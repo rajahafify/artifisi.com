@@ -1,0 +1,216 @@
+<main class="bg-white text-slate-900">
+  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+      <div class="text-base font-semibold uppercase tracking-[0.5em]">Artifisi</div>
+      <div class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
+        <a class="hover:text-slate-900" href="#about">About</a>
+        <a class="hover:text-slate-900" href="#projects">Projects</a>
+        <a class="hover:text-slate-900" href="#blog">Blog</a>
+        <a class="hover:text-slate-900" href="#contact">Contact</a>
+      </div>
+      <a class="inline-flex items-center rounded-full border border-indigo-500 px-5 py-2 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50" href="#contact">Request a demo</a>
+    </nav>
+  </header>
+
+  <section id="hero" class="bg-slate-50">
+    <div class="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-[1.1fr,0.9fr] md:items-center">
+      <div class="space-y-6">
+        <span class="inline-flex items-center rounded-full bg-indigo-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-indigo-700">What's new</span>
+        <h1 class="text-4xl font-bold leading-tight md:text-5xl">Advancing AI with Malaysian Innovation</h1>
+        <p class="text-base text-slate-600 md:text-lg">Artifisi combines cutting-edge artificial intelligence with Malaysian ingenuity to create solutions that transform industries and empower communities.</p>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <a data-role="primary-cta" href="#contact" class="inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-indigo-700">Get started</a>
+          <a data-role="secondary-cta" href="#services" class="inline-flex items-center justify-center rounded-full border border-indigo-200 px-6 py-3 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50">Learn more</a>
+        </div>
+      </div>
+      <div class="flex justify-center md:justify-end">
+        <%= image_tag "hero.webp", alt: "Artifisi hero collage", class: "w-full max-w-lg rounded-3xl border border-slate-200 shadow-lg shadow-slate-300/40" %>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <div class="grid gap-8 md:grid-cols-2 md:items-center">
+        <div class="space-y-6">
+          <h2 class="text-2xl font-semibold tracking-tight text-slate-900">About Artifisi</h2>
+          <p class="text-sm text-slate-600">Founded in 2024, Artifisi Sdn Bhd is a young and dynamic startup at the forefront of AI innovation in Malaysia. Our team of passionate, driven engineers is dedicated to solving complex problems and creating cutting-edge AI solutions that drive industry transformation and societal progress.</p>
+        </div>
+        <div class="space-y-4 text-sm text-slate-600">
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-[0.35em] text-indigo-600">Our Mission</h3>
+            <p class="mt-2">To pioneer AI solutions that empower businesses and improve lives across Southeast Asia, while maintaining the highest standards of ethical development and implementation.</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-[0.35em] text-indigo-600">Our Vision</h3>
+            <p class="mt-2">To become the leading AI innovation hub in Southeast Asia, known for our groundbreaking solutions, ethical practices, and positive impact on society.</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-[0.35em] text-indigo-600">Our Approach</h3>
+            <p class="mt-2">We combine fresh perspectives with cutting-edge research, ensuring our AI solutions are both innovative and applicable to real-world challenges in our region.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 overflow-hidden rounded-3xl">
+        <%= image_tag "values.webp", alt: "Artifisi values montage", class: "w-full object-cover" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <header class="space-y-3 text-center">
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Our Core Values</h2>
+        <p class="text-sm text-slate-600">At Artifisi, our young team is guided by a set of core values that shape our work and our interactions with clients, partners, and the community.</p>
+      </header>
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        <% [
+          ["Innovation", "We constantly push the boundaries of AI technology to create groundbreaking solutions."],
+          ["Ethical Responsibility", "We prioritize the ethical implications of AI and strive to develop solutions that benefit society."],
+          ["Collaboration", "We believe in the power of teamwork and foster a collaborative environment within our company and with our partners."],
+          ["Agility", "As a young startup, we embrace rapid iteration and quick adaptation to meet evolving challenges and opportunities."],
+          ["Continuous Learning", "We embrace a culture of ongoing education and skill development to stay at the forefront of AI technology."],
+          ["Local Expertise", "We leverage our understanding of Southeast Asian markets to create tailored AI solutions for the region."]
+        ].each do |title, description| %>
+          <article class="flex h-full flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-semibold text-slate-900"><%= title %></h3>
+            <p class="text-sm text-slate-600"><%= description %></p>
+          </article>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <header class="space-y-3 text-center">
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Our Services</h2>
+        <p class="text-sm text-slate-600">We provide end-to-end support for teams looking to unlock the potential of artificial intelligence.</p>
+      </header>
+      <div class="mt-12 grid gap-10 md:grid-cols-2">
+        <% [
+          ["AI Consulting", "Expert guidance on AI strategy, opportunity prioritisation, and roadmap development tailored to your organisation."],
+          ["Custom AI Solutions", "Tailored machine learning models and intelligent systems that tackle your most pressing operational challenges."],
+          ["AI Integration", "Seamless integration of AI capabilities into existing products and workflows with change management support."],
+          ["AI Training and Workshops", "Hands-on education programmes that elevate your team's understanding of AI technologies and responsible usage."]
+        ].each_with_index do |(service, description), index| %>
+          <div class="flex gap-4">
+            <span class="mt-1 inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white"><%= index + 1 %></span>
+            <div class="space-y-2">
+              <h3 class="text-lg font-semibold text-slate-900"><%= service %></h3>
+              <p class="text-sm text-slate-600"><%= description %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="border-b border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <header class="space-y-3 text-center">
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Current Projects</h2>
+        <p class="text-sm text-slate-600">Explore some of the initiatives we are actively building with partners across Malaysia.</p>
+      </header>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        <article class="flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md">
+          <div class="h-40 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80');"></div>
+          <div class="space-y-3 px-6 py-6">
+            <h3 class="text-lg font-semibold text-slate-900">RTFC Real-Time Friendly Companion for gamers</h3>
+            <p class="text-sm text-slate-600">An AI-powered assistant that enhances gaming experiences through real-time insights, support, and community engagement.</p>
+            <a href="#" class="inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700">Learn more →</a>
+          </div>
+        </article>
+        <article class="flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md">
+          <div class="h-40 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80');"></div>
+          <div class="space-y-3 px-6 py-6">
+            <h3 class="text-lg font-semibold text-slate-900">Forecast: Shape Your Future</h3>
+            <p class="text-sm text-slate-600">AI-powered predictions for future trends and headlines, helping organizations anticipate change with confidence.</p>
+            <a href="https://forecast.artifisi.com" class="inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700">Test demo →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="blog" class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <header class="space-y-3 text-center">
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">From the Blog</h2>
+        <p class="text-sm text-slate-600">Insights and updates on AI, research, and product development from the Artifisi team.</p>
+      </header>
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        <% [
+          ["Building Ethical AI for Southeast Asia", "Our principles for responsible deployment across diverse communities."],
+          ["Inside Our AI Research Sprints", "How we explore new capabilities and bring them into production."],
+          ["Partner Spotlight: Education", "Supporting Malaysian educators with intelligent content tools."]
+        ].each do |title, description| %>
+          <article class="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="space-y-3">
+              <h3 class="text-lg font-semibold text-slate-900"><%= title %></h3>
+              <p class="text-sm text-slate-600"><%= description %></p>
+            </div>
+            <a href="#blog" class="mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700">Read more →</a>
+          </article>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="bg-white">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <header class="space-y-3 text-center">
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Contact Us</h2>
+        <p class="text-sm text-slate-600">Ready to collaborate or curious about our work? Let’s build AI that matters.</p>
+      </header>
+      <div class="mt-12 grid gap-8 md:grid-cols-[1fr,1.2fr]">
+        <div class="space-y-6 text-sm text-slate-600">
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-[0.35em] text-indigo-600">Get in Touch</h3>
+            <p class="mt-3">hello@artifisi.com</p>
+            <p>+60 12-345 6789</p>
+            <p>Artifisi Sdn Bhd<br>Level 23, Plaza Sentral<br>Kuala Lumpur, Malaysia 50470</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-[0.35em] text-indigo-600">Follow Us</h3>
+            <a class="mt-3 inline-flex items-center gap-2 text-slate-600 hover:text-indigo-600" href="https://x.com/artifisi">@artifisi on X</a>
+          </div>
+        </div>
+        <div class="rounded-3xl border border-slate-200 bg-slate-50 px-6 py-8">
+          <form class="grid gap-4">
+            <div class="grid gap-2">
+              <label class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" for="contact_name">Name</label>
+              <input class="rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" id="contact_name" type="text" placeholder="Your name">
+            </div>
+            <div class="grid gap-2">
+              <label class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" for="contact_email">Email</label>
+              <input class="rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" id="contact_email" type="email" placeholder="you@email.com">
+            </div>
+            <div class="grid gap-2">
+              <label class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" for="contact_company">Company</label>
+              <input class="rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" id="contact_company" type="text" placeholder="Company name">
+            </div>
+            <div class="grid gap-2">
+              <label class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" for="contact_message">Message</label>
+              <textarea class="h-32 rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" id="contact_message" placeholder="Tell us how we can help"></textarea>
+            </div>
+            <button type="submit" class="mt-2 inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-indigo-700">Send message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
+      <div>Pioneering AI innovation in Malaysia since 2024</div>
+      <div class="flex gap-6">
+        <a class="hover:text-indigo-600" href="#about">About</a>
+        <a class="hover:text-indigo-600" href="#services">Services</a>
+        <a class="hover:text-indigo-600" href="#projects">Projects</a>
+        <a class="hover:text-indigo-600" href="#blog">Blog</a>
+      </div>
+      <div>© <%= Time.zone.today.year %> Artifisi Sdn Bhd. All rights reserved.</div>
+    </div>
+  </footer>
+</main>
