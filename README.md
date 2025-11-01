@@ -35,6 +35,7 @@ This repository hosts the marketing site for artifisi.com, implemented as a Rail
   bin/brakeman
   bin/bundler-audit
   ```
+- Every push to `master` and all pull requests trigger GitHub Actions jobs that run `bin/rails db:test:prepare test` and `bin/brakeman --no-pager` to catch regressions early.
 
 ## Deployment
 Kamal configuration lives under `.kamal/`. Before deploying, ensure assets are precompiled (`bin/rails assets:precompile`) and secrets are synced (`bin/rake kamal:env:pull`). Production uses SQLite databases stored in persistent volumes defined in `config/deploy.yml`.
