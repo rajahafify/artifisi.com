@@ -1,25 +1,42 @@
-# README
+# artifisi.com landing page
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This repository hosts the marketing site for artifisi.com, implemented as a Rails 8 application. It uses import maps with Hotwire for frontend interactivity and ships with a Kamal deployment workflow.
 
-Things you may want to cover:
+## Prerequisites
+- Ruby 3.4.7 (install via `rbenv` or `asdf`)
+- Bundler (`gem install bundler`)
+- SQLite 3 for local storage
+- Optional: Docker if you plan to use the provided Kamal stack
 
-* Ruby version
+## Getting Started
+1. Install dependencies and set up the database:
+   ```bash
+   bin/setup
+   ```
+2. Start the development stack with hot reloading:
+   ```bash
+   bin/dev
+   ```
+   This runs the Rails server and propshaft watcher so CSS/JS changes are picked up automatically.
 
-* System dependencies
+## Project Layout
+- `app/` contains controllers, views, stimulus controllers, and assets for the landing experience.
+- `config/` stores environment configuration, credentials, and deploy hooks.
+- `db/` holds migrations and the SQLite databases under `storage/`.
+- `test/` uses Minitest for unit, integration, and system coverage.
+- `public/` can serve static marketing artifacts that do not require Rails routing.
 
-* Configuration
+## Testing & Quality
+- Run the suite with `bin/rails test`.
+- Execute system tests (Capybara + Selenium) with `bin/rails test:system`.
+- Check style and security before opening a PR:
+  ```bash
+  bin/rubocop
+  bin/brakeman
+  bin/bundler-audit
+  ```
 
-* Database creation
+## Deployment
+Kamal configuration lives under `.kamal/`. Before deploying, ensure assets are precompiled (`bin/rails assets:precompile`) and secrets are synced (`bin/rake kamal:env:pull`). Production uses SQLite databases stored in persistent volumes defined in `config/deploy.yml`.
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-# artifisi.com-rails
+See [Repository Guidelines](AGENTS.md) for contributor practices and project conventions.
