@@ -6,7 +6,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "nav", text: /Artifisi/i
-    ["About", "Projects", "Blog", "Contact"].each do |link|
+    [ "About", "Projects", "Blog", "Contact" ].each do |link|
       assert_select "nav a", text: link
     end
 
@@ -23,7 +23,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
       assert_select "section", text: /#{Regexp.escape(value)}/
     end
 
-    ["AI Consulting", "Custom AI Solutions", "AI Integration", "AI Training and Workshops"].each do |service|
+    [ "AI Consulting", "Custom AI Solutions", "AI Integration", "AI Training and Workshops" ].each do |service|
       assert_select "section", text: /#{Regexp.escape(service)}/
     end
 
