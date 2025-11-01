@@ -177,25 +177,13 @@
           </div>
         </div>
         <div class="rounded-3xl border border-slate-200 bg-slate-50 px-6 py-8">
-          <form class="grid gap-4">
-            <div class="grid gap-2">
-              <label class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" for="contact_name">Name</label>
-              <input class="rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" id="contact_name" type="text" placeholder="Your name">
-            </div>
-            <div class="grid gap-2">
-              <label class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" for="contact_email">Email</label>
-              <input class="rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" id="contact_email" type="email" placeholder="you@email.com">
-            </div>
-            <div class="grid gap-2">
-              <label class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" for="contact_company">Company</label>
-              <input class="rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" id="contact_company" type="text" placeholder="Company name">
-            </div>
-            <div class="grid gap-2">
-              <label class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" for="contact_message">Message</label>
-              <textarea class="h-32 rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" id="contact_message" placeholder="Tell us how we can help"></textarea>
-            </div>
-            <button type="submit" class="mt-2 inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-indigo-700">Send message</button>
-          </form>
+          <%= turbo_frame_tag "contact_form" do %>
+            <% if defined?(@contact_submitted) && @contact_submitted %>
+              <%= render "contacts/success" %>
+            <% else %>
+              <%= render "contacts/form", contact: @contact || Contact.new %>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>

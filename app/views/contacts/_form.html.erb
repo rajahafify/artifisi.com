@@ -1,0 +1,30 @@
+<%= form_with model: contact, url: contacts_path, html: { class: "grid gap-4" } do |form| %>
+  <% if contact.errors.any? %>
+    <div class="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+      <h3 class="font-semibold"><%= pluralize(contact.errors.count, "error") %> prevented this message from being sent:</h3>
+      <ul class="mt-2 list-disc space-y-1 pl-5">
+        <% contact.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-2">
+    <%= form.label :name, class: "text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" %>
+    <%= form.text_field :name, placeholder: "Your name", required: true, class: "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+  </div>
+  <div class="grid gap-2">
+    <%= form.label :email, class: "text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" %>
+    <%= form.email_field :email, placeholder: "you@email.com", required: true, class: "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+  </div>
+  <div class="grid gap-2">
+    <%= form.label :company, class: "text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" %>
+    <%= form.text_field :company, placeholder: "Company name", class: "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+  </div>
+  <div class="grid gap-2">
+    <%= form.label :message, class: "text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" %>
+    <%= form.text_area :message, placeholder: "Tell us how we can help", rows: 5, required: true, class: "h-32 rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+  </div>
+  <%= form.button "Send message", class: "mt-2 inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-indigo-700" %>
+<% end %>

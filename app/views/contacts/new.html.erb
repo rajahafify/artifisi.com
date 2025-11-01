@@ -1,0 +1,7 @@
+<section class="contact-form">
+  <h1>Contact Us</h1>
+
+  <%= turbo_frame_tag "contact_form" do %>
+    <%= render "contacts/form", contact: @contact %>
+  <% end %>
+</section>
