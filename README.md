@@ -40,4 +40,12 @@ This repository hosts the marketing site for artifisi.com, implemented as a Rail
 ## Deployment
 Kamal configuration lives under `.kamal/`. Before deploying, ensure assets are precompiled (`bin/rails assets:precompile`) and secrets are synced (`bin/rake kamal:env:pull`). Production uses SQLite databases stored in persistent volumes defined in `config/deploy.yml`.
 
+### Running with Docker Compose
+1. Copy `.env.docker.example` to `.env.docker` and fill in `RAILS_MASTER_KEY` (copy from `config/master.key`).
+2. Build and start the container locally:
+   ```bash
+   docker compose up --build
+   ```
+3. Visit `http://localhost:3000`. Containers mount `log/`, `tmp/`, and `storage/` so data persists between runs.
+
 See [Repository Guidelines](AGENTS.md) for contributor practices and project conventions.
