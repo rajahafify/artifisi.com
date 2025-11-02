@@ -30,5 +30,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "section", text: /RTFC Real-Time Friendly Companion for gamers/
     assert_select "section", text: /Forecast: Shape Your Future/
     assert_select "footer", text: /Pioneering AI innovation in Malaysia since 2024/
+
+    assert_select "a[href='#{new_session_path}']", text: "Log in"
+    assert_select "main.pt-20", count: 0
   end
 end

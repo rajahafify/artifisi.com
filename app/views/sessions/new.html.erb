@@ -1,0 +1,63 @@
+<div class="min-h-screen bg-slate-50 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-[1fr,0.95fr]">
+      <div class="hidden rounded-2xl border border-slate-200/60 bg-white p-8 shadow-sm transition-all duration-200 hover:shadow-md lg:flex lg:flex-col lg:justify-between">
+        <div class="space-y-5">
+          <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium uppercase tracking-[0.35em] text-indigo-600 border border-indigo-100">Artifisi</span>
+          <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Make smarter decisions with Artifisi</h2>
+          <p class="text-sm text-slate-600">Access personalized dashboards, monitor AI performance, and collaborate securely with your team—all from one intuitive workspace.</p>
+        </div>
+        <div class="grid gap-4">
+          <div class="rounded-2xl border border-slate-200/60 bg-slate-50 p-4">
+            <p class="text-sm font-semibold text-slate-900">Live insights</p>
+            <p class="text-sm text-slate-600">Track AI adoption metrics and usage trends in real time.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200/60 bg-slate-50 p-4">
+            <p class="text-sm font-semibold text-slate-900">Human-centered controls</p>
+            <p class="text-sm text-slate-600">Granular roles ensure the right people have the right access.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200/60 bg-white p-8 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div class="space-y-2 text-center">
+          <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Sign in to your account</h1>
+          <p class="text-sm text-slate-600">Enter your credentials to continue where you left off.</p>
+        </div>
+
+        <% if flash[:alert] %>
+          <div class="mt-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
+
+        <%= form_with url: session_path, scope: :session, class: "mt-8 space-y-6" do |form| %>
+          <div class="space-y-2">
+            <%= form.label :email, class: "block text-sm font-medium text-slate-700" %>
+            <%= form.email_field :email, class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white", placeholder: "you@example.com", autocomplete: "email" %>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <%= form.label :password, class: "block text-sm font-medium text-slate-700" %>
+              <a href="#forgot-password" class="text-xs font-medium text-indigo-600 hover:text-indigo-700">Forgot password?</a>
+            </div>
+            <%= form.password_field :password, class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white", placeholder: "••••••••", autocomplete: "current-password" %>
+          </div>
+
+          <div class="flex items-center justify-between text-sm text-slate-600">
+            <label class="inline-flex items-center gap-2">
+              <%= form.check_box :remember_me, class: "h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-1" %>
+              <span>Remember me</span>
+            </label>
+            <%= link_to "Create account", new_user_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-700 underline-offset-4 hover:underline" %>
+          </div>
+
+          <div>
+            <%= form.button "Sign In", class: "w-full inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white bg-gradient-to-r from-[#615bff] to-[#3d32ff] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

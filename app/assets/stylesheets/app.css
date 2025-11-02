@@ -1,12 +1,80 @@
-/* Global overrides */
+/* Liquid glass system */
 
-.glass-effect {
+@keyframes liquid-glass-glint {
+  0% {
+    transform: translateX(-130%) rotate(9deg) skewX(-3deg);
+    opacity: 0;
+  }
+  10% {
+    transform: translateX(-80%) rotate(9deg) skewX(-3deg);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateX(-20%) rotate(9deg) skewX(-3deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translateX(120%) rotate(9deg) skewX(-3deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(160%) rotate(9deg) skewX(-3deg);
+    opacity: 0;
+  }
+}
+
+.liquid-glass {
+  position: relative;
+  overflow: hidden;
   backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.glass-effect a {
+.liquid-glass::before,
+.liquid-glass::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.liquid-glass a {
   text-shadow: -1px -1px 0 white, 1px -1px 0 white,
     -1px 1px 0 white, 1px 1px 0 white;
+}
+
+.liquid-glass::before {
+  top: -58%;
+  left: -30%;
+  width: 130%;
+  height: 240%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0) 5%, rgba(255, 255, 255, 0.85) 45%, rgba(255, 255, 255, 0) 85%);
+  filter: blur(0.7rem);
+  animation: liquid-glass-glint 6s cubic-bezier(0.56, 0.08, 0.18, 0.94) infinite;
+}
+
+.liquid-glass::after {
+  bottom: -35%;
+  left: 10%;
+  width: 78%;
+  height: 48%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  filter: blur(1.2rem);
+  opacity: 0.6;
+}
+
+.liquid-glass[data-tone="emerald"]::before {
+  background: linear-gradient(120deg, rgba(13, 148, 136, 0) 0%, rgba(13, 148, 136, 0.5) 35%, rgba(255, 255, 255, 0.85) 55%, rgba(13, 148, 136, 0) 90%);
+}
+
+.liquid-glass[data-tone="emerald"]::after {
+  background: radial-gradient(circle at center, rgba(13, 148, 136, 0.38), rgba(13, 148, 136, 0));
+}
+
+.liquid-glass[data-tone="rose"]::before {
+  background: linear-gradient(120deg, rgba(244, 63, 94, 0) 0%, rgba(244, 63, 94, 0.45) 35%, rgba(255, 255, 255, 0.85) 55%, rgba(244, 63, 94, 0) 90%);
+}
+
+.liquid-glass[data-tone="rose"]::after {
+  background: radial-gradient(circle at center, rgba(244, 63, 94, 0.32), rgba(244, 63, 94, 0));
 }

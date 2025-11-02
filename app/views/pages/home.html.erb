@@ -1,5 +1,7 @@
+<% content_for :main_class, "pt-0" %>
+
 <main class="bg-white text-slate-900">
-  <header class="sticky top-0 z-50 glass-effect border-b border-slate-200">
+  <header class="sticky top-0 z-50 liquid-glass border-b border-slate-200">
     <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
       <div class="text-base font-semibold uppercase tracking-[0.5em]">Artifisi</div>
       <div class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
@@ -8,7 +10,10 @@
         <a class="hover:text-slate-900" href="#blog">Blog</a>
         <a class="hover:text-slate-900" href="#contact">Contact</a>
       </div>
-      <a class="inline-flex items-center rounded-full border border-indigo-500 px-5 py-2 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50" href="#contact">Request a demo</a>
+      <div class="flex items-center gap-4">
+        <a class="inline-flex items-center rounded-full border border-indigo-500 px-5 py-2 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50" href="#contact">Request a demo</a>
+        <%= link_to "Log in", new_session_path, class: "text-sm font-semibold text-slate-600 transition hover:text-slate-900" %>
+      </div>
     </nav>
   </header>
 

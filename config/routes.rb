@@ -13,4 +13,7 @@ Rails.application.routes.draw do
   root "pages#home"
 
   resources :contacts, only: %i[new create]
+  resources :users, only: %i[new create show]
+  resource :session, only: %i[new create destroy]
+  get "dashboard" => "dashboard#show", as: :dashboard
 end
