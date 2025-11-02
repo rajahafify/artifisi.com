@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Artifisi Com" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Artifisi Com">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-slate-900">
+    <% if notice || alert %>
+      <div id="toast-region"
+           class="pointer-events-none fixed inset-0 z-50 flex items-end justify-end px-4 pb-4 sm:px-6 sm:pb-6">
+        <div class="flex w-full max-w-sm flex-col gap-3"
+             role="region" aria-label="Notifications" aria-live="assertive">
+          <% if notice %>
+            <div class="pointer-events-auto rounded-2xl liquid-glass shadow-lg shadow-indigo-900/10"
+                 data-controller="alert"
+                 data-alert-dismiss-after-value="5000"
+                 data-tone="emerald"
+                 role="status" aria-live="polite">
+              <div class="flex items-start gap-3 p-4">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-500">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 11 8 14.5 15.5 7" />
+                  </svg>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold text-slate-900">Success</p>
+                  <p class="mt-1 text-sm text-slate-600"><%= notice %></p>
+                </div>
+                <button class="ml-auto inline-flex size-7 items-center justify-center rounded-full text-slate-300 transition hover:text-slate-500"
+                        data-action="alert#close">
+                  <span class="sr-only">Close</span>
+                  <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m6 6 8 8M14 6l-8 8" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          <% end %>
+
+          <% if alert %>
+            <div class="pointer-events-auto rounded-2xl liquid-glass shadow-lg shadow-rose-900/10"
+                 data-controller="alert"
+                 data-alert-dismiss-after-value="7000"
+                 data-tone="rose"
+                 role="alertdialog" aria-live="assertive">
+              <div class="flex items-start gap-3 p-4">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500/15 text-rose-500">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6v5m0 3h.01" />
+                    <circle cx="10" cy="10" r="7" />
+                  </svg>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold text-slate-900">Heads up</p>
+                  <p class="mt-1 text-sm text-slate-600"><%= alert %></p>
+                </div>
+                <button class="ml-auto inline-flex size-7 items-center justify-center rounded-full text-slate-300 transition hover:text-slate-500"
+                        data-action="alert#close">
+                  <span class="sr-only">Close</span>
+                  <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m6 6 8 8M14 6l-8 8" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="dashboard-container flex min-h-screen w-full">
+      <div class="flex-1">
+        <div class="grid min-h-screen w-full gap-0 border border-slate-200/70 bg-white shadow-2xl shadow-slate-900/30 lg:grid-cols-[260px_minmax(0,1fr)]">
+          <% sidebar_active = content_for?(:sidebar_active) ? yield(:sidebar_active) : nil %>
+          <% sidebar_actions = content_for?(:sidebar_actions) ? capture { yield :sidebar_actions } : nil %>
+          <%= render "dashboard/sidebar", current_user: current_user, active: sidebar_active do %>
+            <%= sidebar_actions %>
+          <% end %>
+
+          <div class="flex flex-col">
+            <% label = content_for?(:header_label) ? yield(:header_label) : nil %>
+            <% title = content_for?(:header_title) ? yield(:header_title) : (current_user ? "Welcome back, #{current_user.name}" : "Dashboard") %>
+            <% subtitle = content_for?(:header_subtitle) ? yield(:header_subtitle) : nil %>
+            <% header_actions = content_for?(:header_actions) ? capture { yield :header_actions } : nil %>
+            <%= render "dashboard/header", label: label, title: title, subtitle: subtitle, actions: header_actions %>
+
+            <% main_wrapper_class = content_for?(:main_wrapper_class) ? yield(:main_wrapper_class) : "flex-1 space-y-10 bg-white px-6 py-8 lg:px-10" %>
+            <main class="<%= main_wrapper_class %>">
+              <%= yield %>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

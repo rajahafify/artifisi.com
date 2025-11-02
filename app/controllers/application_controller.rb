@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  layout :determine_layout
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
@@ -19,5 +20,12 @@ class ApplicationController < ActionController::Base
     return if current_user
 
     redirect_to new_session_path, alert: "Please sign in to continue."
+  end
+
+  def determine_layout
+    return "application" if controller_name == "pages" && action_name == "home"
+    return "application" unless current_user
+
+    "dashboard"
   end
 end
