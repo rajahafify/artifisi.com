@@ -1,21 +1,7 @@
-<% content_for :main_class, "pt-0" %>
+<% content_for :main_class, "flex-1 pt-0" %>
 
 <main class="bg-white text-slate-900">
-  <header class="sticky top-0 z-50 liquid-glass border-b border-slate-200">
-    <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-      <div class="text-base font-semibold uppercase tracking-[0.5em]">Artifisi</div>
-      <div class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-        <a class="hover:text-slate-900" href="#about">About</a>
-        <a class="hover:text-slate-900" href="#projects">Projects</a>
-        <a class="hover:text-slate-900" href="#blog">Blog</a>
-        <a class="hover:text-slate-900" href="#contact">Contact</a>
-      </div>
-      <div class="flex items-center gap-4">
-        <a class="inline-flex items-center rounded-full border border-indigo-500 px-5 py-2 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50" href="#contact">Request a demo</a>
-        <%= link_to "Log in", login_path, class: "text-sm font-semibold text-slate-600 transition hover:text-slate-900" %>
-      </div>
-    </nav>
-  </header>
+  <%= render_public_header %>
 
   <section id="hero" class="bg-slate-50">
     <div class="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-[1.1fr,0.9fr] md:items-center">
@@ -145,18 +131,21 @@
         <p class="text-sm text-slate-600">Insights and updates on AI, research, and product development from the Artifisi team.</p>
       </header>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
-        <% [
-          ["Building Ethical AI for Southeast Asia", "Our principles for responsible deployment across diverse communities."],
-          ["Inside Our AI Research Sprints", "How we explore new capabilities and bring them into production."],
-          ["Partner Spotlight: Education", "Supporting Malaysian educators with intelligent content tools."]
-        ].each do |title, description| %>
-          <article class="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div class="space-y-3">
-              <h3 class="text-lg font-semibold text-slate-900"><%= title %></h3>
-              <p class="text-sm text-slate-600"><%= description %></p>
-            </div>
-            <a href="#blog" class="mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700">Read more →</a>
-          </article>
+        <% if @featured_posts.any? %>
+          <% @featured_posts.each do |post| %>
+            <article class="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+              <div class="space-y-3">
+                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-indigo-600"><%= post.status.titleize %></p>
+                <h3 class="text-lg font-semibold text-slate-900"><%= post.title %></h3>
+                <p class="text-sm text-slate-600"><%= truncate(post.body.to_plain_text, length: 120) %></p>
+              </div>
+              <%= link_to "Read more →", blog_path(post), class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
+            </article>
+          <% end %>
+        <% else %>
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500">
+            No posts published yet. Check back soon for news from the team.
+          </div>
         <% end %>
       </div>
     </div>

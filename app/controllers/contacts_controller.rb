@@ -26,6 +26,7 @@ class ContactsController < ApplicationController
         end
         format.html do
           @contact_submitted = false
+          @featured_posts = Post.recent_published
           render "pages/home", status: :unprocessable_entity
         end
       end

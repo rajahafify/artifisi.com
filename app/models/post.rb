@@ -5,6 +5,8 @@ class Post < ApplicationRecord
 
   enum :status, { draft: 0, published: 1 }, default: :draft
 
+  scope :recent_published, ->(limit_value = 3) { published.with_rich_text_body.order(created_at: :desc).limit(limit_value) }
+
   validates :title, presence: true
   validates :body, presence: true
   validates :slug, presence: true, uniqueness: true

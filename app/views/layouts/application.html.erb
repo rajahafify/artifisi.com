@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <title><%= content_for(:title) || "Artifisi Com" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -25,7 +25,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= ["bg-slate-100", (content_for?(:body_class) ? yield(:body_class) : nil)].compact.join(" ") %>">
+  <body class="<%= ["m-0", "flex", "min-h-screen", "flex-col", "bg-slate-100", (content_for?(:body_class) ? yield(:body_class) : nil)].compact.join(" ") %>">
     <% if notice || alert %>
       <div id="toast-region"
            class="pointer-events-none fixed inset-0 z-50 flex items-end justify-end px-4 pb-4 sm:px-6 sm:pb-6">
@@ -88,7 +88,7 @@
         </div>
       </div>
     <% end %>
-    <main class="<%= content_for?(:main_class) ? yield(:main_class) : "pt-20" %>">
+    <main class="<%= content_for?(:main_class) ? yield(:main_class) : "flex-1 pt-20" %>">
       <%= yield %>
     </main>
   </body>

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :contacts, only: %i[new create]
   resources :users
   resources :posts, param: :slug
+  get "blogs/:slug" => "blogs#show", as: :blog
   get "profile" => "users#profile", as: :profile
   get "registration" => "registrations#new", as: :registration
   get "login" => "sessions#new", as: :login

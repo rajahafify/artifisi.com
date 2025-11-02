@@ -1,0 +1,39 @@
+<% content_for :main_class, "flex-1 pt-0" %>
+<main class="bg-white text-slate-900">
+  <%= render_public_header %>
+  <section class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-4xl px-6 py-16 sm:py-24">
+      <div class="flex flex-col items-center gap-4 text-center">
+        <%= link_to "Back to blog", root_path(anchor: "blog"), class: "inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-indigo-600 transition hover:text-indigo-700" %>
+        <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-indigo-600"><%= @post.status.titleize %></span>
+        <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl text-slate-900"><%= @post.title %></h1>
+        <div class="flex flex-wrap items-center justify-center gap-3 text-sm text-slate-500">
+          <span>By <span class="font-medium text-slate-900"><%= @post.author.name %></span></span>
+          <span>•</span>
+          <span>Published <%= @post.updated_at.to_fs(:long) %></span>
+        </div>
+      </div>
+
+      <article class="mt-12 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md">
+        <div class="prose prose-slate max-w-none px-8 py-10 sm:px-12 sm:py-12">
+          <%= @post.body %>
+        </div>
+      </article>
+
+      <% if @related_posts.any? %>
+        <div class="mt-16 border-t border-slate-200 pt-10">
+          <h2 class="text-lg font-semibold text-slate-900">More stories</h2>
+          <div class="mt-6 grid gap-4 sm:grid-cols-3">
+            <% @related_posts.each do |related_post| %>
+              <article class="rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <p class="text-xs uppercase tracking-[0.3em] text-indigo-600"><%= related_post.status.titleize %></p>
+                <h3 class="mt-3 text-sm font-semibold text-slate-900"><%= link_to related_post.title, blog_path(related_post), class: "hover:text-indigo-600" %></h3>
+                <p class="mt-2 text-xs text-slate-500"><%= truncate(related_post.body.to_plain_text, length: 90) %></p>
+              </article>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</main>
