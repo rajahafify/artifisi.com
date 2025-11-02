@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "pages#home"
 
-  resources :contacts, only: %i[new create]
+  resources :contacts, only: %i[new create index]
   resources :users
   resources :posts, param: :slug
   get "blogs/:slug" => "blogs#show", as: :blog

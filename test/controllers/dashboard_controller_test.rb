@@ -36,6 +36,15 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
         author: @user
       )
     end
+    contacts = []
+    3.times do |index|
+      contacts << Contact.create!(
+        name: "Lead #{index + 1}",
+        email: "lead#{index + 1}@example.com",
+        company: "Company #{index + 1}",
+        message: "I am interested in learning more about Artifisi #{index + 1}."
+      )
+    end
 
     post session_path, params: {
       session: { email: @user.email, password: "password123" }
@@ -70,6 +79,16 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
       assert_select "section#blogs a[href='#{edit_post_path(post_record)}']", text: /Edit/i
       assert_select "section#blogs form[action='#{post_path(post_record)}'] input[name='_method'][value='delete']"
     end
+    assert_select "section#contacts"
+    assert_select "section#contacts h2", text: /Contact requests/i
+    assert_select "section#contacts table tbody tr", 3
+    contacts.first(3).each do |contact_record|
+      assert_select "section#contacts td", text: contact_record.name
+      assert_select "section#contacts td", text: contact_record.email
+      assert_select "section#contacts td", text: contact_record.company
+    end
+    assert_select "section#contacts a[href='#{new_contact_path}']", text: /Add contact/i
+    assert_select "section#contacts a[href='#{contacts_path}']", text: /View more/i
     assert_select "a[href='#{new_post_path}']", text: /Add post/i
     assert_select "form[action='#{session_path}'] button", text: "Log out"
   end

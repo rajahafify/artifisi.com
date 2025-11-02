@@ -5,5 +5,6 @@ class DashboardController < ApplicationController
     @user = current_user
     @recent_users = User.order(created_at: :desc).limit(5)
     @recent_posts = Post.includes(:author).order(created_at: :desc).limit(5)
+    @recent_contacts = Contact.order(created_at: :desc).limit(5)
   end
 end

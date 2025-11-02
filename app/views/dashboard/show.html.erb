@@ -25,6 +25,18 @@
 <% end %>
 
 <%= render "dashboard/section",
+           id: "contacts",
+           badge: "Leads",
+           title: "Contact requests",
+           subtitle: "Latest messages submitted from the website form.",
+           add_label: "Add contact",
+           add_path: new_contact_path,
+           view_label: "View more",
+           view_path: contacts_path do %>
+  <%= render "dashboard/contacts_table", contacts: @recent_contacts %>
+<% end %>
+
+<%= render "dashboard/section",
            id: "blogs",
            badge: "Content",
            title: "Blog posts",

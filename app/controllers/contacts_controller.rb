@@ -1,4 +1,10 @@
 class ContactsController < ApplicationController
+  before_action :require_login, only: :index
+
+  def index
+    @contacts = Contact.order(created_at: :desc)
+  end
+
   def create
     @contact = Contact.new(contact_params)
 

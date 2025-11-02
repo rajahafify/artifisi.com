@@ -1,0 +1,32 @@
+<table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+  <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+    <tr>
+      <th scope="col" class="px-6 py-3">Name</th>
+      <th scope="col" class="px-6 py-3">Email</th>
+      <th scope="col" class="px-6 py-3">Company</th>
+      <th scope="col" class="px-6 py-3">Received</th>
+      <th scope="col" class="px-6 py-3">Message</th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-slate-200 bg-white">
+    <% if contacts.any? %>
+      <% contacts.each do |contact| %>
+        <tr>
+          <td class="px-6 py-4 font-medium text-slate-900"><%= contact.name %></td>
+          <td class="px-6 py-4 text-slate-600">
+            <%= mail_to contact.email, contact.email, class: "hover:text-indigo-600" %>
+          </td>
+          <td class="px-6 py-4 text-slate-500"><%= contact.company.presence || "—" %></td>
+          <td class="px-6 py-4 text-slate-500"><%= contact.created_at.to_fs(:long) %></td>
+          <td class="px-6 py-4 text-slate-500"><%= truncate(contact.message, length: 80) %></td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="5" class="px-6 py-4 text-sm text-slate-500">
+          No contact requests yet.
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
