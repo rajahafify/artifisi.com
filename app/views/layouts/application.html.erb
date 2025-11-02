@@ -91,5 +91,6 @@
     <main class="<%= content_for?(:main_class) ? yield(:main_class) : "flex-1 pt-20" %>">
       <%= yield %>
     </main>
+    <%= render "layouts/public_footer" %>
   </body>
 </html>
