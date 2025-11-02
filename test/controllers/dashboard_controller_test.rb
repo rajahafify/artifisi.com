@@ -13,7 +13,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
   test "redirects guests to sign-in" do
     get dashboard_path
 
-    assert_redirected_to new_session_path
+    assert_redirected_to login_path
     assert_equal "Please sign in to continue.", flash[:alert]
   end
 
@@ -25,6 +25,15 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
         email: "member#{index}@example.com",
         password: "password123",
         password_confirmation: "password123"
+      )
+    end
+    posts = []
+    3.times do |index|
+      posts << Post.create!(
+        title: "Sample Post #{index + 1}",
+        body: "Body for sample post #{index + 1}",
+        status: index.even? ? "draft" : "published",
+        author: @user
       )
     end
 
@@ -48,6 +57,14 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     recent_users.each do |recent_user|
       assert_select "section#users a[href='#{edit_user_path(recent_user)}']", text: /Update/i
       assert_select "section#users form[action='#{user_path(recent_user)}'] input[name='_method'][value='delete']"
+    end
+    assert_select "section#blogs"
+    assert_select "section#blogs h2", text: /Blog posts/i
+    assert_select "section#blogs a[href='#{posts_path}']", text: /View posts/i
+    assert_select "section#blogs table tbody tr", 3
+    posts.first(3).each do |post_record|
+      assert_select "section#blogs td", text: post_record.title
+      assert_select "section#blogs td", text: post_record.status.titleize
     end
     assert_select "form[action='#{session_path}'] button", text: "Log out"
   end

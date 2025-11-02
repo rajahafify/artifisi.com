@@ -22,13 +22,23 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     follow_redirect!
   end
 
-  test "renders new user form" do
+  test "requires sign in for new user form" do
+    get new_user_path
+    assert_redirected_to login_path
+    assert_equal "Please sign in to continue.", flash[:alert]
+  end
+
+  test "renders dashboard new user form for signed-in users" do
+    admin = create_user
+
+    sign_in(admin)
+
     get new_user_path
     assert_response :success
-    assert_select "div.min-h-screen.bg-slate-50"
-    assert_select "div.max-w-7xl.mx-auto"
-    assert_select "div", class: /rounded-2xl/
-    assert_select "h1", "Create your Artifisi account"
+    assert_select "div.dashboard-container"
+    assert_select "section h2", "Create user account"
+    assert_select "form[action='#{users_path}']"
+    assert_select "button", text: "Create user"
   end
 
   test "creates user with valid parameters" do
@@ -147,7 +157,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "requires sign in for profile" do
     get profile_path
-    assert_redirected_to new_session_path
+    assert_redirected_to login_path
     assert_equal "Please sign in to continue.", flash[:alert]
   end
 
@@ -155,7 +165,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     user = create_user
 
     get user_path(user)
-    assert_redirected_to new_session_path
+    assert_redirected_to login_path
     assert_equal "Please sign in to continue.", flash[:alert]
   end
 
@@ -181,6 +191,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_select "section#support"
     assert_select "a[href='#{edit_user_path(user)}']", text: /Edit profile/
   end
+
 
   test "shows user detail with dashboard shell" do
     admin = create_user

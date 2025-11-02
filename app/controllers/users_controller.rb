@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
-  before_action :require_login, only: %i[index show edit update destroy profile]
+  before_action :require_login, only: %i[index show edit update destroy profile new]
 
   def index
     @users = User.order(created_at: :desc)
@@ -14,10 +14,11 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      session[:user_id] = @user.id
+      session[:user_id] = @user.id unless current_user
       redirect_to @user, notice: "Account created successfully."
     else
-      render :new, status: :unprocessable_entity
+      template = current_user ? :new : "registrations/new"
+      render template, status: :unprocessable_entity
     end
   end
 

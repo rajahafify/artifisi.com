@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   def require_login
     return if current_user
 
-    redirect_to new_session_path, alert: "Please sign in to continue."
+    redirect_to login_path, alert: "Please sign in to continue."
   end
 
   def determine_layout

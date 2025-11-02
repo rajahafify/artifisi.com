@@ -56,3 +56,45 @@
     </table>
   </div>
 </section>
+
+<section id="blogs" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.35em] text-indigo-600">Content</p>
+      <h2 class="mt-2 text-xl font-semibold text-slate-900">Blog posts</h2>
+      <p class="text-sm text-slate-500">Latest articles shared with the team.</p>
+    </div>
+    <%= link_to "View posts", posts_path, class: "inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-indigo-700" %>
+  </header>
+
+  <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200">
+    <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+      <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+        <tr>
+          <th scope="col" class="px-6 py-3">Title</th>
+          <th scope="col" class="px-6 py-3">Status</th>
+          <th scope="col" class="px-6 py-3">Author</th>
+          <th scope="col" class="px-6 py-3">Updated</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200 bg-white">
+        <% if @recent_posts.any? %>
+          <% @recent_posts.each do |post| %>
+            <tr>
+              <td class="px-6 py-4 font-medium text-slate-900"><%= post.title %></td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600"><%= post.status.titleize %></span>
+              </td>
+              <td class="px-6 py-4 text-slate-600"><%= post.author.name %></td>
+              <td class="px-6 py-4 text-slate-500"><%= post.updated_at.to_fs(:long) %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="4" class="px-6 py-4 text-sm text-slate-500">No posts found. Start by creating a new post.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

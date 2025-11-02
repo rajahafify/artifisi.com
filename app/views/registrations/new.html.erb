@@ -1,0 +1,133 @@
+<div class="min-h-screen bg-slate-50 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-[0.95fr,1fr]">
+      <div class="hidden rounded-2xl border border-slate-200/60 bg-white p-8 shadow-sm transition-all duration-200 hover:shadow-md lg:flex lg:flex-col lg:justify-between">
+        <div class="space-y-5">
+          <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium uppercase tracking-[0.35em] text-indigo-600 border border-indigo-100">Why join</span>
+          <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Build with Malaysia's leading AI team</h2>
+          <p class="text-sm text-slate-600">Create an account to access Artifisi's product suite, collaborate with your team, and unlock upcoming beta features built for the local ecosystem.</p>
+        </div>
+        <div class="grid gap-4">
+          <div class="rounded-2xl border border-slate-200/60 bg-slate-50 p-4">
+            <p class="text-sm font-semibold text-slate-900">Unified workspace</p>
+            <p class="text-sm text-slate-600">Manage experiments, deployments, and documentation from a single dashboard.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200/60 bg-slate-50 p-4">
+            <p class="text-sm font-semibold text-slate-900">Local-first support</p>
+            <p class="text-sm text-slate-600">Get region-specific insights and direct access to the Artifisi engineering team.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200/60 bg-white p-8 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div class="space-y-2 text-center">
+          <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Create your Artifisi account</h1>
+          <p class="text-sm text-slate-600">We’ll set up your workspace in just a few steps.</p>
+        </div>
+
+        <%= form_with model: @user, class: "mt-8 space-y-6" do |form| %>
+          <% name_error = @user.errors.full_messages_for(:name).first %>
+          <% email_error = @user.errors.full_messages_for(:email).first %>
+          <% password_error = @user.errors.full_messages_for(:password).first %>
+          <% password_confirmation_error = @user.errors.full_messages_for(:password_confirmation).first %>
+
+          <div class="space-y-2" data-field="user[name]">
+            <%= form.label :name, class: "block text-sm font-medium text-slate-700" %>
+            <% name_classes = [
+              "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+              ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-400" if name_error.present?)
+            ].compact.join(" ") %>
+            <% name_aria = {} %>
+            <% if name_error.present? %>
+              <% name_aria[:invalid] = true %>
+              <% name_aria[:describedby] = "user_name_error" %>
+            <% end %>
+            <%= form.text_field :name,
+                                class: name_classes,
+                                placeholder: "Your name",
+                                autocomplete: "name",
+                                aria: name_aria.presence %>
+            <% if name_error.present? %>
+              <p id="user_name_error" class="form-field-error text-xs font-medium text-rose-600"><%= name_error %></p>
+            <% end %>
+          </div>
+
+          <div class="space-y-2" data-field="user[email]">
+            <%= form.label :email, class: "block text-sm font-medium text-slate-700" %>
+            <% email_classes = [
+              "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+              ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-400" if email_error.present?)
+            ].compact.join(" ") %>
+            <% email_aria = {} %>
+            <% if email_error.present? %>
+              <% email_aria[:invalid] = true %>
+              <% email_aria[:describedby] = "user_email_error" %>
+            <% end %>
+            <%= form.email_field :email,
+                                 class: email_classes,
+                                 placeholder: "you@example.com",
+                                 autocomplete: "email",
+                                 aria: email_aria.presence %>
+            <% if email_error.present? %>
+              <p id="user_email_error" class="form-field-error text-xs font-medium text-rose-600"><%= email_error %></p>
+            <% end %>
+          </div>
+
+          <div class="space-y-2" data-field="user[password]">
+            <div class="flex items-center justify-between">
+              <%= form.label :password, class: "block text-sm font-medium text-slate-700" %>
+              <span class="text-xs text-slate-500">Minimum 8 characters</span>
+            </div>
+            <% password_classes = [
+              "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+              ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-400" if password_error.present?)
+            ].compact.join(" ") %>
+            <% password_aria = {} %>
+            <% if password_error.present? %>
+              <% password_aria[:invalid] = true %>
+              <% password_aria[:describedby] = "user_password_error" %>
+            <% end %>
+            <%= form.password_field :password,
+                                    class: password_classes,
+                                    placeholder: "••••••••",
+                                    autocomplete: "new-password",
+                                    aria: password_aria.presence %>
+            <% if password_error.present? %>
+              <p id="user_password_error" class="form-field-error text-xs font-medium text-rose-600"><%= password_error %></p>
+            <% end %>
+          </div>
+
+          <div class="space-y-2" data-field="user[password_confirmation]">
+            <%= form.label :password_confirmation, class: "block text-sm font-medium text-slate-700" %>
+            <% password_confirmation_classes = [
+              "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+              ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-400" if password_confirmation_error.present?)
+            ].compact.join(" ") %>
+            <% password_confirmation_aria = {} %>
+            <% if password_confirmation_error.present? %>
+              <% password_confirmation_aria[:invalid] = true %>
+              <% password_confirmation_aria[:describedby] = "user_password_confirmation_error" %>
+            <% end %>
+            <%= form.password_field :password_confirmation,
+                                    class: password_confirmation_classes,
+                                    placeholder: "Repeat password",
+                                    autocomplete: "new-password",
+                                    aria: password_confirmation_aria.presence %>
+            <% if password_confirmation_error.present? %>
+              <p id="user_password_confirmation_error" class="form-field-error text-xs font-medium text-rose-600"><%= password_confirmation_error %></p>
+            <% end %>
+          </div>
+
+          <div class="flex items-center justify-between text-sm text-slate-600">
+            <p>Already have an account?</p>
+            <%= link_to "Log in", login_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-700 underline-offset-4 hover:underline" %>
+          </div>
+
+          <div>
+            <%= form.button "Create Account", class: "w-full inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-white bg-gradient-to-r from-[#615bff] to-[#3d32ff] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

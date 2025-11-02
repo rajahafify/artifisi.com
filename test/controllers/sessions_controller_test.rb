@@ -23,7 +23,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "renders Tailwind-styled login page" do
-    get new_session_path
+    get login_path
 
     assert_response :success
     assert_select "div.min-h-screen.bg-slate-50"
@@ -31,6 +31,19 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div", class: /rounded-2xl/
     assert_select "h1", "Sign in to your account"
     assert_select "form button", text: "Sign In"
+  end
+
+  test "redirects authenticated users from login page" do
+    post session_path, params: {
+      session: {
+        email: @user.email,
+        password: "password123"
+      }
+    }
+
+    get login_path
+
+    assert_redirected_to dashboard_path
   end
 
   test "does not create session for invalid credentials and shows inline error" do

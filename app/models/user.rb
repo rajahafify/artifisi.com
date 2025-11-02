@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   before_validation :normalize_email
 
+  has_many :posts, foreign_key: :author_id, dependent: :destroy
+
   validates :name, presence: true
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, uniqueness: { case_sensitive: false }
   validates :password, presence: true, length: { minimum: 8 }, if: :password_required?
