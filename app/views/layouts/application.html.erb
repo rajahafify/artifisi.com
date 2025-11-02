@@ -21,7 +21,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= tag.link rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/@basecamp/lexxy@0.1.4/dist/lexxy.css", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "lexxy", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 

@@ -61,8 +61,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "form[action='#{posts_path}']"
     assert_select "input[name='post[title]']"
-    assert_select "input[type='hidden'][name='post[body]']"
-    assert_select "div[data-controller='lexxy-editor']"
+    assert_select "lexxy-editor[name='post[body]']"
     assert_select "select[name='post[status]'] option[value='draft']"
     assert_select "select[name='post[status]'] option[value='published']"
   end
@@ -135,7 +134,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "form[action='#{post_path(post_record)}']"
     assert_select "input[name='post[title]'][value='Edit Me']"
-    assert_select "div[data-controller='lexxy-editor']"
+    assert_select "lexxy-editor[name='post[body]']"
   end
 
   test "updates post with valid attributes" do
