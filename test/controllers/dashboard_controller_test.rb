@@ -55,17 +55,22 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_select "section#users a[href='#{new_user_path}']", text: /Add user/i
     recent_users = User.order(created_at: :desc).limit(5)
     recent_users.each do |recent_user|
+      assert_select "section#users a[href='#{user_path(recent_user)}']", text: recent_user.name
       assert_select "section#users a[href='#{edit_user_path(recent_user)}']", text: /Update/i
       assert_select "section#users form[action='#{user_path(recent_user)}'] input[name='_method'][value='delete']"
     end
     assert_select "section#blogs"
     assert_select "section#blogs h2", text: /Blog posts/i
-    assert_select "section#blogs a[href='#{posts_path}']", text: /View posts/i
+    assert_select "section#blogs a[href='#{new_post_path}']", text: /Add post/i
+    assert_select "section#blogs a[href='#{posts_path}']", text: /View more/i
     assert_select "section#blogs table tbody tr", 3
     posts.first(3).each do |post_record|
-      assert_select "section#blogs td", text: post_record.title
+      assert_select "section#blogs a[href='#{post_path(post_record)}']", text: post_record.title
       assert_select "section#blogs td", text: post_record.status.titleize
+      assert_select "section#blogs a[href='#{edit_post_path(post_record)}']", text: /Edit/i
+      assert_select "section#blogs form[action='#{post_path(post_record)}'] input[name='_method'][value='delete']"
     end
+    assert_select "a[href='#{new_post_path}']", text: /Add post/i
     assert_select "form[action='#{session_path}'] button", text: "Log out"
   end
 end
