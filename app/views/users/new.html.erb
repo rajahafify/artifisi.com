@@ -25,39 +25,97 @@
           <p class="text-sm text-slate-600">We’ll set up your workspace in just a few steps.</p>
         </div>
 
-        <% if @user.errors.any? %>
-          <div class="mt-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-            <p class="font-semibold">Please fix the following:</p>
-            <ul class="mt-2 list-disc space-y-1 pl-5">
-              <% @user.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-
         <%= form_with model: @user, class: "mt-8 space-y-6" do |form| %>
-          <div class="space-y-2">
+          <% name_error = @user.errors.full_messages_for(:name).first %>
+          <% email_error = @user.errors.full_messages_for(:email).first %>
+          <% password_error = @user.errors.full_messages_for(:password).first %>
+          <% password_confirmation_error = @user.errors.full_messages_for(:password_confirmation).first %>
+
+          <div class="space-y-2" data-field="user[name]">
             <%= form.label :name, class: "block text-sm font-medium text-slate-700" %>
-            <%= form.text_field :name, class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white", placeholder: "Your name", autocomplete: "name" %>
+            <% name_classes = [
+              "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+              ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-400" if name_error.present?)
+            ].compact.join(" ") %>
+            <% name_aria = {} %>
+            <% if name_error.present? %>
+              <% name_aria[:invalid] = true %>
+              <% name_aria[:describedby] = "user_name_error" %>
+            <% end %>
+            <%= form.text_field :name,
+                                class: name_classes,
+                                placeholder: "Your name",
+                                autocomplete: "name",
+                                aria: name_aria.presence %>
+            <% if name_error.present? %>
+              <p id="user_name_error" class="form-field-error text-xs font-medium text-rose-600"><%= name_error %></p>
+            <% end %>
           </div>
 
-          <div class="space-y-2">
+          <div class="space-y-2" data-field="user[email]">
             <%= form.label :email, class: "block text-sm font-medium text-slate-700" %>
-            <%= form.email_field :email, class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white", placeholder: "you@example.com", autocomplete: "email" %>
+            <% email_classes = [
+              "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+              ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-400" if email_error.present?)
+            ].compact.join(" ") %>
+            <% email_aria = {} %>
+            <% if email_error.present? %>
+              <% email_aria[:invalid] = true %>
+              <% email_aria[:describedby] = "user_email_error" %>
+            <% end %>
+            <%= form.email_field :email,
+                                 class: email_classes,
+                                 placeholder: "you@example.com",
+                                 autocomplete: "email",
+                                 aria: email_aria.presence %>
+            <% if email_error.present? %>
+              <p id="user_email_error" class="form-field-error text-xs font-medium text-rose-600"><%= email_error %></p>
+            <% end %>
           </div>
 
-          <div class="space-y-2">
+          <div class="space-y-2" data-field="user[password]">
             <div class="flex items-center justify-between">
               <%= form.label :password, class: "block text-sm font-medium text-slate-700" %>
               <span class="text-xs text-slate-500">Minimum 8 characters</span>
             </div>
-            <%= form.password_field :password, class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white", placeholder: "••••••••", autocomplete: "new-password" %>
+            <% password_classes = [
+              "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+              ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-400" if password_error.present?)
+            ].compact.join(" ") %>
+            <% password_aria = {} %>
+            <% if password_error.present? %>
+              <% password_aria[:invalid] = true %>
+              <% password_aria[:describedby] = "user_password_error" %>
+            <% end %>
+            <%= form.password_field :password,
+                                    class: password_classes,
+                                    placeholder: "••••••••",
+                                    autocomplete: "new-password",
+                                    aria: password_aria.presence %>
+            <% if password_error.present? %>
+              <p id="user_password_error" class="form-field-error text-xs font-medium text-rose-600"><%= password_error %></p>
+            <% end %>
           </div>
 
-          <div class="space-y-2">
+          <div class="space-y-2" data-field="user[password_confirmation]">
             <%= form.label :password_confirmation, class: "block text-sm font-medium text-slate-700" %>
-            <%= form.password_field :password_confirmation, class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white", placeholder: "Repeat password", autocomplete: "new-password" %>
+            <% password_confirmation_classes = [
+              "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+              ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-400" if password_confirmation_error.present?)
+            ].compact.join(" ") %>
+            <% password_confirmation_aria = {} %>
+            <% if password_confirmation_error.present? %>
+              <% password_confirmation_aria[:invalid] = true %>
+              <% password_confirmation_aria[:describedby] = "user_password_confirmation_error" %>
+            <% end %>
+            <%= form.password_field :password_confirmation,
+                                    class: password_confirmation_classes,
+                                    placeholder: "Repeat password",
+                                    autocomplete: "new-password",
+                                    aria: password_confirmation_aria.presence %>
+            <% if password_confirmation_error.present? %>
+              <p id="user_password_confirmation_error" class="form-field-error text-xs font-medium text-rose-600"><%= password_confirmation_error %></p>
+            <% end %>
           </div>
 
           <div class="flex items-center justify-between text-sm text-slate-600">

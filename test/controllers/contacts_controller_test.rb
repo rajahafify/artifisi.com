@@ -20,4 +20,22 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to root_path
   end
+
+  test "re-renders form with inline errors when contact is invalid" do
+    assert_no_difference("Contact.count") do
+      post contacts_path, params: {
+        contact: {
+          name: "",
+          email: "",
+          company: "",
+          message: ""
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "div[data-field='contact[name]'] .form-field-error", text: "Name can't be blank"
+    assert_select "div[data-field='contact[email]'] .form-field-error", text: "Email can't be blank"
+    assert_select "div[data-field='contact[message]'] .form-field-error", text: "Message can't be blank"
+  end
 end

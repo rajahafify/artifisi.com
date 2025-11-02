@@ -38,9 +38,10 @@
   pointer-events: none;
 }
 
-.liquid-glass a {
+.liquid-glass,
+.liquid-glass * {
   text-shadow: -1px -1px 0 white, 1px -1px 0 white,
-    -1px 1px 0 white, 1px 1px 0 white;
+    -1px 1px 0 white, 1px 1px 0 white !important;
 }
 
 .liquid-glass::before {

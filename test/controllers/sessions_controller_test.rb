@@ -33,7 +33,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "form button", text: "Sign In"
   end
 
-  test "does not create session for invalid credentials" do
+  test "does not create session for invalid credentials and shows inline error" do
     post session_path, params: {
       session: {
         email: @user.email,
@@ -43,7 +43,8 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
     assert_nil session[:user_id]
-    assert_select "div[role='alertdialog'][data-controller='alert']"
+    assert_select "div[data-field='session[email]'] .form-field-error", text: "Invalid email or password."
+    assert_select "div[data-field='session[password]'] .form-field-error", text: "Invalid email or password."
   end
 
   test "destroys session" do

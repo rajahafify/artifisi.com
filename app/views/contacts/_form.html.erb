@@ -1,30 +1,91 @@
 <%= form_with model: contact, url: contacts_path, html: { class: "grid gap-4" } do |form| %>
-  <% if contact.errors.any? %>
-    <div class="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-      <h3 class="font-semibold"><%= pluralize(contact.errors.count, "error") %> prevented this message from being sent:</h3>
-      <ul class="mt-2 list-disc space-y-1 pl-5">
-        <% contact.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <% name_error = contact.errors.full_messages_for(:name).first %>
+  <% email_error = contact.errors.full_messages_for(:email).first %>
+  <% company_error = contact.errors.full_messages_for(:company).first %>
+  <% message_error = contact.errors.full_messages_for(:message).first %>
 
-  <div class="grid gap-2">
+  <div class="grid gap-2" data-field="contact[name]">
     <%= form.label :name, class: "text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" %>
-    <%= form.text_field :name, placeholder: "Your name", required: true, class: "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+    <% name_classes = [
+      "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+      ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-300" if name_error.present?)
+    ].compact.join(" ") %>
+    <% name_aria = {} %>
+    <% if name_error.present? %>
+      <% name_aria[:invalid] = true %>
+      <% name_aria[:describedby] = "contact_name_error" %>
+    <% end %>
+    <%= form.text_field :name,
+                        placeholder: "Your name",
+                        required: true,
+                        class: name_classes,
+                        aria: name_aria.presence %>
+    <% if name_error.present? %>
+      <p id="contact_name_error" class="form-field-error text-xs font-medium text-rose-600"><%= name_error %></p>
+    <% end %>
   </div>
-  <div class="grid gap-2">
+
+  <div class="grid gap-2" data-field="contact[email]">
     <%= form.label :email, class: "text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" %>
-    <%= form.email_field :email, placeholder: "you@email.com", required: true, class: "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+    <% email_classes = [
+      "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+      ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-300" if email_error.present?)
+    ].compact.join(" ") %>
+    <% email_aria = {} %>
+    <% if email_error.present? %>
+      <% email_aria[:invalid] = true %>
+      <% email_aria[:describedby] = "contact_email_error" %>
+    <% end %>
+    <%= form.email_field :email,
+                         placeholder: "you@email.com",
+                         required: true,
+                         class: email_classes,
+                         aria: email_aria.presence %>
+    <% if email_error.present? %>
+      <p id="contact_email_error" class="form-field-error text-xs font-medium text-rose-600"><%= email_error %></p>
+    <% end %>
   </div>
-  <div class="grid gap-2">
+
+  <div class="grid gap-2" data-field="contact[company]">
     <%= form.label :company, class: "text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" %>
-    <%= form.text_field :company, placeholder: "Company name", class: "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+    <% company_classes = [
+      "rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+      ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-300" if company_error.present?)
+    ].compact.join(" ") %>
+    <% company_aria = {} %>
+    <% if company_error.present? %>
+      <% company_aria[:invalid] = true %>
+      <% company_aria[:describedby] = "contact_company_error" %>
+    <% end %>
+    <%= form.text_field :company,
+                        placeholder: "Company name",
+                        class: company_classes,
+                        aria: company_aria.presence %>
+    <% if company_error.present? %>
+      <p id="contact_company_error" class="form-field-error text-xs font-medium text-rose-600"><%= company_error %></p>
+    <% end %>
   </div>
-  <div class="grid gap-2">
+
+  <div class="grid gap-2" data-field="contact[message]">
     <%= form.label :message, class: "text-xs font-semibold uppercase tracking-[0.35em] text-slate-500" %>
-    <%= form.text_area :message, placeholder: "Tell us how we can help", rows: 5, required: true, class: "h-32 rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+    <% message_classes = [
+      "h-32 rounded-md border border-slate-300 bg-white px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+      ("border-rose-400 bg-rose-50/60 focus:border-rose-500 focus:ring-rose-300" if message_error.present?)
+    ].compact.join(" ") %>
+    <% message_aria = {} %>
+    <% if message_error.present? %>
+      <% message_aria[:invalid] = true %>
+      <% message_aria[:describedby] = "contact_message_error" %>
+    <% end %>
+    <%= form.text_area :message,
+                       placeholder: "Tell us how we can help",
+                       rows: 5,
+                       required: true,
+                       class: message_classes,
+                       aria: message_aria.presence %>
+    <% if message_error.present? %>
+      <p id="contact_message_error" class="form-field-error text-xs font-medium text-rose-600"><%= message_error %></p>
+    <% end %>
   </div>
   <%= form.button "Send message", class: "mt-2 inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-indigo-700" %>
 <% end %>

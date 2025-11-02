@@ -41,5 +41,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
+    assert_select "div[data-field='user[name]'] .form-field-error", text: "Name can't be blank"
+    assert_select "div[data-field='user[email]'] .form-field-error", text: "Email is invalid"
+    assert_select "div[data-field='user[password]'] .form-field-error", text: "Password is too short (minimum is 8 characters)"
+    assert_select "div[data-field='user[password_confirmation]'] .form-field-error", text: "Password confirmation doesn't match Password"
   end
 end
