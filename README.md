@@ -40,6 +40,16 @@ This repository hosts the marketing site for artifisi.com, implemented as a Rail
 ## Deployment
 Kamal configuration lives under `.kamal/`. Before deploying, ensure assets are precompiled (`bin/rails assets:precompile`) and secrets are synced (`bin/rake kamal:env:pull`). Production uses SQLite databases stored in persistent volumes defined in `config/deploy.yml`.
 
+### DigitalOcean droplet + local registry
+- `config/deploy.yml` targets the droplet (`root@146.190.83.167`) and a registry running on that same host (`146.190.83.167:5000`).
+- Boot the registry accessory _once_ after provisioning the droplet: `bin/kamal accessory boot registry`. The container persists data under the `registry_data` volume.
+- If Kamal tries to log in before the registry exists, bootstrap it with the slim config: `bin/kamal accessory boot registry -c config/deploy.registry.yml`.
+- Allow inbound traffic on ports 22, 80, 443, and 5000 in the droplet firewall/security groups so the registry is reachable from the build machine.
+- Export a throwaway password so Kamal can satisfy `docker login`: `export KAMAL_REGISTRY_PASSWORD=unused` (or any non-empty string).
+- Mark the registry as insecure on the Docker daemon that executes Kamal builds (usually your laptop). Add `{"insecure-registries":["146.190.83.167:5000"]}` to `/etc/docker/daemon.json` (Linux) or Docker Desktop settings, then restart Docker.
+- Keep `config/master.key` handy so `RAILS_MASTER_KEY` can be loaded from `.kamal/secrets`.
+- Run `bin/kamal setup` for the first deploy; use `bin/kamal deploy` for subsequent releases. HTTPS can be enabled later by uncommenting the `proxy` block, pointing `host` at your domain, and updating DNS to `146.190.83.167`.
+
 ### Running with Docker Compose
 1. Copy `.env.docker.example` to `.env.docker` and fill in `RAILS_MASTER_KEY` (copy from `config/master.key`).
 2. Build and start the container locally:
