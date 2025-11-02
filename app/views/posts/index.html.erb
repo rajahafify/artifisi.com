@@ -37,7 +37,7 @@
           <% @posts.each do |post| %>
             <tr>
               <td class="px-6 py-4 font-medium text-slate-900"><%= link_to post.title, post_path(post), class: "hover:text-indigo-600" %></td>
-              <td class="px-6 py-4 text-slate-600"><%= truncate(post.body.to_plain_text, length: 80) %></td>
+              <td class="px-6 py-4 text-slate-600"><%= post_excerpt(post.body, length: 80) %></td>
               <td class="px-6 py-4">
                 <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600"><%= post.status.titleize %></span>
               </td>

@@ -1,6 +1,7 @@
 require "test_helper"
 
 class PostsControllerTest < ActionDispatch::IntegrationTest
+  include ActionView::Helpers::SanitizeHelper
   setup do
     @user = User.create!(
       name: "Author User",
@@ -43,7 +44,8 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "section#posts-index table tbody tr", 2
     posts.each do |post|
       assert_select "section#posts-index a[href='#{post_path(post)}']", text: post.title
-      assert_select "section#posts-index td", text: /#{Regexp.escape(post.body.to_plain_text.strip.split.first)}/
+      first_word = strip_tags(post.body).split.first
+      assert_select "section#posts-index td", text: /#{Regexp.escape(first_word)}/
       assert_select "section#posts-index td", text: post.status.titleize
       assert_select "section#posts-index a[href='#{edit_post_path(post)}']", text: /Edit/i
       assert_select "section#posts-index form[action='#{post_path(post)}'] input[name='_method'][value='delete']"
@@ -60,7 +62,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "form[action='#{posts_path}']"
     assert_select "input[name='post[title]']"
     assert_select "input[type='hidden'][name='post[body]']"
-    assert_select "trix-editor"
+    assert_select "div[data-controller='lexxy-editor']"
     assert_select "select[name='post[status]'] option[value='draft']"
     assert_select "select[name='post[status]'] option[value='published']"
   end
@@ -83,7 +85,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Post created successfully.", flash[:notice]
     assert_equal @user, created_post.author
     assert_equal "published", created_post.status
-    assert_equal "Here is the full body content for the blog post.", created_post.body.to_plain_text
+    assert_equal "Here is the full body content for the blog post.", strip_tags(created_post.body)
     assert_equal "a-valid-blog-post", created_post.slug
   end
 
@@ -116,7 +118,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", text: /Dashboard Insights/
-    assert_select ".trix-content", text: /Rich content/
+    assert_select ".prose", text: /Rich content/
     assert_select "a[href='#{edit_post_path(post_record)}']", text: "Edit"
   end
 
@@ -133,7 +135,7 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "form[action='#{post_path(post_record)}']"
     assert_select "input[name='post[title]'][value='Edit Me']"
-    assert_select "trix-editor"
+    assert_select "div[data-controller='lexxy-editor']"
   end
 
   test "updates post with valid attributes" do

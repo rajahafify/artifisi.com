@@ -79,3 +79,16 @@
 .liquid-glass[data-tone="rose"]::after {
   background: radial-gradient(circle at center, rgba(244, 63, 94, 0.32), rgba(244, 63, 94, 0));
 }
+.lexxy-fallback-editor {
+  min-height: 320px;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  padding: 1rem;
+  background: #fff;
+  outline: none;
+}
+
+.lexxy-fallback-editor:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}

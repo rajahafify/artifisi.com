@@ -1,11 +1,9 @@
 class Post < ApplicationRecord
   belongs_to :author, class_name: "User"
 
-  has_rich_text :body
-
   enum :status, { draft: 0, published: 1 }, default: :draft
 
-  scope :recent_published, ->(limit_value = 3) { published.with_rich_text_body.order(created_at: :desc).limit(limit_value) }
+  scope :recent_published, ->(limit_value = 3) { published.order(created_at: :desc).limit(limit_value) }
 
   validates :title, presence: true
   validates :body, presence: true

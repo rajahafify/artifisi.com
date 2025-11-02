@@ -3,7 +3,7 @@ class PostsController < ApplicationController
   before_action :set_post, only: %i[show edit update destroy]
 
   def index
-    @posts = Post.includes(:author).with_rich_text_body.order(created_at: :desc)
+    @posts = Post.includes(:author).order(created_at: :desc)
   end
 
   def show; end
@@ -40,7 +40,7 @@ class PostsController < ApplicationController
   private
 
   def set_post
-    @post = Post.with_rich_text_body.includes(:author).find_by!(slug: params[:slug])
+    @post = Post.includes(:author).find_by!(slug: params[:slug])
   end
 
   def post_params

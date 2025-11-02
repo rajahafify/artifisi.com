@@ -28,14 +28,18 @@
     </div>
   </div>
 
-  <div class="space-y-2">
+  <div class="space-y-2" data-controller="lexxy-editor">
     <%= form.label :body, class: "block text-sm font-medium text-slate-700" %>
-    <%= form.rich_text_area :body,
-                            class: "rich-text-input",
-                            placeholder: "Write your post content...",
-                            required: true,
-                            data: { test: "post-body-editor" } %>
-    <p class="text-xs text-slate-500">Editor powered by Trix 2 for formatting, links, and embeds.</p>
+    <%= form.hidden_field :body,
+                          value: post.body,
+                          data: { lexxy_editor_target: "input", placeholder: "Write your post content...", test: "post-body-input" },
+                          required: true %>
+    <div data-lexxy-editor-target="editor"
+         data-lexxy-editor-content-value="<%= h(post.body) %>"
+         class="min-h-[320px] rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2"
+         data-test="post-body-editor">
+    </div>
+    <p class="text-xs text-slate-500">Editor powered by Lexxy. If it fails to load, a basic rich text fallback is provided.</p>
   </div>
 
   <div class="flex items-center justify-end gap-3">

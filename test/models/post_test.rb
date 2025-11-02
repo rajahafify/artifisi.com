@@ -1,6 +1,7 @@
 require "test_helper"
 
 class PostTest < ActiveSupport::TestCase
+  include ActionView::Helpers::SanitizeHelper
   def setup
     @author = User.create!(
       name: "Author",
@@ -46,7 +47,7 @@ class PostTest < ActiveSupport::TestCase
     post = Post.new(valid_attributes.except(:status))
 
     assert_equal "draft", post.status
-    assert_equal "This is the full body of the blog post used for testing.", post.body.to_plain_text
+    assert_equal "This is the full body of the blog post used for testing.", strip_tags(post.body)
   end
 
   test "provides enum helpers for status" do
@@ -56,13 +57,6 @@ class PostTest < ActiveSupport::TestCase
     post.published!
     assert post.published?
     assert_equal %w[draft published], Post.statuses.keys.sort
-  end
-
-  test "body is handled via rich text" do
-    post = Post.new(valid_attributes)
-
-    assert post.body.respond_to?(:to_trix_html)
-    assert_includes post.body.to_trix_html, "<p>This is the full body of the blog post used for testing.</p>"
   end
 
   test "generates sanitized slug from title" do

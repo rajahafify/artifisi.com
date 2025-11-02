@@ -29,7 +29,7 @@ class BlogsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", text: @published_post.title
-    assert_select "div", text: /Published body/
+    assert_select ".prose", text: /Published body/
   end
 
   test "returns not found for draft posts" do
