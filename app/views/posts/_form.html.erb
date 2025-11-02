@@ -1,0 +1,48 @@
+<%= form_with model: post, class: "mt-6 space-y-6" do |form| %>
+  <% if post.errors.any? %>
+    <div data-test="post-errors" class="rounded-xl border border-rose-200 bg-rose-50/70 px-4 py-3 text-sm text-rose-600">
+      <p class="font-semibold text-rose-700">Please fix the following:</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5">
+        <% post.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid gap-4 md:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+    <div class="space-y-2">
+      <%= form.label :title, class: "block text-sm font-medium text-slate-700" %>
+      <%= form.text_field :title,
+                          class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white",
+                          placeholder: "Enter a descriptive title",
+                          required: true %>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :status, class: "block text-sm font-medium text-slate-700" %>
+      <%= form.select :status,
+                      Post.statuses.keys.map { |value| [value.titleize, value] },
+                      {},
+                      class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white" %>
+    </div>
+  </div>
+
+  <div class="space-y-2">
+    <%= form.label :body, class: "block text-sm font-medium text-slate-700" %>
+    <%= form.rich_text_area :body,
+                            class: "rich-text-input",
+                            placeholder: "Write your post content...",
+                            required: true,
+                            data: { test: "post-body-editor" } %>
+    <p class="text-xs text-slate-500">Editor powered by Trix 2 for formatting, links, and embeds.</p>
+  </div>
+
+  <div class="flex items-center justify-end gap-3">
+    <%= link_to "Cancel",
+                post.persisted? ? post_path(post) : posts_path,
+                class: "inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-100" %>
+    <%= form.button (post.persisted? ? "Update post" : "Save post"),
+                    class: "inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-indigo-700" %>
+  </div>
+<% end %>

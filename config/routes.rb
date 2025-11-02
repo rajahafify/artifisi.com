@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
   resources :contacts, only: %i[new create]
   resources :users
-  resources :posts, only: %i[index new create]
+  resources :posts, param: :slug
   get "profile" => "users#profile", as: :profile
   get "registration" => "registrations#new", as: :registration
   get "login" => "sessions#new", as: :login
