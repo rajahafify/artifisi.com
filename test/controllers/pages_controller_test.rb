@@ -22,9 +22,10 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "header", text: /Artifisi/i
-    [ "About", "Projects", "Blog", "Contact" ].each do |link|
+    [ "About", "Blog", "Contact" ].each do |link|
       assert_select "header a", text: link
     end
+    # Projects link is temporarily hidden from navigation
 
     assert_select "h1", "Advancing AI with Malaysian Innovation"
     assert_select "p", text: /Malaysian ingenuity/
