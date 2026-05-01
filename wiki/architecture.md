@@ -83,6 +83,16 @@ Plus Active Storage and Action Text internal tables.
 - Sessions controller for login/logout
 - Registrations controller for sign-up
 - No Devise; custom lightweight auth
+- `ApplicationController#current_user` memoized lookup via `session[:user_id]`
+- `ApplicationController#require_login` redirects to `/login` with alert
+
+## Layout System
+
+- `ApplicationController#determine_layout` dynamically selects layout:
+  - `"application"` for the home page (`pages#home`), blog, and unauthenticated users
+  - `"dashboard"` for authenticated users on all other controllers
+- `ApplicationController#allow_browser versions: :modern` restricts to modern browsers supporting webp, import maps, CSS nesting, and `:has`
+- `stale_when_importmap_changes` invalidates ETags when importmap changes
 
 ## Design System
 
@@ -92,6 +102,17 @@ Defined in `DESIGN.md`. Key tokens:
 - **Corners**: `rounded-2xl` (cards/buttons), `rounded-xl` (inputs)
 - **Shadows**: `shadow-sm` default, `shadow-md` on hover
 - **Motion**: `transition-all duration-200`
+
+### Liquid Glass Toasts
+Custom CSS notification system in `app/assets/stylesheets/app.css`:
+- `.liquid-glass` base class with backdrop-blur and animated gradient glints
+- `data-tone="emerald"` for success, `data-tone="rose"` for error
+- Integrated with Stimulus `Alert` controller for auto-dismiss
+
+### Lexxy Editor
+- Rich text editor for ActionText, pinned via importmap (`pin "lexxy"`)
+- Stylesheet loaded via `stylesheet_link_tag "lexxy"`
+- Fallback styles in `app.css` (`.lexxy-fallback-editor`)
 
 ## Important Files
 

@@ -47,3 +47,28 @@ Notes:
 Verification:
 - code checked: yes
 - human reviewed: no
+
+---
+
+## [2026-05-02] ingestion | Deep codebase ingestion — controllers, views, layouts, helpers, JS, CSS, deployment configs
+
+Source: All files under app/, config/importmap.rb, docker-compose.yml, Dockerfile, .kamal/, .aider.conf.yml
+
+Changes:
+- Updated features.md: added Turbo Stream contact form details, blog controller behavior, dynamic layout system, liquid glass toasts, cookie-based contact dedup
+- Updated architecture.md: added layout system (determine_layout), liquid glass toasts, lexxy editor section
+- Updated open-questions.md: partially resolved lexxy gem question (now known to be an ActionText editor with importmap pin and CSS fallback)
+- Updated source-register.md: registered 15 newly inspected files/sections
+- Updated log.md: this entry
+
+Notes:
+- Lexxy gem confirmed as rich text editor for ActionText — pinned in importmap, stylesheet loaded in both layouts, CSS fallback defined. Exact relationship to Trix still unclear.
+- Contact form uses Turbo Stream for inline replacement on the home page, with cookie-based dedup for return visitors
+- Dashboard layout uses extensive content_for blocks for customization
+- Liquid glass toast system is a custom CSS animation with Stimulus Alert integration
+- Kamal hooks are all .sample files — not yet customized
+- .aider.conf.yml only reads AGENTS.md
+
+Verification:
+- code checked: yes (every controller, model, layout, helper, and config file reviewed)
+- human reviewed: no

@@ -13,9 +13,9 @@ Questions that arose during codebase ingestion that could not be answered from a
 
 ### What is the `lexxy` gem used for?
 
-- **Status**: Unknown
-- **Context**: `gem "lexxy", "~> 0.1.4.beta"` is declared in the Gemfile but its usage is not evident from controller or model code.
-- **Needs verification**: Check `Gemfile.lock` or search for `Lexxy` references in the codebase.
+- **Status**: Partially resolved
+- **Context**: `gem "lexxy", "~> 0.1.4.beta"` is declared in the Gemfile. It is pinned in the importmap (`pin "lexxy"` in `config/importmap.rb`) and its stylesheet is loaded in both layouts (`<%= stylesheet_link_tag "lexxy" %>`). CSS in `app/assets/stylesheets/app.css` provides `.lexxy-fallback-editor` styles (min-height 320px, rounded-xl, focus ring). Appears to be a rich text editor for ActionText post bodies.
+- **Needs verification**: Confirm whether lexxy replaces or enhances ActionText's default Trix editor.
 
 ### Is PWA support intended to be enabled?
 
