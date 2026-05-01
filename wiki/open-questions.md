@@ -1,7 +1,7 @@
 # Open Questions
 
 **Summary**: Unresolved questions and unknowns about the project.  
-**Last updated**: 2026-05-01
+**Last updated**: 2026-05-02
 
 ---
 
@@ -41,15 +41,23 @@ Questions that arose during codebase ingestion that could not be answered from a
 - **Context**: The architecture suggests a low-traffic marketing site, but no explicit scaling expectations found.
 - **Needs verification**: Discuss with project owner.
 
+### Are the Orbwalker Markdown and PDF versions equivalent?
+
+- **Status**: Unknown
+- **Context**: The PDF appears image-based in current environment and text extraction returned empty content.
+- **Needs verification**: Compare PDF and Markdown content directly from original editable source or OCR path.
+
 ## Resolved
 
-- None yet.
+- Orbwalker naming is canonical; `Matchatro` was a temporary internal name. (confirmed by project owner on 2026-05-02)
 
 ## Important Files
 
 - `Gemfile` — lexxy dependency
 - `config/routes.rb` — PWA routes commented out
 - `config/deploy.yml` — Deployment configuration
+- `raw/projects/Orbwalker/game_design_document.md` — New game design source
+- `raw/projects/Orbwalker/Orbwalker.pdf` — New design booklet PDF
 
 ## Related Pages
 

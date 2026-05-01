@@ -2,7 +2,7 @@
 
 **Summary**: Recorded design decisions and tradeoffs made in the project.  
 **Sources**: Gemfile, README.md, PROJECT.md, DESIGN.md  
-**Last updated**: 2026-05-01
+**Last updated**: 2026-05-02
 
 ---
 
@@ -81,6 +81,12 @@ Key technical and design decisions observed in the codebase.
 **Decision**: Formalized design tokens in `DESIGN.md` with explicit Tailwind class combinations.  
 **Rationale**: Ensures visual consistency across all pages; acts as a single source of truth for frontend implementation.  
 **Tradeoff**: Requires discipline to keep DESIGN.md and actual code in sync.
+
+## Project Naming: Orbwalker
+
+**Decision**: Use `Orbwalker` as the canonical public and internal project name in wiki and website content.  
+**Rationale**: Project owner confirmed `Matchatro` was only a temporary draft name during early design documentation.  
+**Tradeoff**: Early raw documents may still contain `Matchatro`; those references should be treated as historical aliases to avoid confusion.
 
 ## Important Files
 

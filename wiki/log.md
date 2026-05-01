@@ -1,7 +1,7 @@
 # Log
 
 **Summary**: Chronological history of wiki changes and codebase events.  
-**Last updated**: 2026-05-01
+**Last updated**: 2026-05-02
 
 ---
 
@@ -22,6 +22,26 @@ Notes:
 
 Verification:
 - code checked: yes (app/, config/, db/, test/ directories reviewed)
+- human reviewed: no
+
+---
+
+## [2026-05-02] website | Replace placeholder projects with Orbwalker showcase
+
+Source: `wiki/context/orbwalker-website-update-todo.md`, `raw/projects/Orbwalker/game_design_document.md`
+
+Changes:
+- Replaced Project Aether and Tactica placeholder cards in `app/views/pages/home.html.erb` with a single Orbwalker project card
+- Added `app/assets/images/orbwalker-hero-keyart.png` from raw project sources
+- Used marketing-safe copy: fantasy match-3 roguelike with free orb movement and build-driven progression
+- CTA links to #contact with "In development — follow our journey →"
+
+Notes:
+- All placeholder project references removed from the homepage
+- Image sourced from `raw/projects/Orbwalker/images/orbwalker-hero-keyart.png`
+
+Verification:
+- code checked: yes
 - human reviewed: no
 
 ---
@@ -71,4 +91,45 @@ Notes:
 
 Verification:
 - code checked: yes (every controller, model, layout, helper, and config file reviewed)
+- human reviewed: no
+
+---
+
+## [2026-05-02] ingestion | Orbwalker raw project source ingestion + website handoff TODO
+
+Source: `raw/projects/Orbwalker/game_design_document.md`, `raw/projects/Orbwalker/Orbwalker.pdf`
+
+Changes:
+- Added `wiki/sources/orbwalker-gdd.md` summarizing Orbwalker source pack
+- Added `wiki/context/orbwalker-website-update-todo.md` as temporary handoff instructions for a follow-up website update agent
+- Updated `wiki/source-register.md` with two new raw sources and PDF partial-ingestion status
+- Updated `wiki/contradictions.md` with project naming mismatch (`Matchatro` vs `Orbwalker`)
+- Updated `wiki/open-questions.md` with Orbwalker naming and source-equivalence verification questions
+- Updated `wiki/index.md` and `wiki/features.md` to reflect newly ingested project context
+
+Notes:
+- PDF text extraction returned empty output in current environment, likely image-based pages; only metadata was ingested.
+- Canonical project naming should be confirmed before public website copy is finalized.
+
+Verification:
+- code checked: yes (raw sources + wiki files reviewed and updated)
+- human reviewed: no
+
+---
+
+## [2026-05-02] decision | Canonicalize Orbwalker naming
+
+Source: project owner confirmation in chat + `raw/projects/Orbwalker/game_design_document.md`
+
+Changes:
+- Updated `wiki/contradictions.md` to resolve `Matchatro` vs `Orbwalker`
+- Updated `wiki/open-questions.md` to remove naming uncertainty and add resolved note
+- Updated `wiki/sources/orbwalker-gdd.md` with resolved naming note
+- Updated `wiki/decisions.md` with explicit naming decision
+
+Notes:
+- `Matchatro` should be treated as a temporary/historical alias only.
+
+Verification:
+- code checked: yes (wiki updates reviewed)
 - human reviewed: no

@@ -1,56 +1,59 @@
 import { Controller } from "@hotwired/stimulus"
 import Lenis from "@studio-freight/lenis"
-import gsap from "gsap"
-import ScrollTrigger from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(ScrollTrigger)
 
 export default class extends Controller {
   static targets = ["layer"]
 
   connect() {
-    // Init Lenis smooth scroll
-    this.lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true
+    this.scrollY = 0
+    this.duration = 2.5
+    this.rafId = null
+
+    this.layerTargets.forEach((layer) => {
+      layer.style.willChange = "transform"
     })
 
-    // Sync Lenis with ScrollTrigger
-    const raf = (time) => {
-      this.lenis.raf(time)
-      ScrollTrigger.update()
-      requestAnimationFrame(raf)
-    }
-    requestAnimationFrame(raf)
+    this._initLenis()
+    window.__parallaxController = this
+  }
 
-    // Apply GSAP ScrollTrigger parallax to each layer
-    this.layerTargets.forEach((layer, i) => {
-      const speed = parseFloat(layer.dataset.parallaxSpeed) || 100
-      layer.style.willChange = "transform"
+  _initLenis() {
+    if (this.lenis) this.lenis.destroy()
+    if (this.rafId) cancelAnimationFrame(this.rafId)
 
-      gsap.to(layer, {
-        y: speed,
-        ease: "none",
-        scrollTrigger: {
-          trigger: this.element,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-          invalidateOnRefresh: true
-        }
+    this.lenis = new Lenis({
+      duration: this.duration,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      smoothTouch: false
+    })
+
+    this.lenis.on("scroll", ({ scroll }) => {
+      this.scrollY = scroll
+      this.layerTargets.forEach((layer) => {
+        const speed = parseFloat(layer.dataset.parallaxSpeed) || 0
+        layer.style.transform = `translate3d(0, ${scroll * (speed / 1000)}px, 0)`
       })
     })
+
+    const raf = (time) => {
+      this.lenis.raf(time)
+      this.rafId = requestAnimationFrame(raf)
+    }
+    this.rafId = requestAnimationFrame(raf)
+  }
+
+  setDuration(val) {
+    this.duration = val
+    this._initLenis()
   }
 
   disconnect() {
-    // Kill all ScrollTriggers in this scope
-    ScrollTrigger.getAll().forEach(st => {
-      if (st.vars.trigger === this.element) st.kill()
-    })
+    window.__parallaxController = null
     if (this.lenis) {
       this.lenis.destroy()
       this.lenis = null
     }
+    if (this.rafId) cancelAnimationFrame(this.rafId)
   }
 }

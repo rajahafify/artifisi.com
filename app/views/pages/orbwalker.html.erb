@@ -1,6 +1,6 @@
 <% content_for :main_class, "flex-1 pt-0" %>
 
-<main class="bg-stone-950 text-stone-200" data-controller="parallax">
+<main class="bg-stone-950 text-stone-200 overflow-x-hidden"><div data-controller="parallax">
 
   <%# --- DARK HEADER --- %>
   <header class="sticky top-0 z-50 border-b border-stone-800 bg-stone-950/80 backdrop-blur">
@@ -24,11 +24,11 @@
   <%# --- HERO | two-layer JS parallax with lerp smoothing --- %>
   <section class="relative h-screen overflow-hidden">
     <%# background layer — parallax target %>
-    <%= image_tag "orbwalker-hero-keyart.png", alt: "", class: "absolute inset-0 h-[120%] w-full object-cover -top-[10%]", "data-parallax-target": "layer", "data-parallax-speed": "-80" %>
+    <%= image_tag "orbwalker-hero-keyart.png", alt: "", class: "absolute inset-0 h-full w-full object-cover", "data-parallax-target": "layer", "data-parallax-speed": "-100", id: "parallax-bg" %>
     <div class="absolute inset-0 bg-stone-950/70"></div>
 
-    <%# text layer — parallax target, drifts upward %>
-    <div class="relative z-10 flex h-full items-center justify-center" data-parallax-target="layer" data-parallax-speed="120">
+    <%# text layer — parallax target, drifts down slower than page %>
+    <div class="relative z-10 flex h-screen items-center justify-center" data-parallax-target="layer" data-parallax-speed="150" id="parallax-text">
       <div class="mx-auto max-w-3xl px-6 py-20 text-center">
         <span class="inline-flex items-center gap-2 rounded-full border border-amber-700/50 bg-amber-950/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-amber-400 backdrop-blur">In Development</span>
         <h1 class="mt-6 text-6xl font-extrabold tracking-tight text-white md:text-8xl">Orbwalker</h1>
@@ -49,7 +49,7 @@
   </section>
 
   <%# --- COMBAT --- %>
-  <section id="gameplay" class="border-t border-stone-800 bg-stone-950">
+  <section id="gameplay" class="border-t border-stone-800 bg-stone-950" data-parallax-target="layer" data-parallax-speed="60">
     <div class="mx-auto max-w-6xl px-6 py-20">
       <div class="grid gap-12 md:grid-cols-[1.2fr,1fr] md:items-center">
         <div class="overflow-hidden rounded-2xl border border-stone-700 shadow-2xl shadow-black/40">
@@ -169,4 +169,5 @@
     </div>
   </section>
 
+</div>
 </main>

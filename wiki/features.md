@@ -1,8 +1,8 @@
 # Features
 
 **Summary**: Feature documentation and behavior of the artifisi.com application.  
-**Sources**: app/, config/routes.rb, db/schema.rb  
-**Last updated**: 2026-05-01
+**Sources**: app/, config/routes.rb, db/schema.rb, raw/projects/Orbwalker/game_design_document.md  
+**Last updated**: 2026-05-02
 
 ---
 
@@ -13,9 +13,14 @@ artifisi.com is the marketing landing site for Artifisi Sdn Bhd, an independent 
 ## Landing Page
 
 - **Route**: `GET /` → `pages#home`
-- **Description**: Gaming studio landing page with hero, about (mission/vision/approach), core values, game development services, in-house game project showcases, blog teasers, and contact section.
+- **Description**: Gaming studio landing page with hero, about (mission/vision/approach), core values, game development services, a single in-development project showcase (Orbwalker — fantasy match-3 roguelike), blog teasers, and contact section. Previous placeholder projects (Project Aether, Tactica) were removed on 2026-05-02.
 - **Design**: Follows DESIGN.md tokens (hero, cards, CTA banners, icon tiles).
 - **Template**: `app/views/pages/home.html.erb`
+
+### Project Source Pipeline (Raw → Website)
+
+- New project references can be added first under `raw/projects/` and ingested into wiki before website copy updates. (source: `AGENTS.md`, `raw/projects/Orbwalker/game_design_document.md`)
+- Orbwalker raw sources (`raw/projects/Orbwalker/`) have been ingested and used to create live website copy as of 2026-05-02. The project card on the landing page uses marketing-safe copy drawn from the GDD.
 
 ## Blog
 
@@ -94,6 +99,7 @@ artifisi.com is the marketing landing site for Artifisi Sdn Bhd, an independent 
 - `app/views/pages/home.html.erb` — Main landing page
 - `app/assets/stylesheets/app.css` — Liquid glass toast CSS and lexxy fallback styles
 - `app/helpers/application_helper.rb` — Helper methods (render_public_header, render_post_body, post_excerpt)
+- `app/assets/images/orbwalker-hero-keyart.png` — Orbwalker project card key art
 
 ## Open Questions
 
