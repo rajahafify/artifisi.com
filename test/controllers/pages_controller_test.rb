@@ -43,8 +43,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
       assert_select "section", text: /#{Regexp.escape(service)}/
     end
 
-    assert_select "section", text: /Project Aether/
-    assert_select "section", text: /Tactica/
+    assert_select "section", text: /Orbwalker/
     assert_select "footer", text: /Building original games in Malaysia since 2024/
 
     assert_select "section#blog a[href='#{blog_path(Post.published.order(created_at: :desc).first)}']", text: /Read more/
