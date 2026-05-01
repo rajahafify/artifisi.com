@@ -8,7 +8,7 @@
 
 ## Overview
 
-artifisi.com is a Rails 8.1.1 marketing/landing site with a blog, contact form, user authentication, and admin dashboard. It follows a standard Rails MVC pattern with Hotwire for client-side interactivity.
+artifisi.com is a Rails 8.1.1 landing site for Artifisi Sdn Bhd, an independent gaming studio. It features a blog, contact form, user authentication, and admin dashboard. It follows a standard Rails MVC pattern with Hotwire for client-side interactivity.
 
 ## Technology Stack
 

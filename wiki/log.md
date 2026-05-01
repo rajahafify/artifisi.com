@@ -23,3 +23,27 @@ Notes:
 Verification:
 - code checked: yes (app/, config/, db/, test/ directories reviewed)
 - human reviewed: no
+
+---
+
+## [2026-05-01] rebrand | Rebrand landing page to independent gaming studio
+
+Source: app/views/pages/home.html.erb
+
+Changes:
+- Rebranded entire landing page from AI startup to independent gaming studio
+- Hero: "Building Original Games with Malaysian Creativity"
+- About: "independent gaming studio based in Malaysia. We design, develop, and publish our own games in-house"
+- Updated Mission, Vision, Approach to gaming context
+- Replaced Core Values: Craftsmanship, Player-First Design, Collaboration, Agility, Continuous Learning, Malaysian Roots/Global Reach
+- Replaced Services: Game Development, Art & Animation, Game Design, Quality Assurance
+- Replaced Projects: Project Aether (action-adventure), Tactica (multiplayer tactics)
+- Updated blog tagline and contact CTA
+
+Notes:
+- Branch: `game-studio`
+- Two commits: `feat: rebrand landing page to independent gaming studio` + `fix: update contact section CTA`
+
+Verification:
+- code checked: yes
+- human reviewed: no

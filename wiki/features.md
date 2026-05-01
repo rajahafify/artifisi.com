@@ -8,12 +8,12 @@
 
 ## Overview
 
-artifisi.com is a marketing landing site with blog capabilities, a contact form, user authentication, and an admin dashboard.
+artifisi.com is the marketing landing site for Artifisi Sdn Bhd, an independent gaming studio. It features a blog, contact form, user authentication, and admin dashboard.
 
 ## Landing Page
 
 - **Route**: `GET /` → `pages#home`
-- **Description**: Marketing landing page with hero, values, services, project showcases, blog teasers, and contact section.
+- **Description**: Gaming studio landing page with hero, about (mission/vision/approach), core values, game development services, in-house game project showcases, blog teasers, and contact section.
 - **Design**: Follows DESIGN.md tokens (hero, cards, CTA banners, icon tiles).
 - **Template**: `app/views/pages/home.html.erb`
 
