@@ -30,6 +30,8 @@
 
 - [[sources/orbwalker-gdd]] — Ingested Orbwalker game design source pack from `raw/projects/Orbwalker/`.
 - [[context/orbwalker-website-update-todo]] — Temporary handoff TODO for featuring Orbwalker on the website.
+- [[context/landing-page-review]] — External audit of live-site positioning, copy, and conversion paths.
+- [[context/landing-page-review-todo]] — Prioritized action items derived from the landing page review.
 
 ## Quick Reference
 

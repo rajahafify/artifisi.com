@@ -5,6 +5,49 @@
 
 ---
 
+## [2026-05-02] fix | Priority 1 — Critical Trust & Credibility completed
+
+Source: `wiki/context/landing-page-review-todo.md`
+
+Changes:
+- **1.1** Added `/privacy` route (`config/routes.rb`), controller action (`app/controllers/pages_controller.rb`), privacy policy view (`app/views/pages/privacy.html.erb`). Updated footer to use `privacy_path`.
+- **1.2** Rewrote login page (`app/views/sessions/new.html.erb`) — removed left-panel AI/SaaS marketing ("AI performance," "adoption metrics," "team collaboration"). Centered minimal sign-in form.
+- **1.3** Changed "Request a demo" → "Contact Us" in header CTA (`app/views/layouts/_public_header.html.erb`).
+- **1.4** Removed "Log in" link from public nav (`app/views/layouts/_public_header.html.erb`). Route remains for admin access.
+
+Added tests:
+- `test/controllers/pages_controller_test.rb`: privacy page test, "Request a demo" / "Log in" absence assertions
+- `test/controllers/sessions_controller_test.rb`: AI/SaaS language absence test
+
+Verification:
+- code checked: yes (60 tests, 542 assertions, 0 failures. rubocop clean. brakeman 0 warnings.)
+- human reviewed: no
+
+---
+
+## [2026-05-02] review | External landing page review ingested
+
+Source: Human reviewer live-site audit of artifisi.com, orbwalker project page, and login page.
+
+Changes:
+- Added `wiki/context/landing-page-review.md` — full review notes including what works, main problems, suggested hero rewrite, and suggested nav.
+- Added `wiki/context/landing-page-review-todo.md` — prioritized action items in four tiers: critical trust (privacy 404, login AI language, CTA language), positioning consistency, Orbwalker conversion, and proof/trust signals.
+- Updated `wiki/index.md` with links to new context pages.
+
+Notes:
+- Confirmed that login page (`app/views/sessions/new.html.erb`) still contains SaaS-era AI dashboard copy.
+- Confirmed nav (`app/views/layouts/_public_header.html.erb`) still shows "Request a demo" and "Log in".
+- Confirmed no `/privacy` route exists in `config/routes.rb` (footer 404).
+- Confirmed "Our Services" on homepage (`app/views/pages/home.html.erb` lines 76-99) clashes with IP-studio positioning.
+- Phone number `+60 12-345 6789` confirmed as placeholder-looking.
+- Branch: `review/landing-page`
+
+Verification:
+- code checked: yes (key files inspected to confirm review claims)
+- human reviewed: no
+
+---
+
 ## [2026-05-01] setup | Initial LLM Wiki Setup
 
 Source: AGENTS.md, README.md, PROJECT.md, DESIGN.md, Gemfile, config/routes.rb, db/schema.rb

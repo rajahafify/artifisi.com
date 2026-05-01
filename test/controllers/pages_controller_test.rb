@@ -48,7 +48,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_select "section#blog a[href='#{blog_path(Post.published.order(created_at: :desc).first)}']", text: /Read more/
     assert_select "section#blog article", 3
-    assert_select "a[href='#{login_path}']", text: "Log in"
+    assert_select "header a", text: "Request a demo", count: 0
+    assert_select "header a", text: "Log in", count: 0
     assert_select "main.pt-20", count: 0
   end
 
@@ -59,5 +60,14 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Orbwalker"
     assert_select "body", /match-3 roguelike/i
     assert_select "body", /fantasy/i
+  end
+
+  test "GET /privacy renders privacy policy page" do
+    get privacy_path
+
+    assert_response :success
+    assert_select "h1", /privacy/i
+    assert_select "body", /collect/i
+    assert_select "footer a[href='#{privacy_path}']"
   end
 end
