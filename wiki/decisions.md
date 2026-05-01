@@ -22,6 +22,12 @@ Key technical and design decisions observed in the codebase.
 **Rationale**: Eliminates Node.js dependency, reduces build complexity, and aligns with Rails 8 defaults. Compatible with Hotwire.  
 **Tradeoff**: Limited to ES modules; no tree-shaking or advanced transforms. Acceptable for a Stimulus-driven site.
 
+## Blog Posts as Static Views (no DB-backed blog)
+
+**Decision**: Blog posts (`/blogs/:slug`) are static view templates rendered directly by `BlogsController#show`. No Post model lookup.  
+**Rationale**: The site has few curated devlog posts; static pages are simpler, faster, and version-controlled alongside the rest of the code.  
+**Tradeoff**: Posts without a matching template return 404. Admin-created DB posts are not publicly routable. Adding a new post requires a code change and deploy.
+
 ## Hotwire (Turbo + Stimulus)
 
 **Decision**: Use Hotwire for client-side interactivity.  
