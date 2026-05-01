@@ -2,9 +2,10 @@ class BlogsController < ApplicationController
   layout "application"
 
   def show
-    safe_slug = params[:slug].to_s.gsub(/[^a-z0-9_-]/, "")
-    render template: "blogs/#{safe_slug.tr('-', '_')}"
-  rescue ActionView::MissingTemplate
-    raise ActiveRecord::RecordNotFound
+    slug = params[:slug].to_s.gsub(/[^a-z0-9_-]/, "")
+    template = "blogs/#{slug.tr("-", "_")}"
+    raise ActionController::RoutingError, "Not Found" unless lookup_context.template_exists?(template, [], false)
+
+    render template: template
   end
 end
