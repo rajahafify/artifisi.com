@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   get "projects/orbwalker" => "pages#orbwalker", as: :orbwalker
   get "privacy" => "pages#privacy", as: :privacy
 
+  get "devlog" => "pages#devlog", as: :devlog
+
   resources :contacts, only: %i[new create index]
   resources :users
   resources :posts, param: :slug

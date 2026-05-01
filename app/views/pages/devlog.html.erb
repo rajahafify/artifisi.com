@@ -1,0 +1,67 @@
+<% content_for :main_class, "flex-1 pt-0" %>
+
+<main class="bg-stone-950 text-stone-200 min-h-screen overflow-x-hidden"><div data-controller="parallax">
+
+  <%# --- DARK HEADER --- %>
+  <header class="sticky top-0 z-50 border-b border-stone-800 bg-stone-950/80 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <%= link_to root_path, class: "text-base font-semibold uppercase tracking-[0.5em] text-stone-300" do %>
+        Artifisi
+      <% end %>
+      <nav class="hidden items-center gap-8 text-sm font-medium text-stone-500 md:flex">
+        <%= link_to "About", root_path(anchor: "about"), class: "hover:text-stone-200 transition" %>
+        <%= link_to "Projects", root_path(anchor: "projects"), class: "hover:text-stone-200 transition" %>
+        <%= link_to "Blog", root_path(anchor: "blog"), class: "hover:text-stone-200 transition" %>
+        <%= link_to "Contact", root_path(anchor: "contact"), class: "hover:text-stone-200 transition" %>
+      </nav>
+      <div class="flex items-center gap-4">
+        <%= link_to "Follow development", "#follow", class: "inline-flex items-center rounded-full border border-amber-700/50 px-5 py-2 text-sm font-semibold text-amber-400 transition hover:-translate-y-0.5 hover:bg-amber-950/50" %>
+        <%= link_to "Home", root_path, class: "text-sm font-semibold text-stone-500 transition hover:text-stone-200" %>
+      </div>
+    </div>
+  </header>
+
+  <%# --- HERO --- %>
+  <section class="border-b border-stone-800 bg-stone-950 px-6 py-20">
+    <div class="mx-auto max-w-4xl text-center">
+      <h1 class="text-5xl font-extrabold tracking-tight text-white md:text-7xl">Devlog</h1>
+      <p class="mt-6 mx-auto max-w-xl text-lg text-stone-400">Insights and updates on game development, design, and studio life from the Artifisi team.</p>
+    </div>
+  </section>
+
+  <%# --- POST LIST --- %>
+  <section class="border-t border-stone-800 bg-stone-950 px-6 py-20">
+    <div class="mx-auto max-w-6xl">
+      <% if @devlog_posts.any? %>
+        <div class="grid gap-6 md:grid-cols-3">
+          <% @devlog_posts.each do |post| %>
+            <article class="flex h-full flex-col justify-between rounded-xl border border-stone-800 bg-stone-900/80 p-6">
+              <div class="space-y-3">
+                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400"><%= post.status.titleize %></p>
+                <h3 class="text-lg font-semibold text-white">
+                  <%= link_to post.title, blog_path(post), class: "hover:text-amber-400 transition" %>
+                </h3>
+                <p class="text-sm text-stone-400"><%= post_excerpt(post.body, length: 120) %></p>
+              </div>
+              <div class="mt-4 space-y-2 text-xs text-stone-500">
+                <p>By <%= post.author.name %> — <%= post.created_at.strftime("%B %d, %Y") %></p>
+              </div>
+              <%= link_to "Read more →", blog_path(post), class: "mt-2 inline-flex text-sm font-semibold text-amber-400 hover:text-amber-300 transition" %>
+            </article>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="rounded-xl border border-stone-800 bg-stone-900/80 p-8 text-center">
+          <p class="text-stone-500">No devlog entries published yet. Stay tuned for updates from the team.</p>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <%# --- BACK LINK --- %>
+  <div class="border-t border-stone-800 bg-stone-950 py-6 text-center">
+    <%= link_to "Back to Artifisi", root_path, class: "text-sm text-stone-500 hover:text-stone-300 transition" %>
+  </div>
+
+</div>
+</main>

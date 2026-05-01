@@ -10,4 +10,8 @@ class PagesController < ApplicationController
 
   def privacy
   end
+
+  def devlog
+    @devlog_posts = Post.published.order(created_at: :desc)
+  end
 end

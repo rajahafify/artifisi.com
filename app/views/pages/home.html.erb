@@ -141,14 +141,18 @@
                 <h3 class="text-lg font-semibold text-slate-900"><%= post.title %></h3>
                 <p class="text-sm text-slate-600"><%= post_excerpt(post.body, length: 120) %></p>
               </div>
-              <%= link_to "Read more →", blog_path(post), class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
+              <%= link_to "Read more →", devlog_path, class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
             </article>
           <% end %>
         <% else %>
           <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500">
-            No posts published yet. Check back soon for news from the team.
+            <%= link_to "No posts published yet. Check back soon for news from the team.", devlog_path, class: "text-slate-500 hover:text-indigo-600 transition" %>
           </div>
         <% end %>
+      </div>
+
+      <div class="mt-6 text-center">
+        <%= link_to "View all posts →", devlog_path, class: "inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition" %>
       </div>
     </div>
   </section>
