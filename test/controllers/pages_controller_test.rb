@@ -69,8 +69,6 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     # 3.1 — playtest/wishlist CTA
     assert_select "section#follow a", text: /wishlist/i
     assert_select "section#follow a", text: /discord/i
-
-
   end
 
   test "GET /privacy renders privacy policy page" do
