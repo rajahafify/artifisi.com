@@ -1,11 +1,12 @@
 class BlogsController < ApplicationController
+  ALLOWED_SLUGS = %w[introducing-orbwalker].freeze
+
   layout "application"
 
   def show
-    slug = params[:slug].to_s.gsub(/[^a-z0-9_-]/, "")
-    template = "blogs/#{slug.tr("-", "_")}"
-    raise ActionController::RoutingError, "Not Found" unless lookup_context.template_exists?(template, [], false)
+    slug = params[:slug]
+    raise ActionController::RoutingError, "Not Found" unless ALLOWED_SLUGS.include?(slug)
 
-    render template: template
+    render slug.tr("-", "_")
   end
 end
