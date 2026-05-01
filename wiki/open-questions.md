@@ -1,7 +1,7 @@
 # Open Questions
 
 **Summary**: Unresolved questions and unknowns about the project.  
-**Last updated**: 2026-05-01
+**Last updated**: 2026-05-02
 
 ---
 
@@ -13,9 +13,9 @@ Questions that arose during codebase ingestion that could not be answered from a
 
 ### What is the `lexxy` gem used for?
 
-- **Status**: Unknown
-- **Context**: `gem "lexxy", "~> 0.1.4.beta"` is declared in the Gemfile but its usage is not evident from controller or model code.
-- **Needs verification**: Check `Gemfile.lock` or search for `Lexxy` references in the codebase.
+- **Status**: Partially resolved
+- **Context**: `gem "lexxy", "~> 0.1.4.beta"` is declared in the Gemfile. It is pinned in the importmap (`pin "lexxy"` in `config/importmap.rb`) and its stylesheet is loaded in both layouts (`<%= stylesheet_link_tag "lexxy" %>`). CSS in `app/assets/stylesheets/app.css` provides `.lexxy-fallback-editor` styles (min-height 320px, rounded-xl, focus ring). Appears to be a rich text editor for ActionText post bodies.
+- **Needs verification**: Confirm whether lexxy replaces or enhances ActionText's default Trix editor.
 
 ### Is PWA support intended to be enabled?
 
@@ -41,15 +41,23 @@ Questions that arose during codebase ingestion that could not be answered from a
 - **Context**: The architecture suggests a low-traffic marketing site, but no explicit scaling expectations found.
 - **Needs verification**: Discuss with project owner.
 
+### Are the Orbwalker Markdown and PDF versions equivalent?
+
+- **Status**: Unknown
+- **Context**: The PDF appears image-based in current environment and text extraction returned empty content.
+- **Needs verification**: Compare PDF and Markdown content directly from original editable source or OCR path.
+
 ## Resolved
 
-- None yet.
+- Orbwalker naming is canonical; `Matchatro` was a temporary internal name. (confirmed by project owner on 2026-05-02)
 
 ## Important Files
 
 - `Gemfile` — lexxy dependency
 - `config/routes.rb` — PWA routes commented out
 - `config/deploy.yml` — Deployment configuration
+- `raw/projects/Orbwalker/game_design_document.md` — New game design source
+- `raw/projects/Orbwalker/Orbwalker.pdf` — New design booklet PDF
 
 ## Related Pages
 

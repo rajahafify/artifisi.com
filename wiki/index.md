@@ -1,7 +1,7 @@
 # Wiki Index
 
 **Summary**: Navigation entry point for the artifisi.com LLM Wiki.  
-**Last updated**: 2026-05-01
+**Last updated**: 2026-05-02
 
 ---
 
@@ -25,6 +25,11 @@
 - [[workflows/]] — Repeatable processes and how-to guides.
 - [[context/]] — Task-specific context packs.
 - [[decisions/]] — Individual decision records.
+
+## Recent Additions
+
+- [[sources/orbwalker-gdd]] — Ingested Orbwalker game design source pack from `raw/projects/Orbwalker/`.
+- [[context/orbwalker-website-update-todo]] — Temporary handoff TODO for featuring Orbwalker on the website.
 
 ## Quick Reference
 

@@ -1,7 +1,7 @@
 # Contradictions
 
 **Summary**: Conflicting claims found in sources or code that cannot be silently resolved.  
-**Last updated**: 2026-05-01
+**Last updated**: 2026-05-02
 
 ---
 
@@ -11,11 +11,15 @@ Record of contradictions discovered during codebase analysis. AGENTS.md rule: "I
 
 ## Active Contradictions
 
-None identified during initial wiki setup.
+None currently active.
 
 ## Resolved Contradictions
 
-None.
+### Orbwalker temporary naming (`Matchatro` -> `Orbwalker`)
+
+- `raw/projects/Orbwalker/game_design_document.md` title uses `Matchatro Game Design Document`.
+- Project owner confirmed `Matchatro` was a temporary name and `Orbwalker` is canonical.
+- Resolution date: 2026-05-02.
 
 ## Notes
 

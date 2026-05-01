@@ -43,13 +43,21 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
       assert_select "section", text: /#{Regexp.escape(service)}/
     end
 
-    assert_select "section", text: /Project Aether/
-    assert_select "section", text: /Tactica/
+    assert_select "section", text: /Orbwalker/
     assert_select "footer", text: /Building original games in Malaysia since 2024/
 
     assert_select "section#blog a[href='#{blog_path(Post.published.order(created_at: :desc).first)}']", text: /Read more/
     assert_select "section#blog article", 3
     assert_select "a[href='#{login_path}']", text: "Log in"
     assert_select "main.pt-20", count: 0
+  end
+
+  test "GET /projects/orbwalker renders Orbwalker detail page" do
+    get orbwalker_path
+
+    assert_response :success
+    assert_select "h1", "Orbwalker"
+    assert_select "body", /match-3 roguelike/i
+    assert_select "body", /fantasy/i
   end
 end

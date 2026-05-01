@@ -1,7 +1,7 @@
 # Source Register
 
 **Summary**: Tracked external sources ingested into the wiki.  
-**Last updated**: 2026-05-01
+**Last updated**: 2026-05-02
 
 ---
 
@@ -17,18 +17,34 @@
 | config/routes.rb | Route definitions | ingested | 2026-05-01 | architecture, features, file-map |
 | db/schema.rb | Database schema | ingested | 2026-05-01 | architecture, features |
 | app/ | Application code | ingested | 2026-05-01 | file-map, features |
+| app/controllers/ | All controllers | ingested | 2026-05-02 | architecture, features |
+| app/models/ | All models | ingested | 2026-05-02 | architecture, features |
+| app/views/layouts/ | Layout templates | ingested | 2026-05-02 | architecture, features |
+| app/views/pages/home.html.erb | Landing page | ingested | 2026-05-02 | features |
+| app/views/contacts/_form.html.erb | Contact form partial | ingested | 2026-05-02 | features |
+| app/assets/stylesheets/app.css | Liquid glass + lexxy CSS | ingested | 2026-05-02 | architecture, features |
+| app/helpers/application_helper.rb | View helpers | ingested | 2026-05-02 | features |
+| app/javascript/controllers/ | Stimulus controllers | ingested | 2026-05-02 | features |
+| config/importmap.rb | Import map config | ingested | 2026-05-02 | architecture |
+| docker-compose.yml | Docker Compose config | ingested | 2026-05-02 | setup |
+| Dockerfile | Production Docker image | ingested | 2026-05-02 | setup, architecture |
+| .kamal/ | Kamal deployment hooks | ingested | 2026-05-02 | setup |
+| .aider.conf.yml | Aider configuration | ingested | 2026-05-02 | setup |
+| raw/projects/Orbwalker/game_design_document.md | Raw game design source | ingested | 2026-05-02 | sources/orbwalker-gdd, features, open-questions |
+| raw/projects/Orbwalker/Orbwalker.pdf | Raw PDF design booklet | partial (metadata only) | 2026-05-02 | sources/orbwalker-gdd, contradictions |
+| app/assets/images/orbwalker-hero-keyart.png | Project key art | ingested | 2026-05-02 | features |
 
 ## Pending Ingestion
 
-- `.kamal/` — Kamal deployment hooks
-- `config/deploy.yml` — Detailed deploy configuration
-- `docker-compose.yml` / `Dockerfile` — Container configuration
-- Individual controller/model files for detailed behavior
+- Individual remaining view templates for detailed behavior
+- Test files for detailed coverage analysis
+- `.kamal/hooks/*.sample` — Hook templates (not yet customized)
+- `raw/projects/Orbwalker/Orbwalker.pdf` full text/content comparison (blocked by image-based PDF in current extraction path)
 
 ## Ingestion Notes
 
 - Initial wiki setup performed 2026-05-01 based on repository snapshot.
-- No external/raw sources ingested yet; `raw/` directory is empty.
+- Orbwalker raw sources added under `raw/projects/Orbwalker/` and initial ingestion completed.
 - Future sources (specs, transcripts, references) should be added to `raw/` and registered here.
 
 ## Related Pages
