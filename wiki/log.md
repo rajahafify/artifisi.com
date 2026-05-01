@@ -5,6 +5,22 @@
 
 ---
 
+## [2026-05-02] fix | Priority 2 — Positioning Consistency completed
+
+Source: `wiki/context/landing-page-review-todo.md`
+
+Changes:
+- **2.1** Renamed "Our Services" → "Our Capabilities" on homepage. Changed section id `#services` → `#capabilities` and updated links. Updated subheader to "We build every part of our games in-house."
+- **2.2** Updated homepage hero: H1 → "Original Games from Malaysia", subcopy includes Orbwalker description, primary CTA → "Follow Orbwalker" (links to orbwalker path), secondary CTA → "Contact the Studio" (links to #contact).
+- **2.3** Updated nav links to: Home, Orbwalker, About, Devlog, Contact.
+- Updated `test/controllers/pages_controller_test.rb` assertions to match new copy and nav links.
+
+Verification:
+- code checked: yes (60 tests, 547 assertions, 0 failures. rubocop clean. brakeman 0 warnings.)
+- human reviewed: no
+
+---
+
 ## [2026-05-02] fix | Priority 1 — Critical Trust & Credibility completed
 
 Source: `wiki/context/landing-page-review-todo.md`

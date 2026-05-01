@@ -19,9 +19,9 @@ Remove leftover SaaS/AI language, fix broken infrastructure, and add real game-s
 
 ## Priority 2 — Positioning Consistency
 
-- [ ] **2.1** Rename "Our Services" to "Our Capabilities" on the homepage — currently the site says it builds its own games but the section reads like a service-for-hire menu. File: `app/views/pages/home.html.erb` (lines 76-99)
-- [ ] **2.2** Update the homepage hero to the suggested rewrite (or a derivative) to front-load the Orbwalker hook and studio identity. File: `app/views/pages/home.html.erb` (lines 10-16)
-- [ ] **2.3** Update suggested nav to: Home, Orbwalker, About, Devlog, Contact. File: `app/views/layouts/_public_header.html.erb` (lines 7-11)
+- [x] **2.1** Rename "Our Services" to "Our Capabilities" on the homepage — currently the site says it builds its own games but the section reads like a service-for-hire menu. File: `app/views/pages/home.html.erb` (lines 76-99)
+- [x] **2.2** Update the homepage hero to the suggested rewrite (or a derivative) to front-load the Orbwalker hook and studio identity. File: `app/views/pages/home.html.erb` (lines 10-16)
+- [x] **2.3** Update suggested nav to: Home, Orbwalker, About, Devlog, Contact. File: `app/views/layouts/_public_header.html.erb` (lines 7-11)
 
 ## Priority 3 — Orbwalker Conversion
 

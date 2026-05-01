@@ -22,14 +22,14 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "header", text: /Artifisi/i
-    [ "About", "Projects", "Blog", "Contact" ].each do |link|
+    [ "Home", "Orbwalker", "About", "Devlog", "Contact" ].each do |link|
       assert_select "header a", text: link
     end
 
-    assert_select "h1", "Building Original Games with Malaysian Creativity"
-    assert_select "p", text: /independent gaming studio/
-    assert_select "a[data-role='primary-cta']", text: "Get started"
-    assert_select "a[data-role='secondary-cta']", text: "Learn more"
+    assert_select "h1", "Original Games from Malaysia"
+    assert_select "p", text: /Orbwalker/
+    assert_select "a[data-role='primary-cta']", text: "Follow Orbwalker"
+    assert_select "a[data-role='secondary-cta']", text: "Contact the Studio"
 
     assert_select "section", text: /About Artifisi/i
     assert_select "section", text: /Our Mission/i
@@ -42,6 +42,9 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     [ "Game Development", "Art & Animation", "Game Design", "Quality Assurance" ].each do |service|
       assert_select "section", text: /#{Regexp.escape(service)}/
     end
+
+    assert_select "section", text: /Our Capabilities/i
+    assert_select "section", text: /Our Services/i, count: 0
 
     assert_select "section", text: /Orbwalker/
     assert_select "footer", text: /Building original games in Malaysia since 2024/
