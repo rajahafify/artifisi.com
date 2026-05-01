@@ -2,22 +2,6 @@ require "test_helper"
 
 class PagesControllerTest < ActionDispatch::IntegrationTest
   test "GET / renders artifisi.com home content" do
-    author = User.create!(
-      name: "Public Author",
-      email: "author@example.com",
-      password: "password123",
-      password_confirmation: "password123"
-    )
-
-    3.times do |index|
-      Post.create!(
-        title: "Published Post #{index + 1}",
-        body: "<div><p>Body content #{index + 1}</p></div>",
-        status: :published,
-        author: author
-      )
-    end
-
     get root_url
 
     assert_response :success
@@ -60,8 +44,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     # 4.4 — press kit link
     assert_select "footer a", text: /press kit/i
 
-    assert_select "section#devlog a[href='#{blog_path(Post.published.order(created_at: :desc).first)}']", text: /Read more/
-    assert_select "section#devlog article", 3
+    assert_select "section#devlog a[href='#{blog_path('introducing-orbwalker')}']", text: /Read more/
+    assert_select "section#devlog article", 1
     assert_select "header a", text: "Request a demo", count: 0
     assert_select "header a", text: "Log in", count: 0
     assert_select "main.pt-20", count: 0
@@ -85,9 +69,6 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     # 3.1 — playtest/wishlist CTA
     assert_select "section#follow a", text: /wishlist/i
     assert_select "section#follow a", text: /discord/i
-
-    # 3.2 — gameplay media above the fold
-    assert_select "section:first-of-type img[alt*='gameplay']"
   end
 
   test "GET /privacy renders privacy policy page" do

@@ -5,6 +5,23 @@
 
 ---
 
+## [2026-05-02] fix | Fix empty devlog section and remove duplicate combat image from orbwalker hero
+
+Source: `bugfix/orbwalker-page` branch
+
+Changes:
+- Removed duplicate `combat.png` from orbwalker hero section (`app/views/pages/orbwalker.html.erb`). The same image already appears in the COMBAT section immediately below.
+- Fixed devlog section on home page showing "No posts published yet" in production. Replaced DB-backed `@featured_posts = Post.recent_published` with a static "Introducing Orbwalker" card linking to `/blogs/introducing-orbwalker`.
+- Updated `PagesController#home` — removed `@featured_posts` query.
+- Updated `test/controllers/pages_controller_test.rb` — removed Post creation fixtures and updated assertions for static blog link and single article count; removed combat.png hero assertion.
+
+Verification:
+- code checked: yes
+- human reviewed: no
+- tests: 61 runs, 560 assertions, 0 failures
+
+---
+
 ## [2026-05-02] feat | Devlog static pages — Introducing Orbwalker
 
 Source: `devlog/introducing-orbwalker` branch

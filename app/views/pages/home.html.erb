@@ -133,22 +133,14 @@
         <p class="text-sm text-slate-600">Insights and updates on game development, design, and studio life from the Artifisi team.</p>
       </header>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
-        <% if @featured_posts.any? %>
-          <% @featured_posts.each do |post| %>
-            <article class="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-              <div class="space-y-3">
-                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-indigo-600"><%= post.status.titleize %></p>
-                <h3 class="text-lg font-semibold text-slate-900"><%= post.title %></h3>
-                <p class="text-sm text-slate-600"><%= post_excerpt(post.body, length: 120) %></p>
-              </div>
-              <%= link_to "Read more →", blog_path(post), class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
-            </article>
-          <% end %>
-        <% else %>
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500">
-            <p class="text-slate-500">No posts published yet. Check back soon for news from the team.</p>
+        <article class="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-indigo-600">Devlog</p>
+            <h3 class="text-lg font-semibold text-slate-900">Introducing Orbwalker</h3>
+            <p class="text-sm text-slate-600">A fantasy match-3 roguelike where you freely drag orbs to unleash powerful combos. Build your arsenal across procedurally generated runs.</p>
           </div>
-        <% end %>
+          <%= link_to "Read more →", blog_path("introducing-orbwalker"), class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
+        </article>
       </div>
     </div>
   </section>
