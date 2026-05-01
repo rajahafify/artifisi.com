@@ -49,11 +49,29 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "section", text: /Orbwalker/
     assert_select "footer", text: /Building original games in Malaysia since 2024/
 
-    assert_select "section#blog a[href='#{blog_path(Post.published.order(created_at: :desc).first)}']", text: /Read more/
-    assert_select "section#blog article", 3
+    # 4.3 — devlog section
+    assert_select "section#devlog", 1
+    assert_select "section#devlog h2", text: /devlog/i
+    assert_select "section#blog", count: 0
+
+    # 4.2 — no placeholder phone
+    assert_no_match(/\+60 12-345 6789/, response.body)
+
+    # 4.4 — press kit link
+    assert_select "footer a", text: /press kit/i
+
+    assert_select "section#devlog a[href='#{blog_path(Post.published.order(created_at: :desc).first)}']", text: /Read more/
+    assert_select "section#devlog article", 3
     assert_select "header a", text: "Request a demo", count: 0
     assert_select "header a", text: "Log in", count: 0
     assert_select "main.pt-20", count: 0
+  end
+
+  # 4.1 — team/founder section
+  test "GET / renders team or founder presence" do
+    get root_url
+    assert_response :success
+    assert_select "section", text: /team|founder/i
   end
 
   test "GET /projects/orbwalker renders Orbwalker detail page" do

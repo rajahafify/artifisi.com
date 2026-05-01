@@ -30,10 +30,10 @@ Remove leftover SaaS/AI language, fix broken infrastructure, and add real game-s
 
 ## Priority 4 — Proof & Trust Signals
 
-- [ ] **4.1** Add team/founder section to the about area or as a separate page.
-- [ ] **4.2** Replace or remove the placeholder phone number `+60 12-345 6789` in the contact section. File: `app/views/pages/home.html.erb` (line 158)
-- [ ] **4.3** Add development updates / devlog capability to the site.
-- [ ] **4.4** Add press/media kit link (can be a placeholder until assets are ready).
+- [x] **4.1** Add team/founder section to the about area or as a separate page.
+- [x] **4.2** Replace or remove the placeholder phone number `+60 12-345 6789` in the contact section. File: `app/views/pages/home.html.erb` (line 158)
+- [x] **4.3** Add development updates / devlog capability to the site.
+- [x] **4.4** Add press/media kit link (can be a placeholder until assets are ready).
 
 ## Constraints
 

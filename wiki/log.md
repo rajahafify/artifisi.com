@@ -1,7 +1,24 @@
 # Log
 
 **Summary**: Chronological history of wiki changes and codebase events.  
-**Last updated**: 2026-05-02
+**Last updated**: 2026-05-02 (All priorities completed)
+
+---
+
+## [2026-05-02] fix | Priority 4 — Proof & Trust Signals completed
+
+Source: `wiki/context/landing-page-review-todo.md`
+
+Changes:
+- **4.1** Added "The Team" section on homepage after about section with founder mention.
+- **4.2** Removed placeholder phone number `+60 12-345 6789` from contact section.
+- **4.3** Renamed blog section: `#blog` → `#devlog`, "From the Blog" → "Devlog". Updated nav anchor. The site already had posts/blogs infrastructure; this aligns labeling with the "Devlog" nav link.
+- **4.4** Added "Press Kit" placeholder link in footer.
+- Updated `test/controllers/pages_controller_test.rb` with assertions for all four items.
+
+Verification:
+- code checked: yes (61 tests, 564 assertions, 0 failures. rubocop clean.)
+- human reviewed: no
 
 ---
 
