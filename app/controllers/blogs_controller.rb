@@ -2,8 +2,8 @@ class BlogsController < ApplicationController
   layout "application"
 
   def show
-    slug = params[:slug]
-    render slug.parameterize.underscore
+    safe_slug = params[:slug].to_s.gsub(/[^a-z0-9_-]/, "")
+    render template: "blogs/#{safe_slug.tr('-', '_')}"
   rescue ActionView::MissingTemplate
     raise ActiveRecord::RecordNotFound
   end
