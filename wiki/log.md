@@ -5,6 +5,21 @@
 
 ---
 
+## [2026-05-02] fix | Priority 3 — Orbwalker Conversion completed
+
+Source: `wiki/context/landing-page-review-todo.md`
+
+Changes:
+- **3.1** Added "Wishlist on Steam" and "Join Discord" placeholder CTAs to the #follow section on the Orbwalker page. Replaced "Back to Artifisi" and "Get in touch" buttons. Added small "Back to Artifisi" tertiary text link.
+- **3.2** Added combat gameplay screenshot (`combat.png`) above the fold in the Orbwalker hero section with rounded-2xl styling.
+- Updated `test/controllers/pages_controller_test.rb` with CTA and gameplay media assertions.
+
+Verification:
+- code checked: yes (60 tests, 553 assertions, 0 failures. rubocop clean.)
+- human reviewed: no
+
+---
+
 ## [2026-05-02] fix | Priority 2 — Positioning Consistency completed
 
 Source: `wiki/context/landing-page-review-todo.md`

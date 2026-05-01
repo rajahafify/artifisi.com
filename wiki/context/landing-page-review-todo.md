@@ -25,8 +25,8 @@ Remove leftover SaaS/AI language, fix broken infrastructure, and add real game-s
 
 ## Priority 3 — Orbwalker Conversion
 
-- [ ] **3.1** Add a playtest/wishlist CTA to the Orbwalker project page — currently only has "In development — follow our journey →." Evaluate creating email capture, Steam wishlist link placeholder, or Discord invite.
-- [ ] **3.2** Add gameplay media (screenshots, video/GIF, or key art) above the fold on the Orbwalker page.
+- [x] **3.1** Add a playtest/wishlist CTA to the Orbwalker project page — currently only has "In development — follow our journey →." Evaluate creating email capture, Steam wishlist link placeholder, or Discord invite.
+- [x] **3.2** Add gameplay media (screenshots, video/GIF, or key art) above the fold on the Orbwalker page.
 
 ## Priority 4 — Proof & Trust Signals
 

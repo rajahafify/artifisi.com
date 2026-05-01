@@ -63,6 +63,13 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Orbwalker"
     assert_select "body", /match-3 roguelike/i
     assert_select "body", /fantasy/i
+
+    # 3.1 — playtest/wishlist CTA
+    assert_select "section#follow a", text: /wishlist/i
+    assert_select "section#follow a", text: /discord/i
+
+    # 3.2 — gameplay media above the fold
+    assert_select "section:first-of-type img[alt*='gameplay']"
   end
 
   test "GET /privacy renders privacy policy page" do
