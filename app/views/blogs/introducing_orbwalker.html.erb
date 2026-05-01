@@ -1,0 +1,120 @@
+<main class="bg-white text-slate-900">
+
+  <!-- Hero image (full-width banner) -->
+  <div class="w-full">
+    <%= image_tag "orbwalker-hero-keyart.png", alt: "", class: "w-full object-cover object-top h-64 md:h-96" %>
+  </div>
+
+  <!-- Article container -->
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 py-16">
+
+    <!-- Category badge -->
+    <div class="mb-6">
+      <span class="inline-flex items-center rounded-full bg-indigo-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-indigo-700">Devlog</span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">Introducing Orbwalker</h1>
+
+    <!-- Author byline -->
+    <div class="mt-5 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+      <span class="inline-flex items-center gap-2">
+        <span class="inline-flex h-8 w-8 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs items-center justify-center">RH</span>
+        <span class="font-medium text-slate-700">Raja Hafify</span>
+      </span>
+      <span class="text-slate-300">·</span>
+      <span>~5 min read</span>
+      <span class="text-slate-300">·</span>
+      <span>May 2025</span>
+    </div>
+
+    <!-- Divider -->
+    <hr class="my-10 border-slate-200" />
+
+    <!-- Article body -->
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-10 mb-4">What is Orbwalker?</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Orbwalker is a fantasy match-3 roguelike where you freely drag orbs to unleash powerful combos. Build your arsenal across procedurally generated runs — every decision shapes your path to victory.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Core Mechanic</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Instead of swapping adjacent orbs, you <strong>drag one orb freely</strong> across the board under a 5‑second timer. Orbs displace others as you move, and routing a single orb can trigger cascading matches that chain across the board.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">Match three or more orbs of the same type in lines, L‑shapes, or T‑shapes. Each match deals damage, heals, or provides resources depending on the orb type, and longer combos multiply your effects.</p>
+
+    <h3 class="text-xl font-semibold text-slate-900 mt-10 mb-3">The Six Orb Types</h3>
+    <ul class="list-disc list-inside space-y-2 text-slate-700 mb-6">
+      <li><strong>Fire</strong> – damage</li>
+      <li><strong>Ice</strong> – damage</li>
+      <li><strong>Earth</strong> – damage</li>
+      <li><strong>Heart</strong> – healing</li>
+      <li><strong>Armor</strong> – defense</li>
+      <li><strong>Gold</strong> – in‑run currency</li>
+    </ul>
+    <p class="text-slate-700 leading-relaxed mb-6">Damage‑type orbs scale with combo multipliers, while Heart and Gold provide flat value unaffected by combo length.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Turn‑Based Combat</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Every enemy broadcasts its intent before you act, so you know exactly what you're facing. Use your orb‑dragging turn to match elements, route cascades, and decide when to heal, defend, or press the attack. No memorization — just planning and reaction.</p>
+
+    <div class="my-10">
+      <%= image_tag "combat.png", alt: "Orbwalker combat screenshot", class: "w-full rounded-2xl border border-slate-200 shadow-lg" %>
+    </div>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Build Your Arsenal</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Between battles you'll spend gold at the shop. Equip gear that changes orb values or adds new powers, deepen your mastery in any orb type to raise its per‑match effect, and purchase relics and consumables that unlock entirely new tactical layers. Your build shapes every run.</p>
+
+    <div class="my-10">
+      <%= image_tag "shop.png", alt: "Orbwalker shop screenshot", class: "w-full rounded-2xl border border-slate-200 shadow-lg" %>
+    </div>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Design Pillars</h2>
+    <ul class="list-disc list-inside space-y-2 text-slate-700 mb-6">
+      <li><strong>Free Movement</strong> — full routing control with a single drag</li>
+      <li><strong>Build-Driven Depth</strong> — equipment, masteries, consumables and relics define your strategy</li>
+      <li><strong>Clear Enemy Intent</strong> — always know the next attack</li>
+      <li><strong>Short, Readable Fights</strong> — depth from speed, not memorization</li>
+      <li><strong>Fantasy First</strong> — gear and relics feel magical, not abstract</li>
+      <li><strong>Cascade Mastery</strong> — chain reactions multiply damage in a satisfying combo system</li>
+    </ul>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Development Status</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Orbwalker is in active development. We're building core gameplay, visual identity, and the procedural dungeon layer. Follow the devlog for the latest updates, playtest windows, and behind‑the‑scenes looks at the craft.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Get Involved</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">
+      <strong>Wishlist on Steam</strong> ·
+      <strong>Join our Discord community</strong> ·
+      <strong>Follow the devlog</strong> for in‑depth articles on game mechanics, art, and design.
+    </p>
+    <p class="text-slate-700 leading-relaxed mb-6">Thank you for joining us on this journey — we can't wait to put Orbwalker in your hands.</p>
+
+    <!-- Tags -->
+    <div class="mt-16 mb-8">
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Tags</p>
+      <div class="flex flex-wrap gap-2">
+        <% ["Orbwalker", "Match-3", "Roguelike", "Game Development", "Indie Game"].each do |tag| %>
+          <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+            <%= tag %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Author bio card -->
+    <div class="bg-indigo-50 rounded-2xl p-6 flex items-start gap-4 mt-12">
+      <div class="w-12 h-12 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-lg shrink-0">RH</div>
+      <div>
+        <p class="font-semibold text-slate-900">Raja Hafify</p>
+        <p class="text-sm text-slate-600 mt-1">Founder of Artifisi, building original games from Malaysia.</p>
+      </div>
+    </div>
+
+    <!-- Share / discuss -->
+    <div class="mt-10 text-center">
+      <a href="#" class="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Discuss on Discord</a>
+    </div>
+
+    <!-- Back to home -->
+    <div class="mt-12 text-center">
+      <%= link_to "← Back to home", root_path, class: "inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition" %>
+    </div>
+
+  </div>
+</main>

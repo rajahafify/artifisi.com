@@ -1,7 +1,24 @@
 # Log
 
 **Summary**: Chronological history of wiki changes and codebase events.  
-**Last updated**: 2026-05-02 (All priorities completed)
+**Last updated**: 2026-05-02
+
+---
+
+## [2026-05-02] feat | Devlog static pages — Introducing Orbwalker
+
+Source: `devlog/introducing-orbwalker` branch
+
+Changes:
+- Replaced dynamic blog system (Post model) with static views served by `BlogsController#show`. Controller now renders templates by slug.
+- Created `app/views/blogs/introducing_orbwalker.html.erb` — static devlog page with light theme, "Devlog" badge, author/date metadata, and full Orbwalker introduction.
+- Removed `devlog` listing route/action/view from `PagesController` and routes.
+- Home page devlog section links use `blog_path(post)`; "View all posts" link removed.
+- Commits: `cc89e16`, `1e4ff5c`, `1633fe6`
+
+Verification:
+- code checked: yes (BlogsController, static view, routes, home page verified)
+- human reviewed: no
 
 ---
 

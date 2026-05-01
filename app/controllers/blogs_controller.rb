@@ -1,11 +1,12 @@
 class BlogsController < ApplicationController
+  ALLOWED_SLUGS = %w[introducing-orbwalker].freeze
+
   layout "application"
 
   def show
-    @post = Post.published.find_by!(slug: params[:slug])
-    @related_posts = Post.published
-                         .where.not(id: @post.id)
-                         .order(created_at: :desc)
-                         .limit(3)
+    slug = params[:slug]
+    raise ActionController::RoutingError, "Not Found" unless ALLOWED_SLUGS.include?(slug)
+
+    render slug.tr("-", "_")
   end
 end
