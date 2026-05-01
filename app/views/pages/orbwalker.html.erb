@@ -24,11 +24,11 @@
   <%# --- HERO | two-layer JS parallax with lerp smoothing --- %>
   <section class="relative h-screen overflow-hidden">
     <%# background layer — parallax target %>
-    <%= image_tag "orbwalker-hero-keyart.png", alt: "", class: "absolute inset-0 h-[120%] w-full object-cover -top-[10%]", "data-parallax-target": "layer", "data-parallax-speed": "0.35" %>
+    <%= image_tag "orbwalker-hero-keyart.png", alt: "", class: "absolute inset-0 h-[120%] w-full object-cover -top-[10%]", "data-parallax-target": "layer", "data-parallax-speed": "-80" %>
     <div class="absolute inset-0 bg-stone-950/70"></div>
 
     <%# text layer — parallax target, drifts upward %>
-    <div class="relative z-10 flex h-full items-center justify-center" data-parallax-target="layer" data-parallax-speed="-0.2">
+    <div class="relative z-10 flex h-full items-center justify-center" data-parallax-target="layer" data-parallax-speed="120">
       <div class="mx-auto max-w-3xl px-6 py-20 text-center">
         <span class="inline-flex items-center gap-2 rounded-full border border-amber-700/50 bg-amber-950/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-amber-400 backdrop-blur">In Development</span>
         <h1 class="mt-6 text-6xl font-extrabold tracking-tight text-white md:text-8xl">Orbwalker</h1>
