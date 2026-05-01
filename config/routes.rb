@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "pages#home"
 
+  get "projects/orbwalker" => "pages#orbwalker", as: :orbwalker
+
   resources :contacts, only: %i[new create index]
   resources :users
   resources :posts, param: :slug

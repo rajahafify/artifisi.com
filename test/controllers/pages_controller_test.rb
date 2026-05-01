@@ -51,4 +51,13 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href='#{login_path}']", text: "Log in"
     assert_select "main.pt-20", count: 0
   end
+
+  test "GET /projects/orbwalker renders Orbwalker detail page" do
+    get orbwalker_path
+
+    assert_response :success
+    assert_select "h1", "Orbwalker"
+    assert_select "body", /match-3 roguelike/i
+    assert_select "body", /fantasy/i
+  end
 end

@@ -4,4 +4,7 @@ class PagesController < ApplicationController
     @contact = Contact.new unless @contact_submitted
     @featured_posts = Post.recent_published
   end
+
+  def orbwalker
+  end
 end
