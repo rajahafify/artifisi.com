@@ -4,14 +4,14 @@
       Artifisi
     <% end %>
     <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
+      <%= link_to "Home", root_path, class: "hover:text-slate-900" %>
+      <%= link_to "Orbwalker", orbwalker_path, class: "hover:text-slate-900" %>
       <%= link_to "About", root_path(anchor: "about"), class: "hover:text-slate-900" %>
-      <%= link_to "Projects", root_path(anchor: "projects"), class: "hover:text-slate-900" %>
-      <%= link_to "Blog", root_path(anchor: "blog"), class: "hover:text-slate-900" %>
+      <%= link_to "Devlog", root_path(anchor: "devlog"), class: "hover:text-slate-900" %>
       <%= link_to "Contact", root_path(anchor: "contact"), class: "hover:text-slate-900" %>
     </nav>
     <div class="flex items-center gap-4">
-      <%= link_to "Request a demo", root_path(anchor: "contact"), class: "inline-flex items-center rounded-full border border-indigo-500 px-5 py-2 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50" %>
-      <%= link_to "Log in", login_path, class: "text-sm font-semibold text-slate-600 transition hover:text-slate-900" %>
+      <%= link_to "Contact Us", root_path(anchor: "contact"), class: "inline-flex items-center rounded-full border border-indigo-500 px-5 py-2 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50" %>
     </div>
   </div>
 </header>

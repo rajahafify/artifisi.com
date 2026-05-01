@@ -37,6 +37,9 @@
           <a href="#gameplay" class="inline-flex items-center justify-center rounded-full bg-amber-500 px-8 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400">Explore gameplay</a>
           <a href="#follow" class="inline-flex items-center justify-center rounded-full border border-stone-500 px-8 py-3 text-sm font-semibold text-stone-200 transition hover:-translate-y-0.5 hover:border-amber-500/50 hover:bg-stone-800">Follow development</a>
         </div>
+        <div class="mt-10 mx-auto max-w-md">
+          <%= image_tag "combat.png", alt: "Orbwalker gameplay screenshot", class: "w-full rounded-2xl border border-stone-700 shadow-2xl shadow-black/40" %>
+        </div>
       </div>
     </div>
 
@@ -163,9 +166,10 @@
       <h2 class="text-3xl font-bold tracking-tight text-white">Forging Ahead</h2>
       <p class="mx-auto mt-4 max-w-lg text-stone-400">Orbwalker is in active development. Stay connected for updates, playtest windows, and behind-the-scenes peeks at the craft.</p>
       <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-        <a href="<%= root_path %>" class="inline-flex items-center justify-center rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400">Back to Artifisi</a>
-        <a href="<%= root_path(anchor: 'contact') %>" class="inline-flex items-center justify-center rounded-full border border-stone-700 px-6 py-3 text-sm font-semibold text-stone-300 transition hover:-translate-y-0.5 hover:border-stone-500 hover:bg-stone-800">Get in touch</a>
+        <a href="#" class="inline-flex items-center justify-center rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400">Wishlist on Steam</a>
+        <a href="#" class="inline-flex items-center justify-center rounded-full border border-stone-700 px-6 py-3 text-sm font-semibold text-stone-300 transition hover:-translate-y-0.5 hover:border-stone-500 hover:bg-stone-800">Join Discord</a>
       </div>
+      <%= link_to "Back to Artifisi", root_path, class: "text-sm text-stone-500 hover:text-stone-300 transition" %>
     </div>
   </section>
 

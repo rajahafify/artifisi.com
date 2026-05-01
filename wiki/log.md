@@ -1,7 +1,98 @@
 # Log
 
 **Summary**: Chronological history of wiki changes and codebase events.  
-**Last updated**: 2026-05-02
+**Last updated**: 2026-05-02 (All priorities completed)
+
+---
+
+## [2026-05-02] fix | Priority 4 — Proof & Trust Signals completed
+
+Source: `wiki/context/landing-page-review-todo.md`
+
+Changes:
+- **4.1** Added "The Team" section on homepage after about section with founder mention.
+- **4.2** Removed placeholder phone number `+60 12-345 6789` from contact section.
+- **4.3** Renamed blog section: `#blog` → `#devlog`, "From the Blog" → "Devlog". Updated nav anchor. The site already had posts/blogs infrastructure; this aligns labeling with the "Devlog" nav link.
+- **4.4** Added "Press Kit" placeholder link in footer.
+- Updated `test/controllers/pages_controller_test.rb` with assertions for all four items.
+
+Verification:
+- code checked: yes (61 tests, 564 assertions, 0 failures. rubocop clean.)
+- human reviewed: no
+
+---
+
+## [2026-05-02] fix | Priority 3 — Orbwalker Conversion completed
+
+Source: `wiki/context/landing-page-review-todo.md`
+
+Changes:
+- **3.1** Added "Wishlist on Steam" and "Join Discord" placeholder CTAs to the #follow section on the Orbwalker page. Replaced "Back to Artifisi" and "Get in touch" buttons. Added small "Back to Artifisi" tertiary text link.
+- **3.2** Added combat gameplay screenshot (`combat.png`) above the fold in the Orbwalker hero section with rounded-2xl styling.
+- Updated `test/controllers/pages_controller_test.rb` with CTA and gameplay media assertions.
+
+Verification:
+- code checked: yes (60 tests, 553 assertions, 0 failures. rubocop clean.)
+- human reviewed: no
+
+---
+
+## [2026-05-02] fix | Priority 2 — Positioning Consistency completed
+
+Source: `wiki/context/landing-page-review-todo.md`
+
+Changes:
+- **2.1** Renamed "Our Services" → "Our Capabilities" on homepage. Changed section id `#services` → `#capabilities` and updated links. Updated subheader to "We build every part of our games in-house."
+- **2.2** Updated homepage hero: H1 → "Original Games from Malaysia", subcopy includes Orbwalker description, primary CTA → "Follow Orbwalker" (links to orbwalker path), secondary CTA → "Contact the Studio" (links to #contact).
+- **2.3** Updated nav links to: Home, Orbwalker, About, Devlog, Contact.
+- Updated `test/controllers/pages_controller_test.rb` assertions to match new copy and nav links.
+
+Verification:
+- code checked: yes (60 tests, 547 assertions, 0 failures. rubocop clean. brakeman 0 warnings.)
+- human reviewed: no
+
+---
+
+## [2026-05-02] fix | Priority 1 — Critical Trust & Credibility completed
+
+Source: `wiki/context/landing-page-review-todo.md`
+
+Changes:
+- **1.1** Added `/privacy` route (`config/routes.rb`), controller action (`app/controllers/pages_controller.rb`), privacy policy view (`app/views/pages/privacy.html.erb`). Updated footer to use `privacy_path`.
+- **1.2** Rewrote login page (`app/views/sessions/new.html.erb`) — removed left-panel AI/SaaS marketing ("AI performance," "adoption metrics," "team collaboration"). Centered minimal sign-in form.
+- **1.3** Changed "Request a demo" → "Contact Us" in header CTA (`app/views/layouts/_public_header.html.erb`).
+- **1.4** Removed "Log in" link from public nav (`app/views/layouts/_public_header.html.erb`). Route remains for admin access.
+
+Added tests:
+- `test/controllers/pages_controller_test.rb`: privacy page test, "Request a demo" / "Log in" absence assertions
+- `test/controllers/sessions_controller_test.rb`: AI/SaaS language absence test
+
+Verification:
+- code checked: yes (60 tests, 542 assertions, 0 failures. rubocop clean. brakeman 0 warnings.)
+- human reviewed: no
+
+---
+
+## [2026-05-02] review | External landing page review ingested
+
+Source: Human reviewer live-site audit of artifisi.com, orbwalker project page, and login page.
+
+Changes:
+- Added `wiki/context/landing-page-review.md` — full review notes including what works, main problems, suggested hero rewrite, and suggested nav.
+- Added `wiki/context/landing-page-review-todo.md` — prioritized action items in four tiers: critical trust (privacy 404, login AI language, CTA language), positioning consistency, Orbwalker conversion, and proof/trust signals.
+- Updated `wiki/index.md` with links to new context pages.
+
+Notes:
+- Confirmed that login page (`app/views/sessions/new.html.erb`) still contains SaaS-era AI dashboard copy.
+- Confirmed nav (`app/views/layouts/_public_header.html.erb`) still shows "Request a demo" and "Log in".
+- Confirmed no `/privacy` route exists in `config/routes.rb` (footer 404).
+- Confirmed "Our Services" on homepage (`app/views/pages/home.html.erb` lines 76-99) clashes with IP-studio positioning.
+- Phone number `+60 12-345 6789` confirmed as placeholder-looking.
+- Branch: `review/landing-page`
+
+Verification:
+- code checked: yes (key files inspected to confirm review claims)
+- human reviewed: no
 
 ---
 

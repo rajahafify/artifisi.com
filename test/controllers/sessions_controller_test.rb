@@ -33,6 +33,20 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "form button", text: "Sign In"
   end
 
+  test "login page does not contain AI dashboard or SaaS language" do
+    get login_path
+
+    assert_response :success
+    assert_no_match(/AI performance/i, response.body)
+    assert_no_match(/adoption metrics/i, response.body)
+    assert_no_match(/team collaboration/i, response.body)
+    assert_no_match(/Live insights/i, response.body)
+    assert_no_match(/Human-centered controls/i, response.body)
+    assert_no_match(/smarter decisions/i, response.body)
+    assert_no_match(/personalized dashboards/i, response.body)
+    assert_no_match(/granular roles/i, response.body)
+  end
+
   test "redirects authenticated users from login page" do
     post session_path, params: {
       session: {

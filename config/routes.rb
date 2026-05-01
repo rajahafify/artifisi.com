@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   root "pages#home"
 
   get "projects/orbwalker" => "pages#orbwalker", as: :orbwalker
+  get "privacy" => "pages#privacy", as: :privacy
 
   resources :contacts, only: %i[new create index]
   resources :users

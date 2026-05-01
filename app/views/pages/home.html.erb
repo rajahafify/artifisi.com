@@ -8,11 +8,11 @@
     <div class="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-[1.1fr,0.9fr] md:items-center">
       <div class="space-y-6">
         <span class="inline-flex items-center rounded-full bg-indigo-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-indigo-700">Now Building</span>
-        <h1 class="text-4xl font-bold leading-tight md:text-5xl">Building Original Games with Malaysian Creativity</h1>
-        <p class="text-base text-slate-600 md:text-lg">Artifisi is an independent gaming studio that designs, develops, and publishes original games entirely in-house — bringing fresh worlds and unforgettable experiences to players everywhere.</p>
+        <h1 class="text-4xl font-bold leading-tight md:text-5xl">Original Games from Malaysia</h1>
+        <p class="text-base text-slate-600 md:text-lg">Artifisi is an independent game studio building original IP with Malaysian creativity and global ambition. Our first title, Orbwalker, is a fantasy match-3 roguelike about free orb movement, tactical combat, and build-driven runs.</p>
         <div class="flex flex-col gap-3 sm:flex-row">
-          <a data-role="primary-cta" href="#contact" class="inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-indigo-700">Get started</a>
-          <a data-role="secondary-cta" href="#services" class="inline-flex items-center justify-center rounded-full border border-indigo-200 px-6 py-3 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50">Learn more</a>
+          <%= link_to "Follow Orbwalker", orbwalker_path, data: { role: "primary-cta" }, class: "inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-indigo-700" %>
+          <a data-role="secondary-cta" href="#contact" class="inline-flex items-center justify-center rounded-full border border-indigo-200 px-6 py-3 text-sm font-semibold text-indigo-600 transition hover:-translate-y-0.5 hover:bg-indigo-50">Contact the Studio</a>
         </div>
       </div>
       <div class="flex justify-center md:justify-end">
@@ -52,6 +52,15 @@
   <section class="border-b border-slate-200 bg-white">
     <div class="mx-auto max-w-6xl px-6 py-16">
       <header class="space-y-3 text-center">
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">The Team</h2>
+        <p class="mx-auto max-w-2xl text-sm text-slate-600">Artifisi was founded by a small team of game developers passionate about building original IP from Malaysia. We're growing — if you love crafting worlds, reach out.</p>
+      </header>
+    </div>
+  </section>
+
+  <section class="border-b border-slate-200 bg-white">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <header class="space-y-3 text-center">
         <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Our Core Values</h2>
         <p class="text-sm text-slate-600">At Artifisi, our team is guided by a set of core values that shape every game we build and every interaction with our players and partners.</p>
       </header>
@@ -73,11 +82,11 @@
     </div>
   </section>
 
-  <section id="services" class="border-b border-slate-200 bg-white">
+  <section id="capabilities" class="border-b border-slate-200 bg-white">
     <div class="mx-auto max-w-6xl px-6 py-16">
       <header class="space-y-3 text-center">
-        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Our Services</h2>
-        <p class="text-sm text-slate-600">We offer end-to-end game development services, from initial concept to final launch.</p>
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Our Capabilities</h2>
+        <p class="text-sm text-slate-600">We build every part of our games in-house — here is what powers our studio.</p>
       </header>
       <div class="mt-12 grid gap-10 md:grid-cols-2">
         <% [
@@ -117,10 +126,10 @@
     </div>
   </section>
 
-  <section id="blog" class="border-b border-slate-200 bg-white">
+  <section id="devlog" class="border-b border-slate-200 bg-white">
     <div class="mx-auto max-w-6xl px-6 py-16">
       <header class="space-y-3 text-center">
-        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">From the Blog</h2>
+        <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Devlog</h2>
         <p class="text-sm text-slate-600">Insights and updates on game development, design, and studio life from the Artifisi team.</p>
       </header>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
@@ -155,7 +164,6 @@
           <div>
             <h3 class="text-sm font-semibold uppercase tracking-[0.35em] text-indigo-600">Get in Touch</h3>
             <p class="mt-3">hello@artifisi.com</p>
-            <p>+60 12-345 6789</p>
             <p>Artifisi Sdn Bhd<br>Level 23, Plaza Sentral<br>Kuala Lumpur, Malaysia 50470</p>
           </div>
           <div>

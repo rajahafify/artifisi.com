@@ -7,4 +7,7 @@ class PagesController < ApplicationController
 
   def orbwalker
   end
+
+  def privacy
+  end
 end
