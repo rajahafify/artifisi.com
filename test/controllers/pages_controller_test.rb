@@ -26,8 +26,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
       assert_select "header a", text: link
     end
 
-    assert_select "h1", "Advancing AI with Malaysian Innovation"
-    assert_select "p", text: /Malaysian ingenuity/
+    assert_select "h1", "Building Original Games with Malaysian Creativity"
+    assert_select "p", text: /independent gaming studio/
     assert_select "a[data-role='primary-cta']", text: "Get started"
     assert_select "a[data-role='secondary-cta']", text: "Learn more"
 
@@ -35,17 +35,17 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "section", text: /Our Mission/i
     assert_select "section", text: /Our Vision/i
     assert_select "section", text: /Our Approach/i
-    %w[Innovation Ethical\ Responsibility Collaboration Agility Continuous\ Learning Local\ Expertise].each do |value|
+    %w[Craftsmanship Player-First\ Design Collaboration Agility Continuous\ Learning Malaysian\ Roots,\ Global\ Reach].each do |value|
       assert_select "section", text: /#{Regexp.escape(value)}/
     end
 
-    [ "AI Consulting", "Custom AI Solutions", "AI Integration", "AI Training and Workshops" ].each do |service|
+    [ "Game Development", "Art & Animation", "Game Design", "Quality Assurance" ].each do |service|
       assert_select "section", text: /#{Regexp.escape(service)}/
     end
 
-    assert_select "section", text: /RTFC Real-Time Friendly Companion for gamers/
-    assert_select "section", text: /Forecast: Shape Your Future/
-    assert_select "footer", text: /Pioneering AI innovation in Malaysia since 2024/
+    assert_select "section", text: /Project Aether/
+    assert_select "section", text: /Tactica/
+    assert_select "footer", text: /Building original games in Malaysia since 2024/
 
     assert_select "section#blog a[href='#{blog_path(Post.published.order(created_at: :desc).first)}']", text: /Read more/
     assert_select "section#blog article", 3
