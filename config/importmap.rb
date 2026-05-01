@@ -9,3 +9,4 @@ pin "tailwindcss-stimulus-components", to: "lib/tailwindcss-stimulus-components.
 pin "tailwindcss-stimulus-components-source", to: "tailwindcss-stimulus-components.module.js", preload: true
 pin "lexxy", to: "lexxy.js"
 pin "@rails/activestorage", to: "activestorage.esm.js" # to support attachments
+pin "@studio-freight/lenis", to: "https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"

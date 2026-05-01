@@ -7,38 +7,58 @@ export default class extends Controller {
   }
 
   connect() {
-    this.boundScroll = this.onScroll.bind(this)
-    this.raf = null
-    this.lastY = 0
+    this._pending = false
+    this._rafId = null
 
     this.layerTargets.forEach((layer) => {
       layer.style.willChange = "transform"
     })
 
-    window.addEventListener("scroll", this.boundScroll, { passive: true })
-    this.tick()
-  }
+    this._onLenisScroll = (data) => {
+      this._scrollY = data.scroll
+      if (!this._pending) {
+        this._pending = true
+        this._rafId = requestAnimationFrame(() => {
+          this._pending = false
+          this._rafId = null
+          this._applyTransforms()
+        })
+      }
+    }
 
-  disconnect() {
-    window.removeEventListener("scroll", this.boundScroll)
-    if (this.raf) cancelAnimationFrame(this.raf)
-  }
+    this._readyHandler = (e) => {
+      this._lenis = e.detail
+      this._lenis.on("scroll", this._onLenisScroll)
+      this._scrollY = this._lenis.scroll || 0
+      this._applyTransforms()
+    }
 
-  onScroll() {
-    if (!this.raf) {
-      this.raf = requestAnimationFrame(() => {
-        this.tick()
-        this.raf = null
-      })
+    if (window.__lenis) {
+      this._lenis = window.__lenis
+      this._lenis.on("scroll", this._onLenisScroll)
+      this._scrollY = this._lenis.scroll || 0
+      this._applyTransforms()
+    } else {
+      window.addEventListener("lenis:ready", this._readyHandler)
     }
   }
 
-  tick() {
-    const scrolled = window.scrollY
-
+  _applyTransforms() {
+    const y = this._scrollY || 0
     this.layerTargets.forEach((layer) => {
       const speed = parseFloat(layer.dataset.parallaxSpeed) || this.speedValue
-      layer.style.transform = `translate3d(0, ${scrolled * speed}px, 0)`
+      layer.style.transform = `translate3d(0, ${y * speed}px, 0)`
     })
+  }
+
+  disconnect() {
+    window.removeEventListener("lenis:ready", this._readyHandler)
+    if (this._lenis) {
+      this._lenis.off("scroll", this._onLenisScroll)
+      this._lenis = null
+    }
+    if (this._rafId) {
+      cancelAnimationFrame(this._rafId)
+    }
   }
 }
