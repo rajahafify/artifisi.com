@@ -1,0 +1,172 @@
+<% content_for :main_class, "flex-1 pt-0" %>
+
+<main class="bg-stone-950 text-stone-200" data-controller="parallax">
+
+  <%# --- DARK HEADER --- %>
+  <header class="sticky top-0 z-50 border-b border-stone-800 bg-stone-950/80 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <%= link_to root_path, class: "text-base font-semibold uppercase tracking-[0.5em] text-stone-300" do %>
+        Artifisi
+      <% end %>
+      <nav class="hidden items-center gap-8 text-sm font-medium text-stone-500 md:flex">
+        <%= link_to "About", root_path(anchor: "about"), class: "hover:text-stone-200 transition" %>
+        <%= link_to "Projects", root_path(anchor: "projects"), class: "hover:text-stone-200 transition" %>
+        <%= link_to "Blog", root_path(anchor: "blog"), class: "hover:text-stone-200 transition" %>
+        <%= link_to "Contact", root_path(anchor: "contact"), class: "hover:text-stone-200 transition" %>
+      </nav>
+      <div class="flex items-center gap-4">
+        <%= link_to "Follow development", "#follow", class: "inline-flex items-center rounded-full border border-amber-700/50 px-5 py-2 text-sm font-semibold text-amber-400 transition hover:-translate-y-0.5 hover:bg-amber-950/50" %>
+        <%= link_to "Home", root_path, class: "text-sm font-semibold text-stone-500 transition hover:text-stone-200" %>
+      </div>
+    </div>
+  </header>
+
+  <%# --- HERO | two-layer JS parallax with lerp smoothing --- %>
+  <section class="relative h-screen overflow-hidden">
+    <%# background layer — parallax target %>
+    <%= image_tag "orbwalker-hero-keyart.png", alt: "", class: "absolute inset-0 h-[120%] w-full object-cover -top-[10%]", "data-parallax-target": "layer", "data-parallax-speed": "0.35" %>
+    <div class="absolute inset-0 bg-stone-950/70"></div>
+
+    <%# text layer — parallax target, drifts upward %>
+    <div class="relative z-10 flex h-full items-center justify-center" data-parallax-target="layer" data-parallax-speed="-0.2">
+      <div class="mx-auto max-w-3xl px-6 py-20 text-center">
+        <span class="inline-flex items-center gap-2 rounded-full border border-amber-700/50 bg-amber-950/60 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-amber-400 backdrop-blur">In Development</span>
+        <h1 class="mt-6 text-6xl font-extrabold tracking-tight text-white md:text-8xl">Orbwalker</h1>
+        <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-stone-300 md:text-xl">A fantasy match-3 roguelike. Drag orbs freely. Build your arsenal. Survive the dungeon — every run is a new legend.</p>
+        <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <a href="#gameplay" class="inline-flex items-center justify-center rounded-full bg-amber-500 px-8 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400">Explore gameplay</a>
+          <a href="#follow" class="inline-flex items-center justify-center rounded-full border border-stone-500 px-8 py-3 text-sm font-semibold text-stone-200 transition hover:-translate-y-0.5 hover:border-amber-500/50 hover:bg-stone-800">Follow development</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pointer-events-none absolute bottom-8 left-1/2 z-20 -translate-x-1/2">
+      <a href="#gameplay" class="pointer-events-auto flex animate-bounce flex-col items-center gap-1 text-stone-400 transition hover:text-amber-400">
+        <span class="text-xs uppercase tracking-[0.3em]">Scroll</span>
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <%# --- COMBAT --- %>
+  <section id="gameplay" class="border-t border-stone-800 bg-stone-950">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <div class="grid gap-12 md:grid-cols-[1.2fr,1fr] md:items-center">
+        <div class="overflow-hidden rounded-2xl border border-stone-700 shadow-2xl shadow-black/40">
+          <%= image_tag "combat.png", alt: "Orbwalker combat", class: "w-full" %>
+        </div>
+        <div class="space-y-5">
+          <h2 class="text-3xl font-bold tracking-tight text-white">Turn-Based Combat</h2>
+          <p class="text-stone-400 leading-relaxed">Every fight is a puzzle. Enemy intent is <span class="text-amber-400">telegraphed</span> — you see their next move before you act. Drag orbs across the board, match elements, and route cascades to deal damage, heal, and defend.</p>
+          <ul class="space-y-3 text-sm text-stone-400">
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 text-amber-400 text-lg leading-none">◆</span>
+              <span>Free orb movement under a 5-second timer</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 text-amber-400 text-lg leading-none">◆</span>
+              <span>Match Fire, Ice, Earth to attack — Heart to heal — Armor to block</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 text-amber-400 text-lg leading-none">◆</span>
+              <span>Chain cascades multiply damage with every combo</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# --- ORB SYSTEM --- %>
+  <section class="border-t border-stone-800 bg-stone-900/50">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <header class="space-y-3 text-center">
+        <h2 class="text-3xl font-bold tracking-tight text-white">Wield the Elements</h2>
+        <p class="mx-auto max-w-xl text-stone-400">Six orb types govern every battle. Match three or more in lines, L-shapes, or T-shapes. Mastery deepens each element independently.</p>
+      </header>
+      <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
+        <% [
+          ["Fire",     "Damage", "text-red-400",   "bg-red-950/50 border-red-900/40"],
+          ["Ice",      "Damage", "text-cyan-400",  "bg-cyan-950/50 border-cyan-900/40"],
+          ["Earth",    "Damage", "text-amber-400", "bg-amber-950/50 border-amber-900/40"],
+          ["Heart",    "Healing","text-rose-400",  "bg-rose-950/50 border-rose-900/40"],
+          ["Armor",    "Defense","text-slate-300", "bg-slate-800 border-slate-700"],
+          ["Gold",    "Currency","text-yellow-400","bg-yellow-950/50 border-yellow-900/40"],
+        ].each do |name, role, color, bg| %>
+          <div class="flex flex-col items-center gap-2 rounded-xl border px-3 py-5 text-center <%= bg %>">
+            <span class="text-2xl font-bold <%= color %>"><%= name %></span>
+            <span class="text-xs uppercase tracking-widest text-stone-500"><%= role %></span>
+          </div>
+        <% end %>
+      </div>
+      <p class="mt-8 text-center text-xs text-stone-600">Damage orbs scale with combo multipliers. Heart and Gold orbs provide flat value unaffected by combo count.</p>
+    </div>
+  </section>
+
+  <%# --- SHOP --- %>
+  <section class="border-t border-stone-800 bg-stone-950">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <div class="grid gap-12 md:grid-cols-[1fr,1.2fr] md:items-center">
+        <div class="space-y-5">
+          <h2 class="text-3xl font-bold tracking-tight text-white">Build Your Arsenal</h2>
+          <p class="text-stone-400 leading-relaxed">Between battles, spend <span class="text-amber-400">gold earned in combat</span> at the shop. Equipment, masteries, consumables, and relics reshape your entire strategy — every purchase is a build-defining decision.</p>
+          <ul class="space-y-3 text-sm text-stone-400">
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 text-amber-400 text-lg leading-none">◆</span>
+              <span>Equipment slots fill with gear that changes orb values and combo scaling</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 text-amber-400 text-lg leading-none">◆</span>
+              <span>Masteries deepen each orb type independently</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 text-amber-400 text-lg leading-none">◆</span>
+              <span>Relics and consumables unlock new tactical layers</span>
+            </li>
+          </ul>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-stone-700 shadow-2xl shadow-black/40">
+          <%= image_tag "shop.png", alt: "Orbwalker shop", class: "w-full" %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# --- PILLARS --- %>
+  <section class="border-t border-stone-800 bg-stone-900/50">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <header class="space-y-3 text-center">
+        <h2 class="text-3xl font-bold tracking-tight text-white">Design Pillars</h2>
+        <p class="mx-auto max-w-xl text-stone-400">Every system is forged around these principles.</p>
+      </header>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <% [
+          ["Free Movement", "Drag one orb through the board, displacing others. Pure routing under pressure — no tapping."],
+          ["Build-Driven Depth", "Equipment, mastery, consumables, and relics change scoring, economy, defense, and orb value."],
+          ["Clear Enemy Intent", "Every turn reveals the enemy's plan. React. Route. Survive."],
+          ["Short, Readable Fights", "Understandable at a glance. High skill comes from routing speed, not memorization."],
+          ["Fantasy First", "Gear feels like gear. Relics feel magical. No casino abstractions — the world reinforces the mechanics."],
+          ["Cascade Mastery", "Chain reactions multiply damage. Cascades are real combos that trigger full orb effects."]
+        ].each do |title, description| %>
+          <div class="rounded-xl border border-stone-800 bg-stone-950/80 p-5">
+            <h3 class="font-semibold text-amber-400"><%= title %></h3>
+            <p class="mt-2 text-sm text-stone-500"><%= description %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <%# --- FOLLOW --- %>
+  <section id="follow" class="border-t border-stone-800 bg-stone-950">
+    <div class="mx-auto max-w-6xl px-6 py-20 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white">Forging Ahead</h2>
+      <p class="mx-auto mt-4 max-w-lg text-stone-400">Orbwalker is in active development. Stay connected for updates, playtest windows, and behind-the-scenes peeks at the craft.</p>
+      <div class="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+        <a href="<%= root_path %>" class="inline-flex items-center justify-center rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400">Back to Artifisi</a>
+        <a href="<%= root_path(anchor: 'contact') %>" class="inline-flex items-center justify-center rounded-full border border-stone-700 px-6 py-3 text-sm font-semibold text-stone-300 transition hover:-translate-y-0.5 hover:border-stone-500 hover:bg-stone-800">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+</main>
