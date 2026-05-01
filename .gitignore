@@ -40,3 +40,4 @@
 
 # Ignore local Kamal secrets and deploy metadata.
 /.kamal/secrets
+.aider*

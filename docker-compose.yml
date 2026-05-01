@@ -14,3 +14,5 @@ services:
       - ./log:/rails/log
       - ./storage:/rails/storage
       - ./tmp:/rails/tmp
+      - ./config/credentials.yml.enc:/rails/config/credentials.yml.enc:ro
+      - ./config/master.key:/rails/config/master.key:ro
