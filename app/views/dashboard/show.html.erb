@@ -1,7 +1,7 @@
 <% content_for :sidebar_active, :dashboard %>
-<% content_for :header_label, "Workspace" %>
+<% content_for :header_label, "Studio Dashboard" %>
 <% content_for :header_title, "Welcome back, #{@user.name}" %>
-<% content_for :header_subtitle, "Monitor your team and recent activity across Artifisi." %>
+<% content_for :header_subtitle, "Manage your team, player messages, and game content — all in one place." %>
 <% content_for :header_actions do %>
   <div class="hidden items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-500 md:inline-flex">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4"></circle><path d="m11 11 4 4"></path></svg>
@@ -14,9 +14,9 @@
 
 <%= render "dashboard/section",
            id: "users",
-           badge: "Users",
+           badge: "Team",
            title: "Team members",
-           subtitle: "Showing the five most recently added users.",
+           subtitle: "Recently added studio accounts.",
            add_label: "Add user",
            add_path: new_user_path,
            view_label: "View more",
@@ -26,9 +26,9 @@
 
 <%= render "dashboard/section",
            id: "contacts",
-           badge: "Leads",
-           title: "Contact requests",
-           subtitle: "Latest messages submitted from the website form.",
+           badge: "Inquiries",
+           title: "Player & partner inquiries",
+           subtitle: "Recent messages from fans, press, and collaborators.",
            add_label: "Add contact",
            add_path: new_contact_path,
            view_label: "View more",
@@ -38,9 +38,9 @@
 
 <%= render "dashboard/section",
            id: "blogs",
-           badge: "Content",
-           title: "Blog posts",
-           subtitle: "Latest articles shared with the team.",
+           badge: "Devlog",
+           title: "Devlog posts",
+           subtitle: "Latest development updates and studio news.",
            add_label: "Add post",
            add_path: new_post_path,
            view_label: "View more",
