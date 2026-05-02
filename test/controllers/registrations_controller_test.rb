@@ -17,7 +17,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div.min-h-screen.bg-slate-50"
     assert_select "div.max-w-7xl.mx-auto"
     assert_select "div", class: /rounded-2xl/
-    assert_select "h1", "Create your Artifisi account"
+    assert_select "h1", "Studio Admin Registration"
   end
 
   test "redirects authenticated users from registration page" do

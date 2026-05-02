@@ -45,7 +45,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "footer a", text: /press kit/i
 
     assert_select "section#devlog a[href='#{blog_path('introducing-orbwalker')}']", text: /Read more/
-    assert_select "section#devlog article", 1
+    assert_select "section#devlog article", 4
     assert_select "header a", text: "Request a demo", count: 0
     assert_select "header a", text: "Log in", count: 0
     assert_select "main.pt-20", count: 0
@@ -67,8 +67,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "body", /fantasy/i
 
     # 3.1 — playtest/wishlist CTA
-    assert_select "section#follow a", text: /wishlist/i
-    assert_select "section#follow a", text: /discord/i
+    assert_select "section#follow a", text: /playtest/i
+    assert_select "section#follow a", text: /contact the studio/i
   end
 
   test "GET /privacy renders privacy policy page" do

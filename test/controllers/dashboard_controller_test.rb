@@ -69,7 +69,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
       assert_select "section#users form[action='#{user_path(recent_user)}'] input[name='_method'][value='delete']"
     end
     assert_select "section#blogs"
-    assert_select "section#blogs h2", text: /Blog posts/i
+    assert_select "section#blogs h2", text: /Devlog posts/i
     assert_select "section#blogs a[href='#{new_post_path}']", text: /Add post/i
     assert_select "section#blogs a[href='#{posts_path}']", text: /View more/i
     assert_select "section#blogs table tbody tr", 3
