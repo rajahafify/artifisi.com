@@ -1,5 +1,5 @@
 class BlogsController < ApplicationController
-  ALLOWED_SLUGS = %w[introducing-orbwalker].freeze
+  ALLOWED_SLUGS = %w[introducing-orbwalker free-orb-movement enemy-intent-combat building-match3-roguelike-malaysia].freeze
 
   layout "application"
 

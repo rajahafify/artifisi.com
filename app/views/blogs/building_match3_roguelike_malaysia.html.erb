@@ -1,0 +1,91 @@
+<main class="bg-white text-slate-900">
+
+  <!-- Hero image (full-width banner) -->
+  <div class="w-full">
+    <%= image_tag "orbwalker-hero-keyart.png", alt: "", class: "w-full object-cover object-top h-64 md:h-96" %>
+  </div>
+
+  <!-- Article container -->
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 py-16">
+
+    <!-- Category badge -->
+    <div class="mb-6">
+      <span class="inline-flex items-center rounded-full bg-indigo-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-indigo-700">Devlog</span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">Building a Match‑3 Roguelike from Malaysia</h1>
+
+    <!-- Author byline -->
+    <div class="mt-5 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+      <span class="inline-flex items-center gap-2">
+        <span class="inline-flex h-8 w-8 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs items-center justify-center">RH</span>
+        <span class="font-medium text-slate-700">Raja Hafify</span>
+      </span>
+      <span class="text-slate-300">·</span>
+      <span>~6 min read</span>
+      <span class="text-slate-300">·</span>
+      <span>June 2025</span>
+    </div>
+
+    <!-- Divider -->
+    <hr class="my-10 border-slate-200" />
+
+    <!-- Article body -->
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-10 mb-4">From Kuala Lumpur to the Global Stage</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Artifisi was founded in Malaysia with a simple but ambitious goal: build original IP that stands shoulder‑to‑shoulder with the best indie games worldwide. Orbwalker is our first step toward that vision — a fantasy match‑3 roguelike conceived entirely in‑house, blending Southeast Asian sensibilities with globally appealing gameplay.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">Developing a premium indie title from Malaysia comes with unique challenges. Infrastructure, funding networks, and local talent pipelines are less mature than those in North America or Europe. But those same constraints breed creativity: we’ve learned to iterate faster, prioritise ruthlessly, and lean heavily on our tight‑knit team’s versatility.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Why Match‑3 + Roguelike?</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Match‑3 games have an almost universal appeal — they’re easy to pick up and impossible to put down. Roguelikes, on the other hand, offer the depth, replayability, and systemic storytelling that keeps players coming back for hundreds of hours. By combining the two, we aim to create a game that is both welcoming and deep, casual and hardcore, comforting and challenging — all at once.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">Our love for both genres drove us to experiment. Early prototypes had tap‑to‑swap controls, but they felt flat. The moment we added free‑drag movement and telegraphed enemy intent, something clicked. The match‑3 became a strategic tool rather than just a pattern‑matching exercise, and the roguelike loop gave us a natural structure for progression, shops, and build variety.</p>
+
+    <div class="my-10">
+      <%= image_tag "shop.png", alt: "Orbwalker shop interface", class: "w-full rounded-2xl border border-slate-200 shadow-lg" %>
+    </div>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">The Tech Behind the Board</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Building a real‑time orb movement system on a grid is surprisingly tricky. We had to implement continuous drag detection, smooth displacement animations for surrounding orbs, and a deterministic physics layer that guarantees identical match outcomes regardless of frame rate. The procedural dungeon generator also had to account for the way our orbs interact with environmental hazards, enemy formations, and shop placements — all while keeping every run fresh.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">We chose a lightweight custom engine built on top of a modern 2D framework, which gives us full control over performance and visual fidelity. The art style — dark fantasy with vibrant orb colours — was designed to be readable in motion and to scale beautifully across devices.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Growing the Malaysian Indie Scene</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">The indie game community in Malaysia is small but fiercely passionate. Studios like Metronomik, Magnus Games, and Weyrdworks have shown that world‑class games can come from this region. We’re proud to be part of that wave, and we hope Orbwalker can inspire more developers in Southeast Asia to chase ambitious original projects.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">We’ve also been working to build bridges — sharing knowledge at local meet‑ups, mentoring students, and collaborating with regional artists and musicians. The more we lift each other up, the stronger the entire ecosystem becomes.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">What’s Next for Artifisi</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Orbwalker is just the beginning. With the foundation of our tech stack, design philosophy, and community support in place, we’re already sketching concepts for future titles that explore new genres while retaining our signature blend of clarity, depth, and heart.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">We believe that where you’re from shouldn’t limit what you can create. Malaysia is full of untold stories, unexplored visual styles, and a hunger for world‑class games. We can’t wait to share Orbwalker with you — and to keep building games that put Malaysian creativity on the global map.</p>
+
+    <!-- Tags -->
+    <div class="mt-16 mb-8">
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Tags</p>
+      <div class="flex flex-wrap gap-2">
+        <% ["Orbwalker", "Indie Dev", "Malaysia", "Game Development", "Studio Journey"].each do |tag| %>
+          <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+            <%= tag %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Author bio card -->
+    <div class="bg-indigo-50 rounded-2xl p-6 flex items-start gap-4 mt-12">
+      <div class="w-12 h-12 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-lg shrink-0">RH</div>
+      <div>
+        <p class="font-semibold text-slate-900">Raja Hafify</p>
+        <p class="text-sm text-slate-600 mt-1">Founder of Artifisi, building original games from Malaysia.</p>
+      </div>
+    </div>
+
+    <!-- Share / discuss -->
+    <div class="mt-10 text-center">
+      <a href="mailto:hello@artifisi.com?subject=Orbwalker%20Community" class="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Discuss on Discord</a>
+    </div>
+
+    <!-- Back to home -->
+    <div class="mt-12 text-center">
+      <%= link_to "← Back to home", root_path, class: "inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition" %>
+    </div>
+
+  </div>
+</main>

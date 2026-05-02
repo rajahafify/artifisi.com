@@ -53,8 +53,20 @@
     <div class="mx-auto max-w-6xl px-6 py-16">
       <header class="space-y-3 text-center">
         <h2 class="text-2xl font-semibold tracking-tight text-slate-900">The Team</h2>
-        <p class="mx-auto max-w-2xl text-sm text-slate-600">Artifisi was founded by a small team of game developers passionate about building original IP from Malaysia. We're growing — if you love crafting worlds, reach out.</p>
+        <p class="mx-auto max-w-2xl text-sm text-slate-600">Artifisi was founded by Raja Hafify, a game designer & developer passionate about building original IP from Malaysia. He brings experience from building web platforms and creative tools into game development.</p>
       </header>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+          <p class="text-sm font-semibold text-slate-900">Raja Hafify</p>
+          <p class="mt-1 text-sm text-slate-600">Founder, Game Designer & Developer</p>
+          <p class="mt-2 text-xs text-slate-500">Previously built web platforms and creative tools. Now channeling that experience into crafting original games from Malaysia.</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+          <p class="text-sm font-semibold text-slate-900">Growing Team</p>
+          <p class="mt-1 text-sm text-slate-600">Artists and developers (hiring)</p>
+          <p class="mt-2 text-xs text-slate-500">We're actively looking for creative talents to build original Malaysian game IP. If you love crafting worlds, reach out.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -140,6 +152,30 @@
             <p class="text-sm text-slate-600">A fantasy match-3 roguelike where you freely drag orbs to unleash powerful combos. Build your arsenal across procedurally generated runs.</p>
           </div>
           <%= link_to "Read more →", blog_path("introducing-orbwalker"), class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
+        </article>
+        <article class="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-indigo-600">Devlog</p>
+            <h3 class="text-lg font-semibold text-slate-900">How Free Orb Movement Works</h3>
+            <p class="text-sm text-slate-600">Drag orbs freely across the board — here's why that changes everything about match-3 combat.</p>
+          </div>
+          <%= link_to "Read more →", blog_path("free-orb-movement"), class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
+        </article>
+        <article class="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-indigo-600">Devlog</p>
+            <h3 class="text-lg font-semibold text-slate-900">Enemy Intent & Readable Combat</h3>
+            <p class="text-sm text-slate-600">Every enemy telegraphs their next move. See how readable combat creates strategic depth.</p>
+          </div>
+          <%= link_to "Read more →", blog_path("enemy-intent-combat"), class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
+        </article>
+        <article class="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-indigo-600">Devlog</p>
+            <h3 class="text-lg font-semibold text-slate-900">Building a Match-3 Roguelike from Malaysia</h3>
+            <p class="text-sm text-slate-600">The journey, challenges, and vision behind building original game IP in Southeast Asia.</p>
+          </div>
+          <%= link_to "Read more →", blog_path("building-match3-roguelike-malaysia"), class: "mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700" %>
         </article>
       </div>
     </div>
