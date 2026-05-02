@@ -1,0 +1,89 @@
+<main class="bg-white text-slate-900">
+
+  <!-- Hero image (full-width banner) -->
+  <div class="w-full">
+    <%= image_tag "orbwalker-hero-keyart.png", alt: "", class: "w-full object-cover object-top h-64 md:h-96" %>
+  </div>
+
+  <!-- Article container -->
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 py-16">
+
+    <!-- Category badge -->
+    <div class="mb-6">
+      <span class="inline-flex items-center rounded-full bg-indigo-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-indigo-700">Devlog</span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">Enemy Intent and Readable Combat</h1>
+
+    <!-- Author byline -->
+    <div class="mt-5 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+      <span class="inline-flex items-center gap-2">
+        <span class="inline-flex h-8 w-8 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs items-center justify-center">RH</span>
+        <span class="font-medium text-slate-700">Raja Hafify</span>
+      </span>
+      <span class="text-slate-300">·</span>
+      <span>~5 min read</span>
+      <span class="text-slate-300">·</span>
+      <span>June 2025</span>
+    </div>
+
+    <!-- Divider -->
+    <hr class="my-10 border-slate-200" />
+
+    <!-- Article body -->
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-10 mb-4">Clarity Over Obscurity</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Combat in most turn‑based games hides information behind percentages, hidden mechanics, or pure trial‑and‑error. Orbwalker takes the opposite approach: <strong>every enemy telegraphs its next move</strong> before you act. You see the exact attack type, damage value, and target area — so your decisions are never a gamble.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">We believe that clarity makes combat deeper, not simpler. When you know the threat you're facing, the puzzle becomes one of creative routing rather than memorising enemy patterns. Your skill as a player is measured by how you respond to a known situation, not by whether you guessed correctly.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">How Intent Works in Practice</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">During your turn, above every enemy a floating panel displays the action they’ll take next. A skirmisher might show “Slash – 12 damage to front row”, while a boss could show “Fire Breath – 25 to all heroes, status: Burn 2 turns”. These indicators update after each action, so you always know what’s coming next.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">Your job is to route orbs to counter those threats. Need to block 12 damage? Match Armour orbs. Need to heal before a big hit? Grab Heart orbs. The system turns every turn into a strategic planning phase where you weigh offence, defence, and resource gain against the timer — and all the information you need is right in front of you.</p>
+
+    <div class="my-10">
+      <%= image_tag "combat.png", alt: "Telegraphed enemy intent in combat", class: "w-full rounded-2xl border border-slate-200 shadow-lg" %>
+    </div>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Planning Over Memorisation</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Traditional roguelikes often rely on players memorising enemy behaviours across runs. Orbwalker removes that barrier by making every intent visible from the start. There’s no need to lose a run to learn what an enemy does — you can read it and react right away. This makes the game more accessible to newcomers while still offering depth to veterans who master advanced routing strategies.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Creating “Aha!” Moments</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Because all information is available, the game can challenge you to solve increasingly complex puzzles. Seeing an enemy about to deliver a devastating strike, then realising you can chain a route that simultaneously heals you, blocks the hit, and scores a match — that moment of insight is one of the most satisfying experiences in Orbwalker. Readable combat doesn’t just reduce frustration; it actively creates “aha!” moments that make you feel like a genius.</p>
+    <p class="text-slate-700 leading-relaxed mb-6">We’ve playtested with dozens of players, and those eureka moments are the ones they talk about most. They’re the reason we believe in this design philosophy wholeheartedly.</p>
+
+    <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-slate-900 mt-12 mb-4">Lessons from Board Games and JRPGs</h2>
+    <p class="text-slate-700 leading-relaxed mb-6">Readable intent draws from classic JRPGs where enemies signal their next move (“Slime is glaring at Hero!”) and from board games where all information is public. We’ve taken those inspirations and fused them with real‑time board manipulation, creating a hybrid that feels both familiar and completely fresh.</p>
+
+    <!-- Tags -->
+    <div class="mt-16 mb-8">
+      <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Tags</p>
+      <div class="flex flex-wrap gap-2">
+        <% ["Orbwalker", "Combat Design", "Game Design", "Enemy AI", "Indie Game"].each do |tag| %>
+          <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+            <%= tag %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Author bio card -->
+    <div class="bg-indigo-50 rounded-2xl p-6 flex items-start gap-4 mt-12">
+      <div class="w-12 h-12 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-lg shrink-0">RH</div>
+      <div>
+        <p class="font-semibold text-slate-900">Raja Hafify</p>
+        <p class="text-sm text-slate-600 mt-1">Founder of Artifisi, building original games from Malaysia.</p>
+      </div>
+    </div>
+
+    <!-- Share / discuss -->
+    <div class="mt-10 text-center">
+      <a href="mailto:hello@artifisi.com?subject=Orbwalker%20Community" class="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Discuss on Discord</a>
+    </div>
+
+    <!-- Back to home -->
+    <div class="mt-12 text-center">
+      <%= link_to "← Back to home", root_path, class: "inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition" %>
+    </div>
+
+  </div>
+</main>
