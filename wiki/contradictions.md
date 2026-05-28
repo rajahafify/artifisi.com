@@ -1,7 +1,7 @@
 # Contradictions
 
 **Summary**: Conflicting claims found in sources or code that cannot be silently resolved.  
-**Last updated**: 2026-05-02
+**Last updated**: 2026-05-28
 
 ---
 
@@ -11,7 +11,12 @@ Record of contradictions discovered during codebase analysis. AGENTS.md rule: "I
 
 ## Active Contradictions
 
-None currently active.
+### Production deploy target mismatch
+
+- `config/deploy.yml` targets web host `206.189.32.232`, registry `localhost:5555`, and proxy host `www.artifisi.com`.
+- `README.md` says the Kamal deployment targets `root@146.190.83.167` with registry `146.190.83.167:5000`.
+- Current deployment on 2026-05-28 used `config/deploy.yml` successfully against `206.189.32.232`.
+- Status: active contradiction; README deployment notes need verification/update.
 
 ## Resolved Contradictions
 

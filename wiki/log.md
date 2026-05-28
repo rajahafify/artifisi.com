@@ -25,6 +25,24 @@ Verification:
 
 ---
 
+## [2026-05-28] operations | Production deploy
+
+Source: `config/deploy.yml`, `README.md`, Kamal deploy output
+
+Changes:
+- Deployed commit `7f686110de51e9b04e51d01ae0deb30acbc440c9` to production via `bin/kamal deploy`.
+- Recorded active deployment-doc contradiction in `wiki/contradictions.md`.
+
+Notes:
+- `config/deploy.yml` targets `206.189.32.232` and `www.artifisi.com`; README still references `146.190.83.167`.
+- Production responded with `HTTP/2 200` at `https://www.artifisi.com`.
+
+Verification:
+- code checked: yes
+- human reviewed: no
+
+---
+
 ## [2026-05-28] test | Verify DB-backed contact and newsletter flows
 
 Source: `test/controllers/pages_controller_test.rb`, `test/controllers/contacts_controller_test.rb`, `test/integration/home_contact_form_test.rb`
