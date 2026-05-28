@@ -22,6 +22,8 @@
 | app/views/layouts/ | Layout templates | ingested | 2026-05-02 | architecture, features |
 | app/views/pages/home.html.erb | Landing page | ingested | 2026-05-02 | features |
 | app/views/pages/orbwalker.html.erb | Orbwalker project page | ingested | 2026-05-28 | features |
+| app/views/pages/_orbwalker_newsletter_form.html.erb | Orbwalker newsletter form partial | ingested | 2026-05-28 | features |
+| app/views/pages/_orbwalker_newsletter_success.html.erb | Orbwalker newsletter success partial | ingested | 2026-05-28 | features |
 | app/controllers/contacts_controller.rb | Contact submissions controller | ingested | 2026-05-28 | features |
 | app/views/contacts/_form.html.erb | Contact form partial | ingested | 2026-05-02 | features |
 | test/controllers/contacts_controller_test.rb | Contact controller tests | ingested | 2026-05-28 | features |

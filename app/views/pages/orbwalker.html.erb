@@ -166,20 +166,12 @@
       <div class="mx-auto mt-8 max-w-xl rounded-2xl border border-stone-800 bg-stone-900/60 p-5 text-left">
         <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">Newsletter signup</p>
         <p class="mt-2 text-sm text-stone-400">Get Orbwalker development updates by email.</p>
-        <%= form_with model: Contact.new, url: contacts_path, class: "mt-4 grid gap-3 sm:grid-cols-2" do |form| %>
-          <%= hidden_field_tag :source, "orbwalker_newsletter" %>
-          <%= form.hidden_field :message, value: "Orbwalker newsletter signup" %>
-          <%= form.hidden_field :company, value: "" %>
-          <%= form.text_field :name,
-                              required: true,
-                              placeholder: "Your name",
-                              class: "w-full rounded-md border border-stone-700 bg-stone-950 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40" %>
-          <%= form.email_field :email,
-                               required: true,
-                               placeholder: "you@email.com",
-                               class: "w-full rounded-md border border-stone-700 bg-stone-950 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40" %>
-          <%= form.button "Sign up",
-                          class: "inline-flex items-center justify-center rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400 sm:col-span-2" %>
+        <%= turbo_frame_tag "orbwalker_newsletter_form" do %>
+          <% if notice == "Thanks for signing up. We'll share Orbwalker updates soon." %>
+            <%= render "pages/orbwalker_newsletter_success" %>
+          <% else %>
+            <%= render "pages/orbwalker_newsletter_form", contact: @orbwalker_newsletter || Contact.new %>
+          <% end %>
         <% end %>
       </div>
       <div class="mt-4 flex justify-center">

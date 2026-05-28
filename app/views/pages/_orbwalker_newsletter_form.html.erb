@@ -1,0 +1,41 @@
+<%= form_with model: contact, url: contacts_path, class: "mt-4 grid gap-3 sm:grid-cols-2" do |form| %>
+  <% name_error = contact.errors.full_messages_for(:name).first %>
+  <% email_error = contact.errors.full_messages_for(:email).first %>
+
+  <%= hidden_field_tag :source, "orbwalker_newsletter" %>
+  <%= form.hidden_field :message, value: "Orbwalker newsletter signup" %>
+  <%= form.hidden_field :company, value: "" %>
+
+  <div class="grid gap-2">
+    <% name_aria = name_error ? { invalid: true, describedby: "orbwalker_newsletter_name_error" } : {} %>
+    <%= form.text_field :name,
+                        required: true,
+                        placeholder: "Your name",
+                        aria: name_aria,
+                        class: "w-full rounded-md border border-stone-700 bg-stone-950 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40" %>
+    <% if name_error %>
+      <p id="orbwalker_newsletter_name_error" class="text-xs font-medium text-red-300"><%= name_error %></p>
+    <% end %>
+  </div>
+
+  <div class="grid gap-2">
+    <% email_aria = email_error ? { invalid: true, describedby: "orbwalker_newsletter_email_error" } : {} %>
+    <%= form.email_field :email,
+                         required: true,
+                         placeholder: "you@email.com",
+                         aria: email_aria,
+                         class: "w-full rounded-md border border-stone-700 bg-stone-950 px-4 py-3 text-sm text-stone-100 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40" %>
+    <% if email_error %>
+      <p id="orbwalker_newsletter_email_error" class="text-xs font-medium text-red-300"><%= email_error %></p>
+    <% end %>
+  </div>
+
+  <% if contact.errors[:message].any? %>
+    <p class="rounded-md border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200 sm:col-span-2">
+      We couldn't save your signup. Please try again.
+    </p>
+  <% end %>
+
+  <%= form.button "Sign up",
+                  class: "inline-flex items-center justify-center rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400 sm:col-span-2" %>
+<% end %>

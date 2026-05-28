@@ -5,6 +5,26 @@
 
 ---
 
+## [2026-05-28] fix | Add Orbwalker newsletter submission feedback
+
+Source: `app/views/pages/orbwalker.html.erb`, `app/controllers/contacts_controller.rb`, `test/controllers/contacts_controller_test.rb`
+
+Changes:
+- Added a dedicated `orbwalker_newsletter_form` Turbo frame with inline success and validation-error states.
+- Updated `ContactsController#create` so Orbwalker newsletter submissions replace the Orbwalker frame instead of the home contact form.
+- Added controller coverage for Orbwalker newsletter Turbo Stream success, Turbo Stream validation failure, and HTML validation failure.
+- Updated `wiki/features.md` and `wiki/source-register.md` for the new feedback behavior and partials.
+
+Notes:
+- Existing home contact form Turbo Stream behavior remains covered and unchanged.
+
+Verification:
+- tests: `bin/rails test test/controllers/contacts_controller_test.rb test/controllers/pages_controller_test.rb test/integration/home_contact_form_test.rb` (14 runs, 183 assertions, 0 failures)
+- lint: `bin/rubocop app/controllers/contacts_controller.rb test/controllers/contacts_controller_test.rb` (no offenses)
+- human reviewed: no
+
+---
+
 ## [2026-05-28] test | Verify DB-backed contact and newsletter flows
 
 Source: `test/controllers/pages_controller_test.rb`, `test/controllers/contacts_controller_test.rb`, `test/integration/home_contact_form_test.rb`
