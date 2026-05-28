@@ -5,6 +5,25 @@
 
 ---
 
+## [2026-05-28] security | Update addressable for Ruby scan
+
+Source: `Gemfile.lock`, `bin/bundler-audit`
+
+Changes:
+- Updated `addressable` from `2.8.7` to `2.9.0`.
+- Updated transitive dependency `public_suffix` from `6.0.2` to `7.0.5`.
+
+Notes:
+- `bin/bundler-audit update && bin/bundler-audit check` flagged `addressable 2.8.7` for `CVE-2026-35611`; the advisory recommends `addressable >= 2.9.0`.
+
+Verification:
+- scan: `bin/bundler-audit check` (no vulnerabilities)
+- scan: `bin/brakeman --no-pager` (0 warnings)
+- tests: `bin/rails test` (65 runs, 628 assertions, 0 failures)
+- human reviewed: no
+
+---
+
 ## [2026-05-28] content | Add Orbwalker itch.io demo links
 
 Source: `app/views/pages/orbwalker.html.erb`, `test/controllers/pages_controller_test.rb`
