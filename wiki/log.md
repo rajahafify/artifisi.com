@@ -5,6 +5,63 @@
 
 ---
 
+## [2026-05-28] content | Add Orbwalker itch.io demo links
+
+Source: `app/views/pages/orbwalker.html.erb`, `test/controllers/pages_controller_test.rb`
+
+Changes:
+- Added a primary `Play demo` CTA in the Orbwalker hero linking to `https://rajahafify.itch.io/orbwalker`.
+- Added a `Play demo on itch.io` CTA in the follow section beside the studio contact link.
+- Updated page controller assertions and `wiki/features.md`.
+
+Verification:
+- tests: `bin/rails test test/controllers/pages_controller_test.rb` (4 runs, 124 assertions, 0 failures)
+- tests: `bin/rails test` (65 runs, 628 assertions, 0 failures)
+- manual: local `/projects/orbwalker` HTML contains both itch.io demo links.
+- human reviewed: no
+
+---
+
+## [2026-05-28] content | Add Orbwalker video demo embed
+
+Source: `app/views/pages/orbwalker.html.erb`, `test/controllers/pages_controller_test.rb`
+
+Changes:
+- Added a `Watch demo` hero CTA linking to `section#demo`.
+- Added a vertical YouTube embed for the Orbwalker short gameplay demo.
+- Updated page controller assertions and `wiki/features.md`.
+
+Verification:
+- tests: `bin/rails test test/controllers/pages_controller_test.rb` (4 runs, 121 assertions, 0 failures)
+- tests: `bin/rails test` (65 runs, 625 assertions, 0 failures)
+- manual: local `/projects/orbwalker` HTML contains the `#demo` CTA and YouTube embed URL.
+- human reviewed: no
+
+---
+
+## [2026-05-28] content | Replace Orbwalker gameplay art with real screenshots
+
+Source: `raw/orbwalker-screenshot/`, `app/views/pages/orbwalker.html.erb`, `test/controllers/pages_controller_test.rb`
+
+Changes:
+- Copied the real Orbwalker combat, shop, relic, and run-summary screenshots into `app/assets/images/`.
+- Updated the Orbwalker project page combat section, shop section, and run-loop section to use those real screenshots.
+- Kept the previous `orbwalker-hero-keyart.png` image as the page hero banner.
+- Added page controller assertions that `/projects/orbwalker` renders the hero key art and real gameplay screenshot assets, and no longer references the old generated combat/shop page images.
+- Added `wiki/sources/orbwalker-screenshots.md` and updated `wiki/features.md` and `wiki/source-register.md`.
+
+Notes:
+- The `raw/orbwalker-screenshot/mainmenu.jpeg` screenshot is retained as source material but is not currently used on the public page.
+
+Verification:
+- tests: `bin/rails test test/controllers/pages_controller_test.rb` (4 runs, 113 assertions, 0 failures)
+- tests: `bin/rails test` (65 runs, 617 assertions, 0 failures)
+- lint: `bin/rubocop test/controllers/pages_controller_test.rb` (no offenses)
+- assets: `bin/rails assets:precompile` (successful; emitted the usual development-mode manifest warning)
+- human reviewed: no
+
+---
+
 ## [2026-05-28] fix | Add Orbwalker newsletter submission feedback
 
 Source: `app/views/pages/orbwalker.html.erb`, `app/controllers/contacts_controller.rb`, `test/controllers/contacts_controller_test.rb`

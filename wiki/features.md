@@ -22,6 +22,15 @@ artifisi.com is the marketing landing site for Artifisi Sdn Bhd, an independent 
 - New project references can be added first under `raw/projects/` and ingested into wiki before website copy updates. (source: `AGENTS.md`, `raw/projects/Orbwalker/game_design_document.md`)
 - Orbwalker raw sources (`raw/projects/Orbwalker/`) have been ingested and used to create live website copy as of 2026-05-02. The project card on the landing page uses marketing-safe copy drawn from the GDD.
 
+## Orbwalker Project Page
+
+- **Route**: `GET /projects/orbwalker` → `pages#orbwalker`
+- **Description**: Public project detail page for Orbwalker with hero, embedded YouTube demo, combat, orb system, shop, relic/run-loop, design pillars, and newsletter signup sections.
+- **Playable demo**: The page links to the playable itch.io demo at `https://rajahafify.itch.io/orbwalker` from the hero and follow sections. External links open in a new tab with `rel="noopener"`. (source: `app/views/pages/orbwalker.html.erb`)
+- **Video demo**: The hero includes a `Watch demo` CTA that jumps to `section#demo`, which embeds the YouTube Short at `https://www.youtube.com/embed/IIFmoNhv2NM`. (source: `app/views/pages/orbwalker.html.erb`)
+- **Images**: The page hero uses `orbwalker-hero-keyart.png`. Gameplay sections use real portrait screenshots from `raw/orbwalker-screenshot/`, copied into `app/assets/images/` as `orbwalker-combat.jpeg`, `orbwalker-shop.jpeg`, `orbwalker-relic.jpeg`, and `orbwalker-run-summary.jpeg`. (source: `raw/orbwalker-screenshot/`, `app/views/pages/orbwalker.html.erb`)
+- **Testing**: `test/controllers/pages_controller_test.rb` asserts the hero key art and real gameplay screenshot assets render on `/projects/orbwalker`, while the old generated combat and shop page images are no longer referenced.
+
 ## Blog
 
 - **Route**: `GET /blogs/:slug` → `blogs#show`

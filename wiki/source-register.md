@@ -28,6 +28,8 @@
 | app/views/contacts/_form.html.erb | Contact form partial | ingested | 2026-05-02 | features |
 | test/controllers/contacts_controller_test.rb | Contact controller tests | ingested | 2026-05-28 | features |
 | test/controllers/pages_controller_test.rb | Page controller tests | ingested | 2026-05-28 | features |
+| raw/orbwalker-screenshot/ | Real Orbwalker screenshot source pack | ingested | 2026-05-28 | sources/orbwalker-screenshots, features |
+| app/assets/images/orbwalker-*.jpeg | Real Orbwalker gameplay screenshots used on project page | ingested | 2026-05-28 | sources/orbwalker-screenshots, features |
 | app/assets/stylesheets/app.css | Liquid glass + lexxy CSS | ingested | 2026-05-02 | architecture, features |
 | app/helpers/application_helper.rb | View helpers | ingested | 2026-05-02 | features |
 | app/javascript/controllers/ | Stimulus controllers | ingested | 2026-05-02 | features |

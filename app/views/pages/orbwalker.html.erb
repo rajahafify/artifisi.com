@@ -34,7 +34,8 @@
         <h1 class="mt-6 text-6xl font-extrabold tracking-tight text-white md:text-8xl">Orbwalker</h1>
         <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-stone-300 md:text-xl">A fantasy match-3 roguelike. Drag orbs freely. Build your arsenal. Survive the dungeon — every run is a new legend.</p>
         <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <a href="#gameplay" class="inline-flex items-center justify-center rounded-full bg-amber-500 px-8 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400">Explore gameplay</a>
+          <a href="https://rajahafify.itch.io/orbwalker" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-amber-500 px-8 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400">Play demo</a>
+          <a href="#demo" class="inline-flex items-center justify-center rounded-full border border-amber-700/50 px-8 py-3 text-sm font-semibold text-amber-400 transition hover:-translate-y-0.5 hover:bg-amber-950/50">Watch demo</a>
           <a href="#follow" class="inline-flex items-center justify-center rounded-full border border-stone-500 px-8 py-3 text-sm font-semibold text-stone-200 transition hover:-translate-y-0.5 hover:border-amber-500/50 hover:bg-stone-800">Follow development</a>
         </div>
 
@@ -49,12 +50,35 @@
     </div>
   </section>
 
+  <%# --- DEMO --- %>
+  <section id="demo" class="border-t border-stone-800 bg-stone-900/50">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <div class="grid gap-12 md:grid-cols-[1fr,1.1fr] md:items-center">
+        <div class="space-y-5">
+          <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">Video demo</p>
+          <h2 class="text-3xl font-bold tracking-tight text-white">See Orbwalker in Motion</h2>
+          <p class="text-stone-400 leading-relaxed">Watch the current combat flow, free orb movement, and mobile interface in a short gameplay clip.</p>
+        </div>
+        <div class="mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-stone-700 bg-black shadow-2xl shadow-black/40">
+          <div class="aspect-[9/16]">
+            <iframe class="h-full w-full"
+                    src="https://www.youtube.com/embed/IIFmoNhv2NM"
+                    title="Orbwalker short gameplay demo"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <%# --- COMBAT --- %>
   <section id="gameplay" class="border-t border-stone-800 bg-stone-950">
     <div class="mx-auto max-w-6xl px-6 py-20">
       <div class="grid gap-12 md:grid-cols-[1.2fr,1fr] md:items-center">
-        <div class="overflow-hidden rounded-2xl border border-stone-700 shadow-2xl shadow-black/40">
-          <%= image_tag "combat.png", alt: "Orbwalker combat", class: "w-full" %>
+        <div class="mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-stone-700 bg-black shadow-2xl shadow-black/40">
+          <%= image_tag "orbwalker-combat.jpeg", alt: "Orbwalker combat screenshot showing enemy intent, orb board, mastery, HP, equipment, relics, and consumables", class: "w-full" %>
         </div>
         <div class="space-y-5">
           <h2 class="text-3xl font-bold tracking-tight text-white">Turn-Based Combat</h2>
@@ -126,9 +150,33 @@
             </li>
           </ul>
         </div>
-        <div class="overflow-hidden rounded-2xl border border-stone-700 shadow-2xl shadow-black/40">
-          <%= image_tag "shop.png", alt: "Orbwalker shop", class: "w-full" %>
+        <div class="mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-stone-700 bg-black shadow-2xl shadow-black/40">
+          <%= image_tag "orbwalker-shop.jpeg", alt: "Orbwalker shop screenshot showing item cards, dungeon relic, reroll, continue, mastery, HP, and inventory slots", class: "w-full" %>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <%# --- RUN LOOP --- %>
+  <section class="border-t border-stone-800 bg-stone-900/50">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+      <header class="space-y-3 text-center">
+        <h2 class="text-3xl font-bold tracking-tight text-white">Relics, Rewards, and Runs</h2>
+        <p class="mx-auto max-w-xl text-stone-400">Boss victories offer build-shaping relic choices, and every completed run feeds back into a clear summary of progress, loot, and lessons learned.</p>
+      </header>
+      <div class="mt-12 grid gap-8 md:grid-cols-2">
+        <figure class="mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-stone-700 bg-black shadow-2xl shadow-black/40">
+          <%= image_tag "orbwalker-relic.jpeg", alt: "Orbwalker boss victory screenshot showing three relic choices after combat", class: "w-full" %>
+          <figcaption class="border-t border-stone-800 bg-stone-950 px-4 py-3 text-sm text-stone-400">
+            Boss victories present relic choices that can reshape the next shop and combat decisions.
+          </figcaption>
+        </figure>
+        <figure class="mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-stone-700 bg-black shadow-2xl shadow-black/40">
+          <%= image_tag "orbwalker-run-summary.jpeg", alt: "Orbwalker run summary screenshot showing defeat, level, monsters, bosses, gold, equipment, and relics", class: "w-full" %>
+          <figcaption class="border-t border-stone-800 bg-stone-950 px-4 py-3 text-sm text-stone-400">
+            Run summaries show the result, earned gold, equipment, relics, and how far the build survived.
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -175,7 +223,10 @@
         <% end %>
       </div>
       <div class="mt-4 flex justify-center">
-        <a href="<%= root_path(anchor: "contact") %>" class="inline-flex items-center justify-center rounded-full border border-stone-700 px-6 py-3 text-sm font-semibold text-stone-300 transition hover:-translate-y-0.5 hover:border-stone-500 hover:bg-stone-800">Contact the studio</a>
+        <div class="flex flex-col items-center gap-3 sm:flex-row">
+          <a href="https://rajahafify.itch.io/orbwalker" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-stone-950 transition hover:-translate-y-0.5 hover:bg-amber-400">Play demo on itch.io</a>
+          <a href="<%= root_path(anchor: "contact") %>" class="inline-flex items-center justify-center rounded-full border border-stone-700 px-6 py-3 text-sm font-semibold text-stone-300 transition hover:-translate-y-0.5 hover:border-stone-500 hover:bg-stone-800">Contact the studio</a>
+        </div>
       </div>
       <%= link_to "Back to Artifisi", root_path, class: "text-sm text-stone-500 hover:text-stone-300 transition" %>
     </div>

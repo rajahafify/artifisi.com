@@ -65,6 +65,19 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Orbwalker"
     assert_select "body", /match-3 roguelike/i
     assert_select "body", /fantasy/i
+    assert_select "a[href='https://rajahafify.itch.io/orbwalker'][target='_blank'][rel='noopener']", text: /play demo/i, count: 2
+    assert_select "a[href='#demo']", text: /watch demo/i
+    assert_select "section#demo" do
+      assert_select "h2", text: "See Orbwalker in Motion"
+      assert_select "iframe[src='https://www.youtube.com/embed/IIFmoNhv2NM'][title='Orbwalker short gameplay demo']"
+    end
+    assert_select "img[src*='orbwalker-hero-keyart']"
+    assert_select "img[src*='orbwalker-combat']"
+    assert_select "img[src*='orbwalker-shop']"
+    assert_select "img[src*='orbwalker-relic']"
+    assert_select "img[src*='orbwalker-run-summary']"
+    assert_select "img[src*='combat.png']", count: 0
+    assert_select "img[src*='shop.png']", count: 0
 
     assert_select "section#follow form[action='#{contacts_path}'][method='post']" do
       assert_select "input[name='source'][value='orbwalker_newsletter']"
@@ -73,6 +86,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
       assert_select "input[name='contact[message]'][value='Orbwalker newsletter signup']"
       assert_select "button[type='submit']", text: /sign up/i
     end
+    assert_select "section#follow a", text: /play demo on itch\.io/i
     assert_select "section#follow a", text: /contact the studio/i
   end
 
