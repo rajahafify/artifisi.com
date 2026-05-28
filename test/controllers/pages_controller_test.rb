@@ -66,8 +66,13 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "body", /match-3 roguelike/i
     assert_select "body", /fantasy/i
 
-    # 3.1 — playtest/wishlist CTA
-    assert_select "section#follow a", text: /playtest/i
+    assert_select "section#follow form[action='#{contacts_path}'][method='post']" do
+      assert_select "input[name='source'][value='orbwalker_newsletter']"
+      assert_select "input[name='contact[name]'][type='text']"
+      assert_select "input[name='contact[email]'][type='email']"
+      assert_select "input[name='contact[message]'][value='Orbwalker newsletter signup']"
+      assert_select "button[type='submit']", text: /sign up/i
+    end
     assert_select "section#follow a", text: /contact the studio/i
   end
 

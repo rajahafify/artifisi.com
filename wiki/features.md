@@ -2,7 +2,7 @@
 
 **Summary**: Feature documentation and behavior of the artifisi.com application.  
 **Sources**: app/, config/routes.rb, db/schema.rb, raw/projects/Orbwalker/game_design_document.md  
-**Last updated**: 2026-05-02
+**Last updated**: 2026-05-28
 
 ---
 
@@ -35,10 +35,11 @@ artifisi.com is the marketing landing site for Artifisi Sdn Bhd, an independent 
 
 - **Routes**: `GET /contacts/new`, `POST /contacts`, `GET /contacts`
 - **Description**: Public contact form with name, email, company, and message fields. Embedded in the home page via a Turbo Frame (`turbo_frame_tag "contact_form"`).
+- **Orbwalker newsletter variant**: The Orbwalker follow section includes a backend signup form (`name`, `email`) that posts to `POST /contacts` with `source=orbwalker_newsletter` and hidden contact metadata. Successful HTML submissions redirect to `GET /projects/orbwalker#follow` with a newsletter-specific confirmation notice. (source: `app/views/pages/orbwalker.html.erb`, `app/controllers/contacts_controller.rb`)
 - **Turbo Stream Support**: `ContactsController#create` handles both `turbo_stream` (inline form replacement on the home page) and `html` (full page redirect) format responses. On success, replaces the form with a success partial; on failure, re-renders the form with validation errors.
 - **Cookie-based dedup**: Sets `cookies[:contact_submission]` (1-year expiry) after successful submission. Home page checks this cookie to show the success state instead of the form on return visits.
 - **Model Validations**: Name, email, and message are required.
-- **Testing**: Controller tests + integration test for home page contact form flow (`test/integration/home_contact_form_test.rb`).
+- **Testing**: Controller tests + integration test for home page contact form flow (`test/integration/home_contact_form_test.rb`, `test/controllers/contacts_controller_test.rb`).
 
 ## Authentication
 

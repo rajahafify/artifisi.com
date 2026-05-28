@@ -1,7 +1,7 @@
 # Source Register
 
 **Summary**: Tracked external sources ingested into the wiki.  
-**Last updated**: 2026-05-02
+**Last updated**: 2026-05-28
 
 ---
 
@@ -21,7 +21,11 @@
 | app/models/ | All models | ingested | 2026-05-02 | architecture, features |
 | app/views/layouts/ | Layout templates | ingested | 2026-05-02 | architecture, features |
 | app/views/pages/home.html.erb | Landing page | ingested | 2026-05-02 | features |
+| app/views/pages/orbwalker.html.erb | Orbwalker project page | ingested | 2026-05-28 | features |
+| app/controllers/contacts_controller.rb | Contact submissions controller | ingested | 2026-05-28 | features |
 | app/views/contacts/_form.html.erb | Contact form partial | ingested | 2026-05-02 | features |
+| test/controllers/contacts_controller_test.rb | Contact controller tests | ingested | 2026-05-28 | features |
+| test/controllers/pages_controller_test.rb | Page controller tests | ingested | 2026-05-28 | features |
 | app/assets/stylesheets/app.css | Liquid glass + lexxy CSS | ingested | 2026-05-02 | architecture, features |
 | app/helpers/application_helper.rb | View helpers | ingested | 2026-05-02 | features |
 | app/javascript/controllers/ | Stimulus controllers | ingested | 2026-05-02 | features |

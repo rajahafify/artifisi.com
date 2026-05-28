@@ -7,6 +7,7 @@ class ContactsController < ApplicationController
 
   def create
     @contact = Contact.new(contact_params)
+    source = params[:source].to_s
 
     if @contact.save
       remember_contact_submission(@contact)
@@ -16,7 +17,7 @@ class ContactsController < ApplicationController
           render turbo_stream: turbo_stream.replace("contact_form", partial: "contacts/success")
         end
         format.html do
-          redirect_to root_path, notice: "Thanks for reaching out! We'll be in touch soon."
+          redirect_to redirect_path_for(source), notice: notice_for(source)
         end
       end
     else
@@ -48,6 +49,18 @@ class ContactsController < ApplicationController
 
   def contact_params
     params.require(:contact).permit(:name, :email, :company, :message)
+  end
+
+  def redirect_path_for(source)
+    return orbwalker_path(anchor: "follow") if source == "orbwalker_newsletter"
+
+    root_path
+  end
+
+  def notice_for(source)
+    return "Thanks for signing up. We'll share Orbwalker updates soon." if source == "orbwalker_newsletter"
+
+    "Thanks for reaching out! We'll be in touch soon."
   end
 
   def remember_contact_submission(contact)

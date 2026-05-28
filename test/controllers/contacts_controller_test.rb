@@ -38,4 +38,21 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div[data-field='contact[email]'] .form-field-error", text: "Email can't be blank"
     assert_select "div[data-field='contact[message]'] .form-field-error", text: "Message can't be blank"
   end
+
+  test "creates orbwalker newsletter contact and redirects back to follow section" do
+    assert_difference("Contact.count", 1) do
+      post contacts_path, params: {
+        source: "orbwalker_newsletter",
+        contact: {
+          name: "Newsletter Fan",
+          email: "fan@example.com",
+          company: "",
+          message: "Orbwalker newsletter signup"
+        }
+      }
+    end
+
+    assert_redirected_to orbwalker_path(anchor: "follow")
+    assert_equal "Thanks for signing up. We'll share Orbwalker updates soon.", flash[:notice]
+  end
 end

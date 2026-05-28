@@ -1,7 +1,41 @@
 # Log
 
 **Summary**: Chronological history of wiki changes and codebase events.  
-**Last updated**: 2026-05-02
+**Last updated**: 2026-05-28
+
+---
+
+## [2026-05-28] test | Verify DB-backed contact and newsletter flows
+
+Source: `test/controllers/pages_controller_test.rb`, `test/controllers/contacts_controller_test.rb`, `test/integration/home_contact_form_test.rb`
+
+Changes:
+- Updated the Orbwalker page controller test to assert the backend newsletter form posts to `POST /contacts` with `source=orbwalker_newsletter` instead of expecting the removed `mailto:` playtest CTA.
+- Re-verified the home page contact form, contact controller, and Orbwalker newsletter signup flow.
+
+Verification:
+- code checked: yes
+- human reviewed: no
+- tests: `bin/rails test test/controllers/pages_controller_test.rb test/controllers/contacts_controller_test.rb test/integration/home_contact_form_test.rb` (11 runs, 154 assertions, 0 failures)
+- tests: `PARALLEL_WORKERS=0 bin/rails test` (62 runs, 576 assertions, 0 failures)
+
+---
+
+## [2026-05-16] feat | Add Orbwalker backend newsletter signup form
+
+Source: `app/views/pages/orbwalker.html.erb`, `app/controllers/contacts_controller.rb`, `test/controllers/contacts_controller_test.rb`
+
+Changes:
+- Replaced Orbwalker `mailto:` playtest CTA with a backend form in the `#follow` section capturing `name` and `email`.
+- Wired submissions through existing `POST /contacts` by sending hidden fields for `message` (`"Orbwalker newsletter signup"`) and `company` (`""`), plus `source=orbwalker_newsletter`.
+- Updated `ContactsController#create` HTML success redirect logic to return Orbwalker newsletter submissions to `GET /projects/orbwalker#follow` with a newsletter-specific flash notice.
+- Added controller test coverage for Orbwalker newsletter signup create + redirect behavior.
+- Updated `wiki/features.md` Contact Form section for this new flow.
+
+Verification:
+- code checked: yes
+- human reviewed: no
+- tests: `bin/rails test test/controllers/contacts_controller_test.rb test/integration/home_contact_form_test.rb` (7 runs, 53 assertions, 0 failures)
 
 ---
 
