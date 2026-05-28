@@ -292,3 +292,22 @@ Notes:
 Verification:
 - code checked: yes (wiki updates reviewed)
 - human reviewed: no
+
+
+---
+
+## [2026-05-28] fix | Add Orbwalker newsletter submission feedback
+
+Source: `app/views/pages/orbwalker.html.erb`, `app/controllers/contacts_controller.rb`, `test/controllers/contacts_controller_test.rb`
+
+Changes:
+- Updated Orbwalker newsletter section to display success notices, validation alerts, and field error messages inline after submission attempts.
+- Updated contact create failure handling to re-render `pages/orbwalker` for `source=orbwalker_newsletter` and provide a `flash.now[:alert]` message.
+- Added controller test coverage for invalid Orbwalker newsletter submissions and visible feedback.
+
+Notes:
+- Local test execution is currently blocked because required Ruby gems are not installed in this environment.
+
+Verification:
+- code checked: yes
+- human reviewed: no

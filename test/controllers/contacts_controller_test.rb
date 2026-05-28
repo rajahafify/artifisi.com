@@ -39,6 +39,26 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
     assert_select "div[data-field='contact[message]'] .form-field-error", text: "Message can't be blank"
   end
 
+  test "re-renders orbwalker page with feedback when newsletter signup is invalid" do
+    assert_no_difference("Contact.count") do
+      post contacts_path, params: {
+        source: "orbwalker_newsletter",
+        contact: {
+          name: "",
+          email: "",
+          company: "",
+          message: "Orbwalker newsletter signup"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "section#follow"
+    assert_select "p", text: "Please correct the highlighted fields and try again."
+    assert_select "li", text: "Name can't be blank"
+    assert_select "li", text: "Email can't be blank"
+  end
+
   test "creates orbwalker newsletter contact and redirects back to follow section" do
     assert_difference("Contact.count", 1) do
       post contacts_path, params: {

@@ -166,7 +166,21 @@
       <div class="mx-auto mt-8 max-w-xl rounded-2xl border border-stone-800 bg-stone-900/60 p-5 text-left">
         <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">Newsletter signup</p>
         <p class="mt-2 text-sm text-stone-400">Get Orbwalker development updates by email.</p>
-        <%= form_with model: Contact.new, url: contacts_path, class: "mt-4 grid gap-3 sm:grid-cols-2" do |form| %>
+        <% if flash[:notice].present? %>
+          <p class="mt-4 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200"><%= flash[:notice] %></p>
+        <% end %>
+        <% if flash[:alert].present? %>
+          <p class="mt-4 rounded-lg border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"><%= flash[:alert] %></p>
+        <% end %>
+        <% contact = @contact || Contact.new %>
+        <% if contact.errors.any? %>
+          <ul class="mt-4 list-disc space-y-1 pl-5 text-sm text-rose-300">
+            <% contact.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        <% end %>
+        <%= form_with model: contact, url: contacts_path, class: "mt-4 grid gap-3 sm:grid-cols-2" do |form| %>
           <%= hidden_field_tag :source, "orbwalker_newsletter" %>
           <%= form.hidden_field :message, value: "Orbwalker newsletter signup" %>
           <%= form.hidden_field :company, value: "" %>

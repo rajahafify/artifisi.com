@@ -32,9 +32,14 @@ class ContactsController < ApplicationController
           ), status: :unprocessable_entity
         end
         format.html do
-          @contact_submitted = false
-          @featured_posts = Post.recent_published
-          render "pages/home", status: :unprocessable_entity
+          if source == "orbwalker_newsletter"
+            flash.now[:alert] = "Please correct the highlighted fields and try again."
+            render "pages/orbwalker", status: :unprocessable_entity
+          else
+            @contact_submitted = false
+            @featured_posts = Post.recent_published
+            render "pages/home", status: :unprocessable_entity
+          end
         end
       end
     end
