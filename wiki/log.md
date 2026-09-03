@@ -1,7 +1,23 @@
 # Log
 
 **Summary**: Chronological history of wiki changes and codebase events.  
-**Last updated**: 2026-05-28
+**Last updated**: 2026-09-03
+
+---
+
+## [2026-09-03] content | Update studio address in contact section
+
+Source: project owner correction in chat + `app/views/pages/home.html.erb`
+
+Changes:
+- Replaced placeholder studio address `Level 23, Plaza Sentral, Kuala Lumpur, Malaysia 50470` with `8, Jalan Prima Pelangi 3, Bukit Prima Pelangi, 51200 Kuala Lumpur, Malaysia` in the home page contact section.
+
+Notes:
+- Old address was an incorrect placeholder; new address confirmed by the project owner.
+
+Verification:
+- code checked: yes (view updated)
+- human reviewed: no
 
 ---
 
