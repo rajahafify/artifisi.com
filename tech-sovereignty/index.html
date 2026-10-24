@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>What Malaysia should build next</title>
+  <meta name="description" content="Waze is out. Eight software categories where Malaysians use an Israel-linked product, which ones a Malaysian firm can take over now, and which are open gaps." />
+  <link rel="canonical" href="https://tech-sovereignty.artifisi.com/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Waze is out. What should Malaysia build next?" />
+  <meta property="og:description" content="Eight categories. Half are ready now. A readiness check by Artifisi, 24 Oct 2026." />
+  <meta property="og:url" content="https://tech-sovereignty.artifisi.com/" />
+  <meta property="og:image" content="https://tech-sovereignty.artifisi.com/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@artifisi_my" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #101413;
+      --bg-2: #151a19;
+      --ink: #eef0ec;
+      --muted: #a3aaa6;
+      --line: #2a302e;
+      --red: #e8604f;
+      --ready: #1fa38a;
+      --gap: #c98a16;
+      --serif: "Fraunces", Georgia, serif;
+      --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+      --mono: "IBM Plex Mono", Menlo, Consolas, monospace;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    html, body { background: var(--bg); }
+    body { margin: 0; color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.55; }
+    a { color: inherit; text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid var(--ready); outline-offset: 2px; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 72px 0; }
+    .kicker { font-family: var(--mono); font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 800; line-height: 1.08; margin: 0; letter-spacing: -.01em; }
+    h1 { font-size: clamp(40px, 7vw, 76px); }
+    h2 { font-size: clamp(30px, 4.4vw, 46px); margin-bottom: 28px; }
+    h3 { font-size: 24px; font-weight: 600; }
+    p { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+    .ready { color: var(--ready); }
+    .gap { color: var(--gap); }
+
+    /* Top bar */
+    .bar { border-bottom: 1px solid var(--line); }
+    .bar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 16px; padding-bottom: 16px; font-size: 14px; }
+    .brand { font-weight: 600; letter-spacing: .04em; text-decoration: none; }
+    .bar a.pdf { color: var(--muted); }
+
+    /* Hero */
+    .hero { padding-top: 56px; }
+    .big { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; margin: 44px 0 56px; }
+    .big .num { font-family: var(--serif); font-weight: 800; color: var(--red); font-size: clamp(110px, 20vw, 210px); line-height: .9; letter-spacing: -.03em; }
+    .big p { font-size: 20px; max-width: 30ch; color: #d3d7d4; }
+    .big strong { color: var(--ink); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .stat { padding: 28px 24px 28px 0; }
+    .stat + .stat { border-left: 1px solid var(--line); padding-left: 24px; }
+    .stat .n { font-family: var(--serif); font-weight: 800; font-size: 46px; line-height: 1; margin-bottom: 14px; }
+    .stat .n small { font-size: 26px; }
+    .stat p { font-size: 15px; color: var(--muted); margin: 0; }
+
+    /* Readiness */
+    .readiness { display: grid; grid-template-columns: 260px 1fr; gap: 56px; align-items: center; }
+    .donut { width: 260px; aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--ready) 0 49.5%, var(--bg) 0 50%, var(--gap) 0 99.5%, var(--bg) 0); display: grid; place-items: center; position: relative; }
+    .donut::before { content: ""; position: absolute; inset: 34px; background: var(--bg); border-radius: 50%; }
+    .donut div { position: relative; text-align: center; font-size: 14px; color: var(--muted); line-height: 1.3; }
+    .donut b { display: block; font-family: var(--serif); font-size: 72px; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+    .legend { display: grid; gap: 28px; }
+    .legend div { display: grid; grid-template-columns: 52px 1fr; }
+    .legend .n { font-family: var(--serif); font-weight: 800; font-size: 46px; line-height: 1; }
+    .legend h3 { font-family: var(--sans); font-size: 18px; margin-bottom: 4px; }
+    .legend p { color: var(--muted); font-size: 15px; margin: 0; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 16px; }
+    th { font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 16px 12px 0; border-bottom: 1px solid var(--line); }
+    td { padding: 18px 16px 18px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+    td:first-child { font-weight: 600; width: 26%; }
+    td:nth-child(2) { width: 30%; }
+    td:last-child { color: #d3d7d4; }
+    td .muted { font-size: 15px; }
+    td b { font-weight: 600; }
+    tr.group td { font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; padding-top: 32px; padding-bottom: 10px; }
+
+    /* Bars */
+    .bars { display: grid; gap: 18px; margin: 8px 0 28px; }
+    .row { display: grid; grid-template-columns: 170px 1fr; gap: 20px; align-items: center; }
+    .row b { display: block; font-weight: 600; }
+    .row small { color: var(--muted); font-size: 13px; }
+    .track { display: flex; align-items: center; gap: 12px; }
+    .fill { height: 26px; border-radius: 3px; min-width: 12px; }
+    .val { font-family: var(--serif); font-weight: 800; font-size: 26px; white-space: nowrap; }
+
+    /* Ask */
+    .ask-head { border-left: 4px solid var(--ready); padding: 6px 0 6px 24px; margin-bottom: 40px; }
+    .ask-head h2 { font-weight: 600; margin: 0; }
+    .ask-head em { font-style: italic; font-weight: 500; }
+    .asks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .asks div { border-top: 2px solid var(--ready); padding-top: 18px; }
+    .asks div:nth-child(2) { border-color: var(--gap); }
+    .asks div:nth-child(3) { border-color: var(--ink); }
+    .asks h3 { margin-bottom: 10px; }
+    .asks p { color: var(--muted); font-size: 15px; }
+
+    /* Notes */
+    .notes { background: var(--bg-2); border-top: 1px solid var(--line); }
+    .notes h2 { font-size: 13px; font-family: var(--mono); font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 40px 0 16px; }
+    .notes h2:first-child { margin-top: 0; }
+    .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; font-size: 14px; color: var(--muted); }
+    .cols b { color: var(--ink); font-weight: 600; }
+    .covered { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; font-size: 14px; color: var(--muted); }
+    .sources { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 32px; font-size: 14px; color: var(--muted); }
+    .sources b { color: var(--ink); font-weight: 600; }
+    .sources a { color: var(--muted); }
+
+    footer { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size: 14px; color: var(--muted); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer strong { color: var(--ink); }
+
+    @media (max-width: 760px) {
+      section { padding: 52px 0; }
+      .big { grid-template-columns: 1fr; gap: 16px; margin: 32px 0 40px; }
+      .stats { grid-template-columns: 1fr; }
+      .stat, .stat + .stat { padding: 20px 0; border-left: 0; }
+      .stat + .stat { border-top: 1px solid var(--line); }
+      .readiness { grid-template-columns: 1fr; gap: 36px; justify-items: start; }
+      .donut { width: 220px; }
+      thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100% !important; }
+      tr { border-bottom: 1px solid var(--line); padding: 14px 0; }
+      tr.group { border-bottom: 0; padding: 0; }
+      td { border: 0; padding: 2px 0; }
+      td:nth-child(2)::before { content: "Used today: "; color: var(--muted); }
+      .row { grid-template-columns: 1fr; gap: 6px; }
+      .asks, .cols, .covered, .sources { grid-template-columns: 1fr; }
+    }
+    /* three.js layer. Text sits in a column on the left; the shapes live on the right. */
+    #scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .bar, main, footer { position: relative; z-index: 1; }
+    .bar { background: rgba(16, 20, 19, .7); backdrop-filter: blur(6px); position: sticky; top: 0; z-index: 2; }
+    .has-scene main > section:not(.notes) { min-height: 100vh; display: flex; align-items: center; }
+    .has-scene main > section > .wrap { width: 100%; }
+    .has-scene .col { max-width: 540px; }
+    .has-scene .col.wide { max-width: 680px; background: rgba(16, 20, 19, .82); backdrop-filter: blur(4px); padding: 28px; margin-left: -28px; border-radius: 6px; }
+    .has-scene .big { grid-template-columns: 1fr; gap: 12px; }
+    .has-scene .big .num { font-size: clamp(110px, 14vw, 170px); }
+    .has-scene .stats { grid-template-columns: 1fr; }
+    .has-scene .stat, .has-scene .stat + .stat { padding: 20px 0; border-left: 0; }
+    .has-scene .stat + .stat { border-top: 1px solid var(--line); }
+    .has-scene .stat { display: grid; grid-template-columns: 120px 1fr; align-items: baseline; gap: 16px; }
+    .has-scene .stat .n { margin: 0; }
+    .has-scene .readiness { grid-template-columns: 1fr; }
+    .has-scene .donut { display: none; }
+    .has-scene .fill { display: none; }
+    .has-scene .row { grid-template-columns: 1fr auto; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+    .has-scene .asks { grid-template-columns: 1fr; gap: 20px; }
+    .notes { background: rgba(21, 26, 25, .92); }
+    .hint { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: 32px; }
+    @media (max-width: 900px) {
+      .has-scene .col, .has-scene .col.wide { background: rgba(16, 20, 19, .8); backdrop-filter: blur(4px); padding: 22px 18px; margin: 0 -8px; border-radius: 6px; max-width: none; }
+      .has-scene .stat { grid-template-columns: 1fr; gap: 6px; }
+      .has-scene main > section:not(.notes) { min-height: 0; display: block; padding-top: 0; }
+      /* Leave the top of the screen free so the shape shows before the text slides over it. */
+      .has-scene main > section:not(.hero):not(.notes) { padding-top: 48vh; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Waze is out. What should Malaysia build next?",
+    "description": "Eight software categories where Malaysians use an Israel-linked product. Four have a Malaysian product ready to scale; four are open gaps. With acquisition prices, a readiness check and three asks for government.",
+    "datePublished": "2026-10-24",
+    "dateModified": "2026-10-24",
+    "inLanguage": "en-MY",
+    "url": "https://tech-sovereignty.artifisi.com/",
+    "image": "https://tech-sovereignty.artifisi.com/og.png",
+    "about": ["Digital sovereignty", "Malaysia", "Waze ban", "TuJu", "Local software"],
+    "author": { "@type": "Organization", "name": "Artifisi Sdn Bhd", "url": "https://www.artifisi.com" },
+    "publisher": { "@type": "Organization", "name": "Artifisi Sdn Bhd", "url": "https://www.artifisi.com", "email": "hello@artifisi.com" }
+  }
+  </script>
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.min.js" } }</script>
+  <script type="module" src="/scene.js"></script>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="bar">
+    <div class="wrap">
+      <a class="brand" href="https://www.artifisi.com">ARTIFISI</a>
+      <a class="pdf" href="/what-malaysia-should-build-next.pdf">Download the one-page PDF</a>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero" data-scene="coin">
+      <div class="wrap"><div class="col">
+        <p class="kicker">Malaysia · Digital sovereignty · 24 Oct 2026</p>
+        <h1>Waze is out.<br />What should Malaysia<br />build next?</h1>
+
+        <div class="big">
+          <div class="num">$1B</div>
+          <p>What Google paid in 2013 for Waze, a navigation app that started in one small country. <strong>Malaysia can build the next one.</strong></p>
+        </div>
+        <p class="hint">Scroll. The chart re-forms with each section.</p>
+      </div></div>
+    </section>
+
+    <section data-scene="stats">
+      <div class="wrap"><div class="col">
+        <p class="kicker">The week in numbers</p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="n">2 <small>days</small></div>
+            <p>From PMX's call to switch to TuJu (20 Oct) to the app buckling under demand (22 Oct)</p>
+          </div>
+          <div class="stat">
+            <div class="n">11</div>
+            <p>Israeli-incorporated products in common use, by the same test the government applied to Waze</p>
+          </div>
+          <div class="stat">
+            <div class="n gap">4</div>
+            <p>everyday categories where Malaysians rely on an Israel-linked product and no Malaysian firm competes yet</p>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-scene="donut">
+      <div class="wrap"><div class="col">
+        <p class="kicker">Readiness check</p>
+        <h2>Eight categories. Half are ready now.</h2>
+        <div class="readiness">
+          <div class="donut" role="img" aria-label="8 categories: 4 ready to scale, 4 open gap">
+            <div><b>8</b>categories Malaysia<br />can build in</div>
+          </div>
+          <div class="legend">
+            <div>
+              <span class="n ready">4</span>
+              <span><h3>Ready to scale</h3><p>A Malaysian product exists today. It needs users, capacity and government as a first customer.</p></span>
+            </div>
+            <div>
+              <span class="n gap">4</span>
+              <span><h3>Open gap</h3><p>No significant Malaysian player. Software that local firms could build with focused funding.</p></span>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-scene="table">
+      <div class="wrap"><div class="col wide">
+        <p class="kicker">Category by category</p>
+        <h2>Who Malaysians use now, and who could replace them</h2>
+        <table>
+          <thead>
+            <tr><th>Category</th><th>Used today</th><th>Malaysian position</th></tr>
+          </thead>
+          <tbody>
+            <tr class="group"><td colspan="3" class="ready">Ready to scale</td></tr>
+            <tr><td>Navigation</td><td>Waze <span class="muted">(Google)</span></td><td><b class="ready">TuJu</b> by LLM. Needs server capacity and map coverage beyond highways.</td></tr>
+            <tr><td>Public transit app</td><td>Moovit <span class="muted">(Mobileye)</span></td><td><b class="ready">PULSE</b> by Prasarana. Covers Rapid KL lines; could add other operators.</td></tr>
+            <tr><td>Website &amp; shop builders</td><td>Wix</td><td><b class="ready">Exabytes, EasyStore, SiteGiant</b> already serve Malaysian SMEs.</td></tr>
+            <tr><td>Security audits</td><td>Check Point <span class="muted">(services)</span></td><td><b class="ready">LGMS</b> and other local firms for testing and audits.</td></tr>
+            <tr class="group"><td colspan="3" class="gap">Open gap</td></tr>
+            <tr><td>Messaging</td><td>Viber <span class="muted">(Rakuten)</span></td><td>No significant local player. Strongest case for government-grade secure chat.</td></tr>
+            <tr><td>Freelance marketplace</td><td>Fiverr</td><td>GoGet covers local errands. Nothing local for global digital gigs.</td></tr>
+            <tr><td>Work management</td><td>monday.com</td><td>No significant local player in team and project tools.</td></tr>
+            <tr><td>Firewall &amp; identity products</td><td>Check Point, CyberArk <span class="muted">(Palo Alto)</span></td><td>Local firms sell services, not products. The hardest gap, and the most sensitive.</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <section data-scene="bars">
+      <div class="wrap"><div class="col">
+        <p class="kicker">The prize</p>
+        <h2>What Israeli firms in these categories sold for</h2>
+        <p class="muted">Acquisition price, US$ billions. Colour shows the category's Malaysian readiness.</p>
+        <div class="bars">
+          <div class="row"><span><b>CyberArk</b><small>Identity security · 2026</small></span><span class="track"><span class="fill" style="width:85%;background:var(--gap)"></span><span class="val">25</span></span></div>
+          <div class="row"><span><b>Waze</b><small>Navigation · 2013</small></span><span class="track"><span class="fill" style="width:3.4%;background:var(--ready)"></span><span class="val">~1</span></span></div>
+          <div class="row"><span><b>Moovit</b><small>Transit app · 2020</small></span><span class="track"><span class="fill" style="width:3.1%;background:var(--ready)"></span><span class="val">0.9</span></span></div>
+          <div class="row"><span><b>Viber</b><small>Messaging · 2014</small></span><span class="track"><span class="fill" style="width:3.1%;background:var(--gap)"></span><span class="val">0.9</span></span></div>
+        </div>
+        <p>A navigation or messaging app built for one market can still be worth close to a billion dollars. Security products are worth far more.</p>
+      </div></div>
+    </section>
+
+    <section data-scene="ask">
+      <div class="wrap"><div class="col">
+        <p class="kicker">The ask</p>
+        <div class="ask-head"><h2>A ban creates demand. <em>Malaysian firms</em> should be ready to meet it.</h2></div>
+        <div class="asks">
+          <div><h3>Buy local first</h3><p>Make government agencies the first customer for the four ready categories, starting with TuJu capacity.</p></div>
+          <div><h3>Fund the gaps</h3><p>Target grants and procurement at messaging, work tools and security products, where no local player exists.</p></div>
+          <div><h3>Publish the test</h3><p>A clear, published data-sovereignty standard tells local firms exactly what they need to build to.</p></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="notes" data-scene="field">
+      <div class="wrap">
+        <h2>Products and companies covered</h2>
+        <div class="covered">
+          <p><b class="ready">Ready to scale</b><br />Waze (Google) · Moovit (Mobileye) · Wix · Check Point (services)<br />Local: TuJu (LLM) · PULSE (Prasarana) · Exabytes · EasyStore · SiteGiant · LGMS</p>
+          <p><b class="gap">Open gap</b><br />Viber (Rakuten) · Fiverr · monday.com · Check Point (products) · CyberArk (Palo Alto Networks)</p>
+        </div>
+
+        <h2>Methodology</h2>
+        <div class="cols">
+          <p><b>Scope.</b> Consumer and business software categories where a widely used product is incorporated in Israel or was founded there. "11 Israeli-incorporated products" counts companies meeting the government's Waze test in our full ledger. Surveillance tools sold only to governments are left out.</p>
+          <p><b>Readiness.</b> Ready: a Malaysian product competes today. Open gap: no significant Malaysian player. Ratings are our judgement from public information, not a product audit.</p>
+          <p><b>Limits.</b> Shows corporate links only; it does not claim any product leaks Malaysian user data. Acquisition prices are announced headline values. Figures as of 24 Oct 2026; ownership changes often.</p>
+        </div>
+
+        <h2>Sources</h2>
+        <ul class="sources">
+          <li><b>Bernama, 21 Oct 2026.</b> Govt bans civil servants from using Waze over data security concerns. <a href="https://www.bernama.com/en/news.php?id=2623648">bernama.com</a></li>
+          <li><b>Malay Mail, 20 Oct 2026.</b> From Waze to TuJu? Anwar backs Malaysian navigation app over data security concerns. <a href="https://www.malaymail.com">malaymail.com</a></li>
+          <li><b>The Star, 23 Oct 2026.</b> Govt might ban Waze in Malaysia if alternative navigation apps available, says Anwar. <a href="https://www.thestar.com.my">thestar.com.my</a></li>
+          <li><b>Bloomberg, 22 Oct 2026.</b> Malaysian traffic app draws ridicule after officials banned Waze. <a href="https://www.bloomberg.com">bloomberg.com</a></li>
+          <li><b>Lowyat.NET, 21 Oct 2026.</b> Anwar Ibrahim encourages Malaysians to use TuJu instead of Waze. <a href="https://www.lowyat.net/2026/407982">lowyat.net</a></li>
+          <li><b>New Straits Times, 21 Oct 2026.</b> MPs seek explanation for Waze ban on civil servants. <a href="https://www.nst.com.my">nst.com.my</a></li>
+          <li><b>Reuters via Ynet, 21 Oct 2026.</b> Malaysia bans Google-owned Waze for government workers over Israeli origins. <a href="https://www.ynetnews.com">ynetnews.com</a></li>
+          <li><b>Calcalist, Oct 2026.</b> Malaysia bars civil servants from Waze; Google acquired Waze in 2013 for about $1B. <a href="https://www.calcalistech.com">calcalistech.com</a></li>
+          <li><b>CRN Asia, Feb 2026.</b> Palo Alto Networks completes $25B acquisition of CyberArk. <a href="https://www.crnasia.com">crnasia.com</a></li>
+          <li><b>NoCamels, May 2020.</b> Moovit acquired in a $900M deal, now part of Mobileye. <a href="https://nocamels.com">nocamels.com</a></li>
+          <li><b>TechCrunch, 2016.</b> Israeli technology and the future of transportation (Rakuten's $900M Viber deal). <a href="https://techcrunch.com">techcrunch.com</a></li>
+          <li><b>Bernama, 21 Oct 2026.</b> Ban on Waze reflects Malaysia's commitment, says Cinta Gaza Malaysia. <a href="https://www.bernama.com/en/news.php?id=2623763">bernama.com</a></li>
+          <li><b>The Edge.</b> LGMS eyes SME market amid rise in cyberattacks. <a href="https://theedgemalaysia.com">theedgemarkets.com</a></li>
+          <li><b>Company websites.</b> Exabytes, EasyStore, SiteGiant, GoGet, Prasarana (PULSE). <a href="https://www.exabytes.my">exabytes.my</a> · <a href="https://www.easystore.co">easystore.co</a> · <a href="https://sitegiant.my">sitegiant.my</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Prepared by <strong>Artifisi Sdn Bhd</strong> · Kuala Lumpur</span>
+      <span><a href="mailto:hello@artifisi.com">hello@artifisi.com</a> · <a href="https://www.artifisi.com">artifisi.com</a></span>
+    </div>
+  </footer>
+</body>
+</html>
