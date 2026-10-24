@@ -9,9 +9,10 @@ interface Props {
 
 const { title, description, image = "/img/melaka-1511.jpg" } = Astro.props;
 const fullTitle = title === "Artifisi" ? title : `${title} · Artifisi`;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+// build.format "file" gives paths like /projects/dunia.html; the site serves them without .html.
+const path = Astro.url.pathname.replace(/index\.html$/, "").replace(/\.html$/, "");
+const canonical = new URL(path, Astro.site);
 const ogImage = new URL(image, Astro.site);
-const path = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -29,38 +30,26 @@ const path = Astro.url.pathname;
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <header class="top">
       <div class="wrap top-row">
         <a class="brand" href="/">Artifisi</a>
         <nav>
-          <a href="/#ai" aria-current={path === "/projects/dunia" ? "page" : undefined}>AI</a>
-          <a href="/#games" aria-current={path.startsWith("/projects/") && path !== "/projects/dunia" ? "page" : undefined}>Games</a>
-          <a href="/#about">About</a>
+          <a href="/projects/dunia" aria-current={path === "/projects/dunia" ? "page" : undefined}>Dunia</a>
+          <a href="/#games">Games</a>
           <a href="/#contact">Contact</a>
         </nav>
       </div>
     </header>
 
-    <main>
+    <main class="wrap">
       <slot />
     </main>
 
     <footer class="bottom">
-      <div class="wrap bottom-row">
-        <span>Artifisi Sdn Bhd · Kuala Lumpur, Malaysia</span>
-        <span>
-          <a href="mailto:hafify@artifisi.com">Email</a>
-          <a href="https://x.com/artifisi">X</a>
-          <a href="/privacy">Privacy</a>
-        </span>
+      <div class="wrap">
+        Artifisi Sdn Bhd, Kuala Lumpur. <a href="/privacy">Privacy</a>
       </div>
     </footer>
   </body>

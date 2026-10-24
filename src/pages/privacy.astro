@@ -4,29 +4,16 @@ import { email } from "../data.js";
 ---
 
 <Base title="Privacy" description="What artifisi.com collects about you, which is almost nothing.">
-  <section class="hero">
-    <div class="wrap page">
-      <span class="eyebrow">Last updated 24 October 2026</span>
-      <h1>Privacy</h1>
-      <p class="lede">This site has no forms, no accounts and no analytics. We do not set cookies.</p>
-
-      <h2>What gets logged</h2>
-      <p class="muted">
-        Our host, Cloudflare, keeps standard server logs such as IP address, browser and the page asked for.
-        We use them only to keep the site running.
-      </p>
-
-      <h2>Embedded videos</h2>
-      <p class="muted">
-        Some pages show a video from Google Drive. Google may set its own cookies when it loads. Their privacy
-        policy covers that.
-      </p>
-
-      <h2>When you email us</h2>
-      <p class="muted">
-        We keep your email to reply to you and do not share it. Ask us to delete it at
-        <a href={`mailto:${email}`}>{email}</a> and we will.
-      </p>
-    </div>
-  </section>
+  <h1>Privacy</h1>
+  <p class="small">Last updated 24 October 2026.</p>
+  <p>This site has no forms, no accounts and no analytics. We don't set cookies.</p>
+  <p>
+    Our host, Cloudflare, keeps normal server logs: IP address, browser, which page. We only use them to keep
+    the site running.
+  </p>
+  <p>The Dunia video is embedded from Google Drive, and Google may set its own cookies when it loads.</p>
+  <p>
+    If you email us, we keep the email so we can reply, and we don't share it. Ask at
+    <a href={`mailto:${email}`}>{email}</a> and we'll delete it.
+  </p>
 </Base>
