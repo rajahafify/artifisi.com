@@ -1,0 +1,160 @@
+---
+import Base from "../layouts/Base.astro";
+import { email, whatsapp, x, duniaVideo, games } from "../data.js";
+
+const ext = (href) => href.startsWith("http");
+---
+
+<Base
+  title="Artifisi"
+  description="Artifisi is an AI company in Kuala Lumpur. We build Dunia, an SDK that turns gameplay into labelled training data for robotics and physical AI. We also make games."
+>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Artifisi Sdn Bhd · Kuala Lumpur</span>
+      <h1>We turn games into training data for AI</h1>
+      <p class="lede">
+        Artifisi is an AI company. Our main work is Dunia, an SDK that records what happens inside a game
+        and turns it into labelled data for robotics and physical AI teams. We also make our own games,
+        which is where the data comes from.
+      </p>
+      <div class="actions">
+        <a class="btn main" href="#ai">Watch the Dunia demo</a>
+        <a class="btn" href="#games">See our games</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="ai">
+    <div class="wrap division">
+      <div>
+        <span class="eyebrow">AI division</span>
+        <h2>Dunia</h2>
+        <p style="margin-top:16px">
+          A robot learns from examples: what the scene looked like, what the agent did, and what happened
+          next. Collecting that in the real world is slow and expensive. A game engine already knows all
+          three.
+        </p>
+        <p>
+          Dunia hooks into the engine and records state, inputs and outcomes at each decision as someone
+          plays. Every step comes out labelled, in the format the buyer asks for.
+        </p>
+        <p>
+          Where it stands today: a working MVP of the SDK runs inside our own demo game. The video shows it.
+          We are looking for the first teams to pilot it with.
+        </p>
+        <div class="facts">
+          <div><span>Product</span><strong>SDK for game engines</strong></div>
+          <div><span>Output</span><strong>Labelled state, action, outcome</strong></div>
+          <div><span>Status</span><strong>MVP in a demo game</strong></div>
+          <div><span>For</span><strong>Robotics and physical AI teams</strong></div>
+        </div>
+        <div class="actions">
+          <a class="btn main" href={`mailto:${email}?subject=Dunia%20pilot`}>Talk to us about a pilot</a>
+          <a class="btn" href="/projects/dunia">More on Dunia</a>
+        </div>
+      </div>
+      <div>
+        <div class="video">
+          <iframe
+            src={duniaVideo.embed}
+            title="Dunia demo video"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+            loading="lazy"></iframe>
+        </div>
+        <p class="caption">
+          The Dunia SDK MVP running in our demo game.
+          <a href={duniaVideo.link} target="_blank" rel="noopener">Open the video</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="games">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow moss">Games division</span>
+        <h2>Our games</h2>
+        <p class="muted" style="margin-top:14px">Original IP, made by a small team, built fast.</p>
+      </div>
+      <div class="games">
+        {
+          games.map((g) => (
+            <article class="game">
+              {g.image ? <img src={g.image} alt={`${g.name} screenshot`} loading="lazy" width="720" height="405" /> : <div class="placeholder">{g.name}</div>}
+              <div class="game-body">
+                <span class={`tag ${g.tagClass}`}>{g.status}</span>
+                <h3>{g.name}</h3>
+                <p>{g.blurb}</p>
+                <div class="actions">
+                  {g.links.map((l) => (
+                    <a class={l.main ? "btn main" : "btn"} href={l.href} {...(ext(l.href) ? { target: "_blank", rel: "noopener" } : {})}>
+                      {l.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="note">
+        <h3 style="margin-bottom:12px">Why one company does both</h3>
+        <p class="muted">
+          Dunia needs a game to live inside, and we know how games get built because we build them. Our
+          games are made for players first. They also give the SDK somewhere to run before it goes into
+          anyone else's game.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">About</span>
+        <h2>Two founders in KL</h2>
+        <p class="muted" style="margin-top:14px">
+          Artifisi Sdn Bhd started in 2023 doing software and AI development work. It went full time in 2025
+          and got Malaysia Digital status in September 2026.
+        </p>
+      </div>
+      <div class="team">
+        <div class="person">
+          <strong>Raja Hafify</strong>
+          <span class="role">Founder</span>
+          <p>
+            Twelve years in software engineering, at startups and at AirAsia. The last two years on AI
+            development. Built Orbwalker on his own in three months.
+          </p>
+        </div>
+        <div class="person">
+          <strong>Hazmi Faiz</strong>
+          <span class="role">Creative Director</span>
+          <p>Motion graphics, digital media and creative production, across arts, entertainment and digital platforms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Contact</span>
+        <h2>Say hello</h2>
+        <p class="muted" style="margin-top:14px">Email is fastest. WhatsApp works too.</p>
+      </div>
+      <div class="contact">
+        <a href={`mailto:${email}`}><span>Email</span><strong>{email}</strong></a>
+        <a href={whatsapp.href} target="_blank" rel="noopener"><span>WhatsApp</span><strong>{whatsapp.label}</strong></a>
+        <a href={x.href} target="_blank" rel="noopener"><span>X</span><strong>{x.label}</strong></a>
+      </div>
+    </div>
+  </section>
+</Base>

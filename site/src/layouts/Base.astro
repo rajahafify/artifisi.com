@@ -1,0 +1,67 @@
+---
+import "../styles/site.css";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const { title, description, image = "/img/melaka-1511.jpg" } = Astro.props;
+const fullTitle = title === "Artifisi" ? title : `${title} · Artifisi`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const path = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap top-row">
+        <a class="brand" href="/">Artifisi</a>
+        <nav>
+          <a href="/#ai" aria-current={path === "/projects/dunia" ? "page" : undefined}>AI</a>
+          <a href="/#games" aria-current={path.startsWith("/projects/") && path !== "/projects/dunia" ? "page" : undefined}>Games</a>
+          <a href="/#about">About</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="bottom">
+      <div class="wrap bottom-row">
+        <span>Artifisi Sdn Bhd · Kuala Lumpur, Malaysia</span>
+        <span>
+          <a href="mailto:hafify@artifisi.com">Email</a>
+          <a href="https://x.com/artifisi">X</a>
+          <a href="/privacy">Privacy</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

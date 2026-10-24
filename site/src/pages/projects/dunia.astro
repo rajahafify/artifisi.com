@@ -1,0 +1,61 @@
+---
+import Base from "../../layouts/Base.astro";
+import { email, duniaVideo } from "../../data.js";
+---
+
+<Base
+  title="Dunia"
+  description="Dunia is an SDK that captures gameplay at engine level and turns it into labelled training data for AI and robotics teams."
+>
+  <section class="hero">
+    <div class="wrap page">
+      <span class="eyebrow">AI division</span>
+      <h1>Dunia</h1>
+      <p class="lede">
+        An SDK that captures gameplay at engine level and turns it into labelled training data for AI and
+        robotics teams.
+      </p>
+
+      <div class="video" style="margin-top:32px">
+        <iframe src={duniaVideo.embed} title="Dunia demo video" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      </div>
+      <p class="caption">
+        The Dunia SDK MVP running in our demo game.
+        <a href={duniaVideo.link} target="_blank" rel="noopener">Open the video</a>
+      </p>
+
+      <h2>The problem</h2>
+      <p class="muted">
+        Robots and world models learn from interaction data: the state of the world, what the agent did, and
+        what happened next. Real-world robot data is slow and expensive to collect, and sometimes it breaks
+        the robot. Data with the actions labelled barely exists on the web.
+      </p>
+
+      <h2>How Dunia works</h2>
+      <ul>
+        <li>The SDK hooks into the game engine and records state, inputs and outcomes as the player acts.</li>
+        <li>It takes a snapshot at each decision point, so the data follows choices rather than every tick.</li>
+        <li>Every step comes out labelled, because the engine already knows the state and the action.</li>
+        <li>The export format is set by the buyer.</li>
+      </ul>
+
+      <h2>Where it is today</h2>
+      <p class="muted">
+        A working MVP of the SDK runs inside our own demo game. That is what the video shows. The next
+        version gets built alongside the first teams who use it, so it solves a real problem for them.
+      </p>
+
+      <h2>Who it is for</h2>
+      <ul>
+        <li>Robotics and physical AI teams who need interaction data.</li>
+        <li>Data companies who buy and resell training data.</li>
+        <li>Game studios who want to put the SDK in their own game.</li>
+      </ul>
+
+      <div class="actions">
+        <a class="btn main" href={`mailto:${email}?subject=Dunia%20pilot`}>Talk to us about a pilot</a>
+        <a class="btn" href={`mailto:${email}?subject=Dunia%20SDK%20for%20my%20game`}>Put Dunia in your game</a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+import { email } from "../../data.js";
+---
+
+<Base
+  title="Melaka 1511"
+  description="Melaka 1511 is a turn-based strategy game set in the Melaka Sultanate, in the years before the Portuguese arrive in 1511."
+  image="/img/melaka-1511.jpg"
+>
+  <section class="hero">
+    <div class="wrap page">
+      <span class="eyebrow moss">Games division · In development</span>
+      <h1>Melaka 1511</h1>
+      <p class="lede">
+        Turn-based strategy set in the Melaka Sultanate. You start weak after the fall of Temasek and have
+        until the Portuguese arrive in 1511 to unite the peninsula.
+      </p>
+
+      <img class="wide-img" src="/img/melaka-1511.jpg" alt="Melaka 1511 early build" width="720" height="405" />
+
+      <p class="muted">
+        You use officers like Tun Perak and Hang Tuah to build the economy, raise an army and win over the
+        states around you. The player trades, governs, defends and negotiates. The history is the game: 1511
+        changed trade across the whole region, and almost no game has touched it.
+      </p>
+
+      <div class="facts">
+        <div><span>Genre</span><strong>Turn-based strategy</strong></div>
+        <div><span>Setting</span><strong>Melaka Sultanate, up to 1511</strong></div>
+        <div><span>Art</span><strong>Voxel</strong></div>
+        <div><span>Platform</span><strong>PC first</strong></div>
+      </div>
+
+      <h2>Publishers</h2>
+      <p class="muted">We are talking to publishers now. Email for the deck and a playable build.</p>
+
+      <div class="actions">
+        <a class="btn main" href={`mailto:${email}?subject=Melaka%201511`}>Ask for the deck</a>
+        <a class="btn" href="https://youtu.be/4TbsJau7QmA" target="_blank" rel="noopener">Watch the video</a>
+      </div>
+    </div>
+  </section>
+</Base>
