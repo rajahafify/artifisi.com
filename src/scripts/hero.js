@@ -842,6 +842,8 @@ window.THREE = THREE;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.userData.narrow = w < 700;
+    // The phone camera sits further back, so the fog starts later too.
+    scene.fog.near = camera.userData.narrow ? 55 : 40; scene.fog.far = camera.userData.narrow ? 130 : 110;
     camera.updateProjectionMatrix();
     if (mode === "city" && sideTarget === 0 && (home || camera.userData.narrow)) setSide(home || -1);
   }
@@ -868,14 +870,14 @@ window.THREE = THREE;
     if (mode === "city" && narrow) {
       // Phones show one half at a time, filling the width.
       var nx = side * 13;
-      tp = [nx + Math.sin(clock * 0.05) * 1.5, 30, 58];
+      tp = [nx + Math.sin(clock * 0.05) * 1.5, 37, 72];
       tl = [nx, 0, 0];
     } else if (mode === "city") {
       var cx = side * 7;
       tp = [cx + Math.sin(clock * 0.05) * 2, 20 + mouseY * -3, 50];
       tl = [cx * 0.9, 2, 0];
     } else {
-      var M = MODES[mode], k2 = narrow ? 1.3 : 1;
+      var M = MODES[mode], k2 = narrow ? 1.6 : 1;
       // Keep the scene to the right of the panel on wide screens.
       var shift = narrow ? 0 : (M.shift != null ? M.shift : (M.side === "ai" ? 3 : -3));
       tp = [M.cam[0] * k2 + shift + Math.sin(clock * 0.1) * 3, M.cam[1] * k2, M.cam[2] * k2];
@@ -906,7 +908,7 @@ window.THREE = THREE;
   resize();
   for (var wu = 0; wu < 600; wu++) updateCity(1 / 30);
   Object.keys(MODES).forEach(function (k) { for (var i = 0; i < 60; i++) MODES[k].update(1 / 30); });
-  camPos.set(camera.userData.narrow ? (home ? 13 : -13) : 0, camera.userData.narrow ? 30 : 20, camera.userData.narrow ? 58 : 50);
+  camPos.set(camera.userData.narrow ? (home ? 13 : -13) : 0, camera.userData.narrow ? 37 : 20, camera.userData.narrow ? 72 : 50);
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var visible = true;
