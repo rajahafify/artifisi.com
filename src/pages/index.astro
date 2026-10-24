@@ -1,5 +1,6 @@
 ---
 import Head from "../components/Head.astro";
+import Hero from "../components/Hero.astro";
 import "../styles/home.css";
 ---
 
@@ -15,56 +16,9 @@ import "../styles/home.css";
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>
-<section class="hero" id="top">
-  <div class="nav">
-    <a class="brand" href="#top">ARTIFISI</a>
-    <nav>
-      <a href="#ai">AI</a>
-      <a href="#games">Games</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </div>
-  <div class="hero-copy">
-    <h1>People play games. <span>We turn what they do into training data for AI.</span></h1>
-  </div>
-  <div class="pins" id="pins">
-    <div class="pin" data-side="games" data-x="-24" data-y="3" data-z="2"><button type="button" data-mode="drive"><b>Driving</b><i>gameplay → data for L4 cars</i></button></div>
-    <div class="pin" data-side="games" data-x="-13" data-y="4.2" data-z="5"><button type="button" data-mode="drone"><b>Drones</b><i>gameplay → data for autonomous flight</i></button></div>
-    <div class="pin" data-side="games" data-x="-5" data-y="3.2" data-z="-8"><button type="button" data-mode="robot"><b>Robots</b><i>gameplay → data for robot arms</i></button></div>
-    <div class="pin" data-side="ai" data-x="13.75" data-y="12.3" data-z="0"><button type="button" data-mode="sdk"><b>Dunia SDK</b><i>the library in the game loop</i></button></div>
-    <div class="pin" data-side="ai" data-x="7" data-y="6" data-z="3.75"><button type="button" data-mode="dataset"><b>Datasets</b><i>gameplay → labelled rows</i></button></div>
-    <div class="pin" data-side="ai" data-x="20.5" data-y="3" data-z="3.75"><button type="button" data-mode="train"><b>Training</b><i>how a model learns from it</i></button></div>
-    <div class="pin always" data-side="count" data-x="13.75" data-y="0.4" data-z="-4.5" style="transform: translateY(46px)"><span class="t" id="count">0 samples</span></div>
-  </div>
-  <div class="probe" id="probe"><div class="ring"></div><div class="tag" id="probe-tag"></div></div>
-
-  <div class="sim-panel" id="sim-panel" aria-live="polite" hidden>
-    <div class="sim-head">
-      <button type="button" class="sim-back" id="sim-back">← Back to both divisions</button>
-      <div class="sim-kicker" id="sim-kicker"></div>
-      <h2 class="sim-title" id="sim-title"></h2>
-      <p class="sim-body" id="sim-body"></p>
-    </div>
-    <div class="sim-tag" id="sim-tag"><pre class="sim-readout" id="sim-readout"></pre></div>
-    <div class="sim-foot">
-      <div class="sim-flow" id="sim-flow"></div>
-      <div class="sim-side">
-        <p class="sim-who" id="sim-who"></p>
-        <div class="sim-links">
-          <a href="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/view" target="_blank" rel="noopener" data-embed="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/preview">Watch the Dunia demo →</a>
-          <a href="#pilot">Become a pilot partner →</a>
-        </div>
-        <p class="sim-note" id="sim-note"></p>
-      </div>
-    </div>
-  </div>
-  <div class="sim-switch" id="sim-switch" hidden></div>
-  <div class="pick">
-    <a href="#games" id="pick-games"><strong>Gaming division</strong><span>Melaka 1511 · Orbwalker · Hullpack Hero</span></a>
-    <a href="#ai" id="pick-ai"><strong>AI division</strong><span>Dunia, gameplay to training data</span></a>
-  </div>
-</section>
+<Hero>
+  <h1>People play games. <span>We turn what they do into training data for AI.</span></h1>
+</Hero>
 
 <section class="band company" id="company">
   <canvas class="co-bg" data-fx="field" aria-hidden="true"></canvas>

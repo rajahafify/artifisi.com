@@ -1,0 +1,57 @@
+---
+// The home hero, shared with /projects/dunia. The slot is the headline.
+// base: prefix for nav links ("" on the home page, "/" elsewhere). start: "ai" opens on the AI half.
+interface Props { base?: string; start?: "ai"; aiHref?: string; aiNote?: string }
+const { base = "", start, aiHref = "#ai", aiNote = "Dunia, gameplay to training data" } = Astro.props;
+---
+<section class="hero" id="top" data-start={start}>
+  <div class="nav">
+    <a class="brand" href={base ? "/" : "#top"}>ARTIFISI</a>
+    <nav>
+      <a href={base + "#ai"}>AI</a>
+      <a href={base + "#games"}>Games</a>
+      <a href={base + "#about"}>About</a>
+      <a href={base + "#contact"}>Contact</a>
+    </nav>
+  </div>
+  <div class="hero-copy">
+    <slot />
+  </div>
+  <div class="pins" id="pins">
+    <div class="pin" data-side="games" data-x="-24" data-y="3" data-z="2"><button type="button" data-mode="drive"><b>Driving</b><i>gameplay → data for L4 cars</i></button></div>
+    <div class="pin" data-side="games" data-x="-13" data-y="4.2" data-z="5"><button type="button" data-mode="drone"><b>Drones</b><i>gameplay → data for autonomous flight</i></button></div>
+    <div class="pin" data-side="games" data-x="-5" data-y="3.2" data-z="-8"><button type="button" data-mode="robot"><b>Robots</b><i>gameplay → data for robot arms</i></button></div>
+    <div class="pin" data-side="ai" data-x="13.75" data-y="12.3" data-z="0"><button type="button" data-mode="sdk"><b>Dunia SDK</b><i>the library in the game loop</i></button></div>
+    <div class="pin" data-side="ai" data-x="7" data-y="6" data-z="3.75"><button type="button" data-mode="dataset"><b>Datasets</b><i>gameplay → labelled rows</i></button></div>
+    <div class="pin" data-side="ai" data-x="20.5" data-y="3" data-z="3.75"><button type="button" data-mode="train"><b>Training</b><i>how a model learns from it</i></button></div>
+    <div class="pin always" data-side="count" data-x="13.75" data-y="0.4" data-z="-4.5" style="transform: translateY(46px)"><span class="t" id="count">0 samples</span></div>
+  </div>
+  <div class="mchips" id="mchips" aria-label="What each division does"></div>
+  <div class="probe" id="probe"><div class="ring"></div><div class="tag" id="probe-tag"></div></div>
+
+  <div class="sim-panel" id="sim-panel" aria-live="polite" hidden>
+    <div class="sim-head">
+      <button type="button" class="sim-back" id="sim-back">← Back to both divisions</button>
+      <div class="sim-kicker" id="sim-kicker"></div>
+      <h2 class="sim-title" id="sim-title"></h2>
+      <p class="sim-body" id="sim-body"></p>
+    </div>
+    <div class="sim-tag" id="sim-tag"><pre class="sim-readout" id="sim-readout"></pre></div>
+    <div class="sim-foot">
+      <div class="sim-flow" id="sim-flow"></div>
+      <div class="sim-side">
+        <p class="sim-who" id="sim-who"></p>
+        <div class="sim-links">
+          <a href="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/view" target="_blank" rel="noopener" data-embed="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/preview">Watch the Dunia demo →</a>
+          <a href="#pilot">Become a pilot partner →</a>
+        </div>
+        <p class="sim-note" id="sim-note"></p>
+      </div>
+    </div>
+  </div>
+  <div class="sim-switch" id="sim-switch" hidden></div>
+  <div class="pick">
+    <a href={base + "#games"} id="pick-games"><strong>Gaming division</strong><span>Melaka 1511 · Orbwalker · Hullpack Hero</span></a>
+    <a href={aiHref} id="pick-ai"><strong>AI division</strong><span>{aiNote}</span></a>
+  </div>
+</section>
