@@ -1,7 +1,7 @@
 // Links shared across pages. Change them here.
 export const email = "hafify@artifisi.com";
 export const whatsapp = { label: "+60 12-246 8583", href: "https://wa.me/60122468583" };
-export const x = { label: "@artifisi", href: "https://x.com/artifisi" };
+export const x = { label: "@artifisi_my", href: "https://x.com/artifisi_my" };
 
 export const duniaVideo = {
   embed: "https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/preview",
@@ -37,7 +37,7 @@ export const games = [
     name: "Hullpack Hero",
     status: "Early development",
     tagClass: "early",
-    image: null,
+    image: "/img/hullpack-hero.png",
     blurb: "Eve Online meets Backpack Hero, set in our own solar system. Our third original IP.",
     links: [{ label: "Watch the video", href: "https://youtu.be/_Ro_OxFiU68" }],
   },
