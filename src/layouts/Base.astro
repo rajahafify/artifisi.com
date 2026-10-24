@@ -1,4 +1,5 @@
 ---
+import Head from "../components/Head.astro";
 import "../styles/site.css";
 
 interface Props {
@@ -7,37 +8,25 @@ interface Props {
   image?: string;
 }
 
-const { title, description, image = "/img/melaka-1511.jpg" } = Astro.props;
-const fullTitle = title === "Artifisi" ? title : `${title} · Artifisi`;
-// build.format "file" gives paths like /projects/dunia.html; the site serves them without .html.
-const path = Astro.url.pathname.replace(/index\.html$/, "").replace(/\.html$/, "");
-const canonical = new URL(path, Astro.site);
-const ogImage = new URL(image, Astro.site);
+const { title, description, image } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{fullTitle}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Head title={title} description={description} image={image} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>
     <header class="top">
       <div class="wrap top-row">
-        <a class="brand" href="/">Artifisi</a>
+        <a class="brand" href="/">ARTIFISI</a>
         <nav>
-          <a href="/projects/dunia" aria-current={path === "/projects/dunia" ? "page" : undefined}>Dunia</a>
+          <a href="/#ai">AI</a>
           <a href="/#games">Games</a>
+          <a href="/#about">About</a>
           <a href="/#contact">Contact</a>
         </nav>
       </div>
@@ -48,9 +37,7 @@ const ogImage = new URL(image, Astro.site);
     </main>
 
     <footer class="bottom">
-      <div class="wrap">
-        Artifisi Sdn Bhd, Kuala Lumpur. <a href="/privacy">Privacy</a>
-      </div>
+      <div class="wrap">Artifisi Sdn Bhd · Kuala Lumpur, Malaysia · <a href="/privacy">Privacy</a></div>
     </footer>
   </body>
 </html>

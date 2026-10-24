@@ -1,6 +1,6 @@
 # artifisi.com (static rebuild)
 
-Plain static site built with Astro. No database, no accounts, no forms.
+Static site built with Astro. No database and no accounts. The contact form posts to Formspree.
 
 ## Run it
 
@@ -12,9 +12,11 @@ Needs Node 22.12 or newer.
 
 ## Where things live
 
-- `src/pages/` one file per page. `projects/dunia`, `projects/melaka-1511` and `projects/orbwalker` keep the old URLs.
-- `src/data.js` email, the Dunia video link and the game cards.
-- `src/styles/site.css` all the styling. Same colours as the company card.
+- `src/pages/index.astro` the home page markup: three.js hero, company profile, Dunia, games, about, contact form.
+- `src/scripts/home.js` everything that moves on the home page: the hero scene and its use-case views, the small section scenes, the contact form and the video player. three.js comes from npm.
+- `src/styles/home.css` home page styling. `src/styles/site.css` styles the inner pages to match.
+- `src/pages/projects/` and `privacy`, `404` the inner pages. `projects/dunia`, `projects/melaka-1511` and `projects/orbwalker` keep the old URLs.
+- `src/data.js` email, Formspree endpoint and Dunia video link for the inner pages.
 - `public/img/` images. `public/_redirects` sends old Rails URLs somewhere useful.
 
 ## Deploy on Cloudflare Pages
