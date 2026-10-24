@@ -241,24 +241,26 @@ const views = {
     (() => {
       const il = [["Check Point", 1993], ["CyberArk", 1999], ["Wix", 2006], ["Waze", 2008], ["Viber", 2010], ["Fiverr", 2010], ["Moovit", 2012], ["monday.com", 2012]];
       const my = [["Exabytes", 2001], ["EasyStore", 2013], ["SiteGiant", 2013], ["TuJu", 2025]];
-      const X = (yr) => -1.9 + ((yr - 1993) / 33) * 6;
-      const stalks = [...il.map(([t, y], k) => [t, y, 0.5 + k * 0.4, C.ink]), ...my.map(([t, y], k) => [t, y, -(0.6 + k * 0.4), C.ready])];
+      // Kept narrow so the labels on the right still fit on screen.
+      const X0 = -1.2, W = 4.4, Y0 = -0.6;
+      const X = (yr) => X0 + ((yr - 1993) / 33) * W;
+      const stalks = [...il.map(([t, y], k) => [t, y, 0.45 + k * 0.36, C.ink]), ...my.map(([t, y], k) => [t, y, -(0.5 + k * 0.36), C.ready])];
       const axisN = Math.round(N * 0.3), per = Math.floor((N - axisN) / stalks.length);
       return view(
         (i) => {
           if (i < axisN) {
             const t = i / axisN;
-            return [-1.9 + t * 6, (i % 2) * 0.06 - 0.03, ((i * 0.37) % 1 - 0.5) * 0.12, C.road];
+            return [X0 + t * W, Y0 + (i % 2) * 0.06 - 0.03, ((i * 0.37) % 1 - 0.5) * 0.12, C.road];
           }
           const j = i - axisN, k = Math.min(stalks.length - 1, Math.floor(j / per));
           const [, yr, h, c] = stalks[k];
           const u = (j % per) / per;
-          return [X(yr) + ((j % 2) - 0.5) * 0.06, h * u, ((j * 0.37) % 1 - 0.5) * 0.06, c];
+          return [X(yr) + ((j % 2) - 0.5) * 0.06, Y0 + h * u, ((j * 0.37) % 1 - 0.5) * 0.06, c];
         },
         [
-          ...stalks.map(([t, yr, h, c]) => ({ p: [X(yr) + 0.1, h, 0], t: `${t} ${yr}`, c: tone(c), align: "left", small: true })),
-          { p: [-1.9, -0.3, 0], t: "1993", c: "muted", small: true, align: "right" },
-          { p: [4.1, -0.3, 0], t: "2026", c: "muted", small: true, align: "left" },
+          ...stalks.map(([t, yr, h, c]) => ({ p: [X(yr) + 0.1, Y0 + h, 0], t: `${t} ${yr}`, c: tone(c), align: "left", small: true })),
+          { p: [X0 - 0.1, Y0, 0], t: "1993", c: "muted", small: true, align: "right" },
+          { p: [X0 + W + 0.1, Y0, 0], t: "2026", c: "muted", small: true, align: "left" },
         ]
       );
     })(),
@@ -363,7 +365,29 @@ sections.forEach((s) => {
 canvas.addEventListener("click", () => {
   const s = sections[dominant];
   setView(s, current.get(s) + 1);
+  learned();
 });
+
+// Teach the click: a tapping finger until the first switch, and a "1 / 3" chip under every chart.
+const TAUGHT = "ts-taught";
+let taught = false;
+try { taught = localStorage.getItem(TAUGHT) === "1"; } catch {}
+function learned() {
+  taught = true;
+  try { localStorage.setItem(TAUGHT, "1"); } catch {}
+}
+sections.forEach((s) => s.querySelectorAll("button[data-view]").forEach((b) => b.addEventListener("click", learned)));
+const finger = document.createElement("div");
+finger.className = "finger";
+finger.setAttribute("aria-hidden", "true");
+finger.innerHTML = '<span class="ripple"></span><svg viewBox="0 0 24 24" width="44" height="44"><path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg><span class="say">Click the chart</span>';
+document.body.appendChild(finger);
+const chip = document.createElement("div");
+chip.className = "chip";
+chip.setAttribute("aria-hidden", "true");
+document.body.appendChild(chip);
+const fingerAt = new THREE.Vector3(0.3, -0.4, 0);
+const chipAt = new THREE.Vector3(0, -3.6, 0);
 
 // Scroll position -> which two sections to blend, and how far.
 function scrollState() {
@@ -391,8 +415,10 @@ addEventListener("pointermove", (ev) => {
   mouse.y = ev.clientY / innerHeight - 0.5;
 });
 
-// Where the shape sits: beside the text on wide screens, above it on phones.
-let offsetX = 0, offsetY = 0;
+// Where the shape sits: in the free space right of the text on wide screens, above the text on phones.
+// Each section gets its own spot and size, since some text columns are wider than others.
+let offsetX = 0, offsetY = 0, scale = 0.82;
+const place = new Map();
 function resize() {
   const w = innerWidth, h = innerHeight;
   renderer.setSize(w, h, false);
@@ -400,13 +426,22 @@ function resize() {
   const wide = w > 900;
   camera.position.z = wide ? 11 : 13.5;
   const halfH = Math.tan(THREE.MathUtils.degToRad(20)) * camera.position.z;
-  offsetX = wide ? 0.44 * halfH * camera.aspect : 0;
+  const perPx = (2 * halfH) / h;
   offsetY = wide ? 0 : 0.5 * halfH;
-  group.scale.setScalar(wide ? 0.82 : 0.5);
+  sections.forEach((s) => {
+    const col = s.querySelector(".col");
+    if (!wide || !col) return place.set(s, { x: wide ? 0.44 * halfH * camera.aspect : 0, s: wide ? 0.82 : 0.5 });
+    const left = col.getBoundingClientRect().right + 24;
+    const free = Math.max(200, w - left - 16);
+    // Shapes plus their labels span about 8.4 units.
+    place.set(s, { x: (left + free / 2 - w / 2) * perPx, s: Math.min(0.82, (free * perPx) / 8.4) });
+  });
   camera.updateProjectionMatrix();
 }
 addEventListener("resize", resize);
 resize();
+addEventListener("load", resize);
+document.fonts?.ready.then(resize);
 
 // Positions ease toward their target, so scrolling and view changes both animate.
 const cur = new Float32Array(N * 3);
@@ -458,6 +493,10 @@ function frame() {
   const targetX = (name === "donut" && v === 0 ? -0.35 : 0.04) + mouse.y * 0.1;
   group.rotation.y += (targetY - group.rotation.y) * 0.05;
   group.rotation.x += (targetX - group.rotation.x) * 0.05;
+  const spot = place.get(sections[dominant]);
+  offsetX = spot.x;
+  scale += (spot.s - scale) * 0.08;
+  group.scale.setScalar(scale);
   group.position.x += (offsetX - group.position.x) * 0.08;
   group.position.y += (offsetY - group.position.y) * 0.08;
   group.updateMatrixWorld();
@@ -476,6 +515,18 @@ function frame() {
     x = Math.min(Math.max(x, lo), Math.max(lo, hi));
     l.el.style.transform = `translate(${x}px, ${((1 - v3.y) / 2) * h}px)`;
   }
+
+  const count = views[sections[dominant].dataset.scene].length;
+  const multi = count > 1 && settled;
+  const phoneHero = innerWidth <= 900 && dominant === 0;
+  finger.classList.toggle("show", multi && !taught && !phoneHero);
+  chip.classList.toggle("show", multi && !phoneHero);
+  chip.textContent = `${current.get(sections[dominant]) + 1} / ${count} · ${innerWidth <= 900 ? "tap" : "click"} to switch`;
+  v3.copy(fingerAt).applyMatrix4(group.matrixWorld).project(camera);
+  finger.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${((1 - v3.y) / 2) * h}px)`;
+  v3.copy(chipAt).applyMatrix4(group.matrixWorld).project(camera);
+  chip.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${Math.min(((1 - v3.y) / 2) * h, h - 30)}px)`;
+  finger.querySelector(".say").textContent = innerWidth <= 900 ? "Tap the chart" : "Click the chart";
 
   renderer.render(scene, camera);
   requestAnimationFrame(frame);

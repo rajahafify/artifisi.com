@@ -209,6 +209,16 @@
       .ledger td:nth-child(2)::before { content: ""; }
       .ledger td { padding: 1px 0; }
     }
+    /* Teaching the click */
+    .finger, .chip { position: fixed; left: 0; top: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .4s; }
+    .finger.show, .chip.show { opacity: 1; }
+    .finger svg { position: absolute; left: -22px; top: -12px; fill: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.7)); transform-origin: 50% 20%; animation: press 1.8s ease-in-out infinite; }
+    .finger .ripple { position: absolute; left: -18px; top: -18px; width: 36px; height: 36px; border-radius: 50%; border: 2px solid #fff; opacity: 0; animation: ripple 1.8s ease-out infinite; }
+    .finger .say { position: absolute; left: 28px; top: 4px; white-space: nowrap; font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 4px #000; }
+    @keyframes press { 0%, 100% { transform: translate(14px, 14px) scale(1); } 40% { transform: translate(0, 0) scale(1); } 50% { transform: translate(0, 0) scale(.82); } 60% { transform: translate(0, 0) scale(1); } }
+    @keyframes ripple { 0%, 48% { opacity: 0; transform: scale(.3); } 52% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(1.8); } }
+    .chip { translate: -50% 0; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); background: rgba(16, 20, 19, .7); border-radius: 999px; padding: 5px 10px; white-space: nowrap; }
+    @media (prefers-reduced-motion: reduce) { .finger svg, .finger .ripple { animation: none; } }
   </style>
   <script type="application/ld+json">
   {
