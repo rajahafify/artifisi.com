@@ -1,47 +1,107 @@
 ---
-import Base from "../../layouts/Base.astro";
-import { email, duniaVideo } from "../../data.js";
+import Head from "../../components/Head.astro";
+import { duniaVideo } from "../../data.js";
+import "../../styles/home.css";
+import "../../styles/dunia.css";
 ---
 
-<Base
-  title="Dunia"
-  description="Dunia is an SDK that captures gameplay at engine level and turns it into labelled training data for AI and robotics teams."
->
-  <h1>Dunia</h1>
-  <p>
-    Dunia is an SDK. It sits inside a game engine, watches what happens while someone plays, and turns it
-    into labelled training data for AI and robotics teams.
-  </p>
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head
+      title="Dunia"
+      description="Dunia is an SDK that sits inside a game engine and turns gameplay into labelled training data for robots and physical AI."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <section class="hero dhero">
+      <canvas class="dhero-gl" aria-hidden="true"></canvas>
+      <header class="nav">
+        <a class="brand" href="/">ARTIFISI</a>
+        <nav>
+          <a href="/#ai">AI</a>
+          <a href="/#games">Games</a>
+          <a href="/#about">About</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+      </header>
+      <div class="dhero-copy">
+        <div class="label">AI division · Dunia</div>
+        <h1>Gameplay in, training data out.</h1>
+        <p>Dunia is an SDK. It sits inside a game engine, watches what happens while someone plays, and turns it into labelled training data for robots and physical AI.</p>
+        <div class="dhero-cta">
+          <a class="btn light" href="#demo">Watch the demo</a>
+          <a class="btn ghost" href="/#contact">Talk to us</a>
+        </div>
+      </div>
+      <div class="dhero-tag" aria-hidden="true"><span id="dcount">0</span> samples captured</div>
+    </section>
 
-  <div class="video">
-    <iframe src={duniaVideo.embed} title="Dunia demo video" allow="autoplay; fullscreen" allowfullscreen></iframe>
-  </div>
-  <p class="small">The MVP running in our demo game. <a href={duniaVideo.link}>Open it on Google Drive</a>.</p>
+    <section class="band dvideo" id="demo">
+      <div class="inner">
+        <div class="label">Demo</div>
+        <div class="video">
+          <iframe src={duniaVideo.embed} title="Dunia demo video" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <p class="vcap">The MVP running inside our demo game. <a href={duniaVideo.link} target="_blank" rel="noopener">Open it on Google Drive</a>.</p>
+      </div>
+    </section>
 
-  <h2>Why games</h2>
-  <p>
-    A robot or a world model learns from three things: what the world looked like, what the agent did, and
-    what happened next. Collecting that with real robots is slow and expensive, and sometimes you break the
-    robot. There's very little of it on the web with the actions labelled.
-  </p>
-  <p>A game engine already tracks all three. Nobody has to label anything by hand.</p>
+    <section class="band dwhy">
+      <div class="inner two">
+        <div>
+          <div class="label">Why games</div>
+          <h2>A game engine already knows what a robot needs to learn</h2>
+          <p>A robot or a world model learns from three things: what the world looked like, what the agent did, and what happened next. Collecting that with real robots is slow and expensive, and sometimes you break the robot. There is very little of it on the web with the actions labelled.</p>
+          <p>A game engine already tracks all three. Nobody has to label anything by hand.</p>
+        </div>
+        <ol class="sao">
+          <li><b>State</b><span>What the world looked like</span><i>positions, sensors, camera</i></li>
+          <li><b>Action</b><span>What the player did</span><i>steering, inputs, choices</i></li>
+          <li><b>Outcome</b><span>What happened next</span><i>reward, collision, success</i></li>
+        </ol>
+      </div>
+    </section>
 
-  <h2>How it works</h2>
-  <ul>
-    <li>The SDK hooks into the engine and records state, inputs and outcomes as the player acts.</li>
-    <li>It saves a snapshot at each decision, not every frame.</li>
-    <li>The export format is whatever the team using the data needs.</li>
-  </ul>
+    <section class="band dhow">
+      <div class="inner">
+        <div class="label">How it works</div>
+        <h2>Three steps, inside the engine</h2>
+        <div class="steps">
+          <div><span class="n">01</span><h3>Hook in</h3><p>The SDK hooks into the game engine and records state, inputs and outcomes as the player acts.</p></div>
+          <div><span class="n">02</span><h3>Snapshot each decision</h3><p>It saves a snapshot at each decision, not every frame, so the data is dense and small.</p></div>
+          <div><span class="n">03</span><h3>Export</h3><p>Episodes come out labelled, in whatever format the team using the data trains on, for example RLDS.</p></div>
+        </div>
+      </div>
+    </section>
 
-  <h2>Where it is</h2>
-  <p>
-    The MVP works, inside our own demo game. That's what the video shows. The next version gets built with
-    the first teams who use it, so it fits a real problem instead of one we guessed at.
-  </p>
+    <section class="band dstatus">
+      <div class="inner two">
+        <div>
+          <div class="label">Where it is</div>
+          <h2>A working MVP, built next with the first teams</h2>
+          <p>The MVP works inside our own demo game. That is what the video shows. The next version gets built with the first teams who use it, so it fits a real problem instead of one we guessed at.</p>
+        </div>
+        <div>
+          <dl class="facts">
+            <dt>Product</dt><dd>SDK for game engines</dd>
+            <dt>Output</dt><dd>State, action, outcome, labelled</dd>
+            <dt>Status</dt><dd>MVP running in our demo game</dd>
+            <dt>For</dt><dd>Robotics and physical AI teams</dd>
+          </dl>
+          <p class="small">If you train robots or world models, buy training data, or want Dunia inside your own game, we will show you the demo in 15 minutes.</p>
+          <a class="btn dark" href="/#contact">Talk to us about a pilot</a>
+        </div>
+      </div>
+    </section>
 
-  <h2>Talk to us</h2>
-  <p>
-    If you train robots or world models, buy training data, or want Dunia inside your own game,
-    <a href={`mailto:${email}?subject=Dunia`}>email us</a>. We'll show you the demo in 15 minutes.
-  </p>
-</Base>
+    <footer><div class="inner">Artifisi Sdn Bhd · Kuala Lumpur, Malaysia · <a href="/privacy">Privacy</a></div></footer>
+
+    <script>
+      import "../../scripts/dunia.js";
+    </script>
+  </body>
+</html>
