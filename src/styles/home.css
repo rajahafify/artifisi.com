@@ -116,15 +116,38 @@
   .sim-switch button:first-child { border-left: 0; }
   .sim-switch button.on, .sim-switch button:hover { color: var(--black); background: var(--white); }
   .hero.sim canvas { cursor: zoom-out; }
+  /* Phones: no hover, so the pick bar is a toggle and the labels sit in a list above it. */
+  .mchips { display: none; }
   @media (max-width: 700px) {
-    .sim-switch { top: 64px; }
-    .sim-head { top: 104px; }
-    .sim-panel.right .sim-head { text-align: left; }
-    .sim-body { font-size: 14px; }
+    .hero { height: max(560px, min(100svh, 780px)); }
+    .pins, .probe { display: none; }
+    .mchips { display: grid; gap: 6px; position: absolute; z-index: 2; left: 16px; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); transition: opacity .3s; }
+    .mchips button { display: none; grid-template-columns: 1fr auto; align-items: center; gap: 2px 12px; width: 100%; text-align: left; padding: 8px 12px; background: rgba(10,10,10,.86); border: 1px solid #333; color: var(--white); font: 12px var(--mono); cursor: pointer; }
+    .mchips button b { font: 500 15px var(--sans); }
+    .mchips button i { grid-column: 1; font-style: normal; color: var(--gray-3); }
+    .mchips button::after { content: "→"; grid-column: 2; grid-row: 1 / span 2; color: var(--gray-3); font-size: 16px; }
+    .mchips button:active { background: var(--white); color: var(--black); }
+    .mchips.show-games button[data-side="games"], .mchips.show-ai button[data-side="ai"] { display: grid; animation: chip-in .35s ease both; }
+    .mchips button:nth-child(2) { animation-delay: .05s; } .mchips button:nth-child(3) { animation-delay: .1s; }
+    @keyframes chip-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .hero.sim .mchips { opacity: 0; pointer-events: none; }
+    .pick a { padding-top: 18px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+    .pick a.on { background: rgba(255,255,255,0.07); box-shadow: inset 0 2px 0 var(--white); }
+    .hero-copy { top: 84px; }
+
+    .sim-switch { top: 64px; left: 16px; right: 16px; }
+    .sim-switch button { flex: 1; }
+    .sim-head { top: 104px; left: 0; right: 0; width: auto; padding: 0 16px 28px; background: linear-gradient(#0a0a0a 72%, rgba(10,10,10,0)); }
+    .sim-panel.right .sim-head { text-align: left; right: 0; }
+    .sim-kicker { margin-top: 12px; }
+    .sim-title { font-size: 22px; margin-bottom: 6px; }
+    .sim-body { font-size: 14px; line-height: 1.5; }
     .sim-tag, .sim-flow { display: none; }
-    .sim-foot { bottom: 92px; }
-    .sim-side { text-align: left; }
+    .sim-foot { left: 0; right: 0; bottom: calc(66px + env(safe-area-inset-bottom, 0px)); padding: 28px 16px 14px; background: linear-gradient(rgba(10,10,10,0), #0a0a0a 30%); }
+    .sim-side { text-align: left; max-width: none; }
+    .sim-who { font-size: 13px; }
     .sim-links { justify-content: flex-start; }
+    .sim-note { font-size: 10px; }
   }
 
   /* Company band: a short company profile over a faint moving field of points. */
@@ -276,4 +299,23 @@
     .pilot-tracks { grid-template-columns: 1fr; }
     .track { padding-right: 0; }
     .track + .track { padding-left: 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.2); }
+  }
+
+  /* Phones: games become a swipe row so the page stays short. */
+  @media (max-width: 700px) {
+    .grid3 { display: flex; grid-template-columns: none; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 28px -16px 0; padding: 0 16px 12px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .grid3::-webkit-scrollbar { display: none; }
+    .grid3 > .game { flex: 0 0 84%; scroll-snap-align: start; scroll-margin-left: 16px; }
+    .game-body p { font-size: 14px; }
+  }
+
+  /* Small phones (iPhone SE and similar): keep the tagline short and the pick bar on one line. */
+  @media (max-width: 380px) {
+    .hero-copy { top: 76px; }
+    .hero-copy h1 { font-size: 21px; line-height: 1.25; }
+    .pick strong { font-size: 14px; white-space: nowrap; }
+    .pick a { padding-left: 14px; padding-right: 14px; }
+    .pick a + a { padding-left: 14px; padding-right: 14px; }
+    .mchips button { padding: 7px 10px; }
+    .sim-switch button { font-size: 12px; white-space: nowrap; padding-inline: 6px; }
   }

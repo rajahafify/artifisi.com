@@ -1,15 +1,5 @@
-/* Dunia page. Builds on home.css: black header with the live lattice, then white and blue bands. */
-.dhero { height: clamp(540px, 80vh, 760px); }
-.dhero-copy { position: absolute; z-index: 2; left: 0; right: 0; bottom: 72px; max-width: 1232px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); pointer-events: none; }
-.dhero-copy > * { pointer-events: auto; }
-.dhero-copy h1 { font-size: clamp(34px, 5vw, 60px); font-weight: 400; line-height: 1.08; letter-spacing: -0.02em; margin: 10px 0 16px; max-width: 640px; }
-.dhero-copy p { color: #bdbdbd; font-size: 18px; max-width: 520px; margin: 0 0 26px; }
-.dhero-copy .label { color: #8fa3ff; }
-.btn.light { background: var(--white); color: var(--black); border-color: var(--white); }
-.btn.light:hover { background: #dfe5ff; border-color: #dfe5ff; }
-.btn.ghost { color: var(--white); border-color: #4a4a4a; }
-.btn.ghost:hover { border-color: var(--white); }
-.dhero-tag { position: absolute; z-index: 2; right: max(16px, calc(50vw - 600px)); bottom: 72px; font: 12px var(--mono); color: #8a8a8a; border: 1px solid #2a2a2a; padding: 6px 10px; background: rgba(10,10,10,.7); }
+/* Dunia page. Builds on home.css: the shared hero, opened on the AI half, then white and blue bands. */
+.hero-copy .label { color: #8fa3ff; margin-bottom: 10px; }
 
 .dvideo { background: var(--black); color: var(--white); padding-top: 24px; }
 .dvideo .video { position: relative; aspect-ratio: 16 / 9; background: #000; margin-top: 16px; border: 1px solid #222; }
@@ -41,8 +31,10 @@ footer { padding-top: 32px; }
 
 @media (max-width: 860px) {
   .two, .steps { grid-template-columns: 1fr; gap: 28px; }
-  .dhero-tag { display: none; }
-  .dhero-copy { bottom: 40px; }
 }
-.dhero-copy { text-shadow: 0 0 12px #0a0a0a, 0 0 4px #0a0a0a; }
-.dhero-copy .btn { text-shadow: none; }
+
+@media (max-width: 560px) {
+  .sao li { grid-template-columns: 1fr; }
+  .sao b { grid-row: auto; }
+}
+.hero-copy h1 { text-shadow: 0 0 12px #0a0a0a, 0 0 4px #0a0a0a; }

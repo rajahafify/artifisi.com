@@ -1,5 +1,6 @@
 ---
 import Head from "../../components/Head.astro";
+import Hero from "../../components/Hero.astro";
 import { duniaVideo } from "../../data.js";
 import "../../styles/home.css";
 import "../../styles/dunia.css";
@@ -17,28 +18,10 @@ import "../../styles/dunia.css";
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <section class="hero dhero">
-      <canvas class="dhero-gl" aria-hidden="true"></canvas>
-      <header class="nav">
-        <a class="brand" href="/">ARTIFISI</a>
-        <nav>
-          <a href="/#ai">AI</a>
-          <a href="/#games">Games</a>
-          <a href="/#about">About</a>
-          <a href="/#contact">Contact</a>
-        </nav>
-      </header>
-      <div class="dhero-copy">
-        <div class="label">AI division · Dunia</div>
-        <h1>Gameplay in, training data out.</h1>
-        <p>Dunia is an SDK. It sits inside a game engine, watches what happens while someone plays, and turns it into labelled training data for robots and physical AI.</p>
-        <div class="dhero-cta">
-          <a class="btn light" href="#demo">Watch the demo</a>
-          <a class="btn ghost" href="#pilot">Become a pilot partner</a>
-        </div>
-      </div>
-      <div class="dhero-tag" aria-hidden="true"><span id="dcount">0</span> samples captured</div>
-    </section>
+    <Hero base="/" start="ai" aiHref="#demo" aiNote="Dunia, watch the demo below">
+      <div class="label">AI division · Dunia SDK</div>
+      <h1>Gameplay in, <span>training data out.</span></h1>
+    </Hero>
 
     <section class="band dvideo" id="demo">
       <div class="inner">
@@ -126,8 +109,11 @@ import "../../styles/dunia.css";
 
     <footer><div class="inner">Artifisi Sdn Bhd · Kuala Lumpur, Malaysia · <a href="/privacy">Privacy</a></div></footer>
 
+    <dialog class="vmodal" id="vmodal" aria-label="Video"><button type="button" class="vclose" id="vclose">Close ✕</button><div class="vframe"></div></dialog>
+
     <script>
-      import "../../scripts/dunia.js";
+      import "../../scripts/hero.js";
+      import "../../scripts/video.js";
     </script>
   </body>
 </html>
