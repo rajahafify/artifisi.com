@@ -219,6 +219,53 @@
     @keyframes ripple { 0%, 48% { opacity: 0; transform: scale(.3); } 52% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(1.8); } }
     .chip { translate: -50% 0; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); background: rgba(16, 20, 19, .7); border-radius: 999px; padding: 5px 10px; white-space: nowrap; }
     @media (prefers-reduced-motion: reduce) { .finger svg, .finger .ripple { animation: none; } }
+    /* Fine print, styled as cards */
+    .notes { padding-top: 88px; }
+    .notes .notes-h { font-size: clamp(30px, 4.4vw, 46px); font-family: var(--serif); font-weight: 800; letter-spacing: -.01em; text-transform: none; color: var(--ink); margin: 0 0 8px; }
+    .block { margin-top: 56px; }
+    .bh { font-family: var(--mono); font-weight: 400; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px; display: flex; align-items: center; gap: 14px; }
+    .bh::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+    .bh-sub { font-size: 14px; color: var(--muted); margin: 22px 0 12px; }
+    .tagsets { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .tagset { border: 1px solid var(--line); border-radius: 10px; padding: 20px; background: rgba(16, 20, 19, .6); }
+    .ts-h { font-weight: 600; margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+    .ts-h .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ready); }
+    .tagset.gap .ts-h .dot { background: var(--gap); }
+    .ts-sub { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin: 16px 0 8px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+    .tags span { font-size: 13px; padding: 5px 11px; border-radius: 999px; border: 1px solid #3a4441; color: var(--ink); }
+    .tags.local span { background: rgba(31, 163, 138, .16); border-color: rgba(31, 163, 138, .6); color: #8fe3d1; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+    .pc { position: relative; border: 1px solid var(--line); border-radius: 10px; padding: 18px 18px 14px; background: rgba(16, 20, 19, .75); overflow: hidden; transition: transform .2s, border-color .2s; }
+    .pc::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--ready); }
+    .pc.gap::before { background: var(--gap); }
+    .pc.local::before { background: linear-gradient(90deg, var(--ready), #4fd1b5); }
+    .pc:hover { transform: translateY(-3px); border-color: #3a4441; }
+    .pc-cat { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ready); margin: 0 0 8px; }
+    .pc.gap .pc-cat { color: var(--gap); }
+    .pc h3 { font-size: 26px; font-weight: 800; margin: 0; }
+    .pc-year { font-family: var(--serif); font-weight: 600; font-size: 40px; line-height: 1; color: #3f4a46; margin: 6px 0 14px; }
+    .pc-year small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); margin-top: 4px; }
+    .pc dl { display: grid; grid-template-columns: 52px 1fr; gap: 6px 10px; margin: 0; font-size: 13px; }
+    .pc dt { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+    .pc dd { margin: 0; color: #d3d7d4; }
+    .pc dd.sold { color: var(--red); font-weight: 600; }
+    .method { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .method > div { border: 1px solid var(--line); border-radius: 10px; padding: 20px; background: rgba(16, 20, 19, .75); }
+    .mn { font-family: var(--serif); font-weight: 800; font-size: 44px; line-height: 1; color: transparent; -webkit-text-stroke: 1px #5d6763; }
+    .method h4 { font-family: var(--serif); font-size: 22px; font-weight: 600; margin: 10px 0 8px; }
+    .method p { font-size: 14px; color: var(--muted); margin: 0; }
+    .srcs { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+    .sc { display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: rgba(16, 20, 19, .75); text-decoration: none; color: inherit; transition: border-color .2s, transform .2s; }
+    a.sc:hover { border-color: var(--ready); transform: translateY(-2px); }
+    .sc.wide { grid-column: 1 / -1; }
+    .sc-k { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ready); }
+    .sc-t { font-size: 14px; color: var(--ink); line-height: 1.45; flex: 1; }
+    .sc-d { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .sc a { color: var(--muted); }
+    @media (max-width: 760px) {
+      .tagsets, .method { grid-template-columns: 1fr; }
+    }
   </style>
   <script type="application/ld+json">
   {
@@ -390,60 +437,185 @@
 
     <section class="notes" data-scene="field">
       <div class="wrap">
-        <h2>Products and companies covered</h2>
-        <div class="covered">
-          <p><b class="ready">Ready to scale</b><br />Waze (Google) · Moovit (Mobileye) · Wix · Check Point (services)<br />Local: TuJu (LLM) · PULSE (Prasarana) · Exabytes · EasyStore · SiteGiant · LGMS</p>
-          <p><b class="gap">Open gap</b><br />Viber (Rakuten) · Fiverr · monday.com · Check Point (products) · CyberArk (Palo Alto Networks)</p>
+        <p class="kicker">The fine print</p>
+        <h2 class="notes-h">Who is who, and how we know</h2>
+
+        <div class="block">
+          <h3 class="bh">Products and companies covered</h3>
+          <div class="tagsets">
+            <div class="tagset ready">
+              <p class="ts-h"><span class="dot"></span>Ready to scale</p>
+              <p class="tags"><span>Waze (Google)</span><span>Moovit (Mobileye)</span><span>Wix</span><span>Check Point (services)</span></p>
+              <p class="ts-sub">Local</p>
+              <p class="tags local"><span>TuJu (LLM)</span><span>PULSE (Prasarana)</span><span>Exabytes</span><span>EasyStore</span><span>SiteGiant</span><span>LGMS</span></p>
+            </div>
+            <div class="tagset gap">
+              <p class="ts-h"><span class="dot"></span>Open gap</p>
+              <p class="tags"><span>Viber (Rakuten)</span><span>Fiverr</span><span>monday.com</span><span>Check Point (products)</span><span>CyberArk (Palo Alto Networks)</span></p>
+            </div>
+          </div>
         </div>
 
-        <h2>Data ledger</h2>
-        <table class="ledger">
-          <thead><tr><th>Product</th><th>Category</th><th>Founded</th><th>Home</th><th>Owner or listing</th><th>Sale</th></tr></thead>
-          <tbody>
-            <tr class="group"><td colspan="6">Israel-linked products</td></tr>
-            <tr><td>Waze</td><td>Navigation</td><td>2008 (FreeMap Israel, 2006)</td><td>Ra'anana</td><td>Google</td><td>2013, about US$1B (some reports say US$1.3B)</td></tr>
-            <tr><td>Moovit</td><td>Public transit</td><td>2012</td><td>Israel</td><td>Mobileye (Intel)</td><td>2020, US$900M</td></tr>
-            <tr><td>Wix</td><td>Website builder</td><td>2006</td><td>Tel Aviv</td><td>Nasdaq: WIX, listed 2013</td><td>Not sold</td></tr>
-            <tr><td>Check Point</td><td>Security audits, firewall</td><td>1993</td><td>Tel Aviv</td><td>Nasdaq: CHKP, listed 1996</td><td>Not sold</td></tr>
-            <tr><td>Viber</td><td>Messaging</td><td>2010</td><td>Tel Aviv</td><td>Rakuten</td><td>2014, US$900M</td></tr>
-            <tr><td>Fiverr</td><td>Freelance marketplace</td><td>2010</td><td>Tel Aviv</td><td>NYSE: FVRR, listed 2019</td><td>Not sold</td></tr>
-            <tr><td>monday.com</td><td>Work management</td><td>2012</td><td>Tel Aviv</td><td>Nasdaq: MNDY, listed 2021</td><td>Not sold</td></tr>
-            <tr><td>CyberArk</td><td>Identity security</td><td>1999</td><td>Petah Tikva</td><td>Palo Alto Networks</td><td>2026, US$25B</td></tr>
-            <tr class="group"><td colspan="6">Malaysian products</td></tr>
-            <tr><td>TuJu</td><td>Navigation</td><td>2025 (launched 26 Nov)</td><td>Malaysia</td><td>Malaysian Highway Authority (LLM) with Prosignal Consortium</td><td>Not sold</td></tr>
-            <tr><td>Exabytes</td><td>Hosting and website builder</td><td>2001</td><td>Penang</td><td>Private. Says it serves 160,000+ businesses in 121 countries</td><td>Not sold</td></tr>
-            <tr><td>EasyStore</td><td>Shop builder</td><td>2013</td><td>Puchong</td><td>Private</td><td>Not sold</td></tr>
-            <tr><td>SiteGiant</td><td>Shop builder</td><td>2013</td><td>Malaysia</td><td>Private. Says it serves 20,000+ merchants</td><td>Not sold</td></tr>
-          </tbody>
-        </table>
-
-        <h2>Methodology</h2>
-        <div class="cols">
-          <p><b>Scope.</b> Consumer and business software categories where a widely used product is incorporated in Israel or was founded there. "11 Israeli-incorporated products" counts companies meeting the government's Waze test in our full ledger. Surveillance tools sold only to governments are left out.</p>
-          <p><b>Readiness.</b> Ready: a Malaysian product competes today. Open gap: no significant Malaysian player. Ratings are our judgement from public information, not a product audit.</p>
-          <p><b>Limits.</b> Shows corporate links only; it does not claim any product leaks Malaysian user data. Acquisition prices are announced headline values. Figures as of 24 Oct 2026; ownership changes often.</p>
+        <div class="block">
+          <h3 class="bh">Data ledger</h3>
+          <p class="bh-sub">Israel-linked products</p>
+          <div class="cards">
+            <article class="pc ready">
+              <p class="pc-cat">Navigation</p>
+              <h3>Waze</h3>
+              <p class="pc-year">2008<small>FreeMap Israel, 2006</small></p>
+              <dl>
+                <dt>Home</dt><dd>Ra'anana</dd>
+                <dt>Owner</dt><dd>Google</dd>
+                <dt>Sale</dt><dd class="sold">2013, about US$1B (some reports say US$1.3B)</dd>
+              </dl>
+            </article>
+            <article class="pc ready">
+              <p class="pc-cat">Public transit</p>
+              <h3>Moovit</h3>
+              <p class="pc-year">2012</p>
+              <dl>
+                <dt>Home</dt><dd>Israel</dd>
+                <dt>Owner</dt><dd>Mobileye (Intel)</dd>
+                <dt>Sale</dt><dd class="sold">2020, US$900M</dd>
+              </dl>
+            </article>
+            <article class="pc ready">
+              <p class="pc-cat">Website builder</p>
+              <h3>Wix</h3>
+              <p class="pc-year">2006</p>
+              <dl>
+                <dt>Home</dt><dd>Tel Aviv</dd>
+                <dt>Owner</dt><dd>Nasdaq: WIX, listed 2013</dd>
+                <dt>Sale</dt><dd class="">Not sold</dd>
+              </dl>
+            </article>
+            <article class="pc gap">
+              <p class="pc-cat">Security audits, firewall</p>
+              <h3>Check Point</h3>
+              <p class="pc-year">1993</p>
+              <dl>
+                <dt>Home</dt><dd>Tel Aviv</dd>
+                <dt>Owner</dt><dd>Nasdaq: CHKP, listed 1996</dd>
+                <dt>Sale</dt><dd class="">Not sold</dd>
+              </dl>
+            </article>
+            <article class="pc gap">
+              <p class="pc-cat">Messaging</p>
+              <h3>Viber</h3>
+              <p class="pc-year">2010</p>
+              <dl>
+                <dt>Home</dt><dd>Tel Aviv</dd>
+                <dt>Owner</dt><dd>Rakuten</dd>
+                <dt>Sale</dt><dd class="sold">2014, US$900M</dd>
+              </dl>
+            </article>
+            <article class="pc gap">
+              <p class="pc-cat">Freelance marketplace</p>
+              <h3>Fiverr</h3>
+              <p class="pc-year">2010</p>
+              <dl>
+                <dt>Home</dt><dd>Tel Aviv</dd>
+                <dt>Owner</dt><dd>NYSE: FVRR, listed 2019</dd>
+                <dt>Sale</dt><dd class="">Not sold</dd>
+              </dl>
+            </article>
+            <article class="pc gap">
+              <p class="pc-cat">Work management</p>
+              <h3>monday.com</h3>
+              <p class="pc-year">2012</p>
+              <dl>
+                <dt>Home</dt><dd>Tel Aviv</dd>
+                <dt>Owner</dt><dd>Nasdaq: MNDY, listed 2021</dd>
+                <dt>Sale</dt><dd class="">Not sold</dd>
+              </dl>
+            </article>
+            <article class="pc gap">
+              <p class="pc-cat">Identity security</p>
+              <h3>CyberArk</h3>
+              <p class="pc-year">1999</p>
+              <dl>
+                <dt>Home</dt><dd>Petah Tikva</dd>
+                <dt>Owner</dt><dd>Palo Alto Networks</dd>
+                <dt>Sale</dt><dd class="sold">2026, US$25B</dd>
+              </dl>
+            </article>
+          </div>
+          <p class="bh-sub">Malaysian products</p>
+          <div class="cards">
+            <article class="pc local">
+              <p class="pc-cat">Navigation</p>
+              <h3>TuJu</h3>
+              <p class="pc-year">2025<small>launched 26 Nov</small></p>
+              <dl>
+                <dt>Home</dt><dd>Malaysia</dd>
+                <dt>Owner</dt><dd>Malaysian Highway Authority (LLM) with Prosignal Consortium</dd>
+                <dt>Sale</dt><dd class="">Not sold</dd>
+              </dl>
+            </article>
+            <article class="pc local">
+              <p class="pc-cat">Hosting and website builder</p>
+              <h3>Exabytes</h3>
+              <p class="pc-year">2001</p>
+              <dl>
+                <dt>Home</dt><dd>Penang</dd>
+                <dt>Owner</dt><dd>Private. Says it serves 160,000+ businesses in 121 countries</dd>
+                <dt>Sale</dt><dd class="">Not sold</dd>
+              </dl>
+            </article>
+            <article class="pc local">
+              <p class="pc-cat">Shop builder</p>
+              <h3>EasyStore</h3>
+              <p class="pc-year">2013</p>
+              <dl>
+                <dt>Home</dt><dd>Puchong</dd>
+                <dt>Owner</dt><dd>Private</dd>
+                <dt>Sale</dt><dd class="">Not sold</dd>
+              </dl>
+            </article>
+            <article class="pc local">
+              <p class="pc-cat">Shop builder</p>
+              <h3>SiteGiant</h3>
+              <p class="pc-year">2013</p>
+              <dl>
+                <dt>Home</dt><dd>Malaysia</dd>
+                <dt>Owner</dt><dd>Private. Says it serves 20,000+ merchants</dd>
+                <dt>Sale</dt><dd class="">Not sold</dd>
+              </dl>
+            </article>
+          </div>
         </div>
 
-        <h2>Sources</h2>
-        <ul class="sources">
-          <li><b>Bernama, 21 Oct 2026.</b> Govt bans civil servants from using Waze over data security concerns. <a href="https://www.bernama.com/en/news.php?id=2623648">bernama.com</a></li>
-          <li><b>Malay Mail, 20 Oct 2026.</b> From Waze to TuJu? Anwar backs Malaysian navigation app over data security concerns. <a href="https://www.malaymail.com">malaymail.com</a></li>
-          <li><b>The Star, 23 Oct 2026.</b> Govt might ban Waze in Malaysia if alternative navigation apps available, says Anwar. <a href="https://www.thestar.com.my">thestar.com.my</a></li>
-          <li><b>Bloomberg, 22 Oct 2026.</b> Malaysian traffic app draws ridicule after officials banned Waze. <a href="https://www.bloomberg.com">bloomberg.com</a></li>
-          <li><b>Lowyat.NET, 21 Oct 2026.</b> Anwar Ibrahim encourages Malaysians to use TuJu instead of Waze. <a href="https://www.lowyat.net/2026/407982">lowyat.net</a></li>
-          <li><b>New Straits Times, 21 Oct 2026.</b> MPs seek explanation for Waze ban on civil servants. <a href="https://www.nst.com.my">nst.com.my</a></li>
-          <li><b>Reuters via Ynet, 21 Oct 2026.</b> Malaysia bans Google-owned Waze for government workers over Israeli origins. <a href="https://www.ynetnews.com">ynetnews.com</a></li>
-          <li><b>Calcalist, Oct 2026.</b> Malaysia bars civil servants from Waze; Google acquired Waze in 2013 for about $1B. <a href="https://www.calcalistech.com">calcalistech.com</a></li>
-          <li><b>CRN Asia, Feb 2026.</b> Palo Alto Networks completes $25B acquisition of CyberArk. <a href="https://www.crnasia.com">crnasia.com</a></li>
-          <li><b>NoCamels, May 2020.</b> Moovit acquired in a $900M deal, now part of Mobileye. <a href="https://nocamels.com">nocamels.com</a></li>
-          <li><b>TechCrunch, 2016.</b> Israeli technology and the future of transportation (Rakuten's $900M Viber deal). <a href="https://techcrunch.com">techcrunch.com</a></li>
-          <li><b>Bernama, 21 Oct 2026.</b> Ban on Waze reflects Malaysia's commitment, says Cinta Gaza Malaysia. <a href="https://www.bernama.com/en/news.php?id=2623763">bernama.com</a></li>
-          <li><b>The Edge.</b> LGMS eyes SME market amid rise in cyberattacks. <a href="https://theedgemalaysia.com">theedgemarkets.com</a></li>
-          <li><b>Company websites.</b> Exabytes, EasyStore, SiteGiant, GoGet, Prasarana (PULSE). <a href="https://www.exabytes.my">exabytes.my</a> · <a href="https://www.easystore.co">easystore.co</a> · <a href="https://sitegiant.my">sitegiant.my</a></li>
-          <li><b>Malay Mail, 21 Oct 2026.</b> PMO confirms civil servants barred from using Waze over Israel data security risks. Also covers TuJu's developers and launch date. <a href="https://www.malaymail.com/news/malaysia/2026/10/21/pmo-confirms-civil-servants-barred-from-using-waze-over-israel-data-security-risks/240055">malaymail.com</a></li>
-          <li><b>Wikipedia.</b> Founding years, headquarters, listings and sale prices for <a href="https://en.wikipedia.org/wiki/Waze">Waze</a>, <a href="https://en.wikipedia.org/wiki/Moovit">Moovit</a>, <a href="https://en.wikipedia.org/wiki/Viber">Viber</a>, <a href="https://en.wikipedia.org/wiki/Wix.com">Wix</a>, <a href="https://en.wikipedia.org/wiki/Fiverr">Fiverr</a>, <a href="https://en.wikipedia.org/wiki/Monday.com">monday.com</a>, <a href="https://en.wikipedia.org/wiki/Check_Point">Check Point</a> and <a href="https://en.wikipedia.org/wiki/CyberArk">CyberArk</a>. Checked 24 Oct 2026.</li>
-          <li><b>Company pages.</b> <a href="https://www.exabytes.my/about">Exabytes about page</a>, <a href="https://sitegiant.my/about/">SiteGiant story</a>, <a href="https://www.cbinsights.com/company/easystore">EasyStore on CB Insights</a>.</li>
-        </ul>
+        <div class="block">
+          <h3 class="bh">Methodology</h3>
+          <div class="method">
+            <div><span class="mn">01</span><h4>Scope</h4><p>Consumer and business software categories where a widely used product is incorporated in Israel or was founded there. "11 Israeli-incorporated products" counts companies meeting the government's Waze test in our full ledger. Surveillance tools sold only to governments are left out.</p></div>
+            <div><span class="mn">02</span><h4>Readiness</h4><p><b class="ready">Ready:</b> a Malaysian product competes today. <b class="gap">Open gap:</b> no significant Malaysian player. Ratings are our judgement from public information, not a product audit.</p></div>
+            <div><span class="mn">03</span><h4>Limits</h4><p>Shows corporate links only; it does not claim any product leaks Malaysian user data. Acquisition prices are announced headline values. Figures as of 24 Oct 2026; ownership changes often.</p></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h3 class="bh">Sources</h3>
+          <div class="srcs">
+            <a class="sc" href="https://www.bernama.com/en/news.php?id=2623648"><span class="sc-k">Bernama · 21 Oct 2026</span><span class="sc-t">Govt bans civil servants from using Waze over data security concerns.</span><span class="sc-d">bernama.com ↗</span></a>
+            <a class="sc" href="https://www.malaymail.com"><span class="sc-k">Malay Mail · 20 Oct 2026</span><span class="sc-t">From Waze to TuJu? Anwar backs Malaysian navigation app over data security concerns.</span><span class="sc-d">malaymail.com ↗</span></a>
+            <a class="sc" href="https://www.malaymail.com/news/malaysia/2026/10/21/pmo-confirms-civil-servants-barred-from-using-waze-over-israel-data-security-risks/240055"><span class="sc-k">Malay Mail · 21 Oct 2026</span><span class="sc-t">PMO confirms civil servants barred from using Waze over Israel data security risks. Also covers TuJu's developers and launch date.</span><span class="sc-d">malaymail.com ↗</span></a>
+            <a class="sc" href="https://www.thestar.com.my"><span class="sc-k">The Star · 23 Oct 2026</span><span class="sc-t">Govt might ban Waze in Malaysia if alternative navigation apps available, says Anwar.</span><span class="sc-d">thestar.com.my ↗</span></a>
+            <a class="sc" href="https://www.bloomberg.com"><span class="sc-k">Bloomberg · 22 Oct 2026</span><span class="sc-t">Malaysian traffic app draws ridicule after officials banned Waze.</span><span class="sc-d">bloomberg.com ↗</span></a>
+            <a class="sc" href="https://www.lowyat.net/2026/407982"><span class="sc-k">Lowyat.NET · 21 Oct 2026</span><span class="sc-t">Anwar Ibrahim encourages Malaysians to use TuJu instead of Waze.</span><span class="sc-d">lowyat.net ↗</span></a>
+            <a class="sc" href="https://www.nst.com.my"><span class="sc-k">New Straits Times · 21 Oct 2026</span><span class="sc-t">MPs seek explanation for Waze ban on civil servants.</span><span class="sc-d">nst.com.my ↗</span></a>
+            <a class="sc" href="https://www.ynetnews.com"><span class="sc-k">Reuters via Ynet · 21 Oct 2026</span><span class="sc-t">Malaysia bans Google-owned Waze for government workers over Israeli origins.</span><span class="sc-d">ynetnews.com ↗</span></a>
+            <a class="sc" href="https://www.calcalistech.com"><span class="sc-k">Calcalist · Oct 2026</span><span class="sc-t">Malaysia bars civil servants from Waze; Google acquired Waze in 2013 for about $1B.</span><span class="sc-d">calcalistech.com ↗</span></a>
+            <a class="sc" href="https://www.bernama.com/en/news.php?id=2623763"><span class="sc-k">Bernama · 21 Oct 2026</span><span class="sc-t">Ban on Waze reflects Malaysia's commitment, says Cinta Gaza Malaysia.</span><span class="sc-d">bernama.com ↗</span></a>
+            <a class="sc" href="https://www.crnasia.com"><span class="sc-k">CRN Asia · Feb 2026</span><span class="sc-t">Palo Alto Networks completes $25B acquisition of CyberArk.</span><span class="sc-d">crnasia.com ↗</span></a>
+            <a class="sc" href="https://nocamels.com"><span class="sc-k">NoCamels · May 2020</span><span class="sc-t">Moovit acquired in a $900M deal, now part of Mobileye.</span><span class="sc-d">nocamels.com ↗</span></a>
+            <a class="sc" href="https://techcrunch.com"><span class="sc-k">TechCrunch · 2016</span><span class="sc-t">Israeli technology and the future of transportation (Rakuten's $900M Viber deal).</span><span class="sc-d">techcrunch.com ↗</span></a>
+            <a class="sc" href="https://theedgemalaysia.com"><span class="sc-k">The Edge</span><span class="sc-t">LGMS eyes SME market amid rise in cyberattacks.</span><span class="sc-d">theedgemarkets.com ↗</span></a>
+            <div class="sc"><span class="sc-k">Company websites</span><span class="sc-t">Exabytes, EasyStore, SiteGiant, GoGet, Prasarana (PULSE). Also the <a href="https://www.exabytes.my/about">Exabytes about page</a>, the <a href="https://sitegiant.my/about/">SiteGiant story</a> and <a href="https://www.cbinsights.com/company/easystore">EasyStore on CB Insights</a>.</span><span class="sc-d"><a href="https://www.exabytes.my">exabytes.my</a> · <a href="https://www.easystore.co">easystore.co</a> · <a href="https://sitegiant.my">sitegiant.my</a></span></div>
+            <div class="sc wide"><span class="sc-k">Wikipedia · checked 24 Oct 2026</span><span class="sc-t">Founding years, headquarters, listings and sale prices.</span><span class="sc-d"><a href="https://en.wikipedia.org/wiki/Waze">Waze</a> · <a href="https://en.wikipedia.org/wiki/Moovit">Moovit</a> · <a href="https://en.wikipedia.org/wiki/Viber">Viber</a> · <a href="https://en.wikipedia.org/wiki/Wix.com">Wix</a> · <a href="https://en.wikipedia.org/wiki/Fiverr">Fiverr</a> · <a href="https://en.wikipedia.org/wiki/Monday.com">monday.com</a> · <a href="https://en.wikipedia.org/wiki/Check_Point">Check Point</a> · <a href="https://en.wikipedia.org/wiki/CyberArk">CyberArk</a></span></div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
