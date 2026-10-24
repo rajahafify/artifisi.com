@@ -5,6 +5,18 @@
 
 ---
 
+## [2026-10-24] change | Rails app replaced by static Astro site
+
+Source: PR #27
+Changes:
+- Removed the Rails app, Kamal config, Docker files and Ruby CI.
+- Added an Astro static site at the repo root, deployed on Cloudflare Pages.
+Notes:
+- Most wiki pages still describe the Rails app and are now stale.
+Verification:
+- code checked: yes
+- human reviewed: no
+
 ## [2026-09-03] content | Update studio address in contact section
 
 Source: project owner correction in chat + `app/views/pages/home.html.erb`
