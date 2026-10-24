@@ -1,5 +1,6 @@
 // Links shared across pages. Change them here.
 export const email = "hello@artifisi.com";
+export const formspree = "https://formspree.io/f/xeaaobag";
 export const x = { label: "@artifisi_my", href: "https://x.com/artifisi_my" };
 
 export const duniaVideo = {
