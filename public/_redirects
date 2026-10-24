@@ -2,3 +2,4 @@
 /contacts/new /#contact 301
 /registration / 301
 /login / 301
+/project/* /projects/:splat 301
