@@ -13,7 +13,7 @@ Needs Node 22.12 or newer.
 ## Where things live
 
 - `src/pages/` one file per page. `projects/dunia`, `projects/melaka-1511` and `projects/orbwalker` keep the old URLs.
-- `src/data.js` email, WhatsApp, the Dunia video link and the game cards.
+- `src/data.js` email, the Dunia video link and the game cards.
 - `src/styles/site.css` all the styling. Same colours as the company card.
 - `public/img/` images. `public/_redirects` sends old Rails URLs somewhere useful.
 

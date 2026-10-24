@@ -1,6 +1,5 @@
 // Links shared across pages. Change them here.
-export const email = "hafify@artifisi.com";
-export const whatsapp = { label: "+60 12-246 8583", href: "https://wa.me/60122468583" };
+export const email = "hello@artifisi.com";
 export const x = { label: "@artifisi_my", href: "https://x.com/artifisi_my" };
 
 export const duniaVideo = {

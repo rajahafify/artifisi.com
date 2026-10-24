@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import VoxelScene from "../components/VoxelScene.astro";
-import { email, whatsapp, x, duniaVideo, games } from "../data.js";
+import { email, x, duniaVideo, games } from "../data.js";
 ---
 
 <Base
@@ -79,7 +79,6 @@ import { email, whatsapp, x, duniaVideo, games } from "../data.js";
 
   <h2 id="contact">Contact</h2>
   <p>
-    Email <a href={`mailto:${email}`}>{email}</a>, or WhatsApp
-    <a href={whatsapp.href}>{whatsapp.label}</a>. We're also <a href={x.href}>{x.label}</a> on X.
+    Email <a href={`mailto:${email}`}>{email}</a>. We're also <a href={x.href}>{x.label}</a> on X.
   </p>
 </Base>
