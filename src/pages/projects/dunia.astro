@@ -1,0 +1,47 @@
+---
+import Base from "../../layouts/Base.astro";
+import { email, duniaVideo } from "../../data.js";
+---
+
+<Base
+  title="Dunia"
+  description="Dunia is an SDK that captures gameplay at engine level and turns it into labelled training data for AI and robotics teams."
+>
+  <h1>Dunia</h1>
+  <p>
+    Dunia is an SDK. It sits inside a game engine, watches what happens while someone plays, and turns it
+    into labelled training data for AI and robotics teams.
+  </p>
+
+  <div class="video">
+    <iframe src={duniaVideo.embed} title="Dunia demo video" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  </div>
+  <p class="small">The MVP running in our demo game. <a href={duniaVideo.link}>Open it on Google Drive</a>.</p>
+
+  <h2>Why games</h2>
+  <p>
+    A robot or a world model learns from three things: what the world looked like, what the agent did, and
+    what happened next. Collecting that with real robots is slow and expensive, and sometimes you break the
+    robot. There's very little of it on the web with the actions labelled.
+  </p>
+  <p>A game engine already tracks all three. Nobody has to label anything by hand.</p>
+
+  <h2>How it works</h2>
+  <ul>
+    <li>The SDK hooks into the engine and records state, inputs and outcomes as the player acts.</li>
+    <li>It saves a snapshot at each decision, not every frame.</li>
+    <li>The export format is whatever the team using the data needs.</li>
+  </ul>
+
+  <h2>Where it is</h2>
+  <p>
+    The MVP works, inside our own demo game. That's what the video shows. The next version gets built with
+    the first teams who use it, so it fits a real problem instead of one we guessed at.
+  </p>
+
+  <h2>Talk to us</h2>
+  <p>
+    If you train robots or world models, buy training data, or want Dunia inside your own game,
+    <a href={`mailto:${email}?subject=Dunia`}>email us</a>. We'll show you the demo in 15 minutes.
+  </p>
+</Base>
