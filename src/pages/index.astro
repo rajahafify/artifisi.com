@@ -53,7 +53,7 @@ import "../styles/home.css";
         <p class="sim-who" id="sim-who"></p>
         <div class="sim-links">
           <a href="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/view" target="_blank" rel="noopener" data-embed="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/preview">Watch the Dunia demo →</a>
-          <a href="#contact" data-topic="Dunia pilot">Talk to us →</a>
+          <a href="#pilot">Become a pilot partner →</a>
         </div>
         <p class="sim-note" id="sim-note"></p>
       </div>
@@ -98,12 +98,39 @@ import "../styles/home.css";
         <dt>Status</dt><dd>MVP running in our demo game</dd>
         <dt>For</dt><dd>Robotics and physical AI teams</dd>
       </dl>
-      <a class="btn dark" href="#contact" data-topic="Dunia pilot">Talk to us about a pilot</a>
+      <a class="btn dark" href="#pilot">How a pilot works</a>
     </div>
     <a class="poster" href="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/view" target="_blank" rel="noopener" data-embed="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/preview">
       <canvas class="poster-gl" data-fx="dunia" aria-hidden="true"></canvas><span class="play" aria-hidden="true"></span>
       <span class="cap">Dunia demo · the SDK MVP in our demo game</span>
     </a>
+  </div>
+</section>
+
+<section class="band pilot" id="pilot">
+  <div class="inner">
+    <div class="pilot-head">
+      <div class="label">Pilot partners</div>
+      <h2>We're looking for pilot partners on both sides</h2>
+      <p class="pilot-lead">Dunia sits between the games people play and the teams that train on gameplay. We want to run the first pilots with both.</p>
+    </div>
+    <div class="pilot-tracks">
+      <div class="track">
+        <div class="label">For AI and robotics teams</div>
+        <h3>Need training data for a specific task?</h3>
+        <p>Tell us the task and the format you train on. We build a game scenario for it, record real play with Dunia, and you test the labelled data in your own pipeline.</p>
+        <p class="get"><b>You get</b>Data shaped for your problem, and a say in what the SDK does next.</p>
+        <a class="btn pilot-btn" href="#contact" data-topic="Pilot: AI or robotics team">Apply as an AI team</a>
+      </div>
+      <div class="track">
+        <div class="label">For game studios</div>
+        <h3>Have a game people already play?</h3>
+        <p>We put Dunia inside it, record play as labelled data, and work with you on turning that data into a new source of revenue for the game.</p>
+        <p class="get"><b>You get</b>Early access to the SDK, and a say in how it fits your engine.</p>
+        <a class="btn pilot-btn" href="#contact" data-topic="Pilot: game studio">Apply as a game studio</a>
+      </div>
+    </div>
+    <p class="pilot-ask"><b>What we ask</b>A real problem or a real game, and honest feedback.</p>
   </div>
 </section>
 
@@ -172,7 +199,7 @@ import "../styles/home.css";
     <div>
       <div class="label">Contact</div>
       <h2>Talk to us</h2>
-      <p class="contact-note">About a Dunia pilot, our games, or anything else. We reply from hello@artifisi.com.</p>
+      <p class="contact-note">Pilot partners, our games, or anything else. We reply from hello@artifisi.com.</p>
       <div class="rows">
         <div class="row"><div class="label">Email</div><a href="mailto:hello@artifisi.com">hello@artifisi.com</a></div>
         <div class="row"><div class="label">X</div><a href="https://x.com/artifisi_my" target="_blank" rel="noopener">@artifisi_my</a></div>
@@ -183,8 +210,8 @@ import "../styles/home.css";
       <label>Email<input name="email" type="email" autocomplete="email" required></label>
       <label>About
         <select name="topic" id="ctopic">
-          <option>Dunia pilot</option>
-          <option>Data or partnership</option>
+          <option>Pilot: AI or robotics team</option>
+          <option>Pilot: game studio</option>
           <option>Our games</option>
           <option>Investing</option>
           <option>Something else</option>

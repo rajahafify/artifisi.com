@@ -1002,6 +1002,12 @@ window.THREE = THREE;
   document.addEventListener("click", function (e) {
     var a = e.target.closest("[data-topic]"); if (a) { topic.value = a.getAttribute("data-topic"); setTimeout(function () { f.querySelector("input").focus({ preventScroll: true }); }, 500); }
   });
+  // Links from other pages: /#apply-ai and /#apply-studio open the form with the pilot topic set.
+  var deep = { "#apply-ai": "Pilot: AI or robotics team", "#apply-studio": "Pilot: game studio" }[location.hash];
+  if (deep) {
+    topic.value = deep;
+    setTimeout(function () { document.getElementById("contact").scrollIntoView(); f.querySelector("input").focus({ preventScroll: true }); }, 300);
+  }
   f.addEventListener("submit", function (e) {
     e.preventDefault();
     if (f.action.indexOf("FORM_ID") !== -1) { msg.textContent = "Form not connected yet. Email hello@artifisi.com for now."; return; }
