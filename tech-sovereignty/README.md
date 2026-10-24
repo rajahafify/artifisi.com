@@ -1,6 +1,6 @@
 # tech-sovereignty.artifisi.com
 
-One static page, no build step. The infographic is plain HTML (every number, table row, method note and source is text, so search engines read all of it). `scene.js` draws a three.js field of cubes behind the text that re-forms into each section's chart as you scroll: the $1B coin, the 2 / 11 / 4 counts, the eight-segment readiness ring, one slab per category, acquisition prices to scale, and three strands for the three asks. Without JavaScript the page falls back to CSS charts.
+One static page, no build step. Every number, table row, data ledger entry, method note and source is plain HTML text, so search engines read all of it. `scene.js` draws a three.js field of cubes behind the text that re-forms into each section's chart as you scroll, with HTML labels pinned to the 3D shapes. Each section has two or three views (buttons, or click the chart). The data for every view lives in `views` in `scene.js`. Without JavaScript the page falls back to CSS charts and shows every view caption.
 
 three.js 0.180.0 loads from jsDelivr through an import map.
 

@@ -172,6 +172,43 @@
       /* Leave the top of the screen free so the shape shows before the text slides over it. */
       .has-scene main > section:not(.hero):not(.notes) { padding-top: 48vh; }
     }
+    /* Chart labels and view switching */
+    #scene { pointer-events: auto; }
+    #labels { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .4s; }
+    #labels.show { opacity: 1; }
+    .lbl { position: absolute; left: 0; top: 0; white-space: nowrap; font: 500 12px/1.2 var(--mono); letter-spacing: .03em; color: var(--ink); text-shadow: 0 1px 4px #000, 0 0 2px #000; translate: -50% -50%; }
+    .lbl.left { translate: 0 -50%; }
+    .lbl.right { translate: -100% -50%; }
+    .lbl.small { font-size: 11px; }
+    .lbl { white-space: pre; text-align: center; }
+    .lbl.left { text-align: left; }
+    .lbl.right { text-align: right; }
+    @media (max-width: 900px) { .lbl { font-size: 10px; } .lbl.small { font-size: 9px; } }
+    .lbl.ready { color: #4fd1b5; }
+    .lbl.gap { color: #e8a93a; }
+    .lbl.red { color: var(--red); }
+    .lbl.muted { color: var(--muted); }
+    .has-scene main { pointer-events: none; }
+    .has-scene main .col, .has-scene .notes { pointer-events: auto; }
+    .views { margin-top: 28px; }
+    .views .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .views button { font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+    .views button:hover { color: var(--ink); border-color: var(--muted); }
+    .views button.on { color: var(--bg); background: var(--ink); border-color: var(--ink); }
+    .views button:focus-visible { outline: 2px solid var(--ready); outline-offset: 2px; }
+    .views .cap { display: none; font-size: 15px; color: var(--muted); margin: 12px 0 0; }
+    .views .cap b { color: var(--ink); font-weight: 600; }
+    .views .cap.on { display: block; }
+    html:not(.has-scene) .views .tabs { display: none; }
+    html:not(.has-scene) .views .cap { display: block; }
+    .ledger { font-size: 14px; }
+    .ledger td { padding: 10px 12px 10px 0; color: var(--muted); }
+    .ledger td:first-child { color: var(--ink); width: auto; }
+    .ledger td:nth-child(2) { width: auto; }
+    @media (max-width: 760px) {
+      .ledger td:nth-child(2)::before { content: ""; }
+      .ledger td { padding: 1px 0; }
+    }
   </style>
   <script type="application/ld+json">
   {
@@ -194,6 +231,7 @@
 </head>
 <body>
   <canvas id="scene" aria-hidden="true"></canvas>
+  <div id="labels" aria-hidden="true"></div>
   <div class="bar">
     <div class="wrap">
       <a class="brand" href="https://www.artifisi.com">ARTIFISI</a>
@@ -211,7 +249,12 @@
           <div class="num">$1B</div>
           <p>What Google paid in 2013 for Waze, a navigation app that started in one small country. <strong>Malaysia can build the next one.</strong></p>
         </div>
-        <p class="hint">Scroll. The chart re-forms with each section.</p>
+        <p class="hint">Scroll to move through the charts. Click a chart to switch its view.</p>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">$1B</button><button type="button" data-view="1" aria-pressed="false">Four exits</button></div>
+          <p class="cap on" data-view="0"><b>$1B.</b> Each cube is part of the roughly US$1B Google paid for Waze in 2013. Waze began in 2006 as the community project FreeMap Israel and became a company in 2008.</p>
+          <p class="cap" data-view="1"><b>Four exits.</b> The four sales side by side, coin area to scale. CyberArk went to Palo Alto Networks for US$25B (closed Feb 2026). Waze went to Google in 2013, Moovit to Intel's Mobileye in 2020 for US$900M, and Viber to Rakuten in 2014 for US$900M.</p>
+        </div>
       </div></div>
     </section>
 
@@ -232,6 +275,11 @@
             <div class="n gap">4</div>
             <p>everyday categories where Malaysians rely on an Israel-linked product and no Malaysian firm competes yet</p>
           </div>
+        </div>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">The numbers</button><button type="button" data-view="1" aria-pressed="false">The week</button></div>
+          <p class="cap on" data-view="0"><b>The numbers.</b> Two days, eleven products, four open categories.</p>
+          <p class="cap" data-view="1"><b>The week.</b> 20 Oct: the National Cyber Security Committee, chaired by the PM, decides on Waze. 21 Oct: the PMO confirms an immediate public sector ban and the PM urges people to move to homegrown apps like TuJu. 22 Oct: TuJu buckles under demand. 23 Oct: the PM says a nationwide ban needs careful study first, and Waze calls the data security claims completely false. TuJu was built by the Malaysian Highway Authority (LLM) with Prosignal Consortium and launched on 26 Nov 2025.</p>
         </div>
       </div></div>
     </section>
@@ -254,6 +302,11 @@
               <span><h3>Open gap</h3><p>No significant Malaysian player. Software that local firms could build with focused funding.</p></span>
             </div>
           </div>
+        </div>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">Readiness</button><button type="button" data-view="1" aria-pressed="false">Who owns them</button></div>
+          <p class="cap on" data-view="0"><b>Readiness.</b> The ring split by category: four ready to scale, four open gaps.</p>
+          <p class="cap" data-view="1"><b>Who owns them.</b> Four were bought by a foreign tech giant: Waze by Google, Moovit by Mobileye, Viber by Rakuten, CyberArk by Palo Alto Networks. The other four are listed in New York: Check Point (Nasdaq, 1996), Wix (Nasdaq, 2013), Fiverr (NYSE, 2019) and monday.com (Nasdaq, 2021).</p>
         </div>
       </div></div>
     </section>
@@ -279,6 +332,11 @@
             <tr><td>Firewall &amp; identity products</td><td>Check Point, CyberArk <span class="muted">(Palo Alto)</span></td><td>Local firms sell services, not products. The hardest gap, and the most sensitive.</td></tr>
           </tbody>
         </table>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">Categories</button><button type="button" data-view="1" aria-pressed="false">Founded</button></div>
+          <p class="cap on" data-view="0"><b>Categories.</b> One slab per category. Ready ones are packed tight; open gaps are loose.</p>
+          <p class="cap" data-view="1"><b>Founded.</b> When each was founded. Israeli products above the line: Check Point 1993, CyberArk 1999, Wix 2006, Waze 2008, Viber 2010, Fiverr 2010, Moovit 2012, monday.com 2012. Malaysian ones below: Exabytes 2001, EasyStore 2013, SiteGiant 2013, TuJu 2025.</p>
+        </div>
       </div></div>
     </section>
 
@@ -294,6 +352,12 @@
           <div class="row"><span><b>Viber</b><small>Messaging · 2014</small></span><span class="track"><span class="fill" style="width:3.1%;background:var(--gap)"></span><span class="val">0.9</span></span></div>
         </div>
         <p>A navigation or messaging app built for one market can still be worth close to a billion dollars. Security products are worth far more.</p>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">To scale</button><button type="button" data-view="1" aria-pressed="false">Log scale</button><button type="button" data-view="2" aria-pressed="false">Years to sale</button></div>
+          <p class="cap on" data-view="0"><b>To scale.</b> Linear scale, US$ billions. CyberArk dwarfs the rest.</p>
+          <p class="cap" data-view="1"><b>Log scale.</b> Log scale, so the sub-billion sales can be compared. Waze, Moovit and Viber all sold for close to US$1B.</p>
+          <p class="cap" data-view="2"><b>Years to sale.</b> Years from founding to sale. Viber took 4, Waze 5, Moovit 8 and CyberArk 27.</p>
+        </div>
       </div></div>
     </section>
 
@@ -306,6 +370,11 @@
           <div><h3>Fund the gaps</h3><p>Target grants and procurement at messaging, work tools and security products, where no local player exists.</p></div>
           <div><h3>Publish the test</h3><p>A clear, published data-sovereignty standard tells local firms exactly what they need to build to.</p></div>
         </div>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">Three asks</button><button type="button" data-view="1" aria-pressed="false">What each covers</button></div>
+          <p class="cap on" data-view="0"><b>Three asks.</b> Three asks that run together.</p>
+          <p class="cap" data-view="1"><b>What each covers.</b> Buy local first covers the four ready categories. Fund the gaps names messaging, work tools and security products. Publish the test applies to all eight.</p>
+        </div>
       </div></div>
     </section>
 
@@ -316,6 +385,27 @@
           <p><b class="ready">Ready to scale</b><br />Waze (Google) · Moovit (Mobileye) · Wix · Check Point (services)<br />Local: TuJu (LLM) · PULSE (Prasarana) · Exabytes · EasyStore · SiteGiant · LGMS</p>
           <p><b class="gap">Open gap</b><br />Viber (Rakuten) · Fiverr · monday.com · Check Point (products) · CyberArk (Palo Alto Networks)</p>
         </div>
+
+        <h2>Data ledger</h2>
+        <table class="ledger">
+          <thead><tr><th>Product</th><th>Category</th><th>Founded</th><th>Home</th><th>Owner or listing</th><th>Sale</th></tr></thead>
+          <tbody>
+            <tr class="group"><td colspan="6">Israel-linked products</td></tr>
+            <tr><td>Waze</td><td>Navigation</td><td>2008 (FreeMap Israel, 2006)</td><td>Ra'anana</td><td>Google</td><td>2013, about US$1B (some reports say US$1.3B)</td></tr>
+            <tr><td>Moovit</td><td>Public transit</td><td>2012</td><td>Israel</td><td>Mobileye (Intel)</td><td>2020, US$900M</td></tr>
+            <tr><td>Wix</td><td>Website builder</td><td>2006</td><td>Tel Aviv</td><td>Nasdaq: WIX, listed 2013</td><td>Not sold</td></tr>
+            <tr><td>Check Point</td><td>Security audits, firewall</td><td>1993</td><td>Tel Aviv</td><td>Nasdaq: CHKP, listed 1996</td><td>Not sold</td></tr>
+            <tr><td>Viber</td><td>Messaging</td><td>2010</td><td>Tel Aviv</td><td>Rakuten</td><td>2014, US$900M</td></tr>
+            <tr><td>Fiverr</td><td>Freelance marketplace</td><td>2010</td><td>Tel Aviv</td><td>NYSE: FVRR, listed 2019</td><td>Not sold</td></tr>
+            <tr><td>monday.com</td><td>Work management</td><td>2012</td><td>Tel Aviv</td><td>Nasdaq: MNDY, listed 2021</td><td>Not sold</td></tr>
+            <tr><td>CyberArk</td><td>Identity security</td><td>1999</td><td>Petah Tikva</td><td>Palo Alto Networks</td><td>2026, US$25B</td></tr>
+            <tr class="group"><td colspan="6">Malaysian products</td></tr>
+            <tr><td>TuJu</td><td>Navigation</td><td>2025 (launched 26 Nov)</td><td>Malaysia</td><td>Malaysian Highway Authority (LLM) with Prosignal Consortium</td><td>Not sold</td></tr>
+            <tr><td>Exabytes</td><td>Hosting and website builder</td><td>2001</td><td>Penang</td><td>Private. Says it serves 160,000+ businesses in 121 countries</td><td>Not sold</td></tr>
+            <tr><td>EasyStore</td><td>Shop builder</td><td>2013</td><td>Puchong</td><td>Private</td><td>Not sold</td></tr>
+            <tr><td>SiteGiant</td><td>Shop builder</td><td>2013</td><td>Malaysia</td><td>Private. Says it serves 20,000+ merchants</td><td>Not sold</td></tr>
+          </tbody>
+        </table>
 
         <h2>Methodology</h2>
         <div class="cols">
@@ -340,6 +430,9 @@
           <li><b>Bernama, 21 Oct 2026.</b> Ban on Waze reflects Malaysia's commitment, says Cinta Gaza Malaysia. <a href="https://www.bernama.com/en/news.php?id=2623763">bernama.com</a></li>
           <li><b>The Edge.</b> LGMS eyes SME market amid rise in cyberattacks. <a href="https://theedgemalaysia.com">theedgemarkets.com</a></li>
           <li><b>Company websites.</b> Exabytes, EasyStore, SiteGiant, GoGet, Prasarana (PULSE). <a href="https://www.exabytes.my">exabytes.my</a> · <a href="https://www.easystore.co">easystore.co</a> · <a href="https://sitegiant.my">sitegiant.my</a></li>
+          <li><b>Malay Mail, 21 Oct 2026.</b> PMO confirms civil servants barred from using Waze over Israel data security risks. Also covers TuJu's developers and launch date. <a href="https://www.malaymail.com/news/malaysia/2026/10/21/pmo-confirms-civil-servants-barred-from-using-waze-over-israel-data-security-risks/240055">malaymail.com</a></li>
+          <li><b>Wikipedia.</b> Founding years, headquarters, listings and sale prices for <a href="https://en.wikipedia.org/wiki/Waze">Waze</a>, <a href="https://en.wikipedia.org/wiki/Moovit">Moovit</a>, <a href="https://en.wikipedia.org/wiki/Viber">Viber</a>, <a href="https://en.wikipedia.org/wiki/Wix.com">Wix</a>, <a href="https://en.wikipedia.org/wiki/Fiverr">Fiverr</a>, <a href="https://en.wikipedia.org/wiki/Monday.com">monday.com</a>, <a href="https://en.wikipedia.org/wiki/Check_Point">Check Point</a> and <a href="https://en.wikipedia.org/wiki/CyberArk">CyberArk</a>. Checked 24 Oct 2026.</li>
+          <li><b>Company pages.</b> <a href="https://www.exabytes.my/about">Exabytes about page</a>, <a href="https://sitegiant.my/about/">SiteGiant story</a>, <a href="https://www.cbinsights.com/company/easystore">EasyStore on CB Insights</a>.</li>
         </ul>
       </div>
     </section>
