@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What Malaysia pays, by industry, 2010 to 2025</title>
+<meta name="description" content="Nineteen industries, sixteen years of the DOSM Salaries and Wages Survey. Education pays twice the national median. Two in three workers are below it. The gap narrowed, broke in 2020, and never got back to 2019." />
+<link rel="canonical" href="https://reports.artifisi.com/malaysia-wages/" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="What Malaysia pays, by industry" />
+<meta property="og:description" content="Sixteen years of the DOSM wage survey, drawn as six mechanisms. Education pays 2.04x the national median; 65.8% of workers sit below it." />
+<meta property="og:image" content="https://reports.artifisi.com/og.png" />
+<meta property="og:url" content="https://reports.artifisi.com/malaysia-wages/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@artifisi_my" />
+<link rel="icon" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --paper:#f6f2ea; --paper-2:#efe9dd; --ink:#332d26; --muted:#6e665a;
+  --rule:#dcd3c2; --ctx:#b6ab96; --accent:#1e5b49; --warn:#a6442a;
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
+  --s1:14px; --s2:17px; --s3:22px; --s4:clamp(30px,4.2vw,46px); --s5:clamp(42px,7vw,78px);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:var(--s2);line-height:1.62}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+img{max-width:100%;display:block}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* bar */
+.bar{border-bottom:1px solid var(--rule)}
+.bar .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 24px;font-family:var(--mono);font-size:13px;letter-spacing:.04em}
+.brand{font-weight:500;text-decoration:none;letter-spacing:.12em;text-transform:uppercase}
+.bar a.back{color:var(--muted);text-decoration:none}
+.bar a.back:hover{color:var(--ink)}
+
+/* hero */
+header.hero{padding:clamp(48px,7vw,88px) 0 clamp(32px,4vw,52px)}
+.kicker{font-family:var(--mono);font-size:var(--s1);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+h1{font-family:var(--serif);font-weight:800;font-size:var(--s5);line-height:1.02;letter-spacing:-.024em;margin:0;max-width:16ch}
+.stand{margin:26px 0 0;font-size:clamp(19px,2.2vw,23px);line-height:1.5;max-width:44ch;color:#413a31}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:clamp(36px,5vw,56px) 0 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.stat{padding:22px 20px 22px 0}
+.stat+.stat{border-left:1px solid var(--rule);padding-left:20px}
+.stat .n{font-family:var(--mono);font-weight:500;font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.02em;display:block}
+.stat .n small{font-size:.55em;letter-spacing:0}
+.stat .l{font-family:var(--mono);font-size:12.5px;line-height:1.4;color:var(--muted);display:block;margin-top:8px;letter-spacing:.02em}
+.hint{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:28px 0 0}
+
+/* sections */
+section.sec{padding:clamp(56px,8vw,104px) 0;border-top:1px solid var(--rule)}
+.sec-head{display:flex;gap:20px;align-items:baseline;margin-bottom:26px}
+.sec-n{font-family:var(--mono);font-size:var(--s1);color:var(--ctx);letter-spacing:.14em;flex:0 0 auto;padding-top:.35em}
+h2{font-family:var(--serif);font-weight:800;font-size:var(--s4);line-height:1.08;letter-spacing:-.018em;margin:0;max-width:24ch}
+.sec-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(28px,5vw,64px);align-items:start}
+.sec-body.wide{grid-template-columns:1fr}
+.prose{max-width:62ch}
+.prose p{margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose .lead{font-size:clamp(18px,2vw,20px);color:#413a31}
+.hero-fig{margin:0}
+
+/* figure */
+figure.fig{margin:0;position:relative}
+.fig .canvas-wrap{position:relative;width:100%;background:var(--paper-2);border:1px solid var(--rule);overflow:hidden}
+.fig .canvas-wrap::after{content:"";position:absolute;inset:0;pointer-events:none}
+figure.fig canvas{display:block;width:100%;height:100%}
+figcaption{font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--muted);margin-top:12px;letter-spacing:.01em}
+figcaption b{color:var(--ink);font-weight:500}
+.fig-fallback{padding:20px 0 4px}
+.fig-fallback table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:13px}
+.fig-fallback th,.fig-fallback td{text-align:left;padding:6px 10px 6px 0;border-bottom:1px solid var(--rule)}
+.fig-fallback th{color:var(--muted);font-weight:400}
+html.js .fig-fallback{display:none}
+html.no-js .fig .canvas-wrap{display:none}
+figure.fig.failed .canvas-wrap{display:none}
+figure.fig.failed .fig-fallback{display:block}
+
+/* click to play */
+.fig .canvas-wrap{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fig .canvas-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.fig .canvas-wrap.is-playing{cursor:progress}
+.chip{position:absolute;right:10px;bottom:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);background:var(--paper);border:1px solid var(--rule);border-radius:999px;padding:5px 10px;pointer-events:none;transition:color .25s,border-color .25s}
+.chip.busy{color:var(--accent);border-color:var(--accent)}
+.chip.static{opacity:.7}
+.finger{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;opacity:0;transition:opacity .35s var(--ease)}
+.finger.show{opacity:1}
+.finger svg{position:absolute;left:-21px;top:-10px;fill:var(--ink);transform-origin:50% 20%;animation:press 1.9s ease-in-out infinite;filter:drop-shadow(0 1px 2px rgba(246,242,234,.9))}
+.finger .ripple{position:absolute;left:-18px;top:-18px;width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);opacity:0;animation:ripple 1.9s ease-out infinite}
+.finger .say{position:absolute;left:26px;top:4px;white-space:nowrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);background:var(--paper);padding:3px 6px;border-radius:2px}
+@keyframes press{0%,100%{transform:translate(13px,13px) scale(1)}40%{transform:translate(0,0) scale(1)}50%{transform:translate(0,0) scale(.82)}60%{transform:translate(0,0) scale(1)}}
+@keyframes ripple{0%,48%{opacity:0;transform:scale(.3)}52%{opacity:.85;transform:scale(.4)}100%{opacity:0;transform:scale(1.8)}}
+@media (prefers-reduced-motion:reduce){.finger svg,.finger .ripple{animation:none}}
+
+/* pinned labels */
+.scene-label{position:absolute;left:0;top:0;font-family:var(--mono);font-size:var(--ls,13px);line-height:1;color:var(--ink);white-space:nowrap;pointer-events:none;will-change:transform;opacity:0;transition:opacity .3s var(--ease);background:var(--paper);padding:.18em .3em;border-radius:2px}
+.scene-label.big{font-size:calc(var(--ls,13px) * 1.42);font-weight:500;letter-spacing:-.01em}
+.scene-label.small{font-size:calc(var(--ls,13px) * .86);letter-spacing:.02em}
+.scene-label.dim{color:var(--muted)}
+.scene-label.accent{color:var(--accent)}
+.scene-label.warn{color:var(--warn)}
+
+/* video capture: ?shot=name&t=0.5 */
+body.shot-mode > .bar,body.shot-mode > header,body.shot-mode > footer,body.shot-mode > .method{display:none}
+body.shot-mode main > section{display:none;border:0;padding:0}
+body.shot-mode main > section.on{display:block}
+body.shot-mode main > section.on .wrap{max-width:none;padding:0}
+body.shot-mode main > section.on .sec-head,body.shot-mode main > section.on .prose,body.shot-mode main > section.on figcaption{display:none}
+body.shot-mode main > section.on .sec-body{display:block}
+body.shot-mode main > section.on .canvas-wrap{height:100vh;border:0;aspect-ratio:auto!important}
+body.shot-mode main > section.on figure.fig{margin:0}
+body.shot-mode .chip,body.shot-mode .finger{display:none}
+@media (max-width:820px){.scene-label{font-size:11px}}
+
+/* callout inside prose */
+.note{border-left:2px solid var(--accent);padding:2px 0 2px 16px;margin:22px 0 0;font-size:16px;color:var(--muted)}
+.note b{color:var(--ink);font-weight:500}
+
+/* method */
+.method{border-top:1px solid var(--rule);padding:clamp(48px,6vw,80px) 0}
+.method h2{font-size:clamp(24px,3vw,32px);margin-bottom:26px}
+.method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px}
+.method h3{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;font-weight:400}
+.method p,.method li{font-size:15.5px;line-height:1.6;color:#4a423a;margin:0 0 10px}
+.method ul{margin:0;padding-left:18px}
+.method a{color:var(--accent)}
+
+/* footer */
+footer{border-top:1px solid var(--rule);padding:32px 0 56px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+footer a{color:var(--muted)}
+
+@media (max-width:820px){
+  .sec-body{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(3){border-left:0;padding-left:0}
+  .stat:nth-child(n+3){border-top:1px solid var(--rule)}
+  h1{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="wrap">
+  <a class="brand" href="/">Artifisi</a>
+  <a class="back" href="/">&larr; Reports</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="kicker">DOSM &middot; Salaries and Wages Survey &middot; 2010&ndash;2025</p>
+  <h1>What Malaysia pays, by industry</h1>
+  <p class="stand">Nineteen industries, sixteen years, one survey. The median wage nearly doubled in ringgit. The distance between the top of the ladder and the bottom did not close the way the decade suggested it would.</p>
+  <div class="stats">
+    <div class="stat"><span class="n">RM2,940</span><span class="l">national median<br>monthly wage, 2025</span></div>
+    <div class="stat"><span class="n">3.30<small>&times;</small></span><span class="l">best-paid industry<br>over worst-paid, 2025</span></div>
+    <div class="stat"><span class="n">65.8<small>%</small></span><span class="l">of employees in an industry<br>below the median</span></div>
+    <div class="stat"><span class="n">55.6<small>%</small></span><span class="l">of the wage bill<br>in four industries</span></div>
+  </div>
+  <p class="hint">Click any chart to play its shot. Six charts, one per claim.</p>
+</div></header>
+
+<main>
+
+<section class="sec" id="education"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">01</span><h2>Education pays twice the national median.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead">The median worker in education took home <b>RM5,990</b> a month in 2025. Across all industries the median was <b>RM2,940</b>. That is <b>2.04&times;</b> &mdash; the widest gap between any single industry and the national figure.</p>
+      <p>Education has held the top of the ladder every year since 2011. In 2010 it tied with mining at 1.87&times;, and it has widened since. The industry employs 952,300 people, 9.2% of everyone the survey covers, so this is not a small elite pulling a statistic around.</p>
+      <p class="note">The floor of this chart is the national median, not zero. The climb is the distance from RM2,940 to RM5,990.</p>
+    </div>
+    <figure class="fig" data-scene="lift" data-aspect="4/5">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Median monthly wage, 2025</caption>
+        <tr><th>National median</th><td>RM2,940</td></tr>
+        <tr><th>Education median</th><td>RM5,990</td></tr>
+        <tr><th>Ratio</th><td>2.04&times;</td></tr></table>
+      </div>
+      <figcaption><b>Fig 1.</b> A lift from the national median floor to the education floor. Each floor is RM500.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="below-median"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">02</span><h2>Two in three workers are in an industry that pays below the median.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead"><b>65.8%</b> of the 10.38 million employees the survey covers work in an industry whose median sits below the national median. That is not a paradox. It is what happens when a handful of high-paying industries pull the middle up.</p>
+      <p>Manufacturing employs 18.9% of the workforce at 0.91&times; the national median. Trade employs 17.0% at 0.70&times;. Those two industries alone hold more than a third of everyone counted, and both sit under the line.</p>
+      <p class="note">The split is a share of <b>employees covered by the survey</b>, not of total employment. Self-employed and informal workers are outside it.</p>
+    </div>
+    <figure class="fig" data-scene="floor" data-aspect="1/1">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Employees by side of the national median, 2025</caption>
+        <tr><th>Below the median</th><td>65.8%</td></tr>
+        <tr><th>At or above</th><td>34.2%</td></tr></table>
+      </div>
+      <figcaption><b>Fig 2.</b> The workforce falling into two lanes at the national median. Left is below it, right is at or above. Each dot is one part in 420 of the people counted.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="the-gap"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">03</span><h2>It narrowed for a decade, broke in 2020, and never got back to 2019.</h2></div>
+  <div class="sec-body wide">
+    <div class="prose">
+      <p class="lead">Measured as the ratio of the best-paid industry's median to the worst-paid, the spread fell from <b>3.59</b> in 2010 to <b>3.18</b> in 2019 &mdash; a decade of slow convergence. Then in 2020 it jumped to <b>3.80</b> in a single year.</p>
+      <p>It has since closed to 3.30. That is below where the decade started, but above the 2019 floor. The 2020 jump is a real fall in pay, not a change in who was counted: covered employees rose 2.8% that year while the national median fell 15.0%, from RM2,442 to RM2,076.</p>
+      <p class="note">The middle of the decade is not a straight line. The spread sat between 3.39 and 3.72 from 2010 to 2016 before the slide to 2019.</p>
+    </div>
+    <figure class="fig" data-scene="canyon" data-aspect="16/10" style="margin-top:36px">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Spread, best-paid over worst-paid industry median</caption>
+        <tr><th>2010</th><td>3.59</td></tr><tr><th>2013</th><td>3.72</td></tr>
+        <tr><th>2016</th><td>3.62</td></tr><tr><th>2019</th><td>3.18</td></tr>
+        <tr><th>2020</th><td>3.80</td></tr><tr><th>2025</th><td>3.30</td></tr></table>
+      </div>
+      <figcaption><b>Fig 3.</b> The canyon runs left to right, 2010 to 2025. Wall to wall is the spread.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="who-moved"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">04</span><h2>The public sector climbed. Resource and finance fell.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead">Between 2010 and 2025, ten industries moved up the ladder relative to the national median and nine moved down. The biggest climb was health, from 1.33&times; to <b>1.69&times;</b>. Public administration went from 1.36&times; to <b>1.57&times;</b>.</p>
+      <p>The biggest fall was real estate, 1.67&times; to <b>1.29&times;</b>, followed by mining (1.87&times; to 1.57&times;) and finance (1.67&times; to 1.42&times;). The industries that lost ground are the ones that paid a premium in 2010 for resources, property and finance.</p>
+      <p class="note">Ratios are against the national median <b>in the same year</b>, which cancels inflation. No claim of real growth is made here.</p>
+    </div>
+    <figure class="fig" data-scene="section" data-aspect="4/5">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Ratio to national median, 2010 &rarr; 2025</caption>
+        <tr><th>Health</th><td>1.33 &rarr; 1.69</td></tr>
+        <tr><th>Public admin</th><td>1.36 &rarr; 1.57</td></tr>
+        <tr><th>Finance</th><td>1.67 &rarr; 1.42</td></tr>
+        <tr><th>Mining</th><td>1.87 &rarr; 1.57</td></tr>
+        <tr><th>Real estate</th><td>1.67 &rarr; 1.29</td></tr></table>
+      </div>
+      <figcaption><b>Fig 4.</b> Nineteen lift shafts. Ghost is 2010, solid is 2025, the rod is the travel.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="wage-bill"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">05</span><h2>Four industries carry more than half the wage bill.</h2></div>
+  <div class="sec-body wide">
+    <div class="prose">
+      <p class="lead">Multiply each industry's share of employees by its median wage and you get a rough wage bill. Four industries account for <b>55.6%</b> of it: education 17.4%, manufacturing 15.9%, public administration 11.2% and trade 11.0%.</p>
+      <p>They get there two different ways. Education and public administration pay well and employ many. Manufacturing and trade employ the most people in the country and pay below the median. A block's footprint is its share of employees, its height is its pay, and its volume is what it contributes.</p>
+      <p class="note">This is a weighted headcount, not a payroll total. It uses median wage as a stand-in for the average, which understates industries with long high-earner tails.</p>
+    </div>
+    <figure class="fig" data-scene="city" data-aspect="16/10" style="margin-top:36px">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Share of the wage bill, 2025</caption>
+        <tr><th>Education</th><td>17.4%</td></tr><tr><th>Manufacturing</th><td>15.9%</td></tr>
+        <tr><th>Public admin</th><td>11.2%</td></tr><tr><th>Trade</th><td>11.0%</td></tr>
+        <tr><th>Four together</th><td>55.6%</td></tr></table>
+      </div>
+      <figcaption><b>Fig 5.</b> Nineteen blocks, smallest bill first. Footprint is employees, height is pay, volume is the bill.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="the-average"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">06</span><h2>Where pay is lowest, the average sits furthest above the typical wage.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead">In agriculture the mean wage is <b>1.42&times;</b> the median. In construction it is <b>1.40&times;</b>. In public administration it is <b>1.05&times;</b>, and in education 1.06&times;.</p>
+      <p>A wide mean-to-median ratio means a long tail of high earners inside the industry. The industries with the lowest typical pay are also the ones where the typical wage tells you least about what people actually take home.</p>
+      <p class="note">Agriculture's median is RM1,813 and its mean RM2,575. The RM762 between them is the tail.</p>
+    </div>
+    <figure class="fig" data-scene="cutaway" data-aspect="4/5">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Mean over median, 2025</caption>
+        <tr><th>Agriculture</th><td>1.42&times;</td></tr><tr><th>Construction</th><td>1.40&times;</td></tr>
+        <tr><th>Education</th><td>1.06&times;</td></tr><tr><th>Public admin</th><td>1.05&times;</td></tr></table>
+      </div>
+      <figcaption><b>Fig 6.</b> The lift stops at the median floor, then continues to the mean floor.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+</main>
+
+<section class="method"><div class="wrap">
+  <h2>Method and source</h2>
+  <div class="method-grid">
+    <div>
+      <h3>Source</h3>
+      <p>Department of Statistics Malaysia, <em>Salaries and Wages Survey Report</em>, series <code>wages_industry</code>, retrieved from the open data catalogue at <a href="https://data.gov.my/data-catalogue/wages_industry">data.gov.my</a>.</p>
+      <p>960 observations: 20 industry sections &times; 16 years &times; 3 sex categories. Figures on this page use the <em>both sexes</em> rows and the 19 sections that report a median for every year.</p>
+    </div>
+    <div>
+      <h3>Definitions</h3>
+      <ul>
+        <li><b>Ratio</b> &mdash; an industry's median monthly wage divided by the national median monthly wage in the same year. This cancels inflation, so no claim about real growth is made.</li>
+        <li><b>Spread</b> &mdash; the highest industry ratio divided by the lowest, per year.</li>
+        <li><b>Wage bill</b> &mdash; share of employees &times; median wage, normalised. A weighted headcount, not a payroll total.</li>
+        <li><b>Recipients</b> &mdash; employees covered by the survey. Not total employment.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Caveats</h3>
+      <p>Sections B, D, E, L and R each cover 1% or less of covered employees. Their medians are volatile and no claim here rests on them alone.</p>
+      <p>2020 is a genuine break, not a coverage artefact: covered employees rose 2.8% while the national median fell 15.0%.</p>
+      <p>Every figure on this page is traceable to <code>numbers.csv</code> in the source bundle.</p>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span>An analysis by Artifisi &middot; data as published by DOSM</span>
+  <span><a href="/">reports.artifisi.com</a></span>
+</div></footer>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/" } }</script>
+<script type="module" src="./scene.js"></script>
+</body>
+</html>

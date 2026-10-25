@@ -1,0 +1,9 @@
+:root{
+  --paper:#f6f2ea; --ink:#17140f; --muted:#6e665a; --rule:#dcd3c2;
+  --up:#1e5b49; --down:#a6442a; --hi:#c9a227;
+  --display:"Fraunces",Georgia,serif;
+  --text:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
+  --t1:clamp(44px,5.2vw,76px); --t2:30px; --t3:19px; --t4:15px; --t5:13px;
+  --ease:cubic-bezier(.22,.61,.36,1); --dur:600ms;
+}

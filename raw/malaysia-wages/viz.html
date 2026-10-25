@@ -1,0 +1,483 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>The weight of work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f6f2ea;--ink:#17140f;--muted:#6e665a;--rule:#dcd3c2;--up:#1e5b49;--down:#a6442a;
+--display:"Fraunces",Georgia,serif;--text:"IBM Plex Sans",Arial,sans-serif;--mono:"IBM Plex Mono",Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--text);overflow:hidden}
+#c{position:fixed;left:0;top:0;width:100vw;height:100vh;display:block}
+.head{position:fixed;left:5.2vw;top:6.2vh;z-index:3;max-width:min(560px,62vw)}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,3.7vw,54px);line-height:1.02;letter-spacing:-.022em;margin:0}
+.ledger{position:fixed;right:5.2vw;top:6.2vh;z-index:3;font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:right}
+.ledger .h{letter-spacing:.18em;text-transform:uppercase;font-size:10px;color:#9a9081;margin-bottom:11px}
+.ledger div{line-height:1.8}
+.ledger .v{color:var(--ink);font-weight:500}
+.ledger .hi{color:var(--up);font-weight:500}
+.note{position:fixed;left:5.2vw;bottom:7.5vh;z-index:3;font-family:var(--mono);font-size:11.5px;letter-spacing:.01em;
+color:var(--muted);max-width:52ch;line-height:1.6}
+.note b{color:var(--ink);font-weight:500}
+.readout{position:fixed;right:5.2vw;top:6.2vh;z-index:3;font-family:var(--mono);font-size:11.5px;
+color:var(--muted);text-align:right;opacity:0;transition:opacity .35s;line-height:1.8}
+.readout .n{font-family:var(--text);font-weight:600;font-size:15px;color:var(--ink);margin-bottom:9px;letter-spacing:-.01em}
+.readout .b{color:var(--ink);font-weight:500}
+.ledger{transition:opacity .35s}
+.lbl{position:fixed;font-family:var(--mono);font-size:10.5px;color:var(--muted);transform:translate(-50%,0);
+white-space:nowrap;z-index:2;pointer-events:none}
+.lbl::before{content:"";position:absolute;left:50%;bottom:100%;width:1px;height:var(--lead,0px);background:#b7ac97;margin-bottom:4px}
+.lbl.tall{color:var(--ink);font-weight:500}
+.lbl.on{color:var(--ink)}
+body.port .head{left:7vw;right:7vw;top:9vh;max-width:none}
+body.port h1{font-size:clamp(34px,7.2vw,62px)}
+body.port .ledger{display:none}
+body.port .note{left:7vw;right:7vw;bottom:16vh;max-width:none;font-size:13px}
+body.port .readout{display:none}
+body.port .lbl{font-size:9px}
+body.stills *{transition:none!important;animation:none!important}
+</style></head><body>
+<canvas id="c"></canvas>
+<div class="head">
+  <p class="kicker">Malaysia &middot; wages by industry &middot; 2025 &middot; DOSM</p>
+  <h1>Four industries carry more than half the wage bill.</h1>
+</div>
+<div class="ledger">
+  <div class="h">Share of wage bill</div>
+  <div><span class="hi">Education</span> <span class="hi">17.4</span></div>
+  <div>Manufacturing <span class="v">15.9</span></div>
+  <div>Public administration <span class="v">11.2</span></div>
+  <div>Trade <span class="v">11.0</span></div>
+</div>
+<div class="note" id="note"></div>
+<div class="readout" id="readout"></div>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.min.js"}}</script>
+<script type="module">
+const S = [{"s":"ZZ","name":"Other industries","label":"Other 11 industries","r25":0.994,"share":24.3,"bill":22.4,"group":true},{"s":"F","name":"Construction","label":"Construction","r25":0.77,"share":6.2,"bill":4.4,"group":false},{"s":"I","name":"Food and stay","label":"Food and stay","r25":0.68,"share":7.7,"bill":4.9,"group":false},{"s":"K","name":"Finance","label":"Finance","r25":1.42,"share":4,"bill":5.3,"group":false},{"s":"Q","name":"Health","label":"Health","r25":1.69,"share":4.8,"bill":7.5,"group":false},{"s":"G","name":"Trade","label":"Trade","r25":0.7,"share":17,"bill":11,"group":false},{"s":"O","name":"Public admin","label":"Public admin","r25":1.57,"share":7.7,"bill":11.2,"group":false},{"s":"C","name":"Manufacturing","label":"Manufacturing","r25":0.91,"share":18.9,"bill":15.9,"group":false},{"s":"P","name":"Education","label":"Education","r25":2.04,"share":9.2,"bill":17.4,"group":false}];
+const Q = new URLSearchParams(location.search);
+const PORT = innerWidth / innerHeight < 0.85;
+if (PORT) document.body.classList.add("port");
+if (Q.has("t")) document.body.classList.add("stills");
+
+try {
+const THREE = await import("three");
+const RAD = Math.PI / 180;
+const canvas = document.getElementById("c");
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight, false);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color("#f6f2ea");
+scene.fog = new THREE.Fog("#f6f2ea", 70, 130);
+
+/* ---------- layout ---------- */
+const K = 0.54, GAP = 0.40, SPLIT = 1.15, HS = 2.2;
+S.forEach(d => d.w = K * Math.sqrt(d.share));
+const rest = S[0], named = S.slice(1);
+let total = rest.w + SPLIT + named.reduce((t,d) => t + d.w, 0) + GAP * (named.length - 1);
+let cur = -total / 2;
+rest.x = cur + rest.w / 2; cur += rest.w + SPLIT;
+named.forEach(d => { d.x = cur + d.w / 2; cur += d.w + GAP; });
+
+/* ---------- lights ---------- */
+scene.add(new THREE.HemisphereLight(0xffffff, 0xd2c7b4, 1.9));
+const fill = new THREE.DirectionalLight(0xe6ebf2, 0.95); fill.position.set(-2, 6, 22); scene.add(fill);
+const sun = new THREE.DirectionalLight(0xfff6e8, 2.2); sun.position.set(11, 26, -5);
+sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -18; sun.shadow.camera.right = 18;
+sun.shadow.camera.top = 14; sun.shadow.camera.bottom = -14;
+sun.shadow.camera.near = 1; sun.shadow.camera.far = 90;
+sun.shadow.bias = -0.0008; sun.shadow.normalBias = 0.025;
+scene.add(sun); scene.add(sun.target);
+
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.ShadowMaterial({color:0x3b342c, opacity:0.18}));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+
+/* ---------- blocks ---------- */
+const uGeo = new THREE.BoxGeometry(1, 1, 1);
+const matInk  = new THREE.MeshStandardMaterial({color:"#332d26", roughness:.9, metalness:0});
+const matHi   = new THREE.MeshStandardMaterial({color:"#1e5b49", roughness:.84, metalness:0});
+const matRest = new THREE.MeshStandardMaterial({color:"#b6ab96", roughness:.95, metalness:0});
+
+let maxH = 0, maxW = 0;
+S.forEach((d, i) => {
+  d.i = i; d.h = d.r25 * HS;
+  maxH = Math.max(maxH, d.h); maxW = Math.max(maxW, d.w);
+  const m = new THREE.Mesh(uGeo, d.group ? matRest : (d.s === "P" ? matHi : matInk));
+  m.scale.set(d.w, 0.0001, d.w);
+  m.position.set(d.x, 0, 0);
+  m.castShadow = true; m.receiveShadow = true;
+  m.userData.sec = d; d.mesh = m; scene.add(m);
+});
+
+/* ---------- measurement layers ---------- */
+const lineMat = new THREE.LineBasicMaterial({color:0x2b2621, transparent:true, opacity:0});
+const footMat = new THREE.LineBasicMaterial({color:0xf7f3ea, transparent:true, opacity:0});
+const boxMat = new THREE.LineBasicMaterial({color:0x1a1712, transparent:true, opacity:0});
+const accentMat = new THREE.LineBasicMaterial({color:0xa6442a, transparent:true, opacity:0});
+const edgeGeo = new THREE.EdgesGeometry(uGeo);
+
+const datum = new THREE.LineSegments(new THREE.BufferGeometry(), accentMat);
+const datumPts = new Float32Array([-total/2, HS, 1.9, total/2, HS, 1.9]);
+datum.geometry.setAttribute("position", new THREE.BufferAttribute(datumPts, 3));
+scene.add(datum);
+
+const foots = S.map(d => {
+  const g = new THREE.BufferGeometry();
+  const hw = d.w / 2, hz = d.w / 2;
+  const p = new Float32Array([
+    -hw,0,-hz,  hw,0,-hz,  hw,0,-hz,  hw,0,hz,
+     hw,0,hz, -hw,0,hz,  -hw,0,hz, -hw,0,-hz
+  ]);
+  g.setAttribute("position", new THREE.BufferAttribute(p, 3));
+  const l = new THREE.LineSegments(g, footMat);
+  l.position.set(d.x, 0, 0);
+  scene.add(l);
+  return l;
+});
+
+const boxes = S.map(d => {
+  const l = new THREE.LineSegments(edgeGeo, boxMat);
+  l.visible = false; scene.add(l); return l;
+});
+
+/* ---------- glyphs ---------- */
+const fxW = new THREE.MeshBasicMaterial({color:0xf7f3ea});
+const fxG = new THREE.MeshBasicMaterial({color:0x9fe0c4});
+function bar(mat, w, h, dp, x, y, z) {
+  const m = new THREE.Mesh(uGeo, mat);
+  m.scale.set(w, h, dp); m.position.set(x, y, z);
+  return m;
+}
+function buildFx(d) {
+  const g = new THREE.Group();
+  g.position.set(d.x, d.h + 0.02, 0);
+  const W = d.w, mat = d.s === "P" ? fxG : fxW;
+  const upd = [];
+  if (d.group) {
+    const bits = [];
+    for (let i = 0; i < 11; i++) {
+      const m = bar(mat, 0.07, 0.07, 0.07, (Math.random()-0.5)*W*0.8, 0, (Math.random()-0.5)*W*0.8);
+      m.userData.o = Math.random(); g.add(m); bits.push(m);
+    }
+    upd.push(u => bits.forEach(m => {
+      const k = (u * 0.35 + m.userData.o) % 1;
+      m.position.y = k * 1.25; m.scale.setScalar(0.09 * (1 - k) + 0.015);
+    }));
+  } else if (d.s === "P") {
+    const pages = [];
+    for (let i = 0; i < 7; i++) {
+      const piv = new THREE.Group();
+      piv.position.set(0, i * 0.075, -W * 0.24);
+      piv.add(bar(mat, W * 0.78, 0.012, W * 0.5, 0, 0, W * 0.26));
+      g.add(piv); pages.push(piv);
+    }
+    upd.push(u => pages.forEach((piv, i) => {
+      const a = (u * 0.55 - i * 0.11) % 1;
+      piv.rotation.x = -Math.PI / 2 + 1.25 * Math.max(0, Math.sin(a * Math.PI));
+    }));
+  } else if (d.s === "C") {
+    g.add(bar(mat, W * 0.92, 0.012, 0.02, 0, 0.02, 0));
+    const bs = [];
+    for (let i = 0; i < 6; i++) { const m = bar(mat, 0.13, 0.13, 0.13, 0, 0.09, 0); m.userData.o = i / 6; g.add(m); bs.push(m); }
+    upd.push(u => bs.forEach(m => {
+      const k = (u * 0.22 + m.userData.o) % 1;
+      m.position.x = -W * 0.44 + k * W * 0.88;
+      m.position.y = 0.09 + 0.05 * Math.abs(Math.sin(k * Math.PI * 6));
+    }));
+  } else if (d.s === "O") {
+    const pins = [];
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
+      const m = bar(mat, 0.055, 1, 0.055, (i - 1.5) * W * 0.2, 0, (j - 1.5) * W * 0.2);
+      m.userData.o = (i + j) * 0.12; g.add(m); pins.push(m);
+    }
+    upd.push(u => pins.forEach(m => {
+      const h = 0.1 + 0.32 * Math.max(0, Math.sin(u * 2 - m.userData.o));
+      m.scale.y = h; m.position.y = h / 2;
+    }));
+  } else if (d.s === "G") {
+    const sl = [];
+    for (let i = 0; i < 7; i++) { const m = bar(mat, W * 0.62, 0.07, W * 0.42, 0, i * 0.08, 0); g.add(m); sl.push(m); }
+    upd.push(u => { const n = Math.floor((u * 1.6) % 8); sl.forEach((m, i) => m.visible = i < n); });
+  } else if (d.s === "Q") {
+    const seg = [];
+    for (let i = 0; i < 26; i++) {
+      const m = bar(mat, W * 0.9 / 26 * 0.6, 0.05, 0.05, -W * 0.45 + (i + 0.5) * W * 0.9 / 26, 0.05, 0);
+      m.userData.i = i; g.add(m); seg.push(m);
+    }
+    upd.push(u => {
+      const c = (u * 0.9) % 1 * 26;
+      seg.forEach(m => {
+        const dd = Math.abs(m.userData.i - c);
+        const sp = dd < 2 ? Math.exp(-dd * dd) : 0;
+        m.scale.y = 0.05 + sp * 0.55; m.position.y = 0.03 + sp * 0.28;
+      });
+    });
+  } else if (d.s === "K") {
+    const st = [];
+    for (let i = 0; i < 7; i++) { const m = bar(mat, 0.11, 0.11, 0.11, -W * 0.42 + i * W * 0.14, 0.06 + i * 0.09, 0); g.add(m); st.push(m); }
+    upd.push(u => { const n = Math.floor((u * 1.2) % 9); st.forEach((m, i) => m.visible = i < n); });
+  } else if (d.s === "I") {
+    const pf = [];
+    for (let i = 0; i < 8; i++) {
+      const m = bar(mat, 0.07, 0.07, 0.07, (Math.random()-0.5)*W*0.55, 0, (Math.random()-0.5)*W*0.4);
+      m.userData.o = Math.random(); m.userData.p = Math.random() * 6.28; g.add(m); pf.push(m);
+    }
+    upd.push(u => pf.forEach(m => {
+      const k = (u * 0.3 + m.userData.o) % 1;
+      m.position.y = k * 1.1;
+      m.position.x += Math.sin(u * 2 + m.userData.p) * 0.004;
+      m.scale.setScalar(0.085 * (1 - k) + 0.012);
+    }));
+  } else if (d.s === "F") {
+    const legs = [], tops = [];
+    for (let i = 0; i < 4; i++) {
+      const sx = i < 2 ? -1 : 1, sz = i % 2 ? -1 : 1;
+      const m = bar(mat, 0.035, 1, 0.035, sx * W * 0.32, 0, sz * W * 0.32); g.add(m); legs.push(m);
+      const c = bar(mat, W * 0.66, 0.035, 0.035, 0, 0, sz * W * 0.32); g.add(c); tops.push(c);
+    }
+    upd.push(u => {
+      const h = 0.08 + ((u * 0.5) % 1) * 1.15;
+      legs.forEach(m => { m.scale.y = h; m.position.y = h / 2; });
+      tops.forEach(m => m.position.y = h);
+    });
+  }
+  g.visible = false; g.scale.setScalar(1.3); scene.add(g);
+  return {g, upd};
+}
+S.forEach(d => d.fx = buildFx(d));
+
+/* ---------- camera ---------- */
+const camera = new THREE.PerspectiveCamera(26, innerWidth / innerHeight, 0.1, 260);
+const BBOX = [];
+for (const sx of [-1,1]) for (const sy of [0,1]) for (const sz of [-1,1])
+  BBOX.push(new THREE.Vector3(sx * total/2, sy * maxH, sz * maxW/2));
+const probe = new THREE.Vector3();
+const tmpDir = new THREE.Vector3(), tmpTgt = new THREE.Vector3();
+function fitD(az, el, ty, mx, my) {
+  tmpDir.set(Math.sin(az*RAD)*Math.cos(el*RAD), Math.sin(el*RAD), Math.cos(az*RAD)*Math.cos(el*RAD)).normalize();
+  tmpTgt.set(0, ty, 0);
+  let lo = 8, hi = 220;
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2;
+    camera.position.copy(tmpTgt).addScaledVector(tmpDir, mid);
+    camera.lookAt(tmpTgt); camera.updateMatrixWorld();
+    let ok = true;
+    for (const q of BBOX) {
+      probe.copy(q).project(camera);
+      if (Math.abs(probe.x) > mx || probe.y > my || probe.y < -my) { ok = false; break; }
+    }
+    if (ok) hi = mid; else lo = mid;
+  }
+  return hi;
+}
+const smooth = x => x*x*(3 - 2*x);
+function sample(keys, t) {
+  if (t <= keys[0].t) return keys[0];
+  for (let i = 0; i < keys.length - 1; i++) {
+    const a = keys[i], b = keys[i+1];
+    if (t <= b.t) {
+      const k = smooth((t - a.t) / (b.t - a.t));
+      const o = {};
+      for (const p of Object.keys(a)) if (typeof a[p] === "number") o[p] = a[p] + (b[p] - a[p]) * k;
+      return o;
+    }
+  }
+  return keys[keys.length - 1];
+}
+
+const CAM_LAND = [
+  {t:0,  az:7, el:34, ty:5.0, mx:0.90, my:0.94, k:1.00},
+  {t:3,  az:7, el:34, ty:5.0, mx:0.90, my:0.94, k:1.00},
+  {t:11, az:6, el:33, ty:4.9, mx:0.88, my:0.94, k:0.92},
+  {t:19, az:2, el:2,  ty:2.4, mx:0.93, my:0.94, k:0.94},
+  {t:27, az:2, el:72, ty:3.0, mx:0.84, my:0.94, k:0.96},
+  {t:34, az:9, el:33, ty:4.6, mx:0.90, my:0.94, k:1.00},
+  {t:44, az:9, el:33, ty:4.6, mx:0.90, my:0.94, k:1.00},
+  {t:48, az:7, el:34, ty:5.0, mx:0.90, my:0.94, k:1.00}
+];
+const CAM_PORT = [
+  {t:0,  az:7, el:34, ty:6.2, mx:0.96, my:0.62, k:0.64},
+  {t:3,  az:7, el:34, ty:6.2, mx:0.96, my:0.62, k:0.64},
+  {t:11, az:6, el:33, ty:6.0, mx:0.96, my:0.62, k:0.60},
+  {t:19, az:2, el:2,  ty:3.0, mx:0.96, my:0.62, k:0.60},
+  {t:27, az:2, el:72, ty:3.6, mx:0.96, my:0.62, k:0.62},
+  {t:34, az:9, el:33, ty:5.4, mx:0.96, my:0.62, k:0.64},
+  {t:44, az:9, el:33, ty:5.4, mx:0.96, my:0.62, k:0.64},
+  {t:48, az:7, el:34, ty:6.2, mx:0.96, my:0.62, k:0.64}
+];
+const KEYS = PORT ? CAM_PORT : CAM_LAND;
+
+/* ---------- timeline ---------- */
+const T_END = 48;
+const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
+const seg = (t, a, b) => clamp01((t - a) / (b - a));
+const easeOut = x => 1 - Math.pow(1 - x, 3);
+
+const noteEl = document.getElementById("note");
+const NOTES = [
+  [3,  "Nine industries. Two numbers each: how many people, and how much they are paid."],
+  [11, "Height is the median wage against the national median."],
+  [19, "Footprint is the share of employees."],
+  [27, "Footprint times height is the wage bill. <b>Four of these nine carry 55.6% of it.</b>"],
+  [34, ""],
+  [44, "Malaysia, 2025. Median monthly wage RM2,940."]
+];
+
+const labels = S.map(d => {
+  const el = document.createElement("div");
+  el.className = "lbl" + (d.r25 > 1.2 && !d.group ? " tall" : "");
+  el.textContent = d.label;
+  document.body.appendChild(el);
+  return el;
+});
+
+const v = new THREE.Vector3();
+const camPos = new THREE.Vector3(), camLook = new THREE.Vector3();
+let camInit = false, lastD = 0;
+
+const TR0 = 34, TR1 = 44;
+function travel(T) {
+  if (T < TR0 || T >= TR1) return {pan:0, zoom:1, cue:-1, local:-1};
+  const span = TR1 - TR0, n = S.length - 1;
+  const u = (T - TR0) / span * n;
+  const i = Math.min(n - 1, Math.floor(u));
+  const f = u - i;
+  const g = smooth(Math.min(1, Math.max(0, (f - 0.5) / 0.5)));
+  const x = S[i].x + (S[i + 1].x - S[i].x) * g;
+  const cue = Math.round(u);
+  const local = T - (TR0 + cue * span / n);
+  return {pan: x * (PORT ? 0.72 : 0.58), zoom: PORT ? 0.56 : 0.88, cue, local};
+}
+function apply(T) {
+  const c = sample(KEYS, T);
+  const tr = travel(T);
+  const drift = Math.sin(T * 0.13) * 0.9;
+  const panX = tr.cue >= 0 ? tr.pan : (PORT ? total * 0.17 : 0);
+  const D = fitD(c.az, c.el, c.ty, c.mx, c.my) * c.k * tr.zoom;
+  lastD = D;
+  scene.fog.near = D * 1.02; scene.fog.far = D * 1.60;
+  tmpDir.set(Math.sin(c.az*RAD)*Math.cos(c.el*RAD), Math.sin(c.el*RAD), Math.cos(c.az*RAD)*Math.cos(c.el*RAD)).normalize();
+  const wantPos = new THREE.Vector3(panX, c.ty, 0).addScaledVector(tmpDir, D);
+  wantPos.x += drift;
+  const wantLook = new THREE.Vector3(panX, c.ty, 0);
+  if (!camInit) { camPos.copy(wantPos); camLook.copy(wantLook); camInit = true; }
+  camera.position.copy(wantPos); camera.lookAt(wantLook);
+  camera.updateMatrixWorld();
+
+  /* build */
+  S.forEach((d, i) => {
+    const p = easeOut(seg(T, 0.5 + i * 0.09, 1.7 + i * 0.09));
+    d.mesh.scale.y = Math.max(0.0001, d.h * p);
+    d.mesh.position.y = d.h * p / 2;
+    d.build = p;
+  });
+
+  /* datum */
+  const dpIn = easeOut(seg(T, 12.5, 16));
+  const dpOut = 1 - easeOut(seg(T, 19, 21));
+  const dp = dpIn * dpOut;
+  accentMat.opacity = dp * 0.9;
+  const dx0 = -(total/2 + 1.4);
+  const darr = datum.geometry.attributes.position.array;
+  darr[0] = dx0;
+  darr[3] = dx0 + (total + 2.8) * dpIn;
+  datum.geometry.attributes.position.needsUpdate = true;
+  datum.visible = dp > 0.01;
+
+  /* footprints */
+  const fp = easeOut(seg(T, 20.5, 24.5)) * (1 - easeOut(seg(T, 29, 32)));
+  footMat.opacity = fp * 0.8;
+  foots.forEach((l, i) => {
+    l.visible = fp > 0.01;
+    l.position.y = S[i].mesh.position.y * 2 + 0.01;
+  });
+
+  /* outlines on the four */
+  const ob = easeOut(seg(T, 27.5, 31)) * (1 - easeOut(seg(T, 34, 36)));
+  boxMat.opacity = ob * 0.7;
+  boxes.forEach((l, i) => {
+    const big = i >= 5;
+    l.visible = ob > 0.01 && big;
+    if (!l.visible) return;
+    const d = S[i];
+    l.scale.set(d.w * 1.06, Math.max(0.001, d.mesh.scale.y) * 1.06, d.w * 1.06);
+    l.position.set(d.x, d.mesh.position.y, 0);
+  });
+
+  /* glyph cues during travel */
+  S.forEach((d, i) => {
+    const on = i === tr.cue;
+    d.fx.g.visible = on && tr.local > -0.15;
+    if (d.fx.g.visible) {
+      d.fx.g.position.y = d.h + 0.02;
+      d.fx.upd.forEach(f => f(Math.max(0, tr.local)));
+    }
+    labels[i].classList.toggle("on", on);
+  });
+
+  /* labels */
+  const baseY = PORT ? innerHeight - innerHeight * 0.20 : innerHeight - 46;
+  labels.forEach((el, i) => {
+    const d = S[i];
+    v.set(d.x, 0, d.w / 2 + 0.3).project(camera);
+    const px = (v.x * 0.5 + 0.5) * innerWidth;
+    const py = (-v.y * 0.5 + 0.5) * innerHeight;
+    el.style.opacity = (v.x > -0.93 && v.x < 0.93 && v.z < 1) ? 1 : 0;
+    el.style.left = Math.max(46, Math.min(innerWidth - 46, px)) + "px";
+    el.style.top = Math.min(baseY, py + 14) + "px";
+    el.style.setProperty("--lead", Math.max(0, Math.min(baseY, py + 14) - py - 6) + "px");
+  });
+
+  /* copy */
+  const readoutEl = document.getElementById("readout");
+  const ledgerEl = document.querySelector(".ledger");
+  const inTravel = tr.cue >= 0;
+  let txt = NOTES[0][1];
+  for (const [t, s] of NOTES) if (T >= t) txt = s;
+  if (inTravel) {
+    const d = S[tr.cue];
+    readoutEl.innerHTML = '<div class="n">' + d.name + '</div>'
+      + d.share + '% of employees<br>median ' + d.r25.toFixed(2)
+      + '&times; national<br><span class="b">' + d.bill + '% of the wage bill</span>';
+    txt = '<b>' + d.name + '</b> &middot; ' + d.share + '% of employees &middot; '
+        + d.bill + '% of the wage bill';
+  }
+  readoutEl.style.opacity = inTravel ? 1 : 0;
+  ledgerEl.style.opacity = inTravel ? 0 : 1;
+  noteEl.style.opacity = (inTravel && !PORT) ? 0 : 1;
+  if (noteEl.dataset.k !== txt) { noteEl.innerHTML = txt; noteEl.dataset.k = txt; }
+
+  renderer.render(scene, camera);
+}
+
+addEventListener("resize", () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight, false);
+  apply(nowT());
+});
+
+let T0 = null, frozen = Q.has("t") ? parseFloat(Q.get("t")) : null;
+function nowT() { return frozen !== null ? frozen : T0; }
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (reduced) frozen = 8;
+
+window.__seek = t => { frozen = t; apply(t); };
+window.__ready = true;
+
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min((now - last) / 1000, 0.08); last = now;
+  if (frozen === null) { if (T0 === null) T0 = 0; T0 = (T0 + dt) % T_END; }
+  apply(nowT());
+  requestAnimationFrame(loop);
+}
+T0 = 0; apply(0);
+document.title = "ok " + (PORT ? "port" : "land") + " t=" + (nowT()).toFixed(1);
+requestAnimationFrame(loop);
+} catch (e) { document.title = "ERR " + e.message; }
+</script></body></html>
