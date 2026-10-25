@@ -9,6 +9,7 @@ What changed in version 2, and why:
 - scenes are composed for a square volume, so one build survives every frame
 - figures are diffed against the source after the build, because two were wrong
 - animation is checked in a real browser, because headless cannot run time
+- figures open at the first frame, not the last, so the first click reads as a replay and not a reset
 
 Point another agent at this file as its brief, then name the report ("Do this for <report URL>").
 
@@ -27,7 +28,7 @@ Point another agent at this file as its brief, then name the report ("Do this fo
 
 ## What you get
 
-1. One static page. Every number sits in plain HTML text. Behind it, a three.js scene per section that plays when the reader clicks it, and sits on its finished frame until they do.
+1. One static page. Every number sits in plain HTML text. Behind it, a three.js scene per section that plays when the reader clicks it, starting from the first frame of the shot.
 2. A vertical 1080x1920 video of 40 to 55 seconds. A screen recording of the scenes with captions and a TTS voice-over, ending on a card with the page URL.
 
 ## The rules, in the order they cost us time
@@ -51,7 +52,8 @@ One scene is seen at 9:16 (phone, video), 4:5 (Instagram), 1:1 (thumbnail) and 1
 Scroll-triggered playback was rejected on sight. It also fights the reader: they scroll past a section before it starts, and it finishes while they are looking somewhere else.
 
 - `play()` on `click`, and on Enter or Space, so keyboard gets the same thing
-- open on the finished frame: `this.t = 1; this.done = true` in the constructor. The page reads as a still page until someone asks
+- open at the top of the shot: `this.t = 0; this.done = false` in the constructor. The chart stands in its starting state until someone asks, and the first click runs it forward
+- do not open on the finished frame. It was tried: the first click then jumped backwards before running forward, and that read as a reset rather than a replay
 - no `IntersectionObserver`
 - a token guards restarts, so a second click mid play cannot leave two loops running
 

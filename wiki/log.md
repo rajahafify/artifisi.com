@@ -1,7 +1,7 @@
 # Log
 
 **Summary**: Chronological history of wiki changes and codebase events.  
-**Last updated**: 2026-09-03
+**Last updated**: 2026-10-26
 
 ---
 
@@ -682,4 +682,40 @@ Notes:
 
 Verification:
 - code checked: yes
+- human reviewed: no
+
+---
+
+## [2026-10-26] fix | Reconcile the playbook with the shipped code, rebuild the missing brief
+
+Source: project owner answers, `playbook/`, `raw/malaysia-wages/`, `reports/index.html`
+
+Changes:
+- `playbook/instructions.md` rule 3 now opens figures at `t = 0`, matching commit `ad50b92`. The reason
+  is recorded in the rule so the first-frame behaviour is not "fixed" back to the finished frame.
+- `playbook/instructions.md` changelog and the "What you get" line updated to match.
+- `playbook/pipeline.md` Gate 1 now requires a source reference at the precision the source allows,
+  page for a PDF and field plus row key for a dataset. The `numbers.csv` column spec now matches the
+  artifact: `id, value, unit, year, source_ref, wording`.
+- wrote `raw/malaysia-wages/brief.md`, the stage 1 output that had been skipped. Reconstructed from
+  `source.md`, `story-v2.md` and `sections.md`, and labelled as a reconstruction.
+- `playbook/sales/rate-card.md` no longer says the charts "re-form as the reader scrolls". It now
+  says they play when the reader clicks them, which is what the product does.
+- `reports/index.html` step 2 no longer says "seven numbers", which contradicted the 7, 10 and 14
+  chart tiers sold on the same page.
+- `wiki/contradictions.md` records the three conflicts as resolved, and marks the Kamal deploy
+  mismatch obsolete now that the Rails app is gone.
+- `wiki/known-issues.md` rewritten around the current state. `wiki/index.md` Quick Reference now
+  describes Astro, Cloudflare Pages and the two domains instead of Rails and Kamal.
+- `wiki/source-register.md` registers the DOSM dataset and the playbook files.
+
+Notes:
+- The open question is whether the figure trigger stays click-only or gains a hybrid. The owner
+  prefers click. Not decided, not implemented.
+- The wiki pages other than `index.md`, `known-issues.md`, `contradictions.md` and
+  `source-register.md` still describe the removed Rails app. A full refresh is separate work.
+- Prices remain duplicated between `playbook/sales/rate-card.md` and `reports/index.html`.
+
+Verification:
+- code checked: yes (docs and one HTML string; no behaviour change)
 - human reviewed: no

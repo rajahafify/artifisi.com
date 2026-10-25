@@ -25,12 +25,14 @@ Output: `raw/<slug>/source.*` and `source.md` with the citation block.
 Build `numbers.csv` before anything else. One row per figure the page will use:
 
 ```
-id, value, unit, year, page, exact_wording, checked
+id, value, unit, year, source_ref, wording
 ```
 
-`exact_wording` is the sentence in the source, copied. Not a paraphrase.
+`source_ref` points at where the figure lives in the source: a page number for a PDF, a field and row key for a dataset (`wages_median`, `section=P`), a sheet and cell for a spreadsheet. `wording` is the label the source itself uses, copied. Not a paraphrase.
 
-**Gate 1.** No number without a page reference. No number taken from a summary, a news article or a model's memory. If a figure cannot be traced to the source, it does not go on the page.
+**Gate 1.** No number without a source reference. No number taken from a summary, a news article or a model's memory. If a figure cannot be traced to the source, it does not go on the page.
+
+The reference only has to be as precise as the source allows. A report has pages, a dataset has rows. What Gate 1 rules out is a number with no path back to a source at all. The figures are checked against the source at Gate 4, and that diff is recorded in `qa.md`.
 
 ## 4. Analyse
 

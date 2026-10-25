@@ -9,7 +9,7 @@ Sample: reports.artifisi.com/samples/households/
 
 We turn a published report into an interactive web page and a set of vertical videos, from the PDF, in under a week.
 
-The page keeps every number as real text, so search engines and screen readers can read it. The charts are drawn in three.js and re-form as the reader scrolls. The videos run 40 to 55 seconds, captioned, with a voice-over, sized for LinkedIn, Instagram and TikTok.
+The page keeps every number as real text, so search engines and screen readers can read it. The charts are drawn in three.js and play when the reader clicks them. The videos run 40 to 55 seconds, captioned, with a voice-over, sized for LinkedIn, Instagram and TikTok.
 
 ## Why this exists
 
