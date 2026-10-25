@@ -764,3 +764,50 @@ Verification:
 - code checked: yes (mock2.html caption bands read, six frames)
 - not run: `npm run build`, dependencies are not installed in this checkout
 - human reviewed: no
+
+---
+
+## [2026-10-26] plan | Draft the video pipeline
+
+Source: user request, `playbook/`, `raw/malaysia-wages/`, `reports/malaysia-wages/`
+
+Changes:
+- added `playbook/video.md`, a seven stage pipeline: report, story, shots, storyboard, script,
+  voice-over, video.
+- `playbook/instructions.md` and `playbook/pipeline.md` now point at it.
+
+Notes:
+- **The first four stages are shared with the page pipeline.** Report is stages 1 to 3, story is
+  stage 4, shots is stage 5 plus a shot list. The video branches at the end of stage 5 and
+  rejoins after stage 9, because a storyboard frame is a frame of the real scene, not a drawing
+  of one. Page stages 6 to 8 are page-only.
+- **The storyboard is rendered from the page**, with `?shot=<scene>&t=<0..1>`, not from the Gate 3
+  mock. The mock is a second SVG renderer for the same six sections, and two renderers for one
+  story drift. It also catches build failures: if the mock shows a lift and the storyboard
+  shows a bar chart, the build did not realise the design.
+- **The recorder needs rebuilding, not patching.** `record-video.js` scrolls to `.vizpage` and
+  clicks `button[data-view]`, neither of which exists on a page built on the shot mode switches.
+  It should read `storyboard.json`, load one page per shot, play the scene with
+  `window.__stages[i].play()`, hold the exact duration from the storyboard, and capture one file
+  per shot so ffmpeg can concatenate them without clock drift.
+- **The voice-over is what sets the shot lengths.** That is why script and voice-over are two
+  stages rather than one. Before the audio exists, every timing in the plan is an estimate.
+- The timings work. Six captions, 60 words, about 25 seconds of speech at 2.4 words a second,
+  against 38 seconds of scene. Every caption fits inside its own shot with room to spare, so
+  the shot lengths are set by the scenes and the voice-over has to fill them.
+- Two traps designed around but not solved. Headless Chrome does not tick `requestAnimationFrame`
+  without a compositor, so the recorder may capture static frames unless it runs headed. And the
+  voice-over targets 45 seconds against 38 seconds of scene, so about seven seconds have to land
+  deliberately rather than as dead air.
+
+Open:
+- One video per story, or one per shot. The chain assumes one per story.
+- How many videos the service sells. The rate card says three at Standard and six at Flagship,
+  each 40 to 55 seconds, but the wages report has 38 seconds of scene in total. The sales kit
+  and the pipeline have to agree before either is used again.
+
+Verification:
+- code checked: yes (caption word counts and the per shot budget recomputed; `?shot=`,
+  `__seek` and `__stages` confirmed in `reports/malaysia-wages/scene.js`)
+- not run: the pipeline has never been executed
+- human reviewed: no

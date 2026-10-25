@@ -22,6 +22,7 @@ Point another agent at this file as its brief, then name the report ("Do this fo
 | The engine and click indicator | `tech-sovereignty/scene.js` | `Stage`, `chip`, `finger` |
 | The front door | `reports/index.html` | prices and the enquiry form |
 | The stages and gates | `playbook/pipeline.md` | read first |
+| The video pipeline | `playbook/video.md` | report to short, stage by stage |
 | The scripts | `playbook/tools/` | `screenshots.js`, `record-video.js`, `mux.py` |
 
 The scripts have their own dependencies:
@@ -162,6 +163,8 @@ Keep the ten stages in `pipeline.md`. In practice:
 10. **Ship.** PR, preview, merge, then the sales note.
 
 ### Voice-over and video, in detail
+
+The full pipeline is `video.md`. This is the working detail for its stages 5 to 7.
 
 - Write 7 to 9 lines, one per shot, plain sentences, numbers as words ("seven thousand and seventeen ringgit"). Do not say "Artifisi", because the voice mispronounces it. End on "Visit our website to learn more."
 - the captions are already written. The mock carries a caption band on every frame, marked "BURNED IN AT DELIVERY". Start from that copy, do not rewrite it at this stage

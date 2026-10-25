@@ -44,6 +44,7 @@
 | `raw/malaysia-wages/` | DOSM Salaries and Wages Survey dataset, catalogue `wages_industry`, CC BY 4.0, 960 rows | ingested | 2026-10-26 | contradictions, features |
 | `playbook/pipeline.md` | Ten-stage, four-gate build pipeline | ingested | 2026-10-26 | features, decisions |
 | `playbook/instructions.md` | Build and ship playbook, version 2 | ingested | 2026-10-26 | features, known-issues |
+| `playbook/video.md` | Seven-stage video pipeline, report to published short | ingested | 2026-10-26 | features, known-issues |
 | `playbook/sales/` | Rate card, services agreement, outreach copy | ingested | 2026-10-26 | features |
 
 ## Pending Ingestion

@@ -4,6 +4,9 @@ Supersedes the build steps in `instructions.md`. That one assumes the story is a
 
 Ten stages, four gates. Every stage produces a file. If a stage has no file, it did not happen.
 
+The video pipeline is `video.md`. It shares stages 1 to 5 with this one, then branches and
+rejoins after the page is built.
+
 ---
 
 ## 1. Pick

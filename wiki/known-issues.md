@@ -36,9 +36,11 @@ Tracked issues discovered during codebase ingestion and development.
 ### The video has never been produced
 
 - No `.mp4` or `.webm` exists in the repo or on any branch. The only trace is `origin/vo-audio`, an orphan branch with 38 mp3 files and no `script.txt` or `dur.json`, which are the two inputs `record-video.js` reads.
-- The capture side is ready: the page has a shot mode, `window.__seek(t, name)`, and `?still=1`. The captions are already written into the Gate 3 mock, one per frame.
+- The capture side is ready: the page has a shot mode, `window.__seek(t, name)`, `window.__stages[i].play()`, and `?still=1`. The captions are already written into the Gate 3 mock, one per frame.
 - The tooling side is not ready. See the issue above.
 - `ffmpeg` is not installed on the development machine. The WinGet link at `%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe` is a zero-byte file, and `mux.py` needs a working ffmpeg.
+- Two traps are designed around in `playbook/video.md` but not yet solved. Headless Chrome does not tick `requestAnimationFrame` without a compositor, so the recorder may capture static frames unless it runs headed. And the voice-over targets 45 seconds while the six wages shots total 38 seconds of scene, so roughly seven seconds have to land somewhere deliberately.
+- The pipeline for the whole thing is `playbook/video.md`, drafted 2026-10-26. It has never been run.
 
 ### Known gaps in the wages report
 

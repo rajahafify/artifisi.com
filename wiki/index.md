@@ -36,6 +36,7 @@
 - `reports/` — The reports subdomain (`reports.artifisi.com`), a separate Cloudflare Pages project. Not yet documented in a wiki page.
 - `playbook/pipeline.md` — The ten-stage, four-gate pipeline for turning a published report into an interactive page.
 - `playbook/instructions.md` — Build and ship playbook, version 2.
+- `playbook/video.md` — The seven-stage video pipeline: report to story to shots to storyboard to script to voice-over to video.
 
 ## Quick Reference
 
