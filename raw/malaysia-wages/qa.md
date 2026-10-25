@@ -11,6 +11,11 @@
 Each number on the page was recomputed from `data.json`, which is itself derived from
 `source.json` (960 rows, DOSM `wages_industry`).
 
+Note on the `bill` field in `data.json`: it is `share x r25`, a raw product, **not** a
+percentage. It sums to 107.9 across the 19 sections. The percentages come from dividing by
+the total, which the scene does at render time. Read the field directly and the four bill
+leaders look like 59.96% instead of 55.6%.
+
 | Figure on page | Value | Recomputed | Match |
 |---|---|---|---|
 | National median 2025 | RM2,940 | `nat.med2025` | yes |
@@ -33,7 +38,7 @@ Each number on the page was recomputed from `data.json`, which is itself derived
 | Mining | 1.87x -> 1.57x | `sections[B]` | yes |
 | Finance | 1.67x -> 1.42x | `sections[K]` | yes |
 | Four-industry bill | 55.6% | 17.4 + 15.9 + 11.2 + 11.0 | yes |
-| Individual bills | 17.4 / 15.9 / 11.2 / 11.0 | share x median, normalised | yes |
+| Individual bills | 17.4 / 15.9 / 11.2 / 11.0 | share x r25, normalised by the total | yes |
 | Mean / median | 1.42 / 1.40 / 1.05 / 1.06 | A, F, O, P | yes |
 | Agriculture gap | RM762 | 2575 - 1813 | yes |
 

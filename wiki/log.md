@@ -719,3 +719,48 @@ Notes:
 Verification:
 - code checked: yes (docs and one HTML string; no behaviour change)
 - human reviewed: no
+
+---
+
+## [2026-10-26] fix | Make the pipeline match what it actually produces
+
+Source: `playbook/pipeline.md`, `playbook/instructions.md`, `raw/malaysia-wages/`
+
+Changes:
+- `raw/malaysia-wages/data.json` was a stale copy missing the `bill` field on every section.
+  `_mock.cjs` reads `bill` six times, so the Gate 3 generator was drawing the wage bill figures
+  from data that could not produce them. Re-synced with `reports/malaysia-wages/data.json`.
+- `raw/malaysia-wages/story.md` now carries a superseded banner. It holds the withdrawn v1 claim,
+  "the sectors pulling ahead are the ones the government pays for", with nothing in the file to
+  say so. A reader could have taken it for the current story.
+- added `raw/malaysia-wages/README.md`, a table of which file is current for each stage.
+  `story.md`, `story-v2.md`, `mock.html`, `mock2.html` and `viz.html` all sat in one folder with
+  no marker. The README also records the two copies of `data.json` and the drift that happened.
+- `playbook/pipeline.md` stage 9 now says the scene reads `data.json`, not `numbers.csv`, and
+  that the no-JavaScript fallback is a data table, not CSS charts. `instructions.md` rule 9
+  already said table, so the two documents disagreed.
+- `playbook/pipeline.md` stage 6 now says the output is a scene description per section, and that
+  the drawn sketch is the mock at stage 8. There is no separate sketch artefact.
+- `playbook/tools/package.json` added. Playwright and three were undeclared dependencies, so
+  nothing said what version the capture scripts expect. Pinned to Playwright 1.64.1 and three
+  0.180.0, which is the version both pages load from the CDN.
+- `playbook/instructions.md` now gives the install step for the scripts and the `THREE` env var.
+- `playbook/instructions.md` notes that the video captions already exist in the Gate 3 mock,
+  one caption band per frame, so step 8 starts from that copy.
+
+Notes:
+- **The pipeline writes derived files into `raw/`, which AGENTS.md calls immutable.** Eight stage
+  outputs land in `raw/<slug>/` and only `source.*` is a source. This is why two generations of
+  every artefact sit side by side. Recorded in `known-issues.md`. Not resolved: it needs a
+  decision on where a per-report working directory lives.
+- No video has ever been produced. `origin/vo-audio` is an orphan branch holding 38 mp3 files and
+  no `script.txt` or `dur.json`, which are the two inputs `record-video.js` reads.
+- The recorder still drives the households sample. It scrolls to `.vizpage` and clicks
+  `button[data-view]`, neither of which exists on the wages page. The wages page has a shot mode
+  and `window.__stages[i].play()` that the recorder does not use.
+
+Verification:
+- code checked: yes (data.json re-synced and re-parsed, 19 sections, `bill` present)
+- code checked: yes (mock2.html caption bands read, six frames)
+- not run: `npm run build`, dependencies are not installed in this checkout
+- human reviewed: no

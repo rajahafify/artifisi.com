@@ -1,5 +1,11 @@
 # Story
 
+> **Superseded on 2026-10-26. This is version 1, and its central claim was withdrawn.**
+> It was built from two snapshots, 2010 and 2025. The full 16-year series shows the public
+> sector peaked in 2020 and fell back, so most of the apparent pull is one pandemic year.
+> `story-v2.md` is the canonical story. This file is kept for the audit trail. See
+> `wiki/contradictions.md`.
+
 ## The claim
 
 The sectors pulling ahead of the national median are the ones the government pays for. The sectors falling behind are the private, capital-heavy ones.

@@ -74,7 +74,8 @@ Pick the form from the question, not from the engine.
 
 3D only when depth, count or motion carries meaning. A flat chart that is precise beats a cube field that is pretty.
 
-Output: one sketch per section, in `sections.md`.
+Output: one scene per section in `sections.md`: the claim, the mechanism, the shot, and why not a
+chart. The drawn sketch is the mock at stage 8.
 
 ## 7. Design
 
@@ -125,12 +126,12 @@ Output: `mock.pdf`
 
 Text first. Every number in HTML, every claim in a heading. Then the scene on top.
 
-- progressive: with JavaScript off, the page is still readable and the charts fall back to CSS
-- the scene reads from `numbers.csv`, it does not hardcode figures
+- progressive: with JavaScript off, the page is still readable and every figure falls back to a data table in the HTML
+- the scene reads from `data.json`, which is generated from `numbers.csv`. It does not hardcode figures
 - labels pinned in 3D, tracking their object
 - motion only where it explains
 
-Output: `<slug>/index.html`, `<slug>/scene.js`
+Output: `<slug>/index.html`, `<slug>/scene.js`, `<slug>/data.json`
 
 ## 10. QA
 

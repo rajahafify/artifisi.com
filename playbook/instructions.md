@@ -24,6 +24,16 @@ Point another agent at this file as its brief, then name the report ("Do this fo
 | The stages and gates | `playbook/pipeline.md` | read first |
 | The scripts | `playbook/tools/` | `screenshots.js`, `record-video.js`, `mux.py` |
 
+The scripts have their own dependencies:
+
+```
+cd playbook/tools && npm install
+```
+
+That installs Playwright and three, and pulls the Chromium build. The capture scripts point
+`THREE` at an unpacked three build, because jsDelivr and unpkg are not always reachable:
+`npm pack three@0.180.0`, unpack it, and set `THREE=<unpacked>/package`.
+
 `pipeline.md` covers picking, acquiring, verifying, analysing and mocking. This file covers what the two builds taught about building and shipping.
 
 ## What you get
@@ -154,6 +164,7 @@ Keep the ten stages in `pipeline.md`. In practice:
 ### Voice-over and video, in detail
 
 - Write 7 to 9 lines, one per shot, plain sentences, numbers as words ("seven thousand and seventeen ringgit"). Do not say "Artifisi", because the voice mispronounces it. End on "Visit our website to learn more."
+- the captions are already written. The mock carries a caption band on every frame, marked "BURNED IN AT DELIVERY". Start from that copy, do not rewrite it at this stage
 - Record on fify's PC (DESKTOP-30IVP4M), since the cloud cannot reach the TTS service:
   `edge-tts --voice en-SG-LunaNeural --rate=-3% --text "<line>" --write-media D:\artifisi\video-edit\<slug>-vo\l01.mp3`
 - Copy the mp3s back, then get each length with `ffprobe`.
