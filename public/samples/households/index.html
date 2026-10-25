@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>From income to wellbeing</title>
+  <meta name="description" content="The State of Households 2026 by Khazanah Research Institute, in seven interactive charts: income, happiness, poverty by district, the squeeze on the bottom 10%, food, health and ageing." />
+  <meta name="robots" content="noindex" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Malaysian households in 2026, in seven charts" />
+  <meta property="og:description" content="Numbers from KRI's State of Households 2026, drawn as interactive 3D charts. An unofficial sample by Artifisi." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@artifisi_my" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1522;
+      --bg-2: #141b2b;
+      --ink: #eef0ec;
+      --muted: #9ba3b4;
+      --line: #273047;
+      --red: #ef6a55;
+      --ready: #36b3a0;
+      --gap: #e0a23a;
+      --serif: "Fraunces", Georgia, serif;
+      --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+      --mono: "IBM Plex Mono", Menlo, Consolas, monospace;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    html, body { background: var(--bg); }
+    body { margin: 0; color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.55; }
+    a { color: inherit; text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid var(--ready); outline-offset: 2px; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 72px 0; }
+    .kicker { font-family: var(--mono); font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 800; line-height: 1.08; margin: 0; letter-spacing: -.01em; }
+    h1 { font-size: clamp(40px, 7vw, 76px); }
+    h2 { font-size: clamp(30px, 4.4vw, 46px); margin-bottom: 28px; }
+    h3 { font-size: 24px; font-weight: 600; }
+    p { margin: 0 0 12px; }
+    .muted { color: var(--muted); }
+    .ready { color: var(--ready); }
+    .gap { color: var(--gap); }
+
+    /* Top bar */
+    .bar { border-bottom: 1px solid var(--line); }
+    .bar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 16px; padding-bottom: 16px; font-size: 14px; }
+    .brand { font-weight: 600; letter-spacing: .04em; text-decoration: none; }
+    .bar a.pdf { color: var(--muted); }
+
+    /* Hero */
+    .hero { padding-top: 56px; }
+    .big { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; margin: 44px 0 56px; }
+    .big .num { font-family: var(--serif); font-weight: 800; color: var(--red); font-size: clamp(110px, 20vw, 210px); line-height: .9; letter-spacing: -.03em; }
+    .big p { font-size: 20px; max-width: 30ch; color: #d2d7e0; }
+    .big strong { color: var(--ink); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .stat { padding: 28px 24px 28px 0; }
+    .stat + .stat { border-left: 1px solid var(--line); padding-left: 24px; }
+    .stat .n { font-family: var(--serif); font-weight: 800; font-size: 46px; line-height: 1; margin-bottom: 14px; }
+    .stat .n small { font-size: 26px; }
+    .stat p { font-size: 15px; color: var(--muted); margin: 0; }
+
+    /* Readiness */
+    .readiness { display: grid; grid-template-columns: 260px 1fr; gap: 56px; align-items: center; }
+    .donut { width: 260px; aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--ready) 0 49.5%, var(--bg) 0 50%, var(--gap) 0 99.5%, var(--bg) 0); display: grid; place-items: center; position: relative; }
+    .donut::before { content: ""; position: absolute; inset: 34px; background: var(--bg); border-radius: 50%; }
+    .donut div { position: relative; text-align: center; font-size: 14px; color: var(--muted); line-height: 1.3; }
+    .donut b { display: block; font-family: var(--serif); font-size: 72px; color: var(--ink); line-height: 1; margin-bottom: 6px; }
+    .legend { display: grid; gap: 28px; }
+    .legend div { display: grid; grid-template-columns: 52px 1fr; }
+    .legend .n { font-family: var(--serif); font-weight: 800; font-size: 46px; line-height: 1; }
+    .legend h3 { font-family: var(--sans); font-size: 18px; margin-bottom: 4px; }
+    .legend p { color: var(--muted); font-size: 15px; margin: 0; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 16px; }
+    th { font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 16px 12px 0; border-bottom: 1px solid var(--line); }
+    td { padding: 18px 16px 18px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+    td:first-child { font-weight: 600; width: 26%; }
+    td:nth-child(2) { width: 30%; }
+    td:last-child { color: #d2d7e0; }
+    td .muted { font-size: 15px; }
+    td b { font-weight: 600; }
+    tr.group td { font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; padding-top: 32px; padding-bottom: 10px; }
+
+    /* Bars */
+    .bars { display: grid; gap: 18px; margin: 8px 0 28px; }
+    .row { display: grid; grid-template-columns: 170px 1fr; gap: 20px; align-items: center; }
+    .row b { display: block; font-weight: 600; }
+    .row small { color: var(--muted); font-size: 13px; }
+    .track { display: flex; align-items: center; gap: 12px; }
+    .fill { height: 26px; border-radius: 3px; min-width: 12px; }
+    .val { font-family: var(--serif); font-weight: 800; font-size: 26px; white-space: nowrap; }
+
+    /* Ask */
+    .ask-head { border-left: 4px solid var(--ready); padding: 6px 0 6px 24px; margin-bottom: 40px; }
+    .ask-head h2 { font-weight: 600; margin: 0; }
+    .ask-head em { font-style: italic; font-weight: 500; }
+    .asks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .asks div { border-top: 2px solid var(--ready); padding-top: 18px; }
+    .asks div:nth-child(2) { border-color: var(--gap); }
+    .asks div:nth-child(3) { border-color: var(--ink); }
+    .asks h3 { margin-bottom: 10px; }
+    .asks p { color: var(--muted); font-size: 15px; }
+
+    /* Notes */
+    .notes { background: var(--bg-2); border-top: 1px solid var(--line); }
+    .notes h2 { font-size: 13px; font-family: var(--mono); font-weight: 400; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 40px 0 16px; }
+    .notes h2:first-child { margin-top: 0; }
+    .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; font-size: 14px; color: var(--muted); }
+    .cols b { color: var(--ink); font-weight: 600; }
+    .covered { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; font-size: 14px; color: var(--muted); }
+    .sources { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 32px; font-size: 14px; color: var(--muted); }
+    .sources b { color: var(--ink); font-weight: 600; }
+    .sources a { color: var(--muted); }
+
+    footer { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size: 14px; color: var(--muted); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer strong { color: var(--ink); }
+
+    @media (max-width: 760px) {
+      section { padding: 52px 0; }
+      .big { grid-template-columns: 1fr; gap: 16px; margin: 32px 0 40px; }
+      .stats { grid-template-columns: 1fr; }
+      .stat, .stat + .stat { padding: 20px 0; border-left: 0; }
+      .stat + .stat { border-top: 1px solid var(--line); }
+      .readiness { grid-template-columns: 1fr; gap: 36px; justify-items: start; }
+      .donut { width: 220px; }
+      thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100% !important; }
+      tr { border-bottom: 1px solid var(--line); padding: 14px 0; }
+      tr.group { border-bottom: 0; padding: 0; }
+      td { border: 0; padding: 2px 0; }
+      td:nth-child(2)::before { content: "Used today: "; color: var(--muted); }
+      .row { grid-template-columns: 1fr; gap: 6px; }
+      .asks, .cols, .covered, .sources { grid-template-columns: 1fr; }
+    }
+    /* three.js layer. Text sits in a column on the left; the shapes live on the right. */
+    #scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .bar, main, footer { position: relative; z-index: 1; }
+    .bar { background: rgba(15, 21, 34, .7); backdrop-filter: blur(6px); position: sticky; top: 0; z-index: 2; }
+    .has-scene main > section:not(.notes) { min-height: 100vh; display: flex; align-items: center; }
+    .has-scene main > section > .wrap { width: 100%; }
+    .has-scene .col { max-width: 540px; }
+    .has-scene .col.wide { max-width: 680px; background: rgba(15, 21, 34, .82); backdrop-filter: blur(4px); padding: 28px; margin-left: -28px; border-radius: 6px; }
+    .has-scene .big { grid-template-columns: 1fr; gap: 12px; }
+    .has-scene .big .num { font-size: clamp(110px, 14vw, 170px); }
+    .has-scene .stats { grid-template-columns: 1fr; }
+    .has-scene .stat, .has-scene .stat + .stat { padding: 20px 0; border-left: 0; }
+    .has-scene .stat + .stat { border-top: 1px solid var(--line); }
+    .has-scene .stat { display: grid; grid-template-columns: 120px 1fr; align-items: baseline; gap: 16px; }
+    .has-scene .stat .n { margin: 0; }
+    .has-scene .readiness { grid-template-columns: 1fr; }
+    .has-scene .donut { display: none; }
+    .has-scene .fill { display: none; }
+    .has-scene .row { grid-template-columns: 1fr auto; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+    .has-scene .asks { grid-template-columns: 1fr; gap: 20px; }
+    .notes { background: rgba(20, 27, 43, .92); }
+    .hint { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: 32px; }
+    /* Phones: pages. Each topic is a text page, then a full-screen chart page; both snap into place. */
+    .vizpage { display: none; }
+    @media (max-width: 900px), (pointer: coarse) and (orientation: portrait) {
+      html.has-scene { scroll-snap-type: y proximity; scroll-padding-top: var(--bar, 53px); }
+      .has-scene .bar { background: var(--bg); backdrop-filter: none; }
+      .has-scene main > section:not(.notes) { min-height: 0; display: block; padding: 0; }
+      .has-scene main > section:not(.notes) > .wrap { min-height: calc(100svh - var(--bar, 53px)); display: flex; flex-direction: column; justify-content: center; padding-top: 40px; padding-bottom: 40px; background: var(--bg); scroll-snap-align: start; }
+      .has-scene .col, .has-scene .col.wide { background: none; backdrop-filter: none; padding: 0; margin: 0; border-radius: 0; max-width: none; }
+      .has-scene .stat { grid-template-columns: 1fr; gap: 6px; }
+      .has-scene .vizpage { display: block; position: relative; height: calc(100svh - var(--bar, 53px)); scroll-snap-align: start; }
+      .vizpage span { position: absolute; left: 20px; top: 20px; font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+      .has-scene h1 { font-size: clamp(34px, 10vw, 44px); }
+      .has-scene .big { margin: 20px 0 24px; }
+      .has-scene .big .num { font-size: clamp(88px, 28vw, 120px); }
+      .has-scene .big p { font-size: 18px; }
+      .has-scene .hint { margin-top: 20px; }
+      .has-scene .notes { padding-top: 56px; }
+      .views button { padding: 9px 14px; }
+      /* Under the text pages, over the chart. */
+      .has-scene .finger, .has-scene .chip { z-index: 0; }
+    }
+    /* Chart labels and view switching */
+    #scene { pointer-events: auto; }
+    #labels { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .4s; }
+    #labels.show { opacity: 1; }
+    .lbl { position: absolute; left: 0; top: 0; white-space: nowrap; font: 500 12px/1.2 var(--mono); letter-spacing: .03em; color: var(--ink); text-shadow: 0 1px 4px #000, 0 0 2px #000; translate: -50% -50%; }
+    .lbl.left { translate: 0 -50%; }
+    .lbl.right { translate: -100% -50%; }
+    .lbl.small { font-size: 11px; }
+    .lbl { white-space: pre; text-align: center; }
+    .lbl.left { text-align: left; }
+    .lbl.right { text-align: right; }
+    @media (max-width: 900px), (pointer: coarse) and (orientation: portrait) { .lbl { font-size: 11px; } .lbl.small { font-size: 10px; } }
+    .lbl.ready { color: #4fd1b5; }
+    .lbl.gap { color: #e8a93a; }
+    .lbl.red { color: var(--red); }
+    .lbl.muted { color: var(--muted); }
+    .has-scene main { pointer-events: none; }
+    .has-scene main .col, .has-scene .notes { pointer-events: auto; }
+    .views { margin-top: 28px; }
+    .views .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .views button { font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+    .views button:hover { color: var(--ink); border-color: var(--muted); }
+    .views button.on { color: var(--bg); background: var(--ink); border-color: var(--ink); }
+    .views button:focus-visible { outline: 2px solid var(--ready); outline-offset: 2px; }
+    .views .cap { display: none; font-size: 15px; color: var(--muted); margin: 12px 0 0; }
+    .views .cap b { color: var(--ink); font-weight: 600; }
+    .views .cap.on { display: block; }
+    html:not(.has-scene) .views .tabs { display: none; }
+    html:not(.has-scene) .views .cap { display: block; }
+    .ledger { font-size: 14px; }
+    .ledger td { padding: 10px 12px 10px 0; color: var(--muted); }
+    .ledger td:first-child { color: var(--ink); width: auto; }
+    .ledger td:nth-child(2) { width: auto; }
+    @media (max-width: 760px) {
+      .ledger td:nth-child(2)::before { content: ""; }
+      .ledger td { padding: 1px 0; }
+    }
+    /* Teaching the click */
+    .finger, .chip { position: fixed; left: 0; top: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .4s; }
+    .finger.show, .chip.show { opacity: 1; }
+    .finger svg { position: absolute; left: -22px; top: -12px; fill: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.7)); transform-origin: 50% 20%; animation: press 1.8s ease-in-out infinite; }
+    .finger .ripple { position: absolute; left: -18px; top: -18px; width: 36px; height: 36px; border-radius: 50%; border: 2px solid #fff; opacity: 0; animation: ripple 1.8s ease-out infinite; }
+    .finger .say { position: absolute; left: 28px; top: 4px; white-space: nowrap; font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 4px #000; }
+    @keyframes press { 0%, 100% { transform: translate(14px, 14px) scale(1); } 40% { transform: translate(0, 0) scale(1); } 50% { transform: translate(0, 0) scale(.82); } 60% { transform: translate(0, 0) scale(1); } }
+    @keyframes ripple { 0%, 48% { opacity: 0; transform: scale(.3); } 52% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(1.8); } }
+    .chip { translate: -50% 0; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); background: rgba(15, 21, 34, .7); border-radius: 999px; padding: 5px 10px; white-space: nowrap; }
+    @media (prefers-reduced-motion: reduce) { .finger svg, .finger .ripple { animation: none; } }
+    /* Fine print, styled as cards */
+    .notes { padding-top: 88px; }
+    .notes .notes-h { font-size: clamp(30px, 4.4vw, 46px); font-family: var(--serif); font-weight: 800; letter-spacing: -.01em; text-transform: none; color: var(--ink); margin: 0 0 8px; }
+    .block { margin-top: 56px; }
+    .bh { font-family: var(--mono); font-weight: 400; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 0 0 18px; display: flex; align-items: center; gap: 14px; }
+    .bh::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+    .bh-sub { font-size: 14px; color: var(--muted); margin: 22px 0 12px; }
+    .tagsets { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .tagset { border: 1px solid var(--line); border-radius: 10px; padding: 20px; background: rgba(15, 21, 34, .6); }
+    .ts-h { font-weight: 600; margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+    .ts-h .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ready); }
+    .tagset.gap .ts-h .dot { background: var(--gap); }
+    .ts-sub { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin: 16px 0 8px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+    .tags span { font-size: 13px; padding: 5px 11px; border-radius: 999px; border: 1px solid #34405a; color: var(--ink); }
+    .tags.local span { background: rgba(54, 179, 160, .16); border-color: rgba(54, 179, 160, .6); color: #8fe3d1; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+    .pc { position: relative; border: 1px solid var(--line); border-radius: 10px; padding: 18px 18px 14px; background: rgba(15, 21, 34, .75); overflow: hidden; transition: transform .2s, border-color .2s; }
+    .pc::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--ready); }
+    .pc.gap::before { background: var(--gap); }
+    .pc.local::before { background: linear-gradient(90deg, var(--ready), #4fd1b5); }
+    .pc:hover { transform: translateY(-3px); border-color: #34405a; }
+    .pc-cat { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ready); margin: 0 0 8px; }
+    .pc.gap .pc-cat { color: var(--gap); }
+    .pc h3 { font-size: 26px; font-weight: 800; margin: 0; }
+    .pc-year { font-family: var(--serif); font-weight: 600; font-size: 40px; line-height: 1; color: #3c4762; margin: 6px 0 14px; }
+    .pc-year small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); margin-top: 4px; }
+    .pc dl { display: grid; grid-template-columns: 52px 1fr; gap: 6px 10px; margin: 0; font-size: 13px; }
+    .pc dt { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+    .pc dd { margin: 0; color: #d2d7e0; }
+    .pc dd.sold { color: var(--red); font-weight: 600; }
+    .method { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .method > div { border: 1px solid var(--line); border-radius: 10px; padding: 20px; background: rgba(15, 21, 34, .75); }
+    .mn { font-family: var(--serif); font-weight: 800; font-size: 44px; line-height: 1; color: transparent; -webkit-text-stroke: 1px #5a6680; }
+    .method h4 { font-family: var(--serif); font-size: 22px; font-weight: 600; margin: 10px 0 8px; }
+    .method p { font-size: 14px; color: var(--muted); margin: 0; }
+    .srcs { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+    .sc { display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; background: rgba(15, 21, 34, .75); text-decoration: none; color: inherit; transition: border-color .2s, transform .2s; }
+    a.sc:hover { border-color: var(--ready); transform: translateY(-2px); }
+    .sc.wide { grid-column: 1 / -1; }
+    .sc-k { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ready); }
+    .sc-t { font-size: 14px; color: var(--ink); line-height: 1.45; flex: 1; }
+    .sc-d { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .sc a { color: var(--muted); }
+    @media (max-width: 760px) {
+      .tagsets, .method { grid-template-columns: 1fr; }
+    }
+  </style>
+  <style>
+    .sample { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gap); border: 1px solid rgba(224, 162, 58, .5); border-radius: 999px; padding: 4px 10px; }
+    .src { font-size: 14px; color: var(--muted); margin-top: 18px; }
+    .src a { color: var(--muted); }
+    @media (max-width: 600px) { .sample .long { display: none; } }
+  </style>
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.min.js" } }</script>
+  <script type="module" src="scene.js"></script>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div id="labels" aria-hidden="true"></div>
+  <div class="bar">
+    <div class="wrap">
+      <a class="brand" href="https://www.artifisi.com">ARTIFISI</a>
+      <span class="sample">Unofficial sample<span class="long"> · not made by or for KRI</span></span>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero" data-scene="house">
+      <div class="wrap"><div class="col">
+        <p class="kicker">Malaysia · Households · Data from KRI, Oct 2026</p>
+        <h1>From income<br />to wellbeing,<br />in seven charts.</h1>
+        <div class="big">
+          <div class="num">RM7,017</div>
+          <p>The median Malaysian household earned this much a month in 2024. <strong>Wages made up 62.9% of household income.</strong></p>
+        </div>
+        <p>Every number on this page comes from <a href="https://www.krinstitute.org/publications/from-income-to-wellbeing">The State of Households 2026: From Income To Wellbeing</a>, published by Khazanah Research Institute on 23 Oct 2026. We drew the charts. The research is theirs.</p>
+        <p class="hint">Scroll to move through the charts. Click a chart to switch its view.</p>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">The household</button><button type="button" data-view="1" aria-pressed="false">Where it comes from</button></div>
+          <p class="cap on" data-view="0"><b>The household.</b> One house of cubes for the median household and its RM7,017 a month in 2024.</p>
+          <p class="cap" data-view="1"><b>Where it comes from.</b> The same house, split by source. 62.9% of household income came from wages in 2024. The other 37.1% is everything else.</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-scene="happy">
+      <div class="wrap"><div class="col">
+        <p class="kicker">Mood</p>
+        <h2>Malaysians say they are happier than in 2021</h2>
+        <div class="bars">
+          <div class="row"><span><b>2021</b><small>Malaysia Happiness Index</small></span><span class="track"><span class="fill" style="width:64.8%;background:var(--muted)"></span><span class="val">6.48</span></span></div>
+          <div class="row"><span><b>2024</b><small>Malaysia Happiness Index</small></span><span class="track"><span class="fill" style="width:76%;background:var(--ready)"></span><span class="val ready">7.60</span></span></div>
+        </div>
+        <p class="muted">The index is out of 10. KRI suggests part of the jump may be people feeling better after the pandemic years. The wider Malaysian Well-Being Index has risen since 2000, with the environment part dipping between 2005 and 2008.</p>
+        <div class="views">
+          <p class="cap on" data-view="0"><b>Out of 10.</b> Two columns against a ghost column of 10. The 2021 score was 6.48 and the 2024 score was 7.60.</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-scene="districts">
+      <div class="wrap"><div class="col">
+        <p class="kicker">Where you live</p>
+        <h2>In 111 of 166 districts, poverty is above the national rate</h2>
+        <div class="stats">
+          <div class="stat"><div class="n">5.1<small>%</small></div><p>National poverty rate, 2024</p></div>
+          <div class="stat"><div class="n gap">111</div><p>districts with a poverty rate above 5.1%</p></div>
+          <div class="stat"><div class="n red">66</div><p>districts above double the national rate, over 10.2%</p></div>
+        </div>
+        <p class="src">Districts above the national median income hold 46.2% of households. The central region leads on income.</p>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">All 166</button><button type="button" data-view="1" aria-pressed="false">The extremes</button></div>
+          <p class="cap on" data-view="0"><b>All 166.</b> One ball per district. 55 at or below the national rate, 45 above it, and 66 above double it.</p>
+          <p class="cap" data-view="1"><b>The extremes.</b> Pitas in Sabah had a poverty rate of 50%. Kuala Krai in Kelantan, the highest in the Peninsula, had 20.2%. The national rate was 5.1%.</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-scene="squeeze">
+      <div class="wrap"><div class="col">
+        <p class="kicker">The squeeze</p>
+        <h2>The poorest tenth now keeps almost nothing back</h2>
+        <p>In 2019, households in the bottom 10% had 10.8% of their income left after spending. In 2024 it was 1.9%. Their gross income in 2024 was RM2,227 a month.</p>
+        <div class="bars">
+          <div class="row"><span><b>Bottom 10%</b><small>Rise in monthly spending, 2019 to 2024</small></span><span class="track"><span class="fill" style="width:100%;background:var(--red)"></span><span class="val red">RM384</span></span></div>
+          <div class="row"><span><b>Top 10%</b><small>Rise in monthly spending, 2019 to 2024</small></span><span class="track"><span class="fill" style="width:17%;background:var(--muted)"></span><span class="val">RM65</span></span></div>
+        </div>
+        <p class="muted">For the bottom 10% that rise was 21.3%. Spending for every group in the lower 70% rose by more than 15%.</p>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">Left over</button><button type="button" data-view="1" aria-pressed="false">Spending up</button></div>
+          <p class="cap on" data-view="0"><b>Left over.</b> Two jars of bottom 10% income. The bright cubes at the top are what is left after spending: 10.8% in 2019, 1.9% in 2024.</p>
+          <p class="cap" data-view="1"><b>Spending up.</b> How much more a month each group spent in 2024 than in 2019. RM384 more for the bottom 10%, RM65 more for the top 10%.</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-scene="plate">
+      <div class="wrap"><div class="col">
+        <p class="kicker">Food</p>
+        <h2>We now spend more eating out than eating at home</h2>
+        <div class="bars">
+          <div class="row"><span><b>Eating out</b><small>Average household, a month, 2024</small></span><span class="track"><span class="fill" style="width:100%;background:var(--gap)"></span><span class="val gap">RM902.70</span></span></div>
+          <div class="row"><span><b>Food at home</b><small>Average household, a month, 2024</small></span><span class="track"><span class="fill" style="width:97%;background:var(--ready)"></span><span class="val ready">RM875.80</span></span></div>
+        </div>
+        <p class="muted">Food weighs on the poor most. It took 38.3% of spending for the bottom 10% of households and 24.5% for the top 10%.</p>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">Out vs home</button><button type="button" data-view="1" aria-pressed="false">Share of spending</button></div>
+          <p class="cap on" data-view="0"><b>Out vs home.</b> Two plates, area to scale. RM902.70 a month on eating out, RM875.80 on food at home.</p>
+          <p class="cap" data-view="1"><b>Share of spending.</b> The bright arc is the part of all spending that goes to food. 38.3% for the bottom 10%, 24.5% for the top 10%.</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-scene="health">
+      <div class="wrap"><div class="col">
+        <p class="kicker">Health</p>
+        <h2>More than half of adults are overweight or obese</h2>
+        <div class="stats">
+          <div class="stat"><div class="n gap">32.6<small>%</small></div><p>of adults overweight, 2023</p></div>
+          <div class="stat"><div class="n red">21.8<small>%</small></div><p>of adults obese, 2023</p></div>
+        </div>
+        <p class="src">Both shares rose between 2019 and 2023. Diabetes is now one of the leading causes of death in most states.</p>
+        <div class="views">
+          <p class="cap on" data-view="0"><b>A hundred adults.</b> Each ball is 1% of adults, rounded. Amber is overweight, red is obese.</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section data-scene="ageing">
+      <div class="wrap"><div class="col">
+        <p class="kicker">Ageing</p>
+        <h2>Perak is getting old fastest</h2>
+        <p>In 2024, 41.7% of households in Perak had at least one older person living in them. Two years earlier it was 35.5%.</p>
+        <div class="bars">
+          <div class="row"><span><b>Perak</b><small>Households headed by an older person</small></span><span class="track"><span class="fill" style="width:100%;background:var(--gap)"></span><span class="val gap">25.6%</span></span></div>
+          <div class="row"><span><b>Pahang</b><small>Households headed by an older person</small></span><span class="track"><span class="fill" style="width:87%;background:var(--ready)"></span><span class="val">22.2%</span></span></div>
+          <div class="row"><span><b>Negeri Sembilan</b><small>Households headed by an older person</small></span><span class="track"><span class="fill" style="width:81%;background:var(--ready)"></span><span class="val">20.8%</span></span></div>
+          <div class="row"><span><b>Perlis</b><small>Households headed by an older person</small></span><span class="track"><span class="fill" style="width:81%;background:var(--ready)"></span><span class="val">20.7%</span></span></div>
+        </div>
+        <div class="views">
+          <div class="tabs" role="group" aria-label="Chart view"><button type="button" data-view="0" class="on" aria-pressed="true">Perak, 2 years</button><button type="button" data-view="1" aria-pressed="false">Older heads</button></div>
+          <p class="cap on" data-view="0"><b>Perak, 2 years.</b> Share of Perak households with at least one older person: 35.5% in 2022, 41.7% in 2024.</p>
+          <p class="cap" data-view="1"><b>Older heads.</b> The four states with the highest share of households headed by an older person in 2024.</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="notes" data-scene="field">
+      <div class="wrap">
+        <p class="kicker">The fine print</p>
+        <h2 class="notes-h">Where this comes from</h2>
+
+        <div class="block">
+          <h3 class="bh">Also in the report</h3>
+          <div class="method">
+            <div><span class="mn">01</span><h4>Services nearby</h4><p>97.8% of households live within 5km of a public health facility, 98.7% within 5km of a primary school and 95.9% within 5km of a secondary school. Treated water, electricity and telecoms are close to universal.</p></div>
+            <div><span class="mn">02</span><h4>Work</h4><p>Labour force participation was 70.6%. Formal jobs sit mostly in cities. Skill-related underemployment was 18.6% in Kuala Lumpur and 26.5% in Pulau Pinang, the two lowest reported. Women take part less and earn less than men.</p></div>
+            <div><span class="mn">03</span><h4>Food supply</h4><p>Malaysia buys from a few import sources. Nearly three quarters of beef imports come from India and about two thirds of vegetable imports come from China.</p></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h3 class="bh">About this page</h3>
+          <div class="method">
+            <div><span class="mn">A</span><h4>Source</h4><p>Khazanah Research Institute, <i>The State of Households 2026: From Income To Wellbeing</i>, 23 Oct 2026. Lead author Rachel Gong. KRI publishes it under CC BY 3.0. KRI drew on DOSM survey data, including the Household Income and Expenditure Survey.</p></div>
+            <div><span class="mn">B</span><h4>Who made it</h4><p>Artifisi Sdn Bhd built this page as an unofficial sample of an interactive report. KRI did not make, ask for or check it. Any mistake in copying a number is ours.</p></div>
+            <div><span class="mn">C</span><h4>Limits</h4><p>We show headline figures only, rounded the way the report rounds them. The health dot grid rounds each share to the nearest 1%. Read the full report for method, definitions and the district tables.</p></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h3 class="bh">Sources</h3>
+          <div class="srcs">
+            <a class="sc" href="https://www.krinstitute.org/publications/from-income-to-wellbeing"><span class="sc-k">KRI · 23 Oct 2026</span><span class="sc-t">From Income To Wellbeing: The State of Households 2026. Report page with the full report, executive summaries and slides.</span><span class="sc-d">krinstitute.org ↗</span></a>
+            <a class="sc" href="https://www.krinstitute.org/the-state-of-households"><span class="sc-k">KRI · series</span><span class="sc-t">The State of Households, every edition since 2014.</span><span class="sc-d">krinstitute.org ↗</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span><strong>Want one of these for your report?</strong> A page like this plus a 40 second video, in five working days. <a href="mailto:hello@artifisi.com">hello@artifisi.com</a></span>
+      <span>Artifisi Sdn Bhd · Kuala Lumpur</span>
+    </div>
+  </footer>
+</body>
+</html>
