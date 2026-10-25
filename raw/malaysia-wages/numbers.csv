@@ -1,0 +1,70 @@
+id,value,unit,year,source_ref,wording
+nat_median_2010,1500,RM/month,2010,wages_median,national median monthly wage
+nat_median_2025,2940,RM/month,2025,wages_median,national median monthly wage
+nat_mean_2025,3803,RM/month,2025,wages_mean,national mean monthly wage
+nat_emp_2025,10381.6,thousand persons,2025,recipients,employees covered
+med_P_2010,2800,RM/month,2010,section=P,"median, education"
+med_P_2025,5990,RM/month,2025,section=P,"median, education"
+ratio_P_2010,1.87,x national median,2010,computed,median / national median
+ratio_P_2025,2.04,x national median,2025,computed,median / national median
+drift_P,0.17,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_Q_2010,1995,RM/month,2010,section=Q,"median, health"
+med_Q_2025,4976,RM/month,2025,section=Q,"median, health"
+ratio_Q_2010,1.33,x national median,2010,computed,median / national median
+ratio_Q_2025,1.69,x national median,2025,computed,median / national median
+drift_Q,0.36,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_J_2010,2500,RM/month,2010,section=J,"median, information and communication"
+med_J_2025,4723,RM/month,2025,section=J,"median, information and communication"
+ratio_J_2010,1.67,x national median,2010,computed,median / national median
+ratio_J_2025,1.61,x national median,2025,computed,median / national median
+drift_J,-0.06,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_O_2010,2045,RM/month,2010,section=O,"median, public administration"
+med_O_2025,4625,RM/month,2025,section=O,"median, public administration"
+ratio_O_2010,1.36,x national median,2010,computed,median / national median
+ratio_O_2025,1.57,x national median,2025,computed,median / national median
+drift_O,0.21,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_B_2010,2800,RM/month,2010,section=B,"median, mining"
+med_B_2025,4604,RM/month,2025,section=B,"median, mining"
+ratio_B_2010,1.87,x national median,2010,computed,median / national median
+ratio_B_2025,1.57,x national median,2025,computed,median / national median
+drift_B,-0.3,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_K_2010,2500,RM/month,2010,section=K,"median, finance"
+med_K_2025,4188,RM/month,2025,section=K,"median, finance"
+ratio_K_2010,1.67,x national median,2010,computed,median / national median
+ratio_K_2025,1.42,x national median,2025,computed,median / national median
+drift_K,-0.24,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_L_2010,2500,RM/month,2010,section=L,"median, real estate"
+med_L_2025,3785,RM/month,2025,section=L,"median, real estate"
+ratio_L_2010,1.67,x national median,2010,computed,median / national median
+ratio_L_2025,1.29,x national median,2025,computed,median / national median
+drift_L,-0.38,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_M_2010,1900,RM/month,2010,section=M,"median, professional services"
+med_M_2025,3873,RM/month,2025,section=M,"median, professional services"
+ratio_M_2010,1.27,x national median,2010,computed,median / national median
+ratio_M_2025,1.32,x national median,2025,computed,median / national median
+drift_M,0.05,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_D_2010,2300,RM/month,2010,section=D,"median, electricity"
+med_D_2025,3727,RM/month,2025,section=D,"median, electricity"
+ratio_D_2010,1.53,x national median,2010,computed,median / national median
+ratio_D_2025,1.27,x national median,2025,computed,median / national median
+drift_D,-0.27,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_A_2010,780,RM/month,2010,section=A,"median, agriculture"
+med_A_2025,1813,RM/month,2025,section=A,"median, agriculture"
+ratio_A_2010,0.52,x national median,2010,computed,median / national median
+ratio_A_2025,0.62,x national median,2025,computed,median / national median
+drift_A,0.1,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_F_2010,1200,RM/month,2010,section=F,"median, construction"
+med_F_2025,2270,RM/month,2025,section=F,"median, construction"
+ratio_F_2010,0.8,x national median,2010,computed,median / national median
+ratio_F_2025,0.77,x national median,2025,computed,median / national median
+drift_F,-0.03,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+med_G_2010,1100,RM/month,2010,section=G,"median, trade"
+med_G_2025,2063,RM/month,2025,section=G,"median, trade"
+ratio_G_2010,0.73,x national median,2010,computed,median / national median
+ratio_G_2025,0.7,x national median,2025,computed,median / national median
+drift_G,-0.03,change in x,2010-2025,computed,ratio 2025 minus ratio 2010
+mm_A_2025,1.42,mean / median,2025,computed,"how top heavy, agriculture"
+mm_F_2025,1.4,mean / median,2025,computed,"how top heavy, construction"
+mm_P_2025,1.06,mean / median,2025,computed,"how top heavy, education"
+emp_J_2025,241.8,thousand persons,2025,recipients,information and communication
+share_J_2025,2.3,% of employees,2025,computed,share of all employees

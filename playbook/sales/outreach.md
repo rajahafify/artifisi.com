@@ -11,7 +11,7 @@ Subject: An unofficial interactive version of State of Households 2026
 >
 > It is seven of your headline numbers as an interactive page, plus a 45 second video. Every figure comes from the report, copied exactly, with the year and the page noted.
 >
-> https://consultancy.artifisi.com/samples/households/
+> https://reports.artifisi.com/samples/households/
 >
 > It is marked unofficial and set to noindex, so it will not compete with KRI's own page in search. If you would rather it did not exist, tell me and I will take it down the same day.
 >

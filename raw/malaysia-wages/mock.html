@@ -1,0 +1,459 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Malaysia wages, mock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>:root{--paper:#f6f2ea;--ink:#17140f;--muted:#6e665a;--rule:#dcd3c2;--up:#1e5b49;--down:#a6442a;--hi:#c9a227;--display:"Fraunces",Georgia,serif;--text:"IBM Plex Sans",Arial,sans-serif;--mono:"IBM Plex Mono",Menlo,monospace}
+*{box-sizing:border-box}
+@page{size:1440px 900px;margin:0}
+html,body{margin:0;background:#8a8a8a;font-family:var(--text);color:var(--ink)}
+.board{width:1440px;height:900px;background:var(--paper);padding:56px 80px;position:relative;overflow:hidden;page-break-after:always}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+h1{font-family:var(--display);font-weight:800;font-size:72px;line-height:1.02;letter-spacing:-.022em;margin:0;max-width:17ch}
+h2{font-family:var(--display);font-weight:800;font-size:36px;line-height:1.08;margin:0 0 22px;max-width:26ch;letter-spacing:-.015em}
+p{margin:0 0 12px;font-size:17px;line-height:1.5;color:var(--muted);max-width:50ch}
+.cap{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+.pnum{position:absolute;right:80px;bottom:36px;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.15em}
+.rule{height:1px;background:var(--rule);margin:26px 0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.big{font-family:var(--display);font-weight:800;font-size:100px;line-height:.9;letter-spacing:-.03em}
+.unit{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.06em;margin:12px 0 0}
+svg{display:block;overflow:visible}</style></head><body>
+
+<section class="board">
+  <p class="kicker">Malaysia &middot; wages by industry &middot; 2010 to 2025</p>
+  <div class="cols" style="grid-template-columns:1.05fr .95fr;margin-top:40px">
+    <div>
+      <h1>The sectors pulling ahead are the ones the government pays for.</h1>
+      <div class="rule"></div>
+      <p>Median monthly wage, all employees. Education sits at 2.04 times the national median. Health climbed from 1.33 to 1.69. Real estate fell from 1.67 to 1.29.</p>
+      <p class="cap">DOSM, Salaries and Wages Survey &middot; CC BY 4.0</p>
+    </div>
+    <div>
+      <svg viewBox="0 0 520 400">
+        <line x1="30" y1="360" x2="490" y2="360" stroke="#dcd3c2"/>
+        <rect x="80" y="183" width="140" height="177" fill="#c9c0ae"/>
+        <rect x="300" y="0" width="140" height="360" fill="#1e5b49"/>
+        <text x="80" y="172" style="font-family:IBM Plex Mono;font-size:14px;fill:#17140f">RM2,940</text>
+        <text x="300" y="34" style="font-family:IBM Plex Mono;font-size:14px;fill:#f6f2ea">RM5,990</text>
+        <text x="300" y="84" style="font-family:Fraunces;font-weight:800;font-size:46px;fill:#f6f2ea">2.04x</text>
+        <text x="80" y="384" style="font-family:IBM Plex Sans;font-size:14px;fill:#17140f">National median</text>
+        <text x="300" y="384" style="font-family:IBM Plex Sans;font-size:14px;fill:#17140f">Education</text>
+      </svg>
+    </div>
+  </div>
+  <div class="pnum">01</div>
+</section>
+
+<section class="board">
+  <p class="kicker">Drift &middot; each sector's median against the national median</p>
+  <h2>Health climbed 0.36. Real estate fell 0.38.</h2>
+  <div id="slope"></div>
+  <div class="pnum">02</div>
+</section>
+
+<section class="board">
+  <p class="kicker">Information and communication</p>
+  <h2>The sector everyone assumes is winning grew slower than the country.</h2>
+  <div class="cols" style="grid-template-columns:1fr 1.05fr;margin-top:20px">
+    <div>
+      <div class="big">1.61<span style="font-size:42px">x</span></div>
+      <p class="unit">median against national, 2025 &middot; 1.67x in 2010</p>
+      <div class="rule"></div>
+      <p>Nominal growth of 89 per cent, against 96 per cent for the national median. It employs 241,800 people, 2.3 per cent of the country.</p>
+    </div>
+    <div id="depth"></div>
+  </div>
+  <div class="pnum">03</div>
+</section>
+
+<section class="board">
+  <p class="kicker">2025 &middot; ratio to the national median</p>
+  <h2>Five sectors pay more than 1.5 times the median.</h2>
+  <div id="bars"></div>
+  <div class="pnum">04</div>
+</section>
+
+<section class="board">
+  <p class="kicker">Mean against median &middot; 2025</p>
+  <h2>In agriculture the average is 42 per cent above the typical wage.</h2>
+  <div id="dumb"></div>
+  <p class="cap" style="margin-top:18px">The gap measures how top heavy a sector is. Education and public administration pay almost everyone the same.</p>
+  <div class="pnum">05</div>
+</section>
+
+<section class="board">
+  <p class="kicker">Pay against size &middot; 2025</p>
+  <h2>The nine sectors paying above 1.2 times the median employ 34 per cent of all workers.</h2>
+  <div id="scatter"></div>
+  <div class="pnum">06</div>
+</section>
+
+<script>
+var DATA = {
+ "national": {
+  "med2010": 1500,
+  "med2025": 2940,
+  "mean2025": 3803,
+  "emp2025": 10381.6
+ },
+ "sections": [
+  {
+   "s": "A",
+   "name": "Agriculture",
+   "r10": 0.52,
+   "r25": 0.62,
+   "med": 1813,
+   "mean": 2575,
+   "emp": 270.4,
+   "share": 2.6
+  },
+  {
+   "s": "B",
+   "name": "Mining",
+   "r10": 1.87,
+   "r25": 1.57,
+   "med": 4604,
+   "mean": 6175,
+   "emp": 80.8,
+   "share": 0.8
+  },
+  {
+   "s": "C",
+   "name": "Manufacturing",
+   "r10": 0.85,
+   "r25": 0.91,
+   "med": 2663,
+   "mean": 3357,
+   "emp": 1965.2,
+   "share": 18.9
+  },
+  {
+   "s": "D",
+   "name": "Electricity",
+   "r10": 1.53,
+   "r25": 1.27,
+   "med": 3727,
+   "mean": 4256,
+   "emp": 98.7,
+   "share": 1
+  },
+  {
+   "s": "E",
+   "name": "Water",
+   "r10": 0.81,
+   "r25": 0.84,
+   "med": 2466,
+   "mean": 3136,
+   "emp": 77.8,
+   "share": 0.7
+  },
+  {
+   "s": "F",
+   "name": "Construction",
+   "r10": 0.8,
+   "r25": 0.77,
+   "med": 2270,
+   "mean": 3188,
+   "emp": 642.9,
+   "share": 6.2
+  },
+  {
+   "s": "G",
+   "name": "Trade",
+   "r10": 0.73,
+   "r25": 0.7,
+   "med": 2063,
+   "mean": 2739,
+   "emp": 1760.9,
+   "share": 17
+  },
+  {
+   "s": "H",
+   "name": "Transport",
+   "r10": 1,
+   "r25": 0.91,
+   "med": 2664,
+   "mean": 3375,
+   "emp": 542.4,
+   "share": 5.2
+  },
+  {
+   "s": "I",
+   "name": "Food and stay",
+   "r10": 0.6,
+   "r25": 0.68,
+   "med": 2013,
+   "mean": 2527,
+   "emp": 804.1,
+   "share": 7.7
+  },
+  {
+   "s": "J",
+   "name": "Information",
+   "r10": 1.67,
+   "r25": 1.61,
+   "med": 4723,
+   "mean": 5511,
+   "emp": 241.8,
+   "share": 2.3
+  },
+  {
+   "s": "K",
+   "name": "Finance",
+   "r10": 1.67,
+   "r25": 1.42,
+   "med": 4188,
+   "mean": 4998,
+   "emp": 419.5,
+   "share": 4
+  },
+  {
+   "s": "L",
+   "name": "Real estate",
+   "r10": 1.67,
+   "r25": 1.29,
+   "med": 3785,
+   "mean": 4708,
+   "emp": 83.7,
+   "share": 0.8
+  },
+  {
+   "s": "M",
+   "name": "Professional",
+   "r10": 1.27,
+   "r25": 1.32,
+   "med": 3873,
+   "mean": 5023,
+   "emp": 356.3,
+   "share": 3.4
+  },
+  {
+   "s": "N",
+   "name": "Admin support",
+   "r10": 0.67,
+   "r25": 0.73,
+   "med": 2151,
+   "mean": 2663,
+   "emp": 559.8,
+   "share": 5.4
+  },
+  {
+   "s": "O",
+   "name": "Public admin",
+   "r10": 1.36,
+   "r25": 1.57,
+   "med": 4625,
+   "mean": 4838,
+   "emp": 804.2,
+   "share": 7.7
+  },
+  {
+   "s": "P",
+   "name": "Education",
+   "r10": 1.87,
+   "r25": 2.04,
+   "med": 5990,
+   "mean": 6367,
+   "emp": 952.3,
+   "share": 9.2
+  },
+  {
+   "s": "Q",
+   "name": "Health",
+   "r10": 1.33,
+   "r25": 1.69,
+   "med": 4976,
+   "mean": 5262,
+   "emp": 500,
+   "share": 4.8
+  },
+  {
+   "s": "R",
+   "name": "Arts",
+   "r10": 0.83,
+   "r25": 0.91,
+   "med": 2688,
+   "mean": 3399,
+   "emp": 43.4,
+   "share": 0.4
+  },
+  {
+   "s": "S",
+   "name": "Other services",
+   "r10": 0.8,
+   "r25": 0.68,
+   "med": 2013,
+   "mean": 2536,
+   "emp": 175.9,
+   "share": 1.7
+  }
+ ],
+ "series": {
+  "years": [
+   "2010",
+   "2011",
+   "2012",
+   "2013",
+   "2014",
+   "2015",
+   "2016",
+   "2017",
+   "2018",
+   "2019",
+   "2020",
+   "2021",
+   "2022",
+   "2023",
+   "2024",
+   "2025"
+  ],
+  "national": [
+   1500,
+   1500,
+   1566,
+   1700,
+   1800,
+   1942,
+   2000,
+   2160,
+   2308,
+   2442,
+   2076,
+   2256,
+   2429,
+   2602,
+   2793,
+   2940
+  ],
+  "J": [
+   2500,
+   2500,
+   2600,
+   3000,
+   2970,
+   3000,
+   3200,
+   3500,
+   3641,
+   3989,
+   3490,
+   3686,
+   3970,
+   4154,
+   4231,
+   4723
+  ],
+  "Jr": [
+   1.667,
+   1.667,
+   1.66,
+   1.765,
+   1.65,
+   1.545,
+   1.6,
+   1.62,
+   1.578,
+   1.633,
+   1.681,
+   1.634,
+   1.634,
+   1.596,
+   1.515,
+   1.606
+  ]
+ }
+};
+var S = DATA.sections, SER = DATA.series;
+function t(x,y,txt,o){o=o||{};return '<text x="'+x+'" y="'+y+'" style="font-family:'+(o.mono===false?'IBM Plex Sans':'IBM Plex Mono')+';font-size:'+(o.size||12)+'px;fill:'+(o.fill||'#6e665a')+'">'+txt+'</text>';}
+function ln(x1,y1,x2,y2,c,w,d){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+c+'" stroke-width="'+(w||1)+'"'+(d?' stroke-dasharray="3 4"':'')+'/>';}
+
+(function slope(){
+ var W=1280,H=600,x0=180,x1=1020,yTop=40,yBot=560,rMin=0.45,rMax=2.15;
+ var y=function(r){return yBot-(r-rMin)/(rMax-rMin)*(yBot-yTop);};
+ var sorted=S.slice().sort(function(a,b){return (b.r25-b.r10)-(a.r25-a.r10);});
+ var key=[sorted[0].s,sorted[1].s,sorted[2].s,sorted[sorted.length-1].s,sorted[sorted.length-2].s,sorted[sorted.length-3].s];
+ var s='<svg viewBox="0 0 '+W+' '+H+'">';
+ s+=ln(x0,yTop-8,x0,yBot,'#cfc6b3');s+=ln(x1,yTop-8,x1,yBot,'#cfc6b3');
+ s+=ln(x0,y(1),x1,y(1),'#b9ae99',1,1);
+ s+=t(x0,yTop-20,'2010',{size:11});s+=t(x1-26,yTop-20,'2025',{size:11});
+ s+=t(x1+10,y(1)+4,'1.0x',{size:11});
+ S.forEach(function(d){
+  var up=d.r25>d.r10,c=up?'#1e5b49':'#a6442a',hi=key.indexOf(d.s)>-1;
+  s+=ln(x0,y(d.r10),x1,y(d.r25),c,hi?2.4:1.1);
+  s+='<circle cx="'+x0+'" cy="'+y(d.r10)+'" r="'+(hi?4.5:2.4)+'" fill="'+c+'" opacity="'+(hi?1:.45)+'"/>';
+  s+='<circle cx="'+x1+'" cy="'+y(d.r25)+'" r="'+(hi?4.5:2.4)+'" fill="'+c+'" opacity="'+(hi?1:.45)+'"/>';
+ });
+ var labs=S.filter(function(d){return key.indexOf(d.s)>-1;}).map(function(d){return {y:y(d.r25),txt:d.name+'  '+d.r25.toFixed(2)+'x',up:d.r25>d.r10};}).sort(function(a,b){return a.y-b.y;});
+ for(var i=1;i<labs.length;i++){if(labs[i].y-labs[i-1].y<22)labs[i].y=labs[i-1].y+22;}
+ labs.forEach(function(l){s+=t(x1+18,l.y+4,l.txt,{size:12.5,fill:l.up?'#1e5b49':'#a6442a'});});
+ s+='</svg>';
+ document.getElementById('slope').innerHTML=s;
+})();
+
+(function depth(){
+ var picks=[0,5,10,15],W=620,H=470;
+ var s='<svg viewBox="0 0 '+W+' '+H+'">';
+ picks.forEach(function(idx,i){
+  var r=SER.Jr[idx],dx=i*24,dy=i*-52,barW=Math.max((r-1)*780,4),y=330+dy;
+  s+='<rect x="'+(40+dx)+'" y="'+y+'" width="470" height="56" rx="2" fill="#ffffff" stroke="#dcd3c2"/>';
+  s+='<rect x="'+(40+dx)+'" y="'+y+'" width="'+barW+'" height="56" rx="2" fill="#1e5b49"/>';
+  s+=t(52+dx,y+35,SER.years[idx],{size:13,fill:'#f6f2ea'});
+  s+=t(40+dx+barW+12,y+35,r.toFixed(2)+'x',{size:14,fill:'#17140f'});
+ });
+ s+=t(40,452,'premium over the national median, four years',{size:11});
+ s+='</svg>';
+ document.getElementById('depth').innerHTML=s;
+})();
+
+(function bars(){
+ var rows=S.slice().sort(function(a,b){return b.r25-a.r25;});
+ var W=1280,rowH=27,top=30,x=340,max=2.1,scale=800/max;
+ var s='<svg viewBox="0 0 '+W+' '+(rows.length*rowH+50)+'">';
+ [0.5,1,1.5,2].forEach(function(v){s+=ln(x+v*scale,top-10,x+v*scale,rows.length*rowH+6,'#e6ddcb');s+=t(x+v*scale-10,top-16,v.toFixed(1)+'x',{size:10.5});});
+ s+=ln(x,top-10,x,rows.length*rowH+6,'#b9ae99');
+ rows.forEach(function(d,i){
+  var y=i*rowH+top,w=d.r25*scale,c=d.r25>=1.5?'#1e5b49':(d.r25>=1.2?'#7d8a6f':'#cfc6b3');
+  s+=t(x-12,y+15,d.name,{size:12.5,mono:false,fill:'#17140f'});
+  s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="17" rx="1.5" fill="'+c+'"/>';
+  s+=t(x+w+10,y+14,d.r25.toFixed(2)+'x',{size:12,fill:'#17140f'});
+ });
+ s+='</svg>';
+ document.getElementById('bars').innerHTML=s;
+})();
+
+(function dumb(){
+ var rows=S.slice().sort(function(a,b){return (b.mean/b.med)-(a.mean/a.med);});
+ var W=1280,rowH=24,x0=340,x1=1150,min=1600,max=6500;
+ var px=function(v){return x0+(v-min)/(max-min)*(x1-x0);};
+ var s='<svg viewBox="0 0 '+W+' '+(rows.length*rowH+52)+'">';
+ [2000,3000,4000,5000,6000].forEach(function(v){s+=ln(px(v),8,px(v),rows.length*rowH+4,'#e6ddcb');s+=t(px(v)-16,rows.length*rowH+30,'RM'+v,{size:10.5});});
+ rows.forEach(function(d,i){
+  var y=i*rowH+14;
+  s+=t(x0-12,y+4,d.name,{size:12,mono:false,fill:'#17140f'});
+  s+=ln(px(d.med),y,px(d.mean),y,'#dcd3c2',3);
+  s+='<circle cx="'+px(d.med)+'" cy="'+y+'" r="4" fill="#17140f"/>';
+  s+='<circle cx="'+px(d.mean)+'" cy="'+y+'" r="4" fill="#a6442a"/>';
+  if(i<3) s+=t((px(d.med)+px(d.mean))/2-12,y-8,'+'+(Math.round((d.mean/d.med-1)*100))+'%',{size:10.5,fill:'#a6442a'});
+ });
+ s+='</svg>';
+ document.getElementById('dumb').innerHTML=s;
+})();
+
+(function scatter(){
+ var W=1280,H=470,padL=100,padR=40,padT=20,padB=56,xr=[0,20],yr=[0.5,2.15];
+ var px=function(v){return padL+(v-xr[0])/(xr[1]-xr[0])*(W-padL-padR);};
+ var py=function(v){return H-padB-(v-yr[0])/(yr[1]-yr[0])*(H-padT-padB);};
+ var s='<svg viewBox="0 0 '+W+' '+H+'">';
+ [0.5,1,1.5,2].forEach(function(v){s+=ln(padL,py(v),W-padR,py(v),'#e6ddcb');s+=t(padL-40,py(v)+4,v.toFixed(1)+'x',{size:10.5});});
+ [5,10,15,20].forEach(function(v){s+=t(px(v)-8,H-padB+20,v+'%',{size:10.5});});
+ s+=ln(padL,py(1.2),W-padR,py(1.2),'#b9ae99',1,1);
+ S.forEach(function(d){
+  var big=d.share>4;
+  s+='<circle cx="'+px(d.share)+'" cy="'+py(d.r25)+'" r="'+(big?6:4.5)+'" fill="'+(d.r25>=1.2?'#1e5b49':'#a6442a')+'" opacity=".85"/>';
+  if(d.share>4||d.r25>1.55)s+=t(px(d.share)+10,py(d.r25)+4,d.name,{size:11.5,mono:false,fill:'#17140f'});
+ });
+ s+=t(padL,H-16,'share of all employees',{size:11});
+ s+='</svg>';
+ document.getElementById('scatter').innerHTML=s;
+})();
+</script>
+</body></html>

@@ -3,4 +3,4 @@
 /registration / 301
 /login / 301
 /project/* /projects/:splat 301
-/samples/* https://consultancy.artifisi.com/samples/:splat 301
+/samples/* https://reports.artifisi.com/samples/:splat 301
