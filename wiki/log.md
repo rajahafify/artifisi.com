@@ -434,3 +434,45 @@ Notes:
 Verification:
 - code checked: yes (wiki updates reviewed)
 - human reviewed: no
+
+
+---
+
+## [2026-10-25] decision | Package the report-to-page service as a sellable line
+
+Source: `playbook/instructions.md`, `public/samples/households/`
+
+Changes:
+- added `playbook/sales/rate-card.md`
+- added `playbook/sales/services-agreement.md`
+
+Notes:
+- Prices come from the playbook: RM4,500 standard, RM2,900 pilot. Flagship and Calendar tiers are new and untested.
+- Positioning decision: this is a cash-flow line for Dunia, not a second business. Target 2 to 3 retainers, keep sales effort low.
+- Service tax treatment is unverified. Needs an accountant.
+- The agreement is a template, not legal advice.
+
+Verification:
+- code checked: no
+- human reviewed: no
+
+
+---
+
+## [2026-10-25] feature | Consultancy front door at consultancy.artifisi.com
+
+Source: user request, `playbook/sales/`
+
+Changes:
+- added `public/consultancy/index.html` (standalone page, own styles, no three.js)
+- added `playbook/sales/README.md` with the Cloudflare subdomain steps
+
+Notes:
+- The page is plain HTML in `public/`, so the Astro build copies it to `dist/consultancy/index.html`. It works at both `/consultancy` and the subdomain root.
+- Every custom domain on a Cloudflare Pages project serves the same site, so the subdomain needs a URL Rewrite rule from `/` to `/consultancy`.
+- Prices are now duplicated in `rate-card.md` and the page. Change both together.
+- `public/samples/households/README.md` is copied into `dist/` and published. Consider moving internal notes out of `public/`.
+
+Verification:
+- code checked: yes (`npm run build` passes, desktop 1440 and 390 viewport screenshots reviewed)
+- human reviewed: no

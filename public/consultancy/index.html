@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Artifisi Consultancy. Your report, in seven charts and forty seconds.</title>
+<meta name="description" content="We turn a published report into an interactive web page and a set of vertical videos, from the PDF, in five working days. Sample built from KRI's State of Households 2026." />
+<link rel="canonical" href="https://consultancy.artifisi.com/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Artifisi Consultancy" />
+<meta property="og:description" content="Your report, in seven charts and forty seconds. From the PDF, in five working days." />
+<meta property="og:url" content="https://consultancy.artifisi.com/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@artifisi_my" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0f1522;
+    --bg-2: #141b2b;
+    --ink: #eef0ec;
+    --muted: #9ba3b4;
+    --line: #273047;
+    --red: #ef6a55;
+    --ready: #36b3a0;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); }
+  body { margin: 0; color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.6; }
+  a { color: inherit; text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--ready); outline-offset: 3px; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 22px; }
+  section { padding: 64px 0; border-top: 1px solid var(--line); }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 0 0 16px; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 800; line-height: 1.06; letter-spacing: -.015em; margin: 0; }
+  h1 { font-size: clamp(38px, 6.4vw, 74px); }
+  h2 { font-size: clamp(28px, 3.6vw, 40px); margin-bottom: 24px; }
+  h3 { font-size: 21px; font-weight: 600; margin-bottom: 8px; }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--muted); }
+  .red { color: var(--red); }
+  .lead { font-size: 21px; max-width: 62ch; color: #d2d7e0; }
+
+  /* top */
+  .bar { border-bottom: 1px solid var(--line); }
+  .bar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-top: 18px; padding-bottom: 18px; font-size: 13px; font-family: var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .bar a { text-decoration: none; color: var(--muted); }
+  .bar a:hover { color: var(--ink); }
+  .bar .brand { color: var(--ink); }
+  .bar nav { display: flex; gap: 30px; }
+
+  /* hero */
+  .hero { padding-top: 80px; border-top: 0; }
+  .hero h1 { max-width: 20ch; }
+  .hero .lead { margin-top: 24px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; align-items: center; }
+  .btn { display: inline-block; padding: 14px 24px; background: var(--red); color: #1a0f0c; font-weight: 600; text-decoration: none; border-radius: 2px; }
+  .btn:hover { background: #f2836f; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .btn.ghost:hover { border-color: var(--muted); }
+
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); margin-top: 56px; }
+  .fact { padding: 26px 20px 26px 0; }
+  .fact + .fact { border-left: 1px solid var(--line); padding-left: 20px; }
+  .fact b { display: block; font-family: var(--serif); font-size: 30px; line-height: 1.1; margin-bottom: 6px; }
+  .fact span { font-size: 13px; color: var(--muted); }
+
+  /* three up */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+  .three h3 { color: var(--ink); }
+  .three p { color: var(--muted); font-size: 16px; margin: 0; }
+  .num { font-family: var(--mono); font-size: 12px; color: var(--red); letter-spacing: .2em; display: block; margin-bottom: 12px; }
+
+  /* sample */
+  .sample { background: var(--bg-2); }
+  .sample .card { border: 1px solid var(--line); padding: 28px; display: grid; gap: 8px; margin-top: 28px; }
+  .sample .card h3 { font-size: 24px; }
+  .sample .card p { color: var(--muted); margin: 0; font-size: 16px; }
+  .sample .card .go { font-family: var(--mono); font-size: 13px; color: var(--ready); text-decoration: none; letter-spacing: .06em; }
+  .sample .card .go:hover { text-decoration: underline; }
+
+  /* steps */
+  .steps { display: grid; gap: 0; margin-top: 8px; }
+  .step { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 22px 0; border-top: 1px solid var(--line); }
+  .step:first-child { border-top: 0; }
+  .step .n { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .2em; padding-top: 5px; }
+  .step p { margin: 0; }
+
+  /* prices */
+  .prices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 8px; }
+  .price { background: var(--bg); padding: 24px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .price .name { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+  .price .amt { font-family: var(--serif); font-size: 30px; line-height: 1.1; }
+  .price .per { font-size: 13px; color: var(--muted); }
+  .price ul { margin: 10px 0 0; padding-left: 16px; font-size: 14px; color: var(--muted); }
+  .price li { margin-bottom: 4px; }
+  .price.pick { background: var(--bg-2); }
+  .price.pick .amt { color: var(--ready); }
+  .note { font-size: 14px; color: var(--muted); margin-top: 18px; }
+
+  /* limits */
+  .limits { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 44px; margin-top: 8px; }
+  .limits div p { margin: 0; color: var(--muted); font-size: 16px; }
+  .limits h3 { font-size: 18px; font-family: var(--sans); font-weight: 600; }
+
+  /* contact */
+  .contact { background: var(--bg-2); }
+  .mail { font-family: var(--serif); font-size: clamp(24px, 4vw, 42px); color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--red); }
+  .mail:hover { color: var(--red); }
+
+  footer { padding: 40px 0 56px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  @media (max-width: 860px) {
+    .facts { grid-template-columns: repeat(2, 1fr); }
+    .fact:nth-child(3) { border-left: 0; padding-left: 0; }
+    .three { grid-template-columns: 1fr; gap: 28px; }
+    .prices { grid-template-columns: repeat(2, 1fr); }
+    .limits { grid-template-columns: 1fr; gap: 24px; }
+  }
+  @media (max-width: 520px) {
+    .prices { grid-template-columns: 1fr; }
+    section { padding: 48px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="wrap">
+    <a class="brand" href="https://artifisi.com">Artifisi Consultancy</a>
+    <nav>
+      <a href="/samples/households">The sample</a>
+      <a href="#prices">Prices</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">Reports, made readable</p>
+    <h1>Your report, in seven charts and <span class="red">forty seconds</span>.</h1>
+    <p class="lead">We turn a published report into an interactive web page and a set of vertical videos. You send the PDF. We send back something your comms team can post.</p>
+    <div class="cta">
+      <a class="btn" href="/samples/households">See a finished one</a>
+      <a class="btn ghost" href="mailto:hello@artifisi.com?subject=Report%20to%20page">hello@artifisi.com</a>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>5</b><span>working days, start to live</span></div>
+      <div class="fact"><b>7</b><span>charts per report</span></div>
+      <div class="fact"><b>40s</b><span>vertical video, captioned</span></div>
+      <div class="fact"><b>RM4,500</b><span>standard package</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">The problem</p>
+    <h2>A report is a bad shape for the internet.</h2>
+    <p class="lead">Most of the people you want to reach will read the executive summary, if that. The numbers are good. They are just locked in a file nobody opens on a phone.</p>
+    <p class="lead muted">Your comms team still has a month of posts to fill, and a graph from page 42 is not a post.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">What you get</p>
+    <h2>Three things, from the same numbers.</h2>
+    <div class="three">
+      <div>
+        <span class="num">01</span>
+        <h3>The page</h3>
+        <p>Every figure is real text, so search engines and screen readers can read it. The charts are drawn in 3D and re-form as the reader scrolls. Tap one to switch view. On a phone it becomes a text page, then a full screen chart.</p>
+      </div>
+      <div>
+        <span class="num">02</span>
+        <h3>The videos</h3>
+        <p>Three vertical films, 40 to 55 seconds, captioned, with a voice over. Sized for LinkedIn, Instagram and TikTok. Each one covers a single number, so they can run in any order.</p>
+      </div>
+      <div>
+        <span class="num">03</span>
+        <h3>The stills</h3>
+        <p>Every chart as a press ready image, so the report page, the deck and the launch post all match. No one has to screenshot a PDF again.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sample">
+  <div class="wrap">
+    <p class="kicker">Proof</p>
+    <h2>We already built one.</h2>
+    <p class="lead">Khazanah Research Institute published The State of Households 2026 on 23 October. We turned seven of its numbers into a page and a 45 second film, in a day.</p>
+    <div class="card">
+      <h3>From income to wellbeing</h3>
+      <p>Income, happiness, poverty by district, the squeeze on the bottom 10%, food, health and ageing. Seven charts, each with a second view.</p>
+      <a class="go" href="/samples/households">Open the sample</a>
+    </div>
+    <p class="note">That page is unofficial. KRI did not ask for it and did not check it. We built it to show what the work looks like. Every figure comes from the report, and any mistake in copying one is ours.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">How it works</p>
+    <h2>One week, four steps.</h2>
+    <div class="steps">
+      <div class="step"><span class="n">01</span><p>You send the final PDF, and the spreadsheet behind it if one exists.</p></div>
+      <div class="step"><span class="n">02</span><p>We pick seven numbers that each make one chart, and send them back for you to check. This is the only step that needs your time.</p></div>
+      <div class="step"><span class="n">03</span><p>We build the page and the videos. First draft in five working days.</p></div>
+      <div class="step"><span class="n">04</span><p>You approve every figure. We publish to your domain or ours, and hand over the files.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="prices">
+  <div class="wrap">
+    <p class="kicker">Prices</p>
+    <h2>Four ways to buy it.</h2>
+    <div class="prices">
+      <div class="price">
+        <span class="name">Pilot</span>
+        <span class="amt">RM2,900</span>
+        <span class="per">first two clients each quarter</span>
+        <ul><li>1 page, 7 charts</li><li>1 vertical video</li><li>Case study in return</li></ul>
+      </div>
+      <div class="price pick">
+        <span class="name">Standard</span>
+        <span class="amt">RM4,500</span>
+        <span class="per">5 working days</span>
+        <ul><li>1 page, 10 charts</li><li>3 vertical videos</li><li>Press stills</li></ul>
+      </div>
+      <div class="price">
+        <span class="name">Flagship</span>
+        <span class="amt">RM12,000</span>
+        <span class="per">10 working days</span>
+        <ul><li>1 page, 14 charts</li><li>6 videos, 1 film</li><li>Launch pack</li></ul>
+      </div>
+      <div class="price">
+        <span class="name">Calendar</span>
+        <span class="amt">RM3,000</span>
+        <span class="per">per month</span>
+        <ul><li>Every report you publish</li><li>48 hours after the PDF</li><li>Quarterly recap film</li></ul>
+      </div>
+    </div>
+    <p class="note">Two rounds of changes are included in every package. Prices exclude service tax where it applies.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">The fine print, early</p>
+    <h2>What we do not do.</h2>
+    <div class="limits">
+      <div>
+        <h3>We do not check your numbers</h3>
+        <p>We copy figures exactly as the report prints them. You approve every one before we publish. If a number is wrong in the source, it will be wrong on the page.</p>
+      </div>
+      <div>
+        <h3>We do not claim your work</h3>
+        <p>Until you approve it, the page says it is unofficial and was not made by or for you. We do not use your name or logo without written consent.</p>
+      </div>
+      <div>
+        <h3>We do not keep your page</h3>
+        <p>You own the page and the videos once the invoice is paid. We keep the engine and the chart code, and we may show the work in our portfolio.</p>
+      </div>
+      <div>
+        <h3>We do not overrun quietly</h3>
+        <p>If we miss a date we agreed, the fee drops 10% for each working day we are late. If we cannot finish, you get back the part we did not deliver.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <p class="kicker">Contact</p>
+    <h2>Tell us what you published.</h2>
+    <p class="lead">Send the PDF and the date it went out. We will reply within one working day with what we would build and the price.</p>
+    <p style="margin-top:26px"><a class="mail" href="mailto:hello@artifisi.com?subject=Report%20to%20page">hello@artifisi.com</a></p>
+    <p class="note">Artifisi Sdn Bhd, Kuala Lumpur. Also on X at <a href="https://x.com/artifisi_my">@artifisi_my</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Artifisi Sdn Bhd · Kuala Lumpur, Malaysia</span>
+    <span><a href="https://artifisi.com">artifisi.com</a> · <a href="https://artifisi.com/privacy">Privacy</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
