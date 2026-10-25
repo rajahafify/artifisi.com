@@ -389,11 +389,19 @@ document.body.appendChild(chip);
 const fingerAt = new THREE.Vector3(0.3, -0.4, 0);
 const chipAt = new THREE.Vector3(0, -3.6, 0);
 
+// Phones pin the chart in a stage under the top bar; the text scrolls in the space below it.
+const topBar = document.querySelector(".bar");
+const notes = document.querySelector(".notes");
+const stage = { phone: false, top: 0, w: 0, h: 0, shift: 0 };
+
 // Scroll position -> which two sections to blend, and how far.
 function scrollState() {
-  const mid = scrollY + innerHeight * 0.5;
-  // A shape is fully formed when its section's top reaches the top of the screen (or its middle, if shorter).
-  const centers = sections.map((s) => s.offsetTop + Math.min(s.offsetHeight, innerHeight) * 0.5);
+  // On phones the reading line sits in the text area under the stage.
+  const top = stage.phone ? stage.top + stage.h : 0;
+  const read = top + (innerHeight - top) * (stage.phone ? 0.3 : 0.5);
+  const mid = scrollY + read;
+  // A shape is fully formed when its section's top reaches the top of the text area (or its middle, if shorter).
+  const centers = sections.map((s) => s.offsetTop + Math.min(s.offsetHeight * 0.5, read - top));
   if (mid <= centers[0]) return [0, 0, 0];
   for (let k = 0; k < centers.length - 1; k++) {
     if (mid < centers[k + 1]) return [k, k + 1, (mid - centers[k]) / (centers[k + 1] - centers[k])];
@@ -420,17 +428,24 @@ addEventListener("pointermove", (ev) => {
 let offsetX = 0, offsetY = 0, scale = 0.82;
 const place = new Map();
 function resize() {
-  const w = innerWidth, h = innerHeight;
+  const wide = innerWidth > 900;
+  stage.phone = !wide;
+  if (!wide) document.documentElement.style.setProperty("--bar", `${topBar.offsetHeight}px`);
+  stage.top = wide ? 0 : topBar.offsetHeight;
+  stage.w = wide ? innerWidth : canvas.clientWidth;
+  stage.h = wide ? innerHeight : canvas.clientHeight;
+  const w = stage.w, h = stage.h;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
-  const wide = w > 900;
-  camera.position.z = wide ? 11 : 13.5;
+  camera.position.z = 11;
   const halfH = Math.tan(THREE.MathUtils.degToRad(20)) * camera.position.z;
   const perPx = (2 * halfH) / h;
-  offsetY = wide ? 0 : 0.5 * halfH;
+  offsetY = 0;
+  // On a phone the stage is about square; fit the shapes and their labels to its width.
+  const fit = Math.min(0.82, (2 * halfH * camera.aspect) / 8.4, (2 * halfH) / 8.6);
   sections.forEach((s) => {
     const col = s.querySelector(".col");
-    if (!wide || !col) return place.set(s, { x: wide ? 0.44 * halfH * camera.aspect : 0, s: wide ? 0.82 : 0.5 });
+    if (!wide || !col) return place.set(s, { x: wide ? 0.44 * halfH * camera.aspect : 0, s: wide ? 0.82 : fit });
     const left = col.getBoundingClientRect().right + 24;
     const free = Math.max(200, w - left - 16);
     // Shapes plus their labels span about 8.4 units.
@@ -504,7 +519,13 @@ function frame() {
   // Show labels once the shape has settled.
   const settled = Math.abs(f - (dominant === a ? 0 : 1)) < 0.22 && performance.now() - changedAt > 900;
   labelLayer.classList.toggle("show", settled);
-  const w = innerWidth, h = innerHeight;
+  // On phones the fine print pushes the stage up and off the screen.
+  const shift = stage.phone ? Math.min(0, notes.getBoundingClientRect().top - (stage.top + stage.h)) : 0;
+  if (shift !== stage.shift) {
+    stage.shift = shift;
+    canvas.style.transform = labelLayer.style.transform = shift ? `translateY(${shift}px)` : "";
+  }
+  const w = stage.w, h = stage.h, y0 = stage.top + shift;
   for (const l of labelEls) {
     v3.copy(l.p).applyMatrix4(group.matrixWorld).project(camera);
     // Keep every label on screen, which matters on phones.
@@ -518,14 +539,14 @@ function frame() {
 
   const count = views[sections[dominant].dataset.scene].length;
   const multi = count > 1 && settled;
-  const phoneHero = innerWidth <= 900 && dominant === 0;
-  finger.classList.toggle("show", multi && !taught && !phoneHero);
-  chip.classList.toggle("show", multi && !phoneHero);
+  const onScreen = shift > -40;
+  finger.classList.toggle("show", multi && !taught && onScreen);
+  chip.classList.toggle("show", multi && onScreen);
   chip.textContent = `${current.get(sections[dominant]) + 1} / ${count} · ${innerWidth <= 900 ? "tap" : "click"} to switch`;
   v3.copy(fingerAt).applyMatrix4(group.matrixWorld).project(camera);
-  finger.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${((1 - v3.y) / 2) * h}px)`;
+  finger.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${y0 + ((1 - v3.y) / 2) * h}px)`;
   v3.copy(chipAt).applyMatrix4(group.matrixWorld).project(camera);
-  chip.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${Math.min(((1 - v3.y) / 2) * h, h - 30)}px)`;
+  chip.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${y0 + Math.min(((1 - v3.y) / 2) * h, h - 30)}px)`;
   finger.querySelector(".say").textContent = innerWidth <= 900 ? "Tap the chart" : "Click the chart";
 
   renderer.render(scene, camera);
@@ -533,3 +554,5 @@ function frame() {
 }
 frame();
 document.documentElement.classList.add("has-scene");
+// The phone stage only takes its size once has-scene applies.
+resize();
