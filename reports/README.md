@@ -23,7 +23,7 @@ A separate project because Pages gives a custom domain the whole project, and be
 ## Editing
 
 - Copy and prices live in `index.html`. The same prices live in `../playbook/sales/rate-card.md`. Change both together.
-- The contact form posts to Formspree. Replace `YOUR_FORM_ID` in the `<form action>` with the id from formspree.io, then set `_next` to the live URL so the `#sent` banner shows after submit.
+- The contact form posts to the same Formspree form as the main site (`xeaaobag`). `_subject` marks which site it came from; `_next` sends the sender back to `#sent`.
 - `og.png` is the share image. Retake it if the headline changes: headless Chrome at 1200x630.
 - Reports sit one level down and use absolute paths (`/malaysia-wages/`). Samples live at `samples/<slug>/`. The main site 301s `/samples/*` here.
 
