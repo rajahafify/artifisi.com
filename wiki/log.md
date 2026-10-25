@@ -464,13 +464,13 @@ Verification:
 Source: user request, `playbook/sales/`
 
 Changes:
-- added `public/consultancy/index.html` (standalone page, own styles, no three.js)
-- added `playbook/sales/README.md` with the Cloudflare subdomain steps
+- added `consultancy/index.html` (standalone page, own styles, no three.js), plus `favicon.svg` and `og.png`
+- added `consultancy/README.md` with the deploy steps
 
 Notes:
-- The page is plain HTML in `public/`, so the Astro build copies it to `dist/consultancy/index.html`. It works at both `/consultancy` and the subdomain root.
-- Every custom domain on a Cloudflare Pages project serves the same site, so the subdomain needs a URL Rewrite rule from `/` to `/consultancy`.
-- Prices are now duplicated in `rate-card.md` and the page. Change both together.
+- Deploy shape follows tech-sovereignty: a separate Pages project from the same repo, build command `exit 0`, output directory `consultancy`, its own custom domain and CNAME. The main site build does not include it.
+- Sample links in the page are absolute (`https://artifisi.com/samples/households`). A relative link would 404 on the subdomain.
+- Prices are duplicated in `rate-card.md` and `consultancy/index.html`. Change both together.
 - `public/samples/households/README.md` is copied into `dist/` and published. Consider moving internal notes out of `public/`.
 
 Verification:
