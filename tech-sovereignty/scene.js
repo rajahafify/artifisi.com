@@ -435,6 +435,8 @@ function resize() {
   stage.w = wide ? innerWidth : canvas.clientWidth;
   stage.h = wide ? innerHeight : canvas.clientHeight;
   const w = stage.w, h = stage.h;
+  // A hidden or not-yet-laid-out page reports zero size; a later resize fills this in.
+  if (!w || !h) return;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
   camera.position.z = 11;
@@ -454,6 +456,8 @@ function resize() {
   camera.updateProjectionMatrix();
 }
 addEventListener("resize", resize);
+// Also catch size changes that fire no window resize, like an in-app browser opening or the stage settling.
+new ResizeObserver(() => resize()).observe(canvas);
 resize();
 addEventListener("load", resize);
 document.fonts?.ready.then(resize);
@@ -509,6 +513,7 @@ function frame() {
   group.rotation.y += (targetY - group.rotation.y) * 0.05;
   group.rotation.x += (targetX - group.rotation.x) * 0.05;
   const spot = place.get(sections[dominant]);
+  if (!spot) return requestAnimationFrame(frame);
   offsetX = spot.x;
   scale += (spot.s - scale) * 0.08;
   group.scale.setScalar(scale);
