@@ -99,19 +99,24 @@ with `preconnect` set. Display text is not blocked on them.
 
 ## 5. Behaviour
 
-- **Reduced motion**: `prefers-reduced-motion: reduce` skips the IntersectionObserver
-  entirely and renders every scene at `t = 1`, so the page shows final states and never
-  animates. Verified with `--force-prefers-reduced-motion`.
+- **Reduced motion**: `prefers-reduced-motion: reduce` skips playback and renders every
+  scene at `t = 1`, so the page shows final states and never animates. Verified with
+  `--force-prefers-reduced-motion`.
 - **No JavaScript**: `html.no-js` hides the canvas and shows a data table per figure.
   Every claim and every number is still on the page in HTML. Verified in `qa/nojs.png`.
 - **Keyboard**: each figure is a `role="button"` with `tabindex="0"` and an `aria-label` naming
   its claim. Enter and Space play it. Focus ring is 2px accent with 3px offset.
-- **Motion**: click or tap drives playback. Each figure opens on its finished frame, so the
-  page reads without interaction; a click replays the shot from the top, and a click during
-  playback restarts it. Nothing plays on scroll and nothing loops.
+- **Motion**: click or tap drives playback. Each figure opens at the top of its shot
+  (`t = 0`) and runs forward on the first click; a click during playback restarts it.
+  Nothing plays on scroll and nothing loops.
 - **Click indicator**: a finger that presses over the first figure until the reader clicks any
   chart once (remembered in `localStorage` as `mw-taught`), plus a chip on every figure reading
   `Play the shot` / `Playing` / `Replay`. Coarse pointers get "Tap" instead of "Click".
+- **Opening frame**: at `t = 0` the lift, canyon and cutaway fill the frame, because each
+  has a static structure around the moving part. Section 4 and section 5 read thin until
+  clicked, since their scenes are the growth itself. The camera cannot compensate: the
+  bounding box measured at `t = 0` and `t = 1` is the same in all six scenes, because each
+  one animates inside a fixed envelope.
 
 ---
 
