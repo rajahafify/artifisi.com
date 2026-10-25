@@ -476,3 +476,210 @@ Notes:
 Verification:
 - code checked: yes (`npm run build` passes, desktop 1440 and 390 viewport screenshots reviewed)
 - human reviewed: no
+
+## [2026-10-26] build | Wage-bill city: third 3D attempt, now with hover
+
+Source: `raw/malaysia-wages/{data.json,viz.html}`
+
+Changes:
+- rewrote `viz.html`: 9 blocks (8 named industries + a residual) instead of 19
+- encoding: footprint area = share of employees, height = median wage / national median, so **volume = share of the wage bill**
+- ordered by wage bill ascending; residual "Other 11 industries" pinned left, separated, drawn in light stone
+- per-sector hover: lift + animated glyph + readout. Education pages, Manufacturing conveyor, Public admin registry pins, Trade crates, Health pulse, Finance stairs, Food steam, Construction frame, Others scatter
+
+Notes:
+- **Depth-as-time does not work at this camera.** At 33° elevation a block 1.2 units behind reads ~0.48 world units higher regardless of its height, which swamps a 2010→2025 difference of 0.1–0.3. Only works top-down, which kills the height encoding. Dropped the two-date comparison from this figure.
+- 19 blocks was an interaction failure, not just a density one: the thin ones render ~10px wide, below any usable hover target. 9 blocks gives ~160px each.
+- The residual is 22.4% of the bill — the second-largest single block. It sits at the left, outside the ranked run, so it does not compete with the Education crescendo.
+- Hover state is forced with `?hover=N` for screenshot QA.
+
+Verification:
+- code checked: yes (headless Chrome, swiftshader; static + 4 hover states rendered)
+- human reviewed: no
+
+
+## [2026-10-26] build | viz becomes a time-driven film, framed for both web and video
+
+Source: `raw/malaysia-wages/viz.html`
+
+Changes:
+- replaced the hover-only figure with a 48s timeline; every visual is now `f(t)` (camera keys, build stagger, datum draw, footprint outlines, volume outlines, glyph cues, captions)
+- six acts: build 0-3, establish 3-11, height 11-19, width 19-27, volume 27-34, travel 34-44, return 44-48
+- `window.__seek(t)` for frame-accurate capture; `?t=` renders a still and disables CSS transitions
+- responsive framing: landscape shows the whole row, portrait crops to the high end and the travel act covers the rest
+
+Notes:
+- **The video is portrait, not 16:9.** `playbook/tools/record-video.js` captures 540x960 at DPR 2 with `isMobile`, so output is 1080x1920. Composed with the bottom ~16vh clear for the recorder's burned-in `#cap`.
+- **Latent bug, portrait only:** `renderer.setSize(w, h, false)` never set a CSS size on the canvas, so at DPR 2 the canvas laid out at buffer size (1048px) inside a 524px viewport and we saw the top-left quarter. Fixed with explicit `width:100vw;height:100vh`.
+- Fog is now relative to shot distance (`D*1.02` to `D*1.60`) so the depth fade stays constant across framings; a fixed 70-130 range fogged the portrait camera (D=74) to blank.
+- Camera elevation must be near 0 for a true elevation shot. At 10 degrees with a 40-unit throw the camera sits at y=10.5, above the tallest block (4.5), so it still reads as a 3/4 view.
+- Travel keyframes were double-tapering zoom (key `k` tapering 0.88 to 0.62 multiplied by a second 0.80), which cropped both ends.
+- Hover is gone. The hero keeps hover and timeline together; if the web version wants both, the raycast layer can be re-added on top of `apply()`.
+
+Verification:
+- code checked: yes (headless Chrome + swiftshader, stills at t=8/16/24/30/33/39 landscape and t=8 portrait)
+- human reviewed: no
+
+
+## [2026-10-26] pipeline | Stage 2 completed, sections rebuilt, one shot per section
+
+Source: `raw/malaysia-wages/source.json`
+
+Changes:
+- acquired the full dataset (960 rows, 20 sections x 16 years x 3 sexes) and stored it. Stage 2 had only ever stored a summary, so no claim could be re-derived from the source.
+- rebuilt `raw/malaysia-wages/sections.md`: six sections, each one claim, one shape, and one shot in the video. Each section now carries its own frame, camera, motion, text and exit.
+- rewrote `source.md` with the stored file, the 301 redirect note, and the 2020 break.
+- recorded the withdrawn v1 claim in `contradictions.md`.
+
+Notes:
+- **The 16-year series changes the story.** The spread was 3.59 (2010), fell to 3.18 (2019), spiked to 3.80 (2020), and is 3.30 (2025). It is not a smooth convergence. A single 2020 point carries most of the movement.
+- 2020 is real: national median -15.0%, mean -8.4%, covered employees +2.8%. Not a coverage change.
+- Public sector ratios peaked in 2020 and fell back by 2025. The earlier "government sectors won" line was a two-snapshot artefact.
+- Previous turn built a single 48s film covering the whole argument. That was wrong: the pipeline's unit is the section, and `sections.md` is the shot list. The film is superseded by six independent scenes.
+
+Verification:
+- code checked: yes (960 rows counted, field names and year range asserted after download; spread and 2020 deltas recomputed from the stored file)
+- human reviewed: no
+
+
+## [2026-10-26] pipeline | Sections restaged as mechanisms, not charts
+
+Source: `raw/malaysia-wages/sections.md`
+
+Changes:
+- rewrote all six sections as scenes with a running mechanism: lift, sorting floor,
+  corridor, lift-bank section, city, cutaway.
+- added "The rule" at the top: 3D earns its place only when the scene is a mechanism and
+  the claim falls out of watching it run.
+
+Notes:
+- Prior version mapped the pipeline's form table onto flat charts and only made section 5
+  dimensional. That missed how `src/scripts/hero.js` actually works: agents on a street
+  grid captured into a lattice, cars lapping a track with a lidar fan, a robot arm solving
+  IK. The 3D there is a machine, not a renderer.
+- Portrait framing is now a reason for choosing a mechanism (shaft, section, corridor)
+  rather than a constraint to survive.
+
+Verification:
+- code checked: no (plan only)
+- human reviewed: no
+
+
+## [2026-10-26] mock | Six frames mocked, Gate 3
+
+Source: `raw/malaysia-wages/_mock.cjs` -> `mock2.html` -> `mock2.pdf`
+
+Changes:
+- completed Stage 2 properly: `source.json` (960 rows) is now the stored source; added
+  `series.spread` to `data.json` computed from all 20 sections per year.
+- rebuilt section 3 as a canyon seen from above, time left to right. The earlier
+  one-point-perspective corridor was geometrically wrong: the far and near openings came
+  out the same width and it read as an hourglass. Perspective shrink (58%) also swamped
+  the +/-10% spread, so the pinch and the 2020 break were invisible.
+- rebuilt section 5 with real footprint variation. Widths were near-uniform, so
+  "footprint x height = volume" was false and the city was a bar chart in 3D costume.
+  Footprint now uses share^0.7; the four bill leaders are visibly massive.
+- fixed section 4: the y-scale divided by 2.10 but the tallest industry sits at 2.43, so
+  the top car was drawn above the building. Now divides by 2.50. Drift labels moved to a
+  staggered band at the floor.
+- fixed label collisions in 1 (3,000 tick struck through by the 2,940 median line),
+  2 (34.2% clipped on the lane border) and 6 (industry names on top of the mean labels).
+- corrected the section 3 claim: "has not recovered" was wrong. 2025 sits at 3.30, below
+  2010 (3.59) but above the 2019 floor (3.18). Claim is now "never got back to 2019".
+
+Notes:
+- The 16-year series is not a smooth convergence: 3.56-3.72 through 2016, then 3.18 by
+  2019, 3.80 in 2020, 3.30 in 2025. The story is a decade of slow narrowing, one violent
+  break, and a partial recovery that stops short.
+- Screenshots must use an absolute `--screenshot` path; a relative path fails with
+  "Access is denied" under the sandbox.
+
+Verification:
+- code checked: yes (all six frames rendered at 1080x1920 and inspected)
+- human reviewed: no (Gate 3 pending)
+
+## [2026-10-26] build | Report page shipped, Gate 4
+
+Source: `consultancy/reports/malaysia-wages/`
+
+Changes:
+- built `index.html`, `scene.js`, `data.json` for the six approved sections.
+- six three.js scenes, each `f(t)` with a shared stage: fit-to-box camera, fat lines via
+  `Line2`, DOM labels pinned by projection, `__seek(t)` for capture.
+- `?shot=<name>&t=<0..1>` renders one scene full-bleed at 1080x1920 for the video pass.
+- `?still=1` pins every scene to its final frame for QA screenshots.
+- wrote `raw/malaysia-wages/qa.md` with the figure diff and the two claim corrections.
+
+Notes:
+- Two claims were wrong and were fixed during QA, not before: the 2010-2016 spread range
+  (3.39-3.72, not 3.56-3.72) and "education top for the whole series" (mining tied in 2010).
+- Composition had to be redone once. Six wide-and-flat scenes were fitted into a 9:16 frame
+  and each came out as a thin strip with 60% empty. Every scene is now composed for a
+  square-ish bounding volume, and the canyon runs along Z so its width stays literal on
+  screen without perspective shrink.
+- The canyon needed a near-orthographic camera (fov 14). At fov 34 the near end of a 13-unit
+  object overflowed the frame by about 15%.
+- Section 2 is two lanes, not nineteen bins. Nineteen bins at 9:16 gives each bin under
+  20px. Caption rewritten to match what is drawn; the gap is recorded in `qa.md`.
+- Section 5 blocks needed opaque paper bodies. Wireframe-only blocks showed every edge
+  through every other block and read as a tangle.
+
+Verification:
+- code checked: yes
+- figures diffed: yes (23 rows, `qa.md`)
+- desktop, 390px, no-JS, reduced-motion screenshots: yes (`raw/malaysia-wages/qa/`)
+- human reviewed: no
+
+## [2026-10-26] fix | Animation never ran; scroll replaced by click
+
+Source: `consultancy/reports/malaysia-wages/scene.js`
+
+Changes:
+- fixed the play loop: it divided by `duration * 1000` while `duration` was already in
+  milliseconds, so every shot advanced 1000x too slowly. A 5s shot took 83 minutes.
+- removed the IntersectionObserver. Playback is now click or tap, per the reader's call.
+- figures open on their finished frame so the page reads untouched; a click replays.
+- added the click indicator from `tech-sovereignty`: a pressing finger until the first click,
+  remembered in localStorage, and a chip per figure reading Play / Playing / Replay.
+- figure wrappers are now `role="button"`, focusable, Enter and Space to play.
+- chip and finger are hidden in `?shot=` mode so they do not enter the video capture.
+
+Notes:
+- The scroll trigger was invisible in testing because headless Chrome does not tick
+  requestAnimationFrame without a compositor, and `performance.now()` is frozen under
+  `--virtual-time-budget`. The duration bug only showed up in a real browser.
+
+Verification:
+- code checked: yes (mid-play frame captured, chip and finger confirmed)
+- human reviewed: no
+
+## [2026-10-26] rename | consultancy to reports.artifisi.com, playbook v2
+
+Source: `reports/`, `playbook/instructions.md`
+
+Changes:
+- moved `consultancy/` to `reports/`, the folder is now the whole site for
+  `reports.artifisi.com`, a separate Cloudflare Pages project with output directory `reports`.
+- moved the wages report up from `reports/reports/malaysia-wages/` to `reports/malaysia-wages/`,
+  so the URL is `reports.artifisi.com/malaysia-wages/` and not a doubled path.
+- rewrote `reports/index.html` around three things: published reports, custom work, contact.
+  the old page only sold the service.
+- added a Formspree contact form in the `#contact` section, with a honeypot, `_next` back to
+  `#sent`, and a `:target` success banner. `YOUR_FORM_ID` is still a placeholder.
+- updated `public/_redirects` so `/samples/*` on the main site 301s to `reports.artifisi.com`.
+- rebranded canonicals, `og:url` and `og:image` on the report page, plus the sales kit and
+  `sample-households.md`.
+- rewrote `playbook/instructions.md` as version 2. Ten rules in the order they cost time:
+  the scene must be a mechanism, compose for a square volume, click not scroll, teach the
+  click once, `stage.extent()` for labels outside the geometry, diff figures after the build,
+  test animation in a real browser, keep the units honest, text first, one claim one shape.
+
+Notes:
+- `reports/` is its own Pages project so the main site build never depends on it.
+- the doubled path was worth fixing while the folder was untracked and cheap to move.
+- the Formspree id has to be created by a human before the form works. Until then the mailto
+  link is the working path.
+
+Verification:
+- code checked: yes
+- human reviewed: no

@@ -1,7 +1,7 @@
 # Rate card
 
 Artifisi Sdn Bhd · Kuala Lumpur · hello@artifisi.com
-Sample: consultancy.artifisi.com/samples/households/
+Sample: reports.artifisi.com/samples/households/
 
 ---
 
