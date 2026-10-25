@@ -16,4 +16,4 @@ A separate project because Pages gives a custom domain the whole project, and be
 
 - Copy and prices live in `index.html`. The same prices live in `../playbook/sales/rate-card.md`. Change both together.
 - `og.png` is the share image. Retake it if the headline changes: headless Chrome at 1200x630.
-- Links to the sample point at `https://artifisi.com/samples/households` on purpose. A relative link would 404 on the subdomain.
+- Links to the sample point at `https://www.artifisi.com/samples/households` on purpose. A relative link would 404 on the subdomain.
