@@ -389,11 +389,30 @@ document.body.appendChild(chip);
 const fingerAt = new THREE.Vector3(0.3, -0.4, 0);
 const chipAt = new THREE.Vector3(0, -3.6, 0);
 
+// Phones read as pages: each section's text, then a full-screen page that shows its chart. CSS hides these on wide screens.
+const topBar = document.querySelector(".bar");
+const vizPages = sections.map((s) => {
+  if (s.classList.contains("notes")) return null;
+  const page = document.createElement("div");
+  page.className = "vizpage";
+  page.setAttribute("aria-hidden", "true");
+  const kicker = s.querySelector(".kicker");
+  if (kicker) page.appendChild(document.createElement("span")).textContent = kicker.textContent;
+  s.appendChild(page);
+  return page;
+});
+let phone = false;
+
 // Scroll position -> which two sections to blend, and how far.
 function scrollState() {
   const mid = scrollY + innerHeight * 0.5;
   // A shape is fully formed when its section's top reaches the top of the screen (or its middle, if shorter).
-  const centers = sections.map((s) => s.offsetTop + Math.min(s.offsetHeight, innerHeight) * 0.5);
+  // On phones it is fully formed when its chart page fills the screen, so shapes change while text covers them.
+  const centers = sections.map((s, k) => {
+    const page = phone && vizPages[k];
+    if (page) { const r = page.getBoundingClientRect(); return scrollY + r.top + r.height * 0.5; }
+    return s.offsetTop + Math.min(s.offsetHeight, innerHeight) * 0.5;
+  });
   if (mid <= centers[0]) return [0, 0, 0];
   for (let k = 0; k < centers.length - 1; k++) {
     if (mid < centers[k + 1]) return [k, k + 1, (mid - centers[k]) / (centers[k + 1] - centers[k])];
@@ -415,22 +434,28 @@ addEventListener("pointermove", (ev) => {
   mouse.y = ev.clientY / innerHeight - 0.5;
 });
 
-// Where the shape sits: in the free space right of the text on wide screens, above the text on phones.
+// Where the shape sits: in the free space right of the text on wide screens, centred on phones.
 // Each section gets its own spot and size, since some text columns are wider than others.
 let offsetX = 0, offsetY = 0, scale = 0.82;
 const place = new Map();
 function resize() {
-  const w = innerWidth, h = innerHeight;
+  const wide = innerWidth > 900;
+  phone = !wide;
+  if (phone) document.documentElement.style.setProperty("--bar", `${topBar.offsetHeight}px`);
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  // A hidden or not-yet-laid-out page reports zero size; a later resize fills this in.
+  if (!w || !h) return;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
-  const wide = w > 900;
-  camera.position.z = wide ? 11 : 13.5;
+  camera.position.z = 11;
   const halfH = Math.tan(THREE.MathUtils.degToRad(20)) * camera.position.z;
   const perPx = (2 * halfH) / h;
-  offsetY = wide ? 0 : 0.5 * halfH;
+  offsetY = 0;
+  // On a phone, fit the shapes and their labels to the screen width.
+  const fit = Math.min(0.82, (2 * halfH * camera.aspect) / 8.4);
   sections.forEach((s) => {
     const col = s.querySelector(".col");
-    if (!wide || !col) return place.set(s, { x: wide ? 0.44 * halfH * camera.aspect : 0, s: wide ? 0.82 : 0.5 });
+    if (!wide || !col) return place.set(s, { x: wide ? 0.44 * halfH * camera.aspect : 0, s: wide ? 0.82 : fit });
     const left = col.getBoundingClientRect().right + 24;
     const free = Math.max(200, w - left - 16);
     // Shapes plus their labels span about 8.4 units.
@@ -439,6 +464,8 @@ function resize() {
   camera.updateProjectionMatrix();
 }
 addEventListener("resize", resize);
+// Also catch size changes that fire no window resize, like an in-app browser opening.
+new ResizeObserver(() => resize()).observe(canvas);
 resize();
 addEventListener("load", resize);
 document.fonts?.ready.then(resize);
@@ -494,6 +521,7 @@ function frame() {
   group.rotation.y += (targetY - group.rotation.y) * 0.05;
   group.rotation.x += (targetX - group.rotation.x) * 0.05;
   const spot = place.get(sections[dominant]);
+  if (!spot) return requestAnimationFrame(frame);
   offsetX = spot.x;
   scale += (spot.s - scale) * 0.08;
   group.scale.setScalar(scale);
@@ -518,9 +546,8 @@ function frame() {
 
   const count = views[sections[dominant].dataset.scene].length;
   const multi = count > 1 && settled;
-  const phoneHero = innerWidth <= 900 && dominant === 0;
-  finger.classList.toggle("show", multi && !taught && !phoneHero);
-  chip.classList.toggle("show", multi && !phoneHero);
+  finger.classList.toggle("show", multi && !taught);
+  chip.classList.toggle("show", multi);
   chip.textContent = `${current.get(sections[dominant]) + 1} / ${count} · ${innerWidth <= 900 ? "tap" : "click"} to switch`;
   v3.copy(fingerAt).applyMatrix4(group.matrixWorld).project(camera);
   finger.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${((1 - v3.y) / 2) * h}px)`;
@@ -533,3 +560,5 @@ function frame() {
 }
 frame();
 document.documentElement.classList.add("has-scene");
+// The phone layout only applies once has-scene is set.
+resize();
