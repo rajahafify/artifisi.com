@@ -37,10 +37,10 @@ class Stage {
 
     this.body = spec.build(this);
     this.resize();
-    // Open on the finished frame: the page reads without anyone touching it,
-    // and a click replays the shot from the top.
-    this.t = 1;
-    this.done = true;
+    // Open at the top of the shot: the chart stands in its starting state
+    // until the reader asks for it, and the first click runs it forward.
+    this.t = 0;
+    this.done = false;
     this.draw();
 
     this.ro = new ResizeObserver(() => this.resize());
