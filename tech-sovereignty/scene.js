@@ -402,6 +402,8 @@ const vizPages = sections.map((s) => {
   return page;
 });
 let phone = false;
+// Same test as the CSS: a narrow window, or a touch screen held upright even when the browser asks for the desktop site.
+const phoneQuery = matchMedia("(max-width: 900px), (pointer: coarse) and (orientation: portrait)");
 
 // Scroll position -> which two sections to blend, and how far.
 function scrollState() {
@@ -439,7 +441,7 @@ addEventListener("pointermove", (ev) => {
 let offsetX = 0, offsetY = 0, scale = 0.82;
 const place = new Map();
 function resize() {
-  const wide = innerWidth > 900;
+  const wide = !phoneQuery.matches;
   phone = !wide;
   if (phone) document.documentElement.style.setProperty("--bar", `${topBar.offsetHeight}px`);
   const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -548,12 +550,12 @@ function frame() {
   const multi = count > 1 && settled;
   finger.classList.toggle("show", multi && !taught);
   chip.classList.toggle("show", multi);
-  chip.textContent = `${current.get(sections[dominant]) + 1} / ${count} · ${innerWidth <= 900 ? "tap" : "click"} to switch`;
+  chip.textContent = `${current.get(sections[dominant]) + 1} / ${count} · ${phone ? "tap" : "click"} to switch`;
   v3.copy(fingerAt).applyMatrix4(group.matrixWorld).project(camera);
   finger.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${((1 - v3.y) / 2) * h}px)`;
   v3.copy(chipAt).applyMatrix4(group.matrixWorld).project(camera);
   chip.style.transform = `translate(${((v3.x + 1) / 2) * w}px, ${Math.min(((1 - v3.y) / 2) * h, h - 30)}px)`;
-  finger.querySelector(".say").textContent = innerWidth <= 900 ? "Tap the chart" : "Click the chart";
+  finger.querySelector(".say").textContent = phone ? "Tap the chart" : "Click the chart";
 
   renderer.render(scene, camera);
   requestAnimationFrame(frame);

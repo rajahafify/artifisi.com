@@ -167,7 +167,7 @@
     .hint { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: 32px; }
     /* Phones: pages. Each topic is a text page, then a full-screen chart page; both snap into place. */
     .vizpage { display: none; }
-    @media (max-width: 900px) {
+    @media (max-width: 900px), (pointer: coarse) and (orientation: portrait) {
       html.has-scene { scroll-snap-type: y proximity; scroll-padding-top: var(--bar, 53px); }
       .has-scene .bar { background: var(--bg); backdrop-filter: none; }
       .has-scene main > section:not(.notes) { min-height: 0; display: block; padding: 0; }
@@ -197,7 +197,7 @@
     .lbl { white-space: pre; text-align: center; }
     .lbl.left { text-align: left; }
     .lbl.right { text-align: right; }
-    @media (max-width: 900px) { .lbl { font-size: 11px; } .lbl.small { font-size: 10px; } }
+    @media (max-width: 900px), (pointer: coarse) and (orientation: portrait) { .lbl { font-size: 11px; } .lbl.small { font-size: 10px; } }
     .lbl.ready { color: #4fd1b5; }
     .lbl.gap { color: #e8a93a; }
     .lbl.red { color: var(--red); }
