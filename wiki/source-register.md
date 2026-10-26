@@ -1,7 +1,7 @@
 # Source Register
 
 **Summary**: Tracked external sources ingested into the wiki.  
-**Last updated**: 2026-05-28
+**Last updated**: 2026-10-26
 
 ---
 
@@ -41,6 +41,11 @@
 | raw/projects/Orbwalker/game_design_document.md | Raw game design source | ingested | 2026-05-02 | sources/orbwalker-gdd, features, open-questions |
 | raw/projects/Orbwalker/Orbwalker.pdf | Raw PDF design booklet | partial (metadata only) | 2026-05-02 | sources/orbwalker-gdd, contradictions |
 | app/assets/images/orbwalker-hero-keyart.png | Project key art | ingested | 2026-05-02 | features |
+| `raw/malaysia-wages/` | DOSM Salaries and Wages Survey dataset, catalogue `wages_industry`, CC BY 4.0, 960 rows | ingested | 2026-10-26 | contradictions, features |
+| `playbook/pipeline.md` | Ten-stage, four-gate build pipeline | ingested | 2026-10-26 | features, decisions |
+| `playbook/instructions.md` | Build and ship playbook, version 2 | ingested | 2026-10-26 | features, known-issues |
+| `playbook/video.md` | Seven-stage video pipeline, report to published short | ingested | 2026-10-26 | features, known-issues |
+| `playbook/sales/` | Rate card, services agreement, outreach copy | ingested | 2026-10-26 | features |
 
 ## Pending Ingestion
 
@@ -48,6 +53,8 @@
 - Test files for detailed coverage analysis
 - `.kamal/hooks/*.sample` — Hook templates (not yet customized)
 - `raw/projects/Orbwalker/Orbwalker.pdf` full text/content comparison (blocked by image-based PDF in current extraction path)
+- `reports/` — the reports subdomain has no wiki page. `features.md` and `file-map.md` still describe the removed Rails app.
+- The ten-stage pipeline has no dedicated wiki page; it is currently only in `playbook/pipeline.md`.
 
 ## Ingestion Notes
 

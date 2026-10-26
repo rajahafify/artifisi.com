@@ -9,6 +9,7 @@ What changed in version 2, and why:
 - scenes are composed for a square volume, so one build survives every frame
 - figures are diffed against the source after the build, because two were wrong
 - animation is checked in a real browser, because headless cannot run time
+- figures open at the first frame, not the last, so the first click reads as a replay and not a reset
 
 Point another agent at this file as its brief, then name the report ("Do this for <report URL>").
 
@@ -21,13 +22,24 @@ Point another agent at this file as its brief, then name the report ("Do this fo
 | The engine and click indicator | `tech-sovereignty/scene.js` | `Stage`, `chip`, `finger` |
 | The front door | `reports/index.html` | prices and the enquiry form |
 | The stages and gates | `playbook/pipeline.md` | read first |
+| The video pipeline | `playbook/video.md` | report to short, stage by stage |
 | The scripts | `playbook/tools/` | `screenshots.js`, `record-video.js`, `mux.py` |
+
+The scripts have their own dependencies:
+
+```
+cd playbook/tools && npm install
+```
+
+That installs Playwright and three, and pulls the Chromium build. The capture scripts point
+`THREE` at an unpacked three build, because jsDelivr and unpkg are not always reachable:
+`npm pack three@0.180.0`, unpack it, and set `THREE=<unpacked>/package`.
 
 `pipeline.md` covers picking, acquiring, verifying, analysing and mocking. This file covers what the two builds taught about building and shipping.
 
 ## What you get
 
-1. One static page. Every number sits in plain HTML text. Behind it, a three.js scene per section that plays when the reader clicks it, and sits on its finished frame until they do.
+1. One static page. Every number sits in plain HTML text. Behind it, a three.js scene per section that plays when the reader clicks it, starting from the first frame of the shot.
 2. A vertical 1080x1920 video of 40 to 55 seconds. A screen recording of the scenes with captions and a TTS voice-over, ending on a card with the page URL.
 
 ## The rules, in the order they cost us time
@@ -51,7 +63,8 @@ One scene is seen at 9:16 (phone, video), 4:5 (Instagram), 1:1 (thumbnail) and 1
 Scroll-triggered playback was rejected on sight. It also fights the reader: they scroll past a section before it starts, and it finishes while they are looking somewhere else.
 
 - `play()` on `click`, and on Enter or Space, so keyboard gets the same thing
-- open on the finished frame: `this.t = 1; this.done = true` in the constructor. The page reads as a still page until someone asks
+- open at the top of the shot: `this.t = 0; this.done = false` in the constructor. The chart stands in its starting state until someone asks, and the first click runs it forward
+- do not open on the finished frame. It was tried: the first click then jumped backwards before running forward, and that read as a reset rather than a replay
 - no `IntersectionObserver`
 - a token guards restarts, so a second click mid play cannot leave two loops running
 
@@ -151,7 +164,10 @@ Keep the ten stages in `pipeline.md`. In practice:
 
 ### Voice-over and video, in detail
 
+The full pipeline is `video.md`. This is the working detail for its stages 5 to 7.
+
 - Write 7 to 9 lines, one per shot, plain sentences, numbers as words ("seven thousand and seventeen ringgit"). Do not say "Artifisi", because the voice mispronounces it. End on "Visit our website to learn more."
+- the captions are already written. The mock carries a caption band on every frame, marked "BURNED IN AT DELIVERY". Start from that copy, do not rewrite it at this stage
 - Record on fify's PC (DESKTOP-30IVP4M), since the cloud cannot reach the TTS service:
   `edge-tts --voice en-SG-LunaNeural --rate=-3% --text "<line>" --write-media D:\artifisi\video-edit\<slug>-vo\l01.mp3`
 - Copy the mp3s back, then get each length with `ffprobe`.

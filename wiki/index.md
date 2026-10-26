@@ -33,10 +33,15 @@
 - [[context/orbwalker-website-update-todo]] — Temporary handoff TODO for featuring Orbwalker on the website.
 - [[context/landing-page-review]] — External audit of live-site positioning, copy, and conversion paths.
 - [[context/landing-page-review-todo]] — Prioritized action items derived from the landing page review.
+- `reports/` — The reports subdomain (`reports.artifisi.com`), a separate Cloudflare Pages project. Not yet documented in a wiki page.
+- `playbook/pipeline.md` — The ten-stage, four-gate pipeline for turning a published report into an interactive page.
+- `playbook/instructions.md` — Build and ship playbook, version 2.
+- `playbook/video.md` — The seven-stage video pipeline: report to story to shots to storyboard to script to voice-over to video.
 
 ## Quick Reference
 
-- **Stack**: Rails 8.1.1, Ruby 3.4.7, SQLite, Hotwire (Turbo + Stimulus), Propshaft, Kamal
-- **Test**: Minitest, Capybara, Selenium; TDD (red→green→refactor)
-- **Style**: rubocop-rails-omakase (Ruby); ES modules, kebab-case (JS)
-- **Deploy**: Kamal → DigitalOcean droplet (146.190.83.167)
+- **Stack**: Astro static site, three.js, vanilla ES modules. No build step for `reports/`; the main site builds with Astro.
+- **Hosts**: Cloudflare Pages. Two projects: `artifisi-com` (main site) and `reports` (output dir `reports/`).
+- **Domains**: `www.artifisi.com`, `artifisi.com`, `reports.artifisi.com`, `tech-sovereignty.artifisi.com`
+- **Sales**: `playbook/sales/` — rate card, services agreement, outreach. Prices are duplicated in `reports/index.html`; change both together.
+- **Test**: no test suite. Manual QA only, recorded in `raw/<slug>/qa.md`.

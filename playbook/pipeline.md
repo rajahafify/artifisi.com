@@ -4,6 +4,9 @@ Supersedes the build steps in `instructions.md`. That one assumes the story is a
 
 Ten stages, four gates. Every stage produces a file. If a stage has no file, it did not happen.
 
+The video pipeline is `video.md`. It shares stages 1 to 5 with this one, then branches and
+rejoins after the page is built.
+
 ---
 
 ## 1. Pick
@@ -25,12 +28,14 @@ Output: `raw/<slug>/source.*` and `source.md` with the citation block.
 Build `numbers.csv` before anything else. One row per figure the page will use:
 
 ```
-id, value, unit, year, page, exact_wording, checked
+id, value, unit, year, source_ref, wording
 ```
 
-`exact_wording` is the sentence in the source, copied. Not a paraphrase.
+`source_ref` points at where the figure lives in the source: a page number for a PDF, a field and row key for a dataset (`wages_median`, `section=P`), a sheet and cell for a spreadsheet. `wording` is the label the source itself uses, copied. Not a paraphrase.
 
-**Gate 1.** No number without a page reference. No number taken from a summary, a news article or a model's memory. If a figure cannot be traced to the source, it does not go on the page.
+**Gate 1.** No number without a source reference. No number taken from a summary, a news article or a model's memory. If a figure cannot be traced to the source, it does not go on the page.
+
+The reference only has to be as precise as the source allows. A report has pages, a dataset has rows. What Gate 1 rules out is a number with no path back to a source at all. The figures are checked against the source at Gate 4, and that diff is recorded in `qa.md`.
 
 ## 4. Analyse
 
@@ -72,7 +77,8 @@ Pick the form from the question, not from the engine.
 
 3D only when depth, count or motion carries meaning. A flat chart that is precise beats a cube field that is pretty.
 
-Output: one sketch per section, in `sections.md`.
+Output: one scene per section in `sections.md`: the claim, the mechanism, the shot, and why not a
+chart. The drawn sketch is the mock at stage 8.
 
 ## 7. Design
 
@@ -123,12 +129,12 @@ Output: `mock.pdf`
 
 Text first. Every number in HTML, every claim in a heading. Then the scene on top.
 
-- progressive: with JavaScript off, the page is still readable and the charts fall back to CSS
-- the scene reads from `numbers.csv`, it does not hardcode figures
+- progressive: with JavaScript off, the page is still readable and every figure falls back to a data table in the HTML
+- the scene reads from `data.json`, which is generated from `numbers.csv`. It does not hardcode figures
 - labels pinned in 3D, tracking their object
 - motion only where it explains
 
-Output: `<slug>/index.html`, `<slug>/scene.js`
+Output: `<slug>/index.html`, `<slug>/scene.js`, `<slug>/data.json`
 
 ## 10. QA
 
