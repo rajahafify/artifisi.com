@@ -1,0 +1,10 @@
+:root{
+  --paper:#f3f0e9; --paper-2:#eae5da; --ink:#1c1e24; --muted:#6a6d75; --rule:#d6d1c4;
+  --ctx:#a7a49a; --shade:#e3ded2;
+  --cool:#26557f; --warm:#bd5320;
+  --display:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --text:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
+  --t1:clamp(44px,5.2vw,76px); --t2:30px; --t3:19px; --t4:15px; --t5:13px;
+  --ease:cubic-bezier(.22,.61,.36,1); --dur:600ms;
+}

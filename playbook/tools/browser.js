@@ -55,25 +55,46 @@ function route(dir) {
 // a vw is a hundredth of the frame width and a vh a hundredth of the frame height.
 // The numbers are the mock's, at 1080x1920. The kicker sits at 96px down and the rule
 // at 1613px, which is exactly where the page's own 8vh and 16vh bands end.
-const OVERLAY_CSS = `
+//
+// A report picks its theme by name in shots.json, so the same tools render a second
+// report without hardcoding its colours here.
+const THEMES = {
+  wages: {
+    paper: '#f6f2ea', ink: '#332d26', muted: '#6e665a', rule: '#dcd3c2', ctx: '#b6ab96',
+    accent: '#1e5b49',
+    display: '"Fraunces", Georgia, serif', displayWeight: 800,
+    displayLetter: '-.022em',
+  },
+  cpi: {
+    paper: '#f3f0e9', ink: '#1c1e24', muted: '#6a6d75', rule: '#d6d1c4', ctx: '#a7a49a',
+    accent: '#26557f',
+    display: '"Space Grotesk", "Helvetica Neue", Arial, sans-serif', displayWeight: 700,
+    displayLetter: '-.03em',
+  },
+};
+
+function overlayCSS(theme) {
+  const T = THEMES[theme] || THEMES.wages;
+  return `
   .vb-kick { position: fixed; left: 8.33vw; top: 5vh; z-index: 6;
     font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
-    text-transform: uppercase; color: #6e665a; white-space: nowrap; }
+    text-transform: uppercase; color: ${T.muted}; white-space: nowrap; }
   .vb-num { position: fixed; right: 8.33vw; top: 5vh; z-index: 6;
-    font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .1em; color: #b6ab96; }
+    font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .1em; color: ${T.ctx}; }
   .vb-rule { position: fixed; left: 8.33vw; right: 8.33vw; top: 84.01vh; z-index: 6;
-    height: 1px; background: #dcd3c2; }
+    height: 1px; background: ${T.rule}; }
   .vb-cap { position: fixed; left: 8.33vw; right: 8.33vw; top: 87.6vh; z-index: 6;
-    font: 600 2.78vw/1.35 "IBM Plex Sans", sans-serif; color: #332d26; text-align: left; }
-  .vb-end { position: fixed; inset: 0; z-index: 9; background: #f6f2ea;
+    font: 600 2.78vw/1.35 "IBM Plex Sans", sans-serif; color: ${T.ink}; text-align: left; }
+  .vb-end { position: fixed; inset: 0; z-index: 9; background: ${T.paper};
     display: flex; flex-direction: column; justify-content: center; padding: 8.33vw; }
   .vb-end .k { font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
-    text-transform: uppercase; color: #6e665a; margin: 0 0 2.2vh; }
-  .vb-end h2 { font: 800 6.3vw/1.06 Fraunces, Georgia, serif; letter-spacing: -.022em;
-    color: #332d26; margin: 0 0 3.1vh; max-width: 14ch; }
-  .vb-end .u { font: 500 2.41vw/1.3 "IBM Plex Mono", monospace; color: #1e5b49; margin: 0 0 3.7vh; }
-  .vb-end .s { font: 400 1.67vw/1.5 "IBM Plex Sans", sans-serif; color: #6e665a; margin: 0; }
+    text-transform: uppercase; color: ${T.muted}; margin: 0 0 2.2vh; }
+  .vb-end h2 { font: ${T.displayWeight} 6.3vw/1.06 ${T.display}; letter-spacing: ${T.displayLetter};
+    color: ${T.ink}; margin: 0 0 3.1vh; max-width: 14ch; }
+  .vb-end .u { font: 500 2.41vw/1.3 "IBM Plex Mono", monospace; color: ${T.accent}; margin: 0 0 3.7vh; }
+  .vb-end .s { font: 400 1.67vw/1.5 "IBM Plex Sans", sans-serif; color: ${T.muted}; margin: 0; }
 `;
+}
 
 // The capture context. The viewport is the frame itself, one CSS pixel to one frame
 // pixel.
@@ -104,7 +125,21 @@ async function openShot(p, url, settle = 1200) {
   } catch (e) {
     console.log('fonts did not settle, continuing without them');
   }
-  await p.waitForTimeout(400);
+  // A page with several canvases can lose a WebGL context when the browser drops
+  // the oldest one. A frame captured before the context comes back is blank, so
+  // wait for it and force a redraw.
+  try {
+    await p.waitForFunction(() => {
+      const s = window.__stages && window.__stages[0];
+      return !!(s && !s.renderer.getContext().isContextLost());
+    }, null, { timeout: 20000 });
+  } catch (e) {
+    console.log('webgl context still lost, continuing');
+  }
+  await p.evaluate(() => {
+    if (window.__stages) window.__stages.forEach((s) => { s.resize(); s.draw(); });
+  });
+  await p.waitForTimeout(500);
 }
 
-module.exports = { route, LAUNCH, typeFor, OVERLAY_CSS, frameContext, openShot };
+module.exports = { route, LAUNCH, typeFor, THEMES, overlayCSS, frameContext, openShot };

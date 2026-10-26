@@ -1,0 +1,1424 @@
+{
+ "meta": {
+  "title": "Consumer Price Index, September 2026",
+  "asOf": "2026-09",
+  "published": "2026-10-19",
+  "base": "2010 = 100",
+  "source": "DOSM OpenDOSM"
+ },
+ "headline": {
+  "yoy": 1.8,
+  "yoyAug": 1.9,
+  "mom": 0.1,
+  "momAug": 0.3,
+  "index": 137.6,
+  "indexYago": 135.2,
+  "indexBase": 100,
+  "indexDec25": 135.5,
+  "rise1y": 2.4,
+  "riseSince2010": 37.6,
+  "risePctSince2010": 37.6,
+  "risePct1y": 1.8,
+  "yearShareOfClimb": 6.4
+ },
+ "divisions": [
+  {
+   "code": "13",
+   "name": "Personal Care, Social Protection & Miscellaneous Goods and Services",
+   "short": "Personal Care",
+   "yoy": 2.8,
+   "mom": 0.4,
+   "yoyAug": 3.2,
+   "momAug": 0.5,
+   "dYoy": -0.4,
+   "idx": 135.8,
+   "idxYago": 132.1
+  },
+  {
+   "code": "02",
+   "name": "Alcoholic Beverages & Tobacco",
+   "short": "Alcohol",
+   "yoy": 2.8,
+   "mom": 0,
+   "yoyAug": 2.8,
+   "momAug": 0.1,
+   "dYoy": 0,
+   "idx": 178.5,
+   "idxYago": 173.6
+  },
+  {
+   "code": "07",
+   "name": "Transport",
+   "short": "Transport",
+   "yoy": 2.5,
+   "mom": 0.6,
+   "yoyAug": 2,
+   "momAug": 0.6,
+   "dYoy": 0.5,
+   "idx": 125.8,
+   "idxYago": 122.7
+  },
+  {
+   "code": "11",
+   "name": "Restaurant & Accommodation Services",
+   "short": "Restaurants",
+   "yoy": 2.2,
+   "mom": 0.1,
+   "yoyAug": 2.1,
+   "momAug": 0.4,
+   "dYoy": 0.1,
+   "idx": 161.4,
+   "idxYago": 157.9
+  },
+  {
+   "code": "10",
+   "name": "Education",
+   "short": "Education",
+   "yoy": 2.1,
+   "mom": 0.2,
+   "yoyAug": 1.9,
+   "momAug": 0.1,
+   "dYoy": 0.2,
+   "idx": 132.7,
+   "idxYago": 130
+  },
+  {
+   "code": "01",
+   "name": "Food & Beverages",
+   "short": "Food & Bev",
+   "yoy": 1.8,
+   "mom": 0.1,
+   "yoyAug": 1.9,
+   "momAug": 0.2,
+   "dYoy": -0.1,
+   "idx": 161.4,
+   "idxYago": 158.5
+  },
+  {
+   "code": "08",
+   "name": "Information & Communication",
+   "short": "Info & Comms",
+   "yoy": 1.8,
+   "mom": 0.3,
+   "yoyAug": 2.6,
+   "momAug": 0,
+   "dYoy": -0.8,
+   "idx": 91.7,
+   "idxYago": 90.1
+  },
+  {
+   "code": "04",
+   "name": "Housing, Utilities, Gas & Other Fuels",
+   "short": "Housing",
+   "yoy": 1.4,
+   "mom": -0.4,
+   "yoyAug": 2.1,
+   "momAug": 0.4,
+   "dYoy": -0.7,
+   "idx": 133.5,
+   "idxYago": 131.6
+  },
+  {
+   "code": "06",
+   "name": "Health",
+   "short": "Health",
+   "yoy": 1.4,
+   "mom": 0.1,
+   "yoyAug": 1.3,
+   "momAug": 0.2,
+   "dYoy": 0.1,
+   "idx": 134.2,
+   "idxYago": 132.4
+  },
+  {
+   "code": "12",
+   "name": "Insurance & Financial Services",
+   "short": "Insurance",
+   "yoy": 1.2,
+   "mom": 0.2,
+   "yoyAug": 1,
+   "momAug": 0,
+   "dYoy": 0.2,
+   "idx": 118.4,
+   "idxYago": 117
+  },
+  {
+   "code": "09",
+   "name": "Recreation, Sport & Culture",
+   "short": "Recreation",
+   "yoy": 1.2,
+   "mom": 0.1,
+   "yoyAug": 1.1,
+   "momAug": 0.1,
+   "dYoy": 0.1,
+   "idx": 122.2,
+   "idxYago": 120.8
+  },
+  {
+   "code": "05",
+   "name": "Household Furnishings, Equipment & Maintenance",
+   "short": "Furnishings",
+   "yoy": 0.3,
+   "mom": -0.1,
+   "yoyAug": 0.4,
+   "momAug": 0.2,
+   "dYoy": -0.1,
+   "idx": 127.4,
+   "idxYago": 127
+  },
+  {
+   "code": "03",
+   "name": "Clothing & Footwear",
+   "short": "Clothing",
+   "yoy": 0.2,
+   "mom": 0,
+   "yoyAug": 0.1,
+   "momAug": 0,
+   "dYoy": 0.1,
+   "idx": 93.2,
+   "idxYago": 93
+  }
+ ],
+ "path36": [
+  {
+   "date": "2023-10",
+   "yoy": 1.8,
+   "mom": 0.1
+  },
+  {
+   "date": "2023-11",
+   "yoy": 1.5,
+   "mom": 0
+  },
+  {
+   "date": "2023-12",
+   "yoy": 1.5,
+   "mom": 0.2
+  },
+  {
+   "date": "2024-01",
+   "yoy": 1.5,
+   "mom": 0.2
+  },
+  {
+   "date": "2024-02",
+   "yoy": 1.8,
+   "mom": 0.5
+  },
+  {
+   "date": "2024-03",
+   "yoy": 1.8,
+   "mom": 0.1
+  },
+  {
+   "date": "2024-04",
+   "yoy": 1.8,
+   "mom": 0.2
+  },
+  {
+   "date": "2024-05",
+   "yoy": 2,
+   "mom": 0.3
+  },
+  {
+   "date": "2024-06",
+   "yoy": 2,
+   "mom": 0.2
+  },
+  {
+   "date": "2024-07",
+   "yoy": 2,
+   "mom": 0.1
+  },
+  {
+   "date": "2024-08",
+   "yoy": 1.9,
+   "mom": 0.1
+  },
+  {
+   "date": "2024-09",
+   "yoy": 1.8,
+   "mom": 0
+  },
+  {
+   "date": "2024-10",
+   "yoy": 1.9,
+   "mom": 0.2
+  },
+  {
+   "date": "2024-11",
+   "yoy": 1.8,
+   "mom": -0.1
+  },
+  {
+   "date": "2024-12",
+   "yoy": 1.7,
+   "mom": 0.1
+  },
+  {
+   "date": "2025-01",
+   "yoy": 1.7,
+   "mom": 0.1
+  },
+  {
+   "date": "2025-02",
+   "yoy": 1.5,
+   "mom": 0.4
+  },
+  {
+   "date": "2025-03",
+   "yoy": 1.4,
+   "mom": 0
+  },
+  {
+   "date": "2025-04",
+   "yoy": 1.4,
+   "mom": 0.1
+  },
+  {
+   "date": "2025-05",
+   "yoy": 1.2,
+   "mom": 0.1
+  },
+  {
+   "date": "2025-06",
+   "yoy": 1.1,
+   "mom": 0.1
+  },
+  {
+   "date": "2025-07",
+   "yoy": 1.2,
+   "mom": 0.1
+  },
+  {
+   "date": "2025-08",
+   "yoy": 1.3,
+   "mom": 0.1
+  },
+  {
+   "date": "2025-09",
+   "yoy": 1.5,
+   "mom": 0.2
+  },
+  {
+   "date": "2025-10",
+   "yoy": 1.3,
+   "mom": -0.1
+  },
+  {
+   "date": "2025-11",
+   "yoy": 1.4,
+   "mom": 0
+  },
+  {
+   "date": "2025-12",
+   "yoy": 1.6,
+   "mom": 0.3
+  },
+  {
+   "date": "2026-01",
+   "yoy": 1.6,
+   "mom": 0.1
+  },
+  {
+   "date": "2026-02",
+   "yoy": 1.4,
+   "mom": 0.2
+  },
+  {
+   "date": "2026-03",
+   "yoy": 1.7,
+   "mom": 0.3
+  },
+  {
+   "date": "2026-04",
+   "yoy": 1.9,
+   "mom": 0.4
+  },
+  {
+   "date": "2026-05",
+   "yoy": 2,
+   "mom": 0.1
+  },
+  {
+   "date": "2026-06",
+   "yoy": 1.9,
+   "mom": 0
+  },
+  {
+   "date": "2026-07",
+   "yoy": 1.8,
+   "mom": 0
+  },
+  {
+   "date": "2026-08",
+   "yoy": 1.9,
+   "mom": 0.3
+  },
+  {
+   "date": "2026-09",
+   "yoy": 1.8,
+   "mom": 0.1
+  }
+ ],
+ "path12": [
+  {
+   "date": "2025-10",
+   "yoy": 1.3
+  },
+  {
+   "date": "2025-11",
+   "yoy": 1.4
+  },
+  {
+   "date": "2025-12",
+   "yoy": 1.6
+  },
+  {
+   "date": "2026-01",
+   "yoy": 1.6
+  },
+  {
+   "date": "2026-02",
+   "yoy": 1.4
+  },
+  {
+   "date": "2026-03",
+   "yoy": 1.7
+  },
+  {
+   "date": "2026-04",
+   "yoy": 1.9
+  },
+  {
+   "date": "2026-05",
+   "yoy": 2
+  },
+  {
+   "date": "2026-06",
+   "yoy": 1.9
+  },
+  {
+   "date": "2026-07",
+   "yoy": 1.8
+  },
+  {
+   "date": "2026-08",
+   "yoy": 1.9
+  },
+  {
+   "date": "2026-09",
+   "yoy": 1.8
+  }
+ ],
+ "core": {
+  "yoy": 1.7,
+  "yoyAug": 1.7,
+  "yoyDec25": 2.3,
+  "path": [
+   {
+    "date": "2025-09",
+    "yoy": 2.1
+   },
+   {
+    "date": "2025-10",
+    "yoy": 2.2
+   },
+   {
+    "date": "2025-11",
+    "yoy": 2.2
+   },
+   {
+    "date": "2025-12",
+    "yoy": 2.3
+   },
+   {
+    "date": "2026-01",
+    "yoy": 2.3
+   },
+   {
+    "date": "2026-02",
+    "yoy": 2
+   },
+   {
+    "date": "2026-03",
+    "yoy": 2.1
+   },
+   {
+    "date": "2026-04",
+    "yoy": 2
+   },
+   {
+    "date": "2026-05",
+    "yoy": 2
+   },
+   {
+    "date": "2026-06",
+    "yoy": 1.9
+   },
+   {
+    "date": "2026-07",
+    "yoy": 1.8
+   },
+   {
+    "date": "2026-08",
+    "yoy": 1.7
+   },
+   {
+    "date": "2026-09",
+    "yoy": 1.7
+   }
+  ],
+  "path36": [
+   {
+    "date": "2023-10",
+    "yoy": 2.4
+   },
+   {
+    "date": "2023-11",
+    "yoy": 2
+   },
+   {
+    "date": "2023-12",
+    "yoy": 1.9
+   },
+   {
+    "date": "2024-01",
+    "yoy": 1.8
+   },
+   {
+    "date": "2024-02",
+    "yoy": 1.8
+   },
+   {
+    "date": "2024-03",
+    "yoy": 1.7
+   },
+   {
+    "date": "2024-04",
+    "yoy": 1.9
+   },
+   {
+    "date": "2024-05",
+    "yoy": 1.9
+   },
+   {
+    "date": "2024-06",
+    "yoy": 1.9
+   },
+   {
+    "date": "2024-07",
+    "yoy": 1.9
+   },
+   {
+    "date": "2024-08",
+    "yoy": 1.9
+   },
+   {
+    "date": "2024-09",
+    "yoy": 1.8
+   },
+   {
+    "date": "2024-10",
+    "yoy": 1.8
+   },
+   {
+    "date": "2024-11",
+    "yoy": 1.8
+   },
+   {
+    "date": "2024-12",
+    "yoy": 1.6
+   },
+   {
+    "date": "2025-01",
+    "yoy": 1.8
+   },
+   {
+    "date": "2025-02",
+    "yoy": 1.9
+   },
+   {
+    "date": "2025-03",
+    "yoy": 1.9
+   },
+   {
+    "date": "2025-04",
+    "yoy": 2
+   },
+   {
+    "date": "2025-05",
+    "yoy": 1.8
+   },
+   {
+    "date": "2025-06",
+    "yoy": 1.8
+   },
+   {
+    "date": "2025-07",
+    "yoy": 1.8
+   },
+   {
+    "date": "2025-08",
+    "yoy": 2
+   },
+   {
+    "date": "2025-09",
+    "yoy": 2.1
+   },
+   {
+    "date": "2025-10",
+    "yoy": 2.2
+   },
+   {
+    "date": "2025-11",
+    "yoy": 2.2
+   },
+   {
+    "date": "2025-12",
+    "yoy": 2.3
+   },
+   {
+    "date": "2026-01",
+    "yoy": 2.3
+   },
+   {
+    "date": "2026-02",
+    "yoy": 2
+   },
+   {
+    "date": "2026-03",
+    "yoy": 2.1
+   },
+   {
+    "date": "2026-04",
+    "yoy": 2
+   },
+   {
+    "date": "2026-05",
+    "yoy": 2
+   },
+   {
+    "date": "2026-06",
+    "yoy": 1.9
+   },
+   {
+    "date": "2026-07",
+    "yoy": 1.8
+   },
+   {
+    "date": "2026-08",
+    "yoy": 1.7
+   },
+   {
+    "date": "2026-09",
+    "yoy": 1.7
+   }
+  ]
+ },
+ "lowincome": {
+  "yoy": 1.48,
+  "index": 137.3,
+  "indexYago": 135.3
+ },
+ "states": [
+  {
+   "name": "Sarawak",
+   "yoy": 0.5,
+   "mom": 0.2
+  },
+  {
+   "name": "Perlis",
+   "yoy": 0.6,
+   "mom": -0.1
+  },
+  {
+   "name": "Kelantan",
+   "yoy": 0.7,
+   "mom": 0
+  },
+  {
+   "name": "Perak",
+   "yoy": 1.1,
+   "mom": 0
+  },
+  {
+   "name": "Terengganu",
+   "yoy": 1.2,
+   "mom": 0.1
+  },
+  {
+   "name": "Melaka",
+   "yoy": 1.5,
+   "mom": -0.1
+  },
+  {
+   "name": "Pulau Pinang",
+   "yoy": 1.5,
+   "mom": 0
+  },
+  {
+   "name": "W.P. Kuala Lumpur",
+   "yoy": 1.8,
+   "mom": 0
+  },
+  {
+   "name": "Sabah",
+   "yoy": 1.9,
+   "mom": 0.2
+  },
+  {
+   "name": "Selangor",
+   "yoy": 1.9,
+   "mom": 0.1
+  },
+  {
+   "name": "Pahang",
+   "yoy": 2.1,
+   "mom": 0.1
+  },
+  {
+   "name": "Johor",
+   "yoy": 2.2,
+   "mom": 0.1
+  },
+  {
+   "name": "Kedah",
+   "yoy": 2.2,
+   "mom": 0.2
+  },
+  {
+   "name": "W.P. Putrajaya",
+   "yoy": 2.2,
+   "mom": 0.3
+  },
+  {
+   "name": "Negeri Sembilan",
+   "yoy": 2.4,
+   "mom": 0.2
+  },
+  {
+   "name": "W.P. Labuan",
+   "yoy": 2.4,
+   "mom": 0.3
+  }
+ ],
+ "strata": {
+  "urban": {
+   "yoy": 1.76,
+   "idx": 138.6,
+   "idxYago": 136.2,
+   "transport": {
+    "idx": 127,
+    "idxYago": 123.6,
+    "yoy": 2.75
+   },
+   "food": {
+    "idx": 165.4,
+    "idxYago": 162.4,
+    "yoy": 1.85
+   }
+  },
+  "rural": {
+   "yoy": 1.54,
+   "idx": 132,
+   "idxYago": 130,
+   "transport": {
+    "idx": 120.1,
+    "idxYago": 118.5,
+    "yoy": 1.35
+   },
+   "food": {
+    "idx": 146.8,
+    "idxYago": 144.5,
+    "yoy": 1.59
+   }
+  }
+ },
+ "fuel": {
+  "months": [
+   {
+    "month": "2025-08",
+    "ron95": 2.05,
+    "ron95Skps": null,
+    "ron95Budi": null,
+    "ron97": 3.147,
+    "diesel": 2.893,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2025-09",
+    "ron95": 2.16,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 3.194,
+    "diesel": 2.914,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 5
+   },
+   {
+    "month": "2025-10",
+    "ron95": 2.6,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 3.175,
+    "diesel": 2.925,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2025-11",
+    "ron95": 2.633,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 3.248,
+    "diesel": 3.067,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2025-12",
+    "ron95": 2.62,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 3.24,
+    "diesel": 3.025,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2026-01",
+    "ron95": 2.54,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 3.11,
+    "diesel": 2.894,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 5
+   },
+   {
+    "month": "2026-02",
+    "ron95": 2.553,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 3.113,
+    "diesel": 2.995,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2026-03",
+    "ron95": 3.27,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 4.2,
+    "diesel": 4.32,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2026-04",
+    "ron95": 4,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 5.03,
+    "diesel": 5.79,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 5
+   },
+   {
+    "month": "2026-05",
+    "ron95": 3.97,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 4.775,
+    "diesel": 4.97,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2026-06",
+    "ron95": 3.658,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 4.287,
+    "diesel": 4.445,
+    "dieselBudi": null,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2026-07",
+    "ron95": 3.52,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 4.12,
+    "diesel": 4.21,
+    "dieselBudi": 2.1,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 5
+   },
+   {
+    "month": "2026-08",
+    "ron95": 3.745,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 4.263,
+    "diesel": 4.607,
+    "dieselBudi": 2.1,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2026-09",
+    "ron95": 4.183,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 4.662,
+    "diesel": 5.07,
+    "dieselBudi": 2.1,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   },
+   {
+    "month": "2026-10",
+    "ron95": 4.532,
+    "ron95Skps": 2.05,
+    "ron95Budi": 1.99,
+    "ron97": 5.013,
+    "diesel": 5.195,
+    "dieselBudi": 2.1,
+    "dieselSkds": 2.15,
+    "dieselEast": 2.15,
+    "n": 4
+   }
+  ],
+  "window": [
+   {
+    "date": "2025-09-30",
+    "ron95": 2.6,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.21,
+    "diesel": 2.93
+   },
+   {
+    "date": "2025-10-09",
+    "ron95": 2.6,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.18,
+    "diesel": 2.93
+   },
+   {
+    "date": "2025-10-16",
+    "ron95": 2.6,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.18,
+    "diesel": 2.93
+   },
+   {
+    "date": "2025-10-23",
+    "ron95": 2.6,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.14,
+    "diesel": 2.89
+   },
+   {
+    "date": "2025-10-30",
+    "ron95": 2.6,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.2,
+    "diesel": 2.95
+   },
+   {
+    "date": "2025-11-06",
+    "ron95": 2.6,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.2,
+    "diesel": 3.02
+   },
+   {
+    "date": "2025-11-13",
+    "ron95": 2.65,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.25,
+    "diesel": 3.07
+   },
+   {
+    "date": "2025-11-20",
+    "ron95": 2.65,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.28,
+    "diesel": 3.1
+   },
+   {
+    "date": "2025-11-27",
+    "ron95": 2.63,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.26,
+    "diesel": 3.08
+   },
+   {
+    "date": "2025-12-04",
+    "ron95": 2.66,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.29,
+    "diesel": 3.08
+   },
+   {
+    "date": "2025-12-11",
+    "ron95": 2.64,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.27,
+    "diesel": 3.06
+   },
+   {
+    "date": "2025-12-18",
+    "ron95": 2.62,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.24,
+    "diesel": 3.02
+   },
+   {
+    "date": "2025-12-25",
+    "ron95": 2.56,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.16,
+    "diesel": 2.94
+   },
+   {
+    "date": "2026-01-01",
+    "ron95": 2.56,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.16,
+    "diesel": 2.94
+   },
+   {
+    "date": "2026-01-08",
+    "ron95": 2.54,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.11,
+    "diesel": 2.89
+   },
+   {
+    "date": "2026-01-15",
+    "ron95": 2.52,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.08,
+    "diesel": 2.84
+   },
+   {
+    "date": "2026-01-22",
+    "ron95": 2.54,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.1,
+    "diesel": 2.88
+   },
+   {
+    "date": "2026-01-29",
+    "ron95": 2.54,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.1,
+    "diesel": 2.92
+   },
+   {
+    "date": "2026-02-05",
+    "ron95": 2.54,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.1,
+    "diesel": 2.96
+   },
+   {
+    "date": "2026-02-12",
+    "ron95": 2.54,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.1,
+    "diesel": 2.99
+   },
+   {
+    "date": "2026-02-19",
+    "ron95": 2.54,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.1,
+    "diesel": 2.99
+   },
+   {
+    "date": "2026-02-26",
+    "ron95": 2.59,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.15,
+    "diesel": 3.04
+   },
+   {
+    "date": "2026-03-05",
+    "ron95": 2.67,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.25,
+    "diesel": 3.12
+   },
+   {
+    "date": "2026-03-12",
+    "ron95": 3.27,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 3.85,
+    "diesel": 3.92
+   },
+   {
+    "date": "2026-03-19",
+    "ron95": 3.27,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.55,
+    "diesel": 4.72
+   },
+   {
+    "date": "2026-03-26",
+    "ron95": 3.87,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 5.15,
+    "diesel": 5.52
+   },
+   {
+    "date": "2026-04-02",
+    "ron95": 3.87,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.95,
+    "diesel": 6.02
+   },
+   {
+    "date": "2026-04-09",
+    "ron95": 4.27,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 5.35,
+    "diesel": 6.72
+   },
+   {
+    "date": "2026-04-16",
+    "ron95": 4.02,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 5.1,
+    "diesel": 5.97
+   },
+   {
+    "date": "2026-04-23",
+    "ron95": 3.87,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.85,
+    "diesel": 5.12
+   },
+   {
+    "date": "2026-04-30",
+    "ron95": 3.97,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.9,
+    "diesel": 5.12
+   },
+   {
+    "date": "2026-05-07",
+    "ron95": 4.02,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.9,
+    "diesel": 5.17
+   },
+   {
+    "date": "2026-05-14",
+    "ron95": 3.87,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.7,
+    "diesel": 4.87
+   },
+   {
+    "date": "2026-05-21",
+    "ron95": 4.07,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.85,
+    "diesel": 4.97
+   },
+   {
+    "date": "2026-05-28",
+    "ron95": 3.92,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.65,
+    "diesel": 4.87
+   },
+   {
+    "date": "2026-06-04",
+    "ron95": 3.72,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.35,
+    "diesel": 4.67
+   },
+   {
+    "date": "2026-06-11",
+    "ron95": 3.72,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.35,
+    "diesel": 4.67
+   },
+   {
+    "date": "2026-06-18",
+    "ron95": 3.72,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.35,
+    "diesel": 4.37
+   },
+   {
+    "date": "2026-06-25",
+    "ron95": 3.47,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.1,
+    "diesel": 4.07
+   },
+   {
+    "date": "2026-07-01",
+    "ron95": 3.37,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4,
+    "diesel": 3.97
+   },
+   {
+    "date": "2026-07-09",
+    "ron95": 3.37,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4,
+    "diesel": 3.97
+   },
+   {
+    "date": "2026-07-16",
+    "ron95": 3.42,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4,
+    "diesel": 4.07
+   },
+   {
+    "date": "2026-07-23",
+    "ron95": 3.62,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.2,
+    "diesel": 4.42
+   },
+   {
+    "date": "2026-07-30",
+    "ron95": 3.82,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.4,
+    "diesel": 4.62
+   },
+   {
+    "date": "2026-08-06",
+    "ron95": 3.77,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.35,
+    "diesel": 4.57
+   },
+   {
+    "date": "2026-08-13",
+    "ron95": 3.62,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.15,
+    "diesel": 4.47
+   },
+   {
+    "date": "2026-08-20",
+    "ron95": 3.77,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.25,
+    "diesel": 4.67
+   },
+   {
+    "date": "2026-08-27",
+    "ron95": 3.82,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.3,
+    "diesel": 4.72
+   },
+   {
+    "date": "2026-09-03",
+    "ron95": 3.77,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.25,
+    "diesel": 4.67
+   },
+   {
+    "date": "2026-09-10",
+    "ron95": 4.02,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.5,
+    "diesel": 4.92
+   },
+   {
+    "date": "2026-09-17",
+    "ron95": 4.37,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.85,
+    "diesel": 5.27
+   },
+   {
+    "date": "2026-09-24",
+    "ron95": 4.57,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 5.05,
+    "diesel": 5.42
+   },
+   {
+    "date": "2026-10-01",
+    "ron95": 4.52,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 5,
+    "diesel": 5.27
+   },
+   {
+    "date": "2026-10-08",
+    "ron95": 4.67,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 5.15,
+    "diesel": 5.27
+   },
+   {
+    "date": "2026-10-15",
+    "ron95": 4.62,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 5.1,
+    "diesel": 5.17
+   },
+   {
+    "date": "2026-10-22",
+    "ron95": 4.32,
+    "skps": 2.05,
+    "budi95": 1.99,
+    "ron97": 4.8,
+    "diesel": 5.07
+   }
+  ],
+  "sep26": {
+   "month": "2026-09",
+   "ron95": 4.183,
+   "ron95Skps": 2.05,
+   "ron95Budi": 1.99,
+   "ron97": 4.662,
+   "diesel": 5.07,
+   "dieselBudi": 2.1,
+   "dieselSkds": 2.15,
+   "dieselEast": 2.15,
+   "n": 4
+  },
+  "dec25": {
+   "month": "2025-12",
+   "ron95": 2.62,
+   "ron95Skps": 2.05,
+   "ron95Budi": 1.99,
+   "ron97": 3.24,
+   "diesel": 3.025,
+   "dieselBudi": null,
+   "dieselSkds": 2.15,
+   "dieselEast": 2.15,
+   "n": 4
+  },
+  "last": {
+   "date": "2026-10-22",
+   "ron95": 4.32,
+   "ron97": 4.8,
+   "diesel": 5.07,
+   "ron95_skps": 2.05,
+   "diesel_budi": 2.1,
+   "diesel_skds": 2.15,
+   "series_type": "level",
+   "ron95_budi95": 1.99,
+   "diesel_eastmsia": 2.15
+  }
+ },
+ "divisionNames": {
+  "10": "Education",
+  "11": "Restaurant & Accommodation Services",
+  "12": "Insurance & Financial Services",
+  "13": "Personal Care, Social Protection & Miscellaneous Goods and Services",
+  "overall": "Overall",
+  "01": "Food & Beverages",
+  "02": "Alcoholic Beverages & Tobacco",
+  "03": "Clothing & Footwear",
+  "04": "Housing, Utilities, Gas & Other Fuels",
+  "05": "Household Furnishings, Equipment & Maintenance",
+  "06": "Health",
+  "07": "Transport",
+  "08": "Information & Communication",
+  "09": "Recreation, Sport & Culture"
+ }
+}

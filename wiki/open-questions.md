@@ -1,7 +1,7 @@
 # Open Questions
 
 **Summary**: Unresolved questions and unknowns about the project.  
-**Last updated**: 2026-05-02
+**Last updated**: 2026-10-27
 
 ---
 
@@ -10,6 +10,18 @@
 Questions that arose during codebase ingestion that could not be answered from available sources.
 
 ## Unresolved
+
+### Is `raw/` immutable, or is it the working folder?
+
+- **Status**: Unresolved. Raised five times, most recently on 2026-10-27.
+- **Context**: `AGENTS.md` calls `raw/` immutable source material and forbids modifying it. `playbook/pipeline.md` writes eight stage outputs into `raw/<slug>/`, and the video pipeline adds six more. Both shipped reports follow that: `raw/malaysia-wages/` and `raw/malaysia-cpi/` each hold the fetched source beside derived artefacts.
+- **Needs verification**: The project owner picks one. Either a fifth folder joins AGENTS.md's model and the pipeline moves its outputs there, or the `raw/` rule is relaxed to "append-only, and the fetched source inside it is immutable" so derived stage outputs may live beside it. The second matches what the code already does. See [[contradictions]].
+
+### Should the services agreement match the rate card on video length?
+
+- **Status**: Unresolved as of 2026-10-27.
+- **Context**: `playbook/sales/rate-card.md` and `reports/index.html` now say the videos run "up to 60 seconds", which is what the pipeline produces. `playbook/sales/services-agreement.md` still commits to "[n] vertical videos, 40 to 55 seconds, captioned".
+- **Needs verification**: The owner's call. It is a contract template, so it was not changed on the CPI branch.
 
 ### What is the `lexxy` gem used for?
 

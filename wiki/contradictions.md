@@ -1,7 +1,7 @@
 # Contradictions
 
 **Summary**: Conflicting claims found in sources or code that cannot be silently resolved.  
-**Last updated**: 2026-10-26
+**Last updated**: 2026-10-27
 
 ---
 
@@ -10,6 +10,21 @@
 Record of contradictions discovered during codebase analysis. AGENTS.md rule: "If sources disagree → record the contradiction."
 
 ## Active Contradictions
+
+### `raw/` is immutable in AGENTS.md and a working folder in the pipeline
+
+- `AGENTS.md` describes `raw/` as "immutable source material (specs, notes, transcripts, references)" and puts "do not modify `raw/`" under Safety Rules.
+- `playbook/pipeline.md` puts derived stage outputs in `raw/<slug>/`: `brief.md`, `source.json`, `numbers.csv`, `sections.md`, `qa.md`, `tokens.css`, and for the video `shots.json`, `vo/`, `storyboard/`, `video/`. It also says to write them there, not in a `docs/` or `build/` folder.
+- The wages report already did this. `raw/malaysia-wages/` holds both the fetched DOSM rows and eleven derived artefacts, and its `README.md` states that only `source.json` is a source.
+- The CPI report followed the same precedent. `raw/malaysia-cpi/` holds the fetched rows in `source.json` and the derived stages beside them.
+- Status: **unresolved**. Raised five times since the wages report shipped, most recently on 2026-10-27. The project owner has to choose one of two readings: either `raw/` gains a fifth folder for derived output and the pipeline moves there, or the AGENTS.md rule is relaxed to "raw/ is append-only, and the fetched source inside it is immutable, but derived stage outputs may live beside it". The second reading matches what the pipeline actually does and what the wages report shipped. It was not changed unilaterally, because AGENTS.md is the operating system for every agent in the repo and the meaning of the word "immutable" is the owner's call, not the agent's.
+
+### The sales pages promise different video lengths
+
+- `playbook/sales/rate-card.md` and `reports/index.html` said "40 to 55 seconds" for the videos until 2026-10-27. The pipeline actually produced 57.5 seconds for the wages short and 59.26 seconds for the CPI short, so the sales copy was describing something shorter than what ships.
+- On 2026-10-27 the rate card and the front door were changed to "up to 60 seconds", and `playbook/instructions.md` was changed to match.
+- `playbook/sales/services-agreement.md` still says "[n] vertical videos, 40 to 55 seconds, captioned" in Deliverable 2. It was left alone on this branch because it is a contract template and changing a contractual commitment is the owner's decision, not an agent's.
+- Status: **unresolved**. The two readings are not strictly contradictory, since promising 40 to 55 and delivering 40 to 55 is no breach. But the front door now advertises a longer video than the agreement promises, and the pricing page sells "3 vertical videos" against a deliverable of "[n]". Needs the owner's decision on whether the agreement moves to "up to 60 seconds" too.
 
 ### Malaysia wages: "government sectors won" is a 2020 effect, not a trend
 

@@ -8,7 +8,7 @@
 //   THREE=<unpacked three> node storyboard.js <page folder> <shots.json> <vo dir> <out dir>
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
-const { route, LAUNCH, OVERLAY_CSS, frameContext, openShot } = require('./browser');
+const { route, LAUNCH, THEMES, overlayCSS, frameContext, openShot } = require('./browser');
 
 const [,, dirArg, shotsFile, voDirArg, outDirArg] = process.argv;
 if (!dirArg || !shotsFile || !voDirArg || !outDirArg) {
@@ -19,6 +19,9 @@ const dir = path.resolve(dirArg);
 const outDir = path.resolve(outDirArg);
 const shots = JSON.parse(fs.readFileSync(shotsFile, 'utf8'));
 const [W, H] = shots.size || [1080, 1920];
+// The report picks its palette and fonts by name, so these tools are not tied to one report.
+const T = THEMES[shots.theme || 'wages'];
+const OVERLAY_CSS = overlayCSS(shots.theme || 'wages');
 
 // The voice lines live in script.txt, not here. One copy of the words.
 const voText = {};
@@ -89,15 +92,15 @@ function dataUri(file) {
       </div>
     </div>`).join('');
   const sheet = `<!doctype html><meta charset="utf-8"><style>
-    body{margin:0;background:#f6f2ea;color:#332d26;font:400 16px/1.5 "IBM Plex Sans",sans-serif;padding:48px}
-    h1{font:800 44px/1.1 Fraunces,Georgia,serif;margin:0 0 8px}
-    .sub{font:500 14px/1.2 "IBM Plex Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:#6e665a;margin:0 0 48px}
-    .row{display:grid;grid-template-columns:270px 1fr;gap:40px;padding:32px 0;border-top:1px solid #dcd3c2}
-    img{width:270px;height:480px;object-fit:cover;border:1px solid #dcd3c2;display:block}
-    .id{font:500 13px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#6e665a;margin-bottom:14px}
-    .claim{font:800 34px/1.2 Fraunces,Georgia,serif;margin-bottom:16px}
-    .cap{font:500 22px/1.4 "IBM Plex Sans",sans-serif;color:#332d26;margin-bottom:12px}
-    .vo{font:400 16px/1.5 "IBM Plex Sans",sans-serif;color:#6e665a}
+    body{margin:0;background:${T.paper};color:${T.ink};font:400 16px/1.5 "IBM Plex Sans",sans-serif;padding:48px}
+    h1{font:${T.displayWeight} 44px/1.1 ${T.display};letter-spacing:${T.displayLetter};margin:0 0 8px}
+    .sub{font:500 14px/1.2 "IBM Plex Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:${T.muted};margin:0 0 48px}
+    .row{display:grid;grid-template-columns:270px 1fr;gap:40px;padding:32px 0;border-top:1px solid ${T.rule}}
+    img{width:270px;height:480px;object-fit:cover;border:1px solid ${T.rule};display:block}
+    .id{font:500 13px/1.2 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:${T.muted};margin-bottom:14px}
+    .claim{font:${T.displayWeight} 34px/1.2 ${T.display};margin-bottom:16px}
+    .cap{font:500 22px/1.4 "IBM Plex Sans",sans-serif;color:${T.ink};margin-bottom:12px}
+    .vo{font:400 16px/1.5 "IBM Plex Sans",sans-serif;color:${T.muted}}
   </style>
   <h1>${shots.title || 'Storyboard'}</h1>
   <p class="sub">${shots.shots.length} shots &middot; ${W}x${H} &middot; portrait</p>

@@ -874,3 +874,27 @@ Verification:
 - video checked: yes. ffprobe on the output, nine frames pulled across the runtime, the audio
   mapped with silencedetect against the shot boundaries.
 - human reviewed: no
+## [2026-10-27] feature | Build the Malaysia CPI report and its video from the DOSM September 2026 release
+
+Source: `raw/malaysia-cpi/` — DOSM open API, seven catalogue series, CC BY 4.0
+Changes:
+- added the report page at `reports/malaysia-cpi/`, six three.js scenes, one claim each, all playing in one second
+- added the working folder `raw/malaysia-cpi/` with the source, the story, the sections, a 115-row figure register, the shots, the script, the storyboard and the QA record
+- parameterised the capture tools by theme, so `browser.js` exports `THEMES` and `overlayCSS(theme)` and `shots.json` names the theme
+- added the report to the front door at `reports/index.html` and widened its card grid to fit three
+- corrected the promised video length from "40 to 55 seconds" to "up to 60 seconds" in the rate card, the front door and `playbook/instructions.md`
+- registered the CPI source, the tooling change and the report artefacts in `source-register.md`
+
+Notes:
+- **The story is the composition, not the headline.** Headline inflation eased to 1.8% from 1.9%, and the report opens on the price level instead. Transport heated to 2.5% while housing cooled to 1.4%, and the 1.8% is the net of two opposite shocks. The page never says how much a division contributed, because these datasets publish no basket weights.
+- **Core is not "fuel minus non-fuel".** DOSM's core CPI removes items with volatile prices and items with government-administered prices. The first draft said otherwise and was corrected in the story, the sections, the page and the voice-over.
+- **The RON95 market price only exists from 30 September 2025.** Before that RON95 was fixed at RM2.05, so every "how much it has risen" figure starts from December 2025.
+- **Three figures were on the page with no row in the register.** The reverse check, which matches every numeric token in the rendered page against `numbers.csv`, found the 1.40 point transport gap, the 0.22 point overall gap and the index-derived national 1.78% unaccounted for. All three are now registered and recomputed by the verifier. The method note said "these three figures are computed" about a set of nine and did not cover the national figure; it now does.
+- **Six WebGL contexts on one page is enough for Chromium to drop some of them.** The first storyboard came back with blank frames and `CONTEXT_LOST_WEBGL`. `openShot` now waits for `!gl.isContextLost()` and the scene redraws on `webglcontextrestored`. Both guards stay.
+- The video is 59.26 seconds at 1080x1920, 30fps, with 55.36 seconds of speech across seven lines. The voice-over sets the shot lengths. It is a local artefact and is not tracked in git.
+- `playbook/sales/services-agreement.md` still promises "40 to 55 seconds" for the videos. That is a contract template and was not changed on this branch; the difference is recorded in `contradictions.md`.
+
+Verification:
+- code checked: yes. All 115 figures in `numbers.csv` recomputed from `source.json`: 115 match, 0 mismatch, 0 not recomputed. The reverse check leaves no numeric token on the page that the register cannot account for.
+- video checked: yes. ffprobe on the output, the audio profiled per shot window, every gap between shots digital silence.
+- human reviewed: no

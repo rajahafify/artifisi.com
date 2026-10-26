@@ -40,7 +40,7 @@ That installs Playwright and three, and pulls the Chromium build. The capture sc
 ## What you get
 
 1. One static page. Every number sits in plain HTML text. Behind it, a three.js scene per section that plays when the reader clicks it, starting from the first frame of the shot.
-2. A vertical 1080x1920 video of 40 to 55 seconds. A screen recording of the scenes with captions and a TTS voice-over, ending on a card with the page URL.
+2. A vertical 1080x1920 video of up to 60 seconds. A screen recording of the scenes with captions and a TTS voice-over, ending on a card with the page URL.
 
 ## The rules, in the order they cost us time
 

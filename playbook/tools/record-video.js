@@ -9,7 +9,7 @@
 // because the browser clock and the audio clock drift apart.
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
-const { route, LAUNCH, OVERLAY_CSS, frameContext, openShot } = require('./browser');
+const { route, LAUNCH, overlayCSS, frameContext, openShot } = require('./browser');
 
 const [,, dirArg, shotsFile, voDirArg, outDirArg] = process.argv;
 if (!dirArg || !shotsFile || !voDirArg || !outDirArg) {
@@ -22,6 +22,8 @@ const outDir = path.resolve(outDirArg);
 const clipDir = path.join(outDir, 'clips');
 const shots = JSON.parse(fs.readFileSync(shotsFile, 'utf8'));
 const [W, H] = shots.size || [1080, 1920];
+// The report picks its palette and fonts by name, so these tools are not tied to one report.
+const OVERLAY_CSS = overlayCSS(shots.theme || 'wages');
 const GAP = shots.gap === undefined ? 0.4 : shots.gap;
 
 // The recorded voice-over sets the shot lengths when it exists. Before it does, the shot
