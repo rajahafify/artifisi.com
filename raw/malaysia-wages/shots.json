@@ -1,0 +1,79 @@
+{
+    "report":  "malaysia-wages",
+    "page":  "reports/malaysia-wages/",
+    "title":  "What Malaysia pays, by industry",
+    "size":  [
+                 1080,
+                 1920
+             ],
+    "fps":  30,
+    "kicker":  "Malaysia · wages by industry · 2025",
+    "gap":  0.4,
+    "gapNote":  "Seconds held after each voice line ends, before the next shot cuts.",
+    "endCard":  {
+                    "id":  "end",
+                    "vo":  "l07",
+                    "plan":  2.3,
+                    "endHold":  1.5,
+                    "kicker":  "Malaysia, wages by industry, 2010 to 2025",
+                    "title":  "What Malaysia pays, by industry",
+                    "url":  "reports.artifisi.com/malaysia-wages/",
+                    "source":  "Data: Department of Statistics Malaysia, Salaries and Wages Survey. CC BY 4.0."
+                },
+    "shots":  [
+                  {
+                      "id":  "lift",
+                      "scene":  "lift",
+                      "claim":  "Education pays twice the national median",
+                      "caption":  "The lift climbs from the national median to the education median.",
+                      "vo":  "l01",
+                      "plan":  8.6,
+                      "t":  1.0
+                  },
+                  {
+                      "id":  "floor",
+                      "scene":  "floor",
+                      "claim":  "Two in three workers are in an industry that pays below the median",
+                      "caption":  "The workforce forks at the median. Most of it goes left.",
+                      "vo":  "l02",
+                      "plan":  8.15,
+                      "t":  1.0
+                  },
+                  {
+                      "id":  "canyon",
+                      "scene":  "canyon",
+                      "claim":  "It narrowed for a decade, broke in 2020, and never got back to 2019",
+                      "caption":  "The walls are the spread. In 2020 they slam apart.",
+                      "vo":  "l03",
+                      "plan":  8.7,
+                      "t":  1.0
+                  },
+                  {
+                      "id":  "section",
+                      "scene":  "section",
+                      "claim":  "The public sector climbed. Resource and finance fell.",
+                      "caption":  "Nineteen lift cars, one year counter.",
+                      "vo":  "l04",
+                      "plan":  9.44,
+                      "t":  1.0
+                  },
+                  {
+                      "id":  "city",
+                      "scene":  "city",
+                      "claim":  "Four industries carry more than half the wage bill",
+                      "caption":  "Lights fill in proportion to each industry\u0027s share of the bill.",
+                      "vo":  "l05",
+                      "plan":  8.14,
+                      "t":  1.0
+                  },
+                  {
+                      "id":  "cutaway",
+                      "scene":  "cutaway",
+                      "claim":  "Where pay is lowest, the average sits furthest above the typical wage",
+                      "caption":  "The lift stops at the median, then continues to the mean.",
+                      "vo":  "l06",
+                      "plan":  8.31,
+                      "t":  1.0
+                  }
+              ]
+}
