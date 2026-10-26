@@ -248,7 +248,9 @@ function sceneLift(stage, D) {
   const lMed = stage.label("RM2,940  national median", "anchor-l");
   const lTop = stage.label("RM5,990  education", "anchor-b big");
 
-  stage.extent(V(-W / 2, 0, 0), V(W / 2 + 2.1, H + 1.0, 0));
+  // The floor ticks sit outside the shaft on the left and the median label on the right.
+  // Without them inside the box the camera crops them at the video's frame.
+  stage.extent(V(-W / 2 - 0.85, 0, 0), V(W / 2 + 2.1, H + 1.0, 0));
   stage.fit(V(0.3, 0.06, 1), 1.06);
 
   return {
@@ -532,7 +534,11 @@ function sceneCity(stage, D) {
       });
       if (wins.instanceColor) wins.instanceColor.needsUpdate = true;
 
-      const az = lerp(-0.17, 0.21, smooth(t));
+      // The camera sweeps around the block. A wide canvas has room for the sweep, so the
+      // page's 16:10 figure gets the full one. A narrow canvas does not: the block walks
+      // out of frame, so the sweep tightens to what the frame can hold.
+      const amp = lerp(0.09, 0.21, clamp01((stage.camera.aspect - 0.8) / 0.7));
+      const az = lerp(-0.81 * amp, amp, smooth(t));
       const ce = stage.fitCenter, rad = stage.fitRadius;
       stage.camera.position.set(
         ce.x + Math.sin(az) * rad,
@@ -607,13 +613,17 @@ document.documentElement.classList.add("js");
 
 const DATA = await fetch("./data.json").then((r) => r.json());
 const SCENES = {
-  lift: { build: (s) => sceneLift(s, DATA), duration: 5000 },
-  floor: { build: (s) => sceneFloor(s, DATA), duration: 7000 },
-  canyon: { build: (s) => sceneCanyon(s, DATA), duration: 6000 },
-  section: { build: (s) => sceneSection(s, DATA), duration: 6000 },
-  city: { build: (s) => sceneCity(s, DATA), duration: 8000 },
-  cutaway: { build: (s) => sceneCutaway(s, DATA), duration: 6000 },
+  lift: { build: (s) => sceneLift(s, DATA), duration: 1000 },
+  floor: { build: (s) => sceneFloor(s, DATA), duration: 1000 },
+  canyon: { build: (s) => sceneCanyon(s, DATA), duration: 1000 },
+  section: { build: (s) => sceneSection(s, DATA), duration: 1000 },
+  city: { build: (s) => sceneCity(s, DATA), duration: 1000 },
+  cutaway: { build: (s) => sceneCutaway(s, DATA), duration: 1000 },
 };
+
+// Every scene plays in one second on the page. The video stretches a shot to the length of
+// its voice line, so ?dur=<ms> overrides the duration for capture only. Nothing else changes.
+const DUR_OVERRIDE = Number(new URLSearchParams(location.search).get("dur")) || 0;
 
 // ---------- the click indicator ----------
 // Same idea as tech-sovereignty: a finger that presses until you have clicked once,
@@ -680,7 +690,7 @@ document.querySelectorAll("[data-scene]").forEach((fig, index) => {
   const canvas = fig.querySelector("canvas");
   wrap.style.aspectRatio = fig.dataset.aspect || "4 / 5";
   try {
-    const st = new Stage(canvas, wrap, { build: spec.build, duration: spec.duration, reduced }, DATA);
+    const st = new Stage(canvas, wrap, { build: spec.build, duration: DUR_OVERRIDE || spec.duration, reduced }, DATA);
     st.name = name; st.fig = fig;
     stages.push(st);
     attach(st, fig, index);
