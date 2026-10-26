@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Malaysia's inflation eased to 1.8%. The fuel in your tank did not.</title>
+<meta name="description" content="The DOSM Consumer Price Index for September 2026, drawn as six mechanisms. Headline inflation eased to 1.8%, but transport prices heated to 2.5%, the fuel wedge opened to RM2.13 a litre, and the state spread ran from 0.5% to 2.4%." />
+<link rel="canonical" href="https://reports.artifisi.com/malaysia-cpi/" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Inflation eased. Fuel did not." />
+<meta property="og:description" content="Malaysia's Consumer Price Index, September 2026. The headline eased to 1.8%; the fuel in your tank did not. Six charts, one per claim." />
+<meta property="og:image" content="https://reports.artifisi.com/og.png" />
+<meta property="og:url" content="https://reports.artifisi.com/malaysia-cpi/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@artifisi_my" />
+<link rel="icon" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --paper:#f3f0e9; --paper-2:#eae5da; --ink:#1c1e24; --muted:#6a6d75;
+  --rule:#d6d1c4; --ctx:#a7a49a;
+  --cool:#26557f; --warm:#bd5320;
+  --display:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
+  --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
+  --s1:14px; --s2:17px; --s3:22px; --s4:clamp(30px,4.2vw,46px); --s5:clamp(42px,7vw,78px);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:var(--s2);line-height:1.62}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+a:focus-visible{outline:2px solid var(--cool);outline-offset:3px}
+img{max-width:100%;display:block}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* bar */
+.bar{border-bottom:1px solid var(--rule)}
+.bar .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 24px;font-family:var(--mono);font-size:13px;letter-spacing:.04em}
+.brand{font-weight:500;text-decoration:none;letter-spacing:.12em;text-transform:uppercase}
+.bar a.back{color:var(--muted);text-decoration:none}
+.bar a.back:hover{color:var(--ink)}
+
+/* hero */
+header.hero{padding:clamp(48px,7vw,88px) 0 clamp(32px,4vw,52px)}
+.kicker{font-family:var(--mono);font-size:var(--s1);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+h1{font-family:var(--display);font-weight:700;font-size:var(--s5);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:17ch}
+.stand{margin:26px 0 0;font-size:clamp(19px,2.2vw,23px);line-height:1.5;max-width:44ch;color:#3a3c44}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:clamp(36px,5vw,56px) 0 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.stat{padding:22px 20px 22px 0}
+.stat+.stat{border-left:1px solid var(--rule);padding-left:20px}
+.stat .n{font-family:var(--mono);font-weight:500;font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.02em;display:block}
+.stat .n small{font-size:.55em;letter-spacing:0}
+.stat .l{font-family:var(--mono);font-size:12.5px;line-height:1.4;color:var(--muted);display:block;margin-top:8px;letter-spacing:.02em}
+.hint{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:28px 0 0}
+
+/* sections */
+section.sec{padding:clamp(56px,8vw,104px) 0;border-top:1px solid var(--rule)}
+.sec-head{display:flex;gap:20px;align-items:baseline;margin-bottom:26px}
+.sec-n{font-family:var(--mono);font-size:var(--s1);color:var(--ctx);letter-spacing:.14em;flex:0 0 auto;padding-top:.35em}
+h2{font-family:var(--display);font-weight:700;font-size:var(--s4);line-height:1.08;letter-spacing:-.022em;margin:0;max-width:26ch}
+.sec-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(28px,5vw,64px);align-items:start}
+.sec-body.wide{grid-template-columns:1fr}
+.prose{max-width:62ch}
+.prose p{margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose .lead{font-size:clamp(18px,2vw,20px);color:#3a3c44}
+.hero-fig{margin:0}
+
+/* figure */
+figure.fig{margin:0;position:relative}
+.fig .canvas-wrap{position:relative;width:100%;background:var(--paper-2);border:1px solid var(--rule);overflow:hidden}
+.fig .canvas-wrap::after{content:"";position:absolute;inset:0;pointer-events:none}
+figure.fig canvas{display:block;width:100%;height:100%}
+figcaption{font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--muted);margin-top:12px;letter-spacing:.01em}
+figcaption b{color:var(--ink);font-weight:500}
+.fig-fallback{padding:20px 0 4px}
+.fig-fallback table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:13px}
+.fig-fallback th,.fig-fallback td{text-align:left;padding:6px 10px 6px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.fig-fallback th{color:var(--muted);font-weight:400}
+html.js .fig-fallback{display:none}
+html.no-js .fig .canvas-wrap{display:none}
+figure.fig.failed .canvas-wrap{display:none}
+figure.fig.failed .fig-fallback{display:block}
+
+/* click to play */
+.fig .canvas-wrap{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fig .canvas-wrap:focus-visible{outline:2px solid var(--cool);outline-offset:3px}
+.fig .canvas-wrap.is-playing{cursor:progress}
+.chip{position:absolute;right:10px;bottom:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);background:var(--paper);border:1px solid var(--rule);border-radius:999px;padding:5px 10px;pointer-events:none;transition:color .25s,border-color .25s}
+.chip.busy{color:var(--cool);border-color:var(--cool)}
+.chip.static{opacity:.7}
+.finger{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;opacity:0;transition:opacity .35s var(--ease)}
+.finger.show{opacity:1}
+.finger svg{position:absolute;left:-21px;top:-10px;fill:var(--ink);transform-origin:50% 20%;animation:press 1.9s ease-in-out infinite;filter:drop-shadow(0 1px 2px rgba(243,240,233,.9))}
+.finger .ripple{position:absolute;left:-18px;top:-18px;width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);opacity:0;animation:ripple 1.9s ease-out infinite}
+.finger .say{position:absolute;left:26px;top:4px;white-space:nowrap;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);background:var(--paper);padding:3px 6px;border-radius:2px}
+@keyframes press{0%,100%{transform:translate(13px,13px) scale(1)}40%{transform:translate(0,0) scale(1)}50%{transform:translate(0,0) scale(.82)}60%{transform:translate(0,0) scale(1)}}
+@keyframes ripple{0%,48%{opacity:0;transform:scale(.3)}52%{opacity:.85;transform:scale(.4)}100%{opacity:0;transform:scale(1.8)}}
+@media (prefers-reduced-motion:reduce){.finger svg,.finger .ripple{animation:none}}
+
+/* pinned labels */
+.scene-label{position:absolute;left:0;top:0;font-family:var(--mono);font-size:var(--ls,13px);line-height:1;color:var(--ink);white-space:nowrap;pointer-events:none;will-change:transform;opacity:0;transition:opacity .3s var(--ease);background:var(--paper);padding:.18em .3em;border-radius:2px}
+.scene-label.big{font-size:calc(var(--ls,13px) * 1.42);font-weight:500;letter-spacing:-.01em}
+.scene-label.small{font-size:calc(var(--ls,13px) * .86);letter-spacing:.02em}
+.scene-label.dim{color:var(--muted)}
+.scene-label.cool{color:var(--cool)}
+.scene-label.warm{color:var(--warm)}
+
+/* video capture: ?shot=name&t=0.5 */
+/* The frame is 1080x1920. The top 8vh carries the kicker and the bottom 16vh carries the
+   burned in caption, so nothing from the scene enters either band. That leaves a
+   1080x1459 canvas, the same portrait canvas for all six shots. The page gives each
+   figure its own aspect for the reading layout, so the video overrides it. */
+body.shot-mode > .bar,body.shot-mode > header,body.shot-mode > footer,body.shot-mode > .method{display:none}
+body.shot-mode main > section{display:none;border:0;padding:0}
+body.shot-mode main > section.on{display:block;padding:8vh 0 16vh}
+body.shot-mode main > section.on .wrap{max-width:none;padding:0}
+body.shot-mode main > section.on .sec-head,body.shot-mode main > section.on .prose,body.shot-mode main > section.on figcaption{display:none}
+body.shot-mode main > section.on .sec-body{display:block}
+body.shot-mode main > section.on .canvas-wrap{height:76vh;border:0;aspect-ratio:auto!important}
+body.shot-mode main > section.on figure.fig{margin:0}
+body.shot-mode .chip,body.shot-mode .finger{display:none}
+@media (max-width:820px){.scene-label{font-size:11px}}
+
+/* callout inside prose */
+.note{border-left:2px solid var(--cool);padding:2px 0 2px 16px;margin:22px 0 0;font-size:16px;color:var(--muted)}
+.note b{color:var(--ink);font-weight:500}
+
+/* method */
+.method{border-top:1px solid var(--rule);padding:clamp(48px,6vw,80px) 0}
+.method h2{font-size:clamp(24px,3vw,32px);margin-bottom:26px}
+.method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px}
+.method h3{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;font-weight:400}
+.method p,.method li{font-size:15.5px;line-height:1.6;color:#42444c;margin:0 0 10px}
+.method ul{margin:0;padding-left:18px}
+.method a{color:var(--cool)}
+.method code{font-family:var(--mono);font-size:.92em}
+
+/* footer */
+footer{border-top:1px solid var(--rule);padding:32px 0 56px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+footer a{color:var(--muted)}
+
+@media (max-width:820px){
+  .sec-body{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(3){border-left:0;padding-left:0}
+  .stat:nth-child(n+3){border-top:1px solid var(--rule)}
+  h1{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<div class="bar"><div class="wrap">
+  <a class="brand" href="/">Artifisi</a>
+  <a class="back" href="/">&larr; Reports</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <p class="kicker">DOSM &middot; Consumer Price Index &middot; September 2026</p>
+  <h1>Inflation eased. Fuel did not.</h1>
+  <p class="stand">The Consumer Price Index rose 1.8% in the year to September, down from 1.9%. Inside that number the fuel price was still climbing, the price of housing was falling, and the spread between the cheapest state and the dearest was close to five to one.</p>
+  <div class="stats">
+    <div class="stat"><span class="n">1.8<small>%</small></span><span class="l">headline inflation, year on year<br>from 1.9% in August</span></div>
+    <div class="stat"><span class="n">137.6</span><span class="l">consumer price index<br>2010 = 100</span></div>
+    <div class="stat"><span class="n">RM4.18</span><span class="l">average RON95 market price,<br>September 2026</span></div>
+    <div class="stat"><span class="n">0.5&ndash;2.4<small>%</small></span><span class="l">inflation, lowest state<br>to highest</span></div>
+  </div>
+  <p class="hint">Click any chart to play its shot. Six charts, one per claim.</p>
+</div></header>
+
+<main>
+
+<section class="sec" id="the-level"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">01</span><h2>The price level is 37.6% above 2010. One year of that is 1.8%.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead">Malaysia's consumer price index closed September at <b>137.6</b>, against 135.2 a year earlier and 100 for the 2010 base year. Sixteen years of climbing is 37.6 index points. The year since September 2025 is <b>2.4</b> of them, which is <b>6.4%</b> of the whole climb.</p>
+      <p>That gap between the level and the rate is the part the headline hides. A rate of 1.8% sounds like the end of a rise. The level says prices are 37.6% higher than they were when the base year was set, and that is the number a household actually lives with.</p>
+      <p>It also says how little one month can change. From October 2023 to September 2026 the headline rate never left a band between 1.1% and 2.0%.</p>
+      <p class="note">The index base is the 2010 year, set to 100. January 2010 itself prints 99.4.</p>
+    </div>
+    <figure class="fig" data-scene="column" data-aspect="4/5">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Consumer price index, 2010 = 100</caption>
+        <tr><th>September 2026</th><td>137.6</td></tr>
+        <tr><th>September 2025</th><td>135.2</td></tr>
+        <tr><th>Base year 2010</th><td>100</td></tr>
+        <tr><th>Rise since 2010</th><td>37.6 points, 37.6%</td></tr>
+        <tr><th>Rise in one year</th><td>2.4 points, 1.8%</td></tr>
+        <tr><th>One year as a share of the climb</th><td>6.4%</td></tr></table>
+      </div>
+      <figcaption><b>Fig 1.</b> One column, standing on the 2010 base. The plate marks September 2025; the lit sliver above it is the year since.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="the-divisions"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">02</span><h2>The thirteen divisions do not agree. Transport is heating while housing cools.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead">Transport prices rose <b>2.5%</b> in the year to September, up from 2.0% in August. Housing, utilities, gas and other fuels fell to <b>1.4%</b>, from 2.1%. Information and communication dropped to 1.8%, from 2.6%.</p>
+      <p>The national rate sits at 1.8%. Above it: personal care and miscellaneous goods at 2.8%, alcoholic beverages and tobacco at 2.8%, transport at 2.5%, restaurants and accommodation at 2.2%, education at 2.1%. Below it: housing at 1.4%, health at 1.4%, insurance and financial services at 1.2%, recreation at 1.2%, furnishings at 0.3% and clothing at 0.2%.</p>
+      <p>The three biggest moves in a single month were information and communication, down 0.8 points, housing down 0.7, and transport up 0.5. One month moved the composition more than it moved the headline.</p>
+      <p class="note">A division's rate is not its contribution to the national rate. These datasets do not publish the basket weights, so this page never says how much of the 1.8% came from any one of them.</p>
+    </div>
+    <figure class="fig" data-scene="ladder" data-aspect="3/4">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Inflation by division, year on year</caption>
+        <tr><th>Personal Care, Social Protection &amp; Misc.</th><td>2.8%</td><td>was 3.2%</td></tr>
+        <tr><th>Alcoholic Beverages &amp; Tobacco</th><td>2.8%</td><td>was 2.8%</td></tr>
+        <tr><th>Transport</th><td>2.5%</td><td>was 2.0%</td></tr>
+        <tr><th>Restaurant &amp; Accommodation Services</th><td>2.2%</td><td>was 2.1%</td></tr>
+        <tr><th>Education</th><td>2.1%</td><td>was 1.9%</td></tr>
+        <tr><th>Food &amp; Beverages</th><td>1.8%</td><td>was 1.9%</td></tr>
+        <tr><th>Information &amp; Communication</th><td>1.8%</td><td>was 2.6%</td></tr>
+        <tr><th>Housing, Utilities, Gas &amp; Other Fuels</th><td>1.4%</td><td>was 2.1%</td></tr>
+        <tr><th>Health</th><td>1.4%</td><td>was 1.3%</td></tr>
+        <tr><th>Insurance &amp; Financial Services</th><td>1.2%</td><td>was 1.0%</td></tr>
+        <tr><th>Recreation, Sport &amp; Culture</th><td>1.2%</td><td>was 1.1%</td></tr>
+        <tr><th>Household Furnishings, Equipment &amp; Maintenance</th><td>0.3%</td><td>was 0.4%</td></tr>
+        <tr><th>Clothing &amp; Footwear</th><td>0.2%</td><td>was 0.1%</td></tr>
+        <tr><th>Overall</th><td>1.8%</td><td>was 1.9%</td></tr></table>
+      </div>
+      <figcaption><b>Fig 2.</b> Thirteen bars, sorted by September rate. The tick on each bar is where that division stood in August.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="the-band"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">03</span><h2>The headline has not moved in three years, because two shocks have been cancelling.</h2></div>
+  <div class="sec-body wide">
+    <div class="prose">
+      <p class="lead">Since October 2023 the national rate has stayed inside a band of nine tenths of a point. It was <b>1.8%</b> in October 2023 and it is <b>1.8%</b> in September 2026. In between it touched 1.1% in June 2025 and 2.0% in May 2026.</p>
+      <p>Underneath, core inflation has been sliding. Core is the same basket with two kinds of price removed: the ones with volatile prices, and the ones the government administers. It was <b>2.3%</b> in December 2025 and <b>1.7%</b> in September 2026, a fall of six tenths of a point in nine months, while the headline went from 1.6% to 1.8%.</p>
+      <p>Both of the excluded kinds moved hard this year. Fuel is volatile and it rose; electricity and water tariffs are administered, and housing fell. Core strips out both, so it glides down to 1.7% while the headline stands still. The 1.8% is the net of two shocks pointing in opposite directions.</p>
+      <p class="note">The rate is a national average of a fixed basket. The CPI measures the cost of that basket, so the rate a specific household feels can be higher or lower.</p>
+    </div>
+    <figure class="fig" data-scene="path" data-aspect="16/10" style="margin-top:36px">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Headline and core inflation, year on year</caption>
+        <tr><th>October 2023</th><td>1.8%</td><td>core 2.4%</td></tr>
+        <tr><th>June 2025</th><td>1.1%</td><td></td></tr>
+        <tr><th>December 2025</th><td>1.6%</td><td>core 2.3%</td></tr>
+        <tr><th>May 2026</th><td>2.0%</td><td></td></tr>
+        <tr><th>September 2026</th><td>1.8%</td><td>core 1.7%</td></tr>
+        <tr><th>Range, 36 months</th><td>1.1% to 2.0%</td><td></td></tr></table>
+      </div>
+      <figcaption><b>Fig 3.</b> Thirty-six months receding into depth. The ceiling is the headline rate, the second line is core. Dashed rails mark the band the headline never left.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="the-fuel"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">04</span><h2>The fuel shock is a subsidy wedge, and the wedge is still open.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead">The market price of RON95 averaged <b>RM4.18</b> a litre in September 2026, up from <b>RM2.62</b> in December 2025. That is a rise of <b>59.7%</b> in nine months. Over the same period the subsidised price did not move at all: RM2.05, with RM1.99 for BUDI 95 vehicles.</p>
+      <p>The gap between them is <b>RM2.13</b> a litre. That is the difference between what the fuel costs and what the subsidised price is, and it is the part of the fuel shock that never reached the pump price most people pay.</p>
+      <p>Diesel tells the same story with a wider spread. At the market it was RM5.07 on 22 October 2026. The BUDI price was RM2.10, the SKDS price RM2.15, and in East Malaysia diesel was RM2.15.</p>
+      <p class="note">The market price of RON95 only exists from 30 September 2025; before that RON95 was fixed at RM2.05. Every "how much it has risen" figure here starts from December 2025. These are prices, not volumes, so the data cannot say how much fuel is bought at the market price.</p>
+    </div>
+    <figure class="fig" data-scene="drum" data-aspect="4/5">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>RON95, September 2026</caption>
+        <tr><th>Market price, monthly average</th><td>RM4.18</td></tr>
+        <tr><th>Market price, December 2025 average</th><td>RM2.62</td></tr>
+        <tr><th>Subsidised price</th><td>RM2.05</td></tr>
+        <tr><th>BUDI 95 price</th><td>RM1.99</td></tr>
+        <tr><th>Gap</th><td>RM2.13</td></tr>
+        <tr><th>Rise in nine months</th><td>59.7%</td></tr></table>
+      </div>
+      <figcaption><b>Fig 4.</b> One drum, cut open. The surface is the market price, week by week; the level cut into it is the subsidised price, and it does not move.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="the-states"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">05</span><h2>The national number hides a spread of nearly five to one.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead">In September, inflation ran at <b>0.5%</b> in Sarawak and <b>2.4%</b> in Negeri Sembilan and in Labuan. Eight states were above the national 1.8%, eight were below it, and Kuala Lumpur sat exactly on it.</p>
+      <p>The full range, in order: Sarawak 0.5%, Perlis 0.6%, Kelantan 0.7%, Perak 1.1%, Terengganu 1.2%, Melaka 1.5%, Pulau Pinang 1.5%, Kuala Lumpur 1.8%, Sabah 1.9%, Selangor 1.9%, Pahang 2.1%, Johor 2.2%, Kedah 2.2%, Putrajaya 2.2%, Negeri Sembilan 2.4%, Labuan 2.4%.</p>
+      <p>It is the same national basket, priced in seventeen places. What the spread measures is how differently that basket costs from one state to the next.</p>
+      <p class="note">A state rate is not a household rate. It is the national basket priced locally, so it moves with the prices that differ across a state, not with the mix of what people buy.</p>
+    </div>
+    <figure class="fig" data-scene="dots" data-aspect="3/4">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Inflation by state, September 2026</caption>
+        <tr><th>Sarawak</th><td>0.5%</td></tr><tr><th>Perlis</th><td>0.6%</td></tr>
+        <tr><th>Kelantan</th><td>0.7%</td></tr><tr><th>Perak</th><td>1.1%</td></tr>
+        <tr><th>Terengganu</th><td>1.2%</td></tr><tr><th>Melaka</th><td>1.5%</td></tr>
+        <tr><th>Pulau Pinang</th><td>1.5%</td></tr><tr><th>W.P. Kuala Lumpur</th><td>1.8%</td></tr>
+        <tr><th>Sabah</th><td>1.9%</td></tr><tr><th>Selangor</th><td>1.9%</td></tr>
+        <tr><th>Pahang</th><td>2.1%</td></tr><tr><th>Johor</th><td>2.2%</td></tr>
+        <tr><th>Kedah</th><td>2.2%</td></tr><tr><th>W.P. Putrajaya</th><td>2.2%</td></tr>
+        <tr><th>Negeri Sembilan</th><td>2.4%</td></tr><tr><th>W.P. Labuan</th><td>2.4%</td></tr>
+        <tr><th>Overall</th><td>1.8%</td></tr></table>
+      </div>
+      <figcaption><b>Fig 5.</b> Seventeen dots on a floor, sorted by rate. The dashed line is the national rate.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section class="sec" id="the-split"><div class="wrap">
+  <div class="sec-head"><span class="sec-n">06</span><h2>The same fuel shock does not land evenly. Cities carried twice the transport inflation.</h2></div>
+  <div class="sec-body">
+    <div class="prose">
+      <p class="lead">Urban transport prices rose <b>2.75%</b> in the year to September. Rural transport prices rose <b>1.35%</b>. The same fuel price, two very different transport lines.</p>
+      <p>Yet the overall rates are only 0.22 points apart: urban <b>1.76%</b>, rural <b>1.54%</b>. A 1.40 point gap inside transport and a 0.22 point gap overall means transport carries a smaller weight in the rural basket than in the urban one. That is as far as the published data goes.</p>
+      <p>Food tells a smaller version of the same story, 1.85% in the cities against 1.59% in the countryside. And the low-income basket as a whole rose 1.48%, below the national 1.78%.</p>
+      <p class="note">The urban, rural and low-income series publish an index and not a rate, so every rate in this paragraph is computed from the published index rows for September 2026 and September 2025. That includes the national 1.78% it is compared against, which is the index-derived twin of the published 1.8% headline. Every other number on this page is published as it stands.</p>
+    </div>
+    <figure class="fig" data-scene="split" data-aspect="4/5">
+      <div class="canvas-wrap"><canvas aria-hidden="true"></canvas></div>
+      <div class="fig-fallback">
+        <table><caption>Urban and rural, September 2026</caption>
+        <tr><th>Transport, urban</th><td>2.75%</td></tr>
+        <tr><th>Transport, rural</th><td>1.35%</td></tr>
+        <tr><th>All prices, urban</th><td>1.76%</td></tr>
+        <tr><th>All prices, rural</th><td>1.54%</td></tr>
+        <tr><th>Food, urban</th><td>1.85%</td></tr>
+        <tr><th>Food, rural</th><td>1.59%</td></tr>
+        <tr><th>All prices, low-income households</th><td>1.48%</td></tr></table>
+      </div>
+      <figcaption><b>Fig 6.</b> One stream in, two channels out. Each column rises to its own transport rate.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+</main>
+
+<section class="method"><div class="wrap">
+  <h2>Method and source</h2>
+  <div class="method-grid">
+    <div>
+      <h3>Source</h3>
+      <p>Department of Statistics Malaysia, <em>Consumer Price Index, September 2026</em>, published 19 October 2026. Seven catalogue series from <a href="https://open.dosm.gov.my/data-catalogue/">open.dosm.gov.my</a>: <code>cpi_headline</code>, <code>cpi_headline_inflation</code>, <code>cpi_state_inflation</code>, <code>cpi_core_inflation</code>, <code>cpi_lowincome</code>, <code>cpi_strata</code> and <code>fuelprice</code>.</p>
+      <p>Data as of September 2026, retrieved 27 October 2026. Licence CC BY 4.0.</p>
+    </div>
+    <div>
+      <h3>Definitions</h3>
+      <ul>
+        <li><b>Headline inflation</b> &mdash; the year-on-year change in the consumer price index for all items.</li>
+        <li><b>Core inflation</b> &mdash; the same basket with items that have volatile prices or government-administered prices removed.</li>
+        <li><b>Index</b> &mdash; the price level with the 2010 year set to 100. A level, not a rate.</li>
+        <li><b>Computed rates</b> &mdash; the urban, rural and low-income figures, and the national figure they are compared against, derived from published index rows for September 2026 and September 2025.</li>
+        <li><b>Monthly fuel price</b> &mdash; the mean of the weekly market-price rows in that month.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Caveats</h3>
+      <p>The CPI is an average. DOSM's own caveat is that the rate a specific individual experiences may be higher or lower than the published number.</p>
+      <p>These datasets do not publish the basket weights, so no figure here claims how much a division contributed to the headline.</p>
+      <p>The market price of RON95 exists only from 30 September 2025. The fuel series carries prices, not volumes.</p>
+      <p>Every figure on this page is traceable to <code>numbers.csv</code> in the source bundle.</p>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span>An analysis by Artifisi &middot; data as published by DOSM</span>
+  <span><a href="/">reports.artifisi.com</a></span>
+</div></footer>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/" } }</script>
+<script type="module" src="./scene.js"></script>
+</body>
+</html>

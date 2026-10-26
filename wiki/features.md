@@ -101,15 +101,45 @@ artifisi.com is the marketing landing site for Artifisi Sdn Bhd, an independent 
 - **Stimulus Integration**: Uses `tailwindcss-stimulus-components` Alert controller for auto-dismiss (5s for notice, 7s for alert).
 - **Usage**: Rendered in both layouts (`application.html.erb` and `dashboard.html.erb`) when `notice` or `alert` flash messages are present.
 
+## Reports
+
+- **Directory**: `reports/` — the `reports.artifisi.com` subdomain, a separate Cloudflare Pages project. No build step; `reports/` is plain HTML, CSS, ES modules and JSON.
+- **Front door**: `reports/index.html` — the customer-facing page. Prices, the packages, the enquiry form, and a card for every published report. The price list is duplicated from `playbook/sales/rate-card.md`.
+- **Report pages**: `reports/<slug>/` — `index.html`, `scene.js`, `data.json`. Every figure is real text in the HTML, so it is searchable and readable by a screen reader. Each figure's canvas is hidden when JavaScript is off and a data table is shown instead.
+
+### Published reports
+
+| Slug | Source | Scenes | Video |
+|---|---|---|---|
+| `malaysia-wages` | DOSM Salaries and Wages Survey, `wages_industry` | six | 57.5 s, 1080x1920, 30 fps |
+| `malaysia-cpi` | DOSM Consumer Price Index, September 2026, seven open API series | six | 59.26 s, 1080x1920, 30 fps |
+
+### The scene contract
+
+- One three.js scene per section, one claim per scene. A scene is a mechanism, not a chart in 3D.
+- Every scene plays in **one second** on the page. The video stretches the same scene with `?dur=<ms>` to the length of its voice line, so the page rate and the video rate are deliberately different.
+- Click or tap plays a scene from `t = 0`; a click during playback restarts it. Nothing plays on scroll and nothing loops.
+- `prefers-reduced-motion: reduce` skips playback, renders every scene at `t = 1`, and relabels each figure "Still frame".
+- Each figure wrapper is `role="button"`, `tabindex="0"`, with an `aria-label` naming its claim. Enter and Space play it.
+- The capture tools take their palette and display face from `shots.json`, which names a theme. `browser.js` exports `THEMES` and `overlayCSS(theme)`.
+
+### The video chain
+
+`report → story → shots → storyboard → script → vo → video`, in `playbook/tools/`. The voice-over sets the shot lengths: `vo/dur.json` holds the measured duration of each line and each shot holds its scene for exactly its own line.
+
 ## Important Files
 
-- `config/routes.rb` — Complete route definitions
-- `db/schema.rb` — Current schema with all tables
-- `DESIGN.md` — Design system and component tokens
-- `app/views/pages/home.html.erb` — Main landing page
-- `app/assets/stylesheets/app.css` — Liquid glass toast CSS and lexxy fallback styles
-- `app/helpers/application_helper.rb` — Helper methods (render_public_header, render_post_body, post_excerpt)
-- `app/assets/images/orbwalker-hero-keyart.png` — Orbwalker project card key art
+- `reports/index.html` — the front door: prices, packages, enquiry form, report cards
+- `reports/malaysia-cpi/index.html` — the CPI report page, six claims, one scene each
+- `reports/malaysia-cpi/scene.js` — the CPI scenes and the `Stage` class
+- `reports/malaysia-cpi/data.json` — every figure the CPI page can show
+- `playbook/tools/browser.js` — route, launch flags, themes, `openShot`, `frameContext`
+- `playbook/tools/storyboard.js` — one frame per shot plus the contact sheet
+- `playbook/tools/record-video.js` — per shot capture
+- `playbook/tools/voice.py` — edge-tts to mp3, tail silence trimmed, writes `dur.json`
+- `playbook/tools/mux.py` — trim, concat, lay the voice under the shots, write `out.mp4`
+- `raw/malaysia-cpi/qa.md` — figure diff, render checks and screenshots for the CPI report
+- `raw/malaysia-wages/qa.md` — figure diff and screenshots for the wages report
 
 ## Open Questions
 

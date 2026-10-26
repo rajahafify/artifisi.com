@@ -37,6 +37,10 @@
 - `playbook/pipeline.md` — The ten-stage, four-gate pipeline for turning a published report into an interactive page.
 - `playbook/instructions.md` — Build and ship playbook, version 2.
 - `playbook/video.md` — The seven-stage video pipeline: report to story to shots to storyboard to script to voice-over to video. Run end to end on 2026-10-27.
+- `playbook/tools/` — Capture and assembly tools for the video pipeline. The theme is a parameter: `browser.js` exports `THEMES` and `overlayCSS(theme)`, and `shots.json` names the theme.
+- `reports/malaysia-cpi/` — The Malaysia Consumer Price Index report, September 2026. Six three.js scenes, one claim each, all playing in one second. Built from seven DOSM open API series.
+- `raw/malaysia-cpi/` — The working folder for the CPI report. The source, the story, the sections, a 115-row figure register, the shots, the script, the storyboard and the QA record.
+- `raw/malaysia-cpi/video/` — The Malaysia CPI short. 59.26 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
 - `raw/malaysia-wages/video/` — The Malaysia wages short. 57.5 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
 
 ## Quick Reference
@@ -44,6 +48,7 @@
 - **Stack**: Astro static site, three.js, vanilla ES modules. No build step for `reports/`; the main site builds with Astro.
 - **Hosts**: Cloudflare Pages. Two projects: `artifisi-com` (main site) and `reports` (output dir `reports/`).
 - **Domains**: `www.artifisi.com`, `artifisi.com`, `reports.artifisi.com`, `tech-sovereignty.artifisi.com`
-- **Sales**: `playbook/sales/` — rate card, services agreement, outreach. Prices are duplicated in `reports/index.html`; change both together.
-- **Video**: one report, one video. The chain is `report → story → shots → storyboard → script → vo → video`, and the tools are in `playbook/tools/`.
+- **Sales**: `playbook/sales/` — rate card, services agreement, outreach. Prices are duplicated in `reports/index.html`; change both together. The promised video length is "up to 60 seconds" in the rate card and the front door; the services agreement still says "40 to 55 seconds".
+- **Video**: one report, one video. The chain is `report → story → shots → storyboard → script → vo → video`, and the tools are in `playbook/tools/`. Two reports have been through it: wages and CPI.
+- **Reports**: `reports/malaysia-wages/` and `reports/malaysia-cpi/`. Twelve scenes across two DOSM datasets. The front door lists both.
 - **Test**: no test suite. Manual QA only, recorded in `raw/<slug>/qa.md`.

@@ -127,6 +127,53 @@ Maps features to their primary implementation files, aiding navigation and impac
 | `config/cache.yml` | Solid Cache config |
 | `config/cable.yml` | Solid Cable config |
 
+## Reports
+
+| File | Role |
+|---|---|
+| `reports/index.html` | The front door. Prices, packages, enquiry form, a card per published report |
+| `reports/malaysia-wages/index.html` | The wages report page. Six claims, one scene each, the figures as real text |
+| `reports/malaysia-wages/scene.js` | The wages scenes and the `Stage` class |
+| `reports/malaysia-wages/data.json` | Every figure the wages page can show |
+| `reports/malaysia-cpi/index.html` | The CPI report page. Six claims, one scene each, the figures as real text |
+| `reports/malaysia-cpi/scene.js` | The CPI scenes and the `Stage` class |
+| `reports/malaysia-cpi/data.json` | Every figure the CPI page can show |
+| `reports/samples/households/index.html` | The KRI households sample. Unofficial, not checked by KRI |
+
+## Report Working Folders
+
+| File | Role |
+|---|---|
+| `raw/<slug>/source.json` | The rows the source returned. The only source in the folder |
+| `raw/<slug>/source.md` | Citation block, field shapes, caveats |
+| `raw/<slug>/brief.md` | Stage 1. Why this dataset and this story |
+| `raw/<slug>/story.md` | Stage 4. Claim, evidence, counterpoint, so-what |
+| `raw/<slug>/sections.md` | Stage 5. Six sections, one claim and one mechanism each |
+| `raw/<slug>/numbers.csv` | Stage 3. The figure register. One row per figure, with its source reference |
+| `raw/<slug>/tokens.css` | Stage 7. The palette and type scale |
+| `raw/<slug>/qa.md` | Stage 10. The figure diff, the render checks, the known gaps |
+| `raw/<slug>/qa/` | Screenshots and the rendered page text |
+| `raw/<slug>/README.md` | Which file is current for each stage |
+| `raw/<slug>/shots.json` | The shot list. Theme, size, the shots and the end card |
+| `raw/<slug>/vo/script.txt` | The voice-over script, one line per shot |
+| `raw/<slug>/vo/dur.json` | The measured duration of each voice line. These set the shot lengths |
+| `raw/<slug>/storyboard/` | One frame per shot, rendered from the live page, plus the contact sheet |
+| `raw/<slug>/video/clips.json` | What was captured and how long. The clips and the mp4 are local, not tracked |
+
+## Playbook and Tools
+
+| File | Role |
+|---|---|
+| `playbook/pipeline.md` | The ten stages and four gates for a report page |
+| `playbook/video.md` | The seven-stage video pipeline, report to published short |
+| `playbook/instructions.md` | Build and ship rules |
+| `playbook/tools/browser.js` | Route, launch flags, `THEMES`, `overlayCSS`, `frameContext`, `openShot` |
+| `playbook/tools/storyboard.js` | One frame per shot plus the contact sheet |
+| `playbook/tools/record-video.js` | Per shot capture |
+| `playbook/tools/voice.py` | edge-tts to mp3, tail silence trimmed, writes `dur.json` |
+| `playbook/tools/mux.py` | Trim, concat, lay the voice under the shots, write `out.mp4` |
+| `playbook/sales/rate-card.md` | Prices and what is sold. The price list is duplicated in `reports/index.html` |
+
 ## Related Pages
 
 - [[architecture]]

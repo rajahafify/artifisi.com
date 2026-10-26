@@ -1,7 +1,7 @@
 # Source Register
 
 **Summary**: Tracked external sources ingested into the wiki.  
-**Last updated**: 2026-10-26
+**Last updated**: 2026-10-27
 
 ---
 
@@ -50,6 +50,13 @@
 | `raw/malaysia-wages/vo/` | Voice-over script and per line durations. The recorded tracks are local, not tracked | ingested | 2026-10-27 | known-issues |
 | `raw/malaysia-wages/storyboard/` | One 1080x1920 frame per shot, rendered from the live page | ingested | 2026-10-27 | known-issues |
 | `raw/malaysia-wages/video/` | The Malaysia wages short, 57.5 seconds, 1080x1920. The video file itself is local, not tracked | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-cpi/` | DOSM Consumer Price Index, September 2026. Seven open API series: `cpi_headline`, `cpi_headline_inflation`, `cpi_state_inflation`, `cpi_core_inflation`, `cpi_lowincome`, `cpi_strata`, `fuelprice`. CC BY 4.0 | ingested | 2026-10-27 | contradictions, features |
+| `raw/malaysia-cpi/source.json` | The rows the API returned, trimmed to the ones the report uses. The trim is recorded in its `meta.trim` block | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-cpi/numbers.csv` | The figure register for the CPI report. 115 rows, one per figure on the page, each with the series, row key and field it came from | ingested | 2026-10-27 | features |
+| `raw/malaysia-cpi/shots.json` | The shot list for the CPI short: six shots and an end card, 1080x1920 portrait, theme `cpi` | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-cpi/storyboard/` | One 1080x1920 frame per shot for the CPI short, rendered from the live page | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-cpi/video/` | The Malaysia CPI short, 59.26 seconds, 1080x1920. The video file itself is local, not tracked | ingested | 2026-10-27 | known-issues |
+| `open.dosm.gov.my/data-catalogue` | The DOSM open data catalogue. The dataset pages carry the field descriptions and the division code map, and the API returns a bare JSON array of rows | ingested | 2026-10-27 | contradictions |
 | `playbook/sales/` | Rate card, services agreement, outreach copy | ingested | 2026-10-26 | features |
 
 ## Pending Ingestion

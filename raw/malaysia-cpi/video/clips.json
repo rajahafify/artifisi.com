@@ -1,0 +1,37 @@
+[
+ {
+  "id": "column",
+  "length": 10.155000000000001,
+  "voice": 9.755
+ },
+ {
+  "id": "ladder",
+  "length": 9.227,
+  "voice": 8.827
+ },
+ {
+  "id": "path",
+  "length": 7.418,
+  "voice": 7.018
+ },
+ {
+  "id": "drum",
+  "length": 9.562000000000001,
+  "voice": 9.162
+ },
+ {
+  "id": "dots",
+  "length": 9.023,
+  "voice": 8.623
+ },
+ {
+  "id": "split",
+  "length": 10.074,
+  "voice": 9.674
+ },
+ {
+  "id": "end",
+  "length": 3.8,
+  "voice": 2.3
+ }
+]

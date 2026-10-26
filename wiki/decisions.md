@@ -94,8 +94,32 @@ Key technical and design decisions observed in the codebase.
 **Rationale**: Project owner confirmed `Matchatro` was only a temporary draft name during early design documentation.  
 **Tradeoff**: Early raw documents may still contain `Matchatro`; those references should be treated as historical aliases to avoid confusion.
 
+## One Report, One Video
+
+**Decision**: Every report produces exactly one vertical video, and the video file and its recorded voice tracks are **not** tracked in git. The shot list, the voice-over script, the per-line durations and the storyboard PNGs are tracked.  
+**Rationale**: One report makes one video, and the video is six megabytes of incompressible blob. Git keeps every version forever, so tracking it would add that weight to the history of every report that ships. Everything needed to rebuild it is small and text. `voice.py` and `mux.py` put the file back in about three minutes.  
+**Tradeoff**: A clone of the repo has no video in it. If the video is the deliverable, it has to be copied out of the working tree. The root `.gitignore` carries the rule as `raw/*/video/out.mp4`, `raw/*/video/clips/`, `raw/*/video/tmp/` and `raw/*/vo/*.mp3`.  
+**Context**: The rate card's three and six video tiers are out of scope. The video is one per report.
+
+## The Capture Tools Take Their Theme From the Shot List
+
+**Decision**: `playbook/tools/browser.js` exports a `THEMES` map and an `overlayCSS(theme)` function, and `shots.json` names the theme. The capture and storyboard tools read it from there.  
+**Rationale**: The tools were hard-wired to the wages palette, so a second report with a different house style meant editing the tools. The CPI report uses a different palette and a different display face from the wages report. Making the theme a data field means a new house style is a data change, not a code change.  
+**Tradeoff**: A theme is a small set of colours and one display face. A report that wants a genuinely different chart language still has to change `scene.js`, which is expected.
+
+## The Page Plays in One Second, the Video Plays for the Length of the Words
+
+**Decision**: Every scene runs for one second on the page. The video passes `?dur=<ms>` to stretch the same scene to the length of its voice line.  
+**Rationale**: The page is read, not watched. A one-second shot is a summary that a reader can re-trigger by clicking, and six of them do not cost a reader a minute of their life. The video is watched, so its shot length has to match the sentence being spoken over it. The scene's internal timings are all in normalised `t`, so stretching the duration stretches the choreography proportionally and nothing breaks.  
+**Tradeoff**: Two rates to reason about, and the video frame is not the page frame. The composition has to hold at both.
+
 ## Important Files
 
+- `playbook/pipeline.md` — the ten stages and four gates
+- `playbook/video.md` — the seven-stage video pipeline
+- `playbook/tools/browser.js` — route, launch flags, themes, `openShot`, `frameContext`
+- `raw/malaysia-cpi/qa.md` — figure diff, render checks and screenshots for the CPI report
+- `raw/malaysia-wages/qa.md` — figure diff and screenshots for the wages report
 - `Gemfile` — Dependency choices
 - `config/importmap.rb` — Import map configuration
 - `DESIGN.md` — Design token system
