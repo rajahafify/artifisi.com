@@ -77,10 +77,16 @@ crop of a 485px layout and is not a valid mobile test.
 - **Label overlaps**: none remaining. Fixed during build — section 1 (education label sat on the
   car), section 4 (drift labels collided in pairs), section 6 (industry name sat on the mean
   label), section 2 (34.2% overlapped the lane border).
-- **Clipping**: none at either aspect. Scenes whose labels sit outside the geometry declare an
-  invisible `stage.extent()` so the camera fit includes the label band.
+- **Clipping**: fixed. The lift cropped its RM3,500 to RM5,500 tick labels at 9:16, because the
+  labels sit outside the geometry and the camera fit did not include them. The lift now
+  declares an invisible `stage.extent()` that reaches past them. The city had the opposite
+  problem: it orbits the camera after it fits, and on a narrow canvas the block walked out of
+  the left edge and a building was cut in half. The scene now scales its sweep to the aspect
+  it has. The canyon and the section do not crop.
 - **Framing**: every scene is composed for a square-ish bounding volume so it holds at 4:5
-  (desktop column), 16:10 (wide) and 9:16 (video).
+  (desktop column) and 16:10 (wide). It does not follow that the video holds at 9:16 without
+  work, which is what the video pipeline found. The video's canvas is 1080x1459, and the city
+  needed the fix above to hold there.
 
 ---
 

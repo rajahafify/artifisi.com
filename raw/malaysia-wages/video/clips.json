@@ -1,0 +1,37 @@
+[
+ {
+  "id": "lift",
+  "length": 8.997,
+  "voice": 8.597
+ },
+ {
+  "id": "floor",
+  "length": 8.546000000000001,
+  "voice": 8.146
+ },
+ {
+  "id": "canyon",
+  "length": 9.095,
+  "voice": 8.695
+ },
+ {
+  "id": "section",
+  "length": 9.841000000000001,
+  "voice": 9.441
+ },
+ {
+  "id": "city",
+  "length": 8.545,
+  "voice": 8.145
+ },
+ {
+  "id": "cutaway",
+  "length": 8.712,
+  "voice": 8.312
+ },
+ {
+  "id": "end",
+  "length": 3.8,
+  "voice": 2.3
+ }
+]

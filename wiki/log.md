@@ -811,3 +811,66 @@ Verification:
   `__seek` and `__stages` confirmed in `reports/malaysia-wages/scene.js`)
 - not run: the pipeline has never been executed
 - human reviewed: no
+---
+
+## [2026-10-27] feature | Run the video pipeline end to end, and cut the page animations to one second
+
+Source: owner instruction, 2026-10-27. The wages report and `raw/malaysia-wages/`.
+
+Changes:
+- Every scene on the wages page now plays in one second, was five to eight. `scene.js` carries a
+  `?dur=<ms>` override, so the video can stretch the same scene across a whole shot while the
+  page stays at one second. The two rates are deliberate.
+- New `raw/malaysia-wages/shots.json`, the shot list: six shots and an end card, 1080x1920
+  portrait, 30fps, with the claim, the caption and the voice line for each.
+- New `raw/malaysia-wages/vo/`, the script and `dur.json`. The recorded tracks are local.
+- New `raw/malaysia-wages/storyboard/`, one 1080x1920 frame per shot rendered from the live page,
+  plus a contact sheet.
+- New `raw/malaysia-wages/video/`, the clip index and the finished short, 57.5 seconds, 1080x1920,
+  h264 and aac, the voice-over laid on the shot boundaries. The video file is local.
+- New `playbook/tools/browser.js` and `playbook/tools/storyboard.js`. `record-video.js` and
+  `mux.py` rebuilt to read the shot list. New `playbook/tools/voice.py`.
+- `playbook/video.md` rewritten to match what actually ran.
+- `raw/malaysia-wages/qa.md`: the claim "Clipping: none at either aspect" was wrong and is
+  replaced with what the video found.
+
+Notes:
+- **Three traps cost real time and are worth keeping.**
+- *Playwright records at CSS resolution and never scales up.* The screencast is the viewport size
+  in CSS pixels, so a 540 wide viewport recorded into a 1080 wide video leaves the page in the top
+  left corner with the rest of the frame empty. The capture viewport has to be the frame size.
+  `frameContext()` in `browser.js` is now the one place that knows this.
+- *edge-tts pads every line with about a second of silence.* Left in, seven lines added six and a
+  half seconds of dead air to a 57 second video. `voice.py` trims the tail as it writes.
+- *The headless rAF trap does not apply to Playwright.* Measured 45fps in the headless shell and
+  41fps in the full Chromium channel. The trap was real for `--virtual-time-budget`, not for
+  Playwright, and `video.md` said otherwise.
+- **The storyboard caught two framing bugs in the shipped page.** The lift cropped its tick labels
+  at 9:16, which the Gate 4 reference screenshot `qa/shot-lift.png` shows too, so it was never
+  caught at the gate. The city orbits the camera after it fits and walked out of the left edge of
+  a narrow canvas, cutting a building in half. The lift now declares an `extent()` that reaches
+  past its labels, and the city scales its sweep to the aspect it has. The page's own 16:10 city
+  figure is unchanged.
+- **One report, one video.** The rate card's three and six video tiers are out of scope.
+- The video's canvas is 1080x1459, the same portrait canvas for all six shots. The page gives each
+  figure its own aspect for the reading layout, so shot mode overrides it.
+- The voice-over sets the shot lengths. Seven lines, 140 words, 53.6 seconds of speech, plus a
+  0.4 second gap after each and a 1.5 second end hold, is 57.5 seconds.
+- **The finished video and the recorded voice tracks are not tracked in git.** One report makes
+  one video, and the video is six megabytes of incompressible blob that git would keep forever.
+  The root `.gitignore` leaves `raw/*/video/out.mp4` and `raw/*/vo/*.mp3` out, and the shot
+  list, the script, the durations and the storyboard stay in, so the file can be rebuilt in
+  about three minutes. The storyboard PNGs stay tracked for review.
+
+Open:
+- The city scene carries no annotations. The Gate 3 mock has "four industries carry 55.6%" over
+  the skyline and the live scene does not, so the video shot is plainer than the mock.
+- Whether the video is published anywhere or only handed over is not settled.
+
+Verification:
+- code checked: yes. Every figure in the voice-over recomputed against `data.json`, the spread
+  series, the bill share and the industry ratios. The city framing was measured in NDC, not
+  eyeballed, at each angle of the camera sweep.
+- video checked: yes. ffprobe on the output, nine frames pulled across the runtime, the audio
+  mapped with silencedetect against the shot boundaries.
+- human reviewed: no

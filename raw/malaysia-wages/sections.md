@@ -31,6 +31,8 @@ first and a picture second.
 - **Palette** paper `#f6f2ea`, ink `#332d26`, context `#b6ab96`, accent `#1e5b49`,
   warning `#a6442a`. One accent per shot.
 - **Motion** one curve, `smoothstep`. Nothing loops inside a shot. Every shot ends still.
+- **Speed** every scene plays in one second on the page. The video stretches a shot to the
+  length of its voice line with `?dur=<ms>`, which changes the pace and nothing else.
 - **Determinism** each scene is `f(t)`. `__seek(t)` renders any frame exactly.
 
 ---
@@ -46,7 +48,7 @@ rises, each tagged with the ringgit value at that height.
 **Why not a chart** the claim is "twice as high", and the scene makes you *travel* the
 distance rather than compare two bar lengths. The ride is the argument.
 
-**Shot** 5s. Camera rides inside the shaft, looking up. One move: up. Text: the two
+**Shot** 1s. Camera rides inside the shaft, looking up. One move: up. Text: the two
 figures, tagged to their floors. Exit: the car stops at the top floor and holds.
 
 ---
@@ -63,7 +65,7 @@ painted across the floor.
 **Why not a chart** the percentage is a *count of people*, so the scene should count
 people. Watching the floor fill is the claim; a 65.8% bar is a summary of it.
 
-**Shot** 7s. Camera high, looking down the line of bins. One move: a slow dolly along the
+**Shot** 1s. Camera high, looking down the line of bins. One move: a slow dolly along the
 wall. Text: "65.8% of employees" once, when the left-hand bins are visibly fuller.
 
 ---
@@ -80,7 +82,7 @@ stop at 3.30 — below 2010, above the 2019 floor.
 **Why not a chart** the claim is about a space people move through getting narrower. A
 line chart reports the number; a canyon is the thing the number describes.
 
-**Shot** 6s. Camera above the near wall, looking down the cut, static. The walls do the
+**Shot** 1s. Camera above the near wall, looking down the cut, static. The walls do the
 moving. Text: the year, ticking, along the floor. Exit: walls hold at 3.30.
 
 **Why not perspective** an earlier pass put the camera inside a one-point-perspective
@@ -105,7 +107,7 @@ past three floors. Real estate's drops two. The lights follow the cars.
 **Why not a chart** a slope chart draws the same information, but the section lets you see
 *who passes whom* as it happens — the crossing is the story, and crossings are motion.
 
-**Shot** 6s. Camera static, frontal, whole section in frame. The cars move; nothing else
+**Shot** 1s. Camera static, frontal, whole section in frame. The cars move; nothing else
 does. Text: the year counter, and four labels on the biggest movers. Exit: cars hold at
 2025.
 
@@ -122,7 +124,7 @@ The four largest fill first; the rest stay mostly dark. A slow orbit reveals the
 **Why not a chart** volume is a product of two encodings and a bar chart cannot show it.
 This is the one section where the third dimension is a quantity.
 
-**Shot** 8s. Camera orbits about 30 degrees, no cut. Blocks rise in bill order, then the
+**Shot** 1s. Camera orbits about 30 degrees, no cut. Blocks rise in bill order, then the
 four fill with light. Text: "55.6%" once. Exit: orbit stops, the four stay lit.
 
 ---
@@ -138,7 +140,7 @@ The gap between the two stops is the claim.
 **Why not a chart** a dumbbell is two dots and a line. A cutaway makes the gap a *distance
 you ride*, which is what it is.
 
-**Shot** 6s. Camera static on the cut face. The car moves twice. Text: the industry name
+**Shot** 1s. Camera static on the cut face. The car moves twice. Text: the industry name
 and the two floors. Exit: the car holds at the mean floor.
 
 ---

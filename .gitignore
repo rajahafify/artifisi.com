@@ -1,3 +1,27 @@
 node_modules/
 dist/
 .astro/
+__pycache__/
+
+# Local environment and secrets. AGENTS.md forbids committing them, so the rule
+# is in the ignore list rather than in a reviewer's memory.
+.env
+.env.*
+!.env.example
+
+# OS and editor junk.
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Tooling logs.
+*.log
+
+# The generated video and its voice tracks. Both are rebuilt by playbook/tools/ from
+# the committed shot list, script and durations, in about three minutes. One report
+# makes one video, so tracking them would add six megabytes of incompressible blob
+# to the history for every report that ships.
+raw/*/video/out.mp4
+raw/*/video/clips/
+raw/*/video/tmp/
+raw/*/vo/*.mp3

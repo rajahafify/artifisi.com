@@ -110,13 +110,17 @@ figure.fig.failed .fig-fallback{display:block}
 .scene-label.warn{color:var(--warn)}
 
 /* video capture: ?shot=name&t=0.5 */
+/* The frame is 1080x1920. The top 8vh carries the kicker and the bottom 16vh carries the
+   burned in caption, so nothing from the scene enters either band. That leaves a
+   1080x1459 canvas, the same portrait canvas for all six shots. The page gives each
+   figure its own aspect for the reading layout, so the video overrides it. */
 body.shot-mode > .bar,body.shot-mode > header,body.shot-mode > footer,body.shot-mode > .method{display:none}
 body.shot-mode main > section{display:none;border:0;padding:0}
-body.shot-mode main > section.on{display:block}
+body.shot-mode main > section.on{display:block;padding:8vh 0 16vh}
 body.shot-mode main > section.on .wrap{max-width:none;padding:0}
 body.shot-mode main > section.on .sec-head,body.shot-mode main > section.on .prose,body.shot-mode main > section.on figcaption{display:none}
 body.shot-mode main > section.on .sec-body{display:block}
-body.shot-mode main > section.on .canvas-wrap{height:100vh;border:0;aspect-ratio:auto!important}
+body.shot-mode main > section.on .canvas-wrap{height:76vh;border:0;aspect-ratio:auto!important}
 body.shot-mode main > section.on figure.fig{margin:0}
 body.shot-mode .chip,body.shot-mode .finger{display:none}
 @media (max-width:820px){.scene-label{font-size:11px}}
