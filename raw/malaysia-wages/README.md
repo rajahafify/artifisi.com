@@ -25,6 +25,15 @@ nothing here is current by default.
 | `viz.html` | — | superseded. The single 48 second film prototype, replaced by six scenes |
 | `qa.md` | 10. QA | current. The figure diff and the known gaps |
 | `qa/` | 10. QA | current. Screenshots, desktop, phone, no-JS and the video frames |
+| `shots.json` | video 3. Shots | current. Six shots and an end card, 1080x1920 portrait |
+| `vo/script.txt` | video 5. Script | current. Seven voice lines, `l01\|text` |
+| `vo/*.mp3` | video 6. Voice-over | the recorded lines, tail silence trimmed. Local, not tracked |
+| `vo/dur.json` | video 6. Voice-over | current. Per line durations. These set the shot lengths |
+| `storyboard/` | video 4. Storyboard | current. One 1080x1920 frame per shot, from the live page |
+| `storyboard/storyboard.png` | video 4. Storyboard | current. The contact sheet |
+| `video/out.mp4` | video 7. Video | 57.5 seconds, 1080x1920, 30fps. Local, not tracked |
+| `video/clips/` | video 7. Video | the per shot captures. Local, not tracked |
+| `video/clips.json` | video 7. Video | current. What was captured and how long |
 
 ## The two copies of data.json
 
@@ -55,6 +64,27 @@ the starting point for the voice-over script in step 8 of the pipeline:
 4. Nineteen lift cars, one year counter.
 5. Lights fill in proportion to each industry's share of the bill.
 6. The lift stops at the median, then continues to the mean.
+
+They became `vo/script.txt` and the caption burned into each frame. The burned caption and the
+spoken line are the same sentence, deliberately. The voice-over script in `vo/script.txt` is
+longer, because it has to carry the figures as words.
+
+## The page plays in one second, the video plays for the length of the words
+
+Every scene on the page runs for one second. The video stretches the same scene across its
+whole shot with `?dur=<ms>`, so the choreography plays out over nine seconds instead of one.
+The scene's internal timings are all in normalised `t`, so the change stretches them
+proportionally and nothing breaks. The two rates are deliberate and they are not the same.
+
+## The video is not tracked in git
+
+`out.mp4` and the recorded voice lines are built artefacts, and one report makes one video.
+Tracking them would put six megabytes of incompressible blob into the history for every
+report that ships, and git keeps every version forever. The root `.gitignore` leaves them out.
+
+Everything needed to rebuild them is committed: `shots.json`, `vo/script.txt`, `vo/dur.json`,
+the page and the tools. `voice.py` and `mux.py` put the file back in about three minutes.
+The storyboard PNGs stay tracked, so the shots can be reviewed without running anything.
 
 ## Superseded files
 

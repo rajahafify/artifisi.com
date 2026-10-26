@@ -25,22 +25,30 @@ Tracked issues discovered during codebase ingestion and development.
 - The `reports/` subdomain has no wiki page at all.
 - Owner: unassigned. A full wiki refresh is a separate piece of work.
 
-### The pipeline tools are hardcoded to the households sample
+### The pipeline tools are partly hardcoded to the households sample
 
 - `playbook/tools/screenshots.js` maps section names `house, districts, squeeze, plate, ageing`. The wages report uses `lift, floor, canyon, section, city, cutaway`, so the view count silently falls back to 1 per section.
-- `playbook/tools/record-video.js` has a hardcoded `SHOTS` array and an end card reading "The State of Households 2026 / artifisi.com/samples/households".
-- The instructions say to edit `SHOTS` by hand, but do not flag the screenshots view map or the end card.
-- The wages page has a capture interface the recorder does not use: `?shot=<name>` isolates a section full-bleed, and `window.__stages[i].play()` runs the shot. `record-video.js` still scrolls to `.vizpage` and clicks `button[data-view]`, neither of which exists on that page.
-- Dependencies are now declared in `playbook/tools/package.json` (Playwright 1.64.1, three 0.180.0). They were previously undeclared.
+- `playbook/tools/record-video.js` was rebuilt on 2026-10-27 and no longer hardcodes anything about the households sample. It reads the shot list, the voice-over durations and the overlay from `raw/<slug>/shots.json` and the page.
+- Dependencies are declared in `playbook/tools/package.json` (Playwright 1.64.1, three 0.180.0). They were previously undeclared.
 
-### The video has never been produced
+### The video is produced, but the tooling was rebuilt to get there
 
-- No `.mp4` or `.webm` exists in the repo or on any branch. The only trace is `origin/vo-audio`, an orphan branch with 38 mp3 files and no `script.txt` or `dur.json`, which are the two inputs `record-video.js` reads.
-- The capture side is ready: the page has a shot mode, `window.__seek(t, name)`, `window.__stages[i].play()`, and `?still=1`. The captions are already written into the Gate 3 mock, one per frame.
-- The tooling side is not ready. See the issue above.
-- `ffmpeg` is not installed on the development machine. The WinGet link at `%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe` is a zero-byte file, and `mux.py` needs a working ffmpeg.
-- Two traps are designed around in `playbook/video.md` but not yet solved. Headless Chrome does not tick `requestAnimationFrame` without a compositor, so the recorder may capture static frames unless it runs headed. And the voice-over targets 45 seconds while the six wages shots total 38 seconds of scene, so roughly seven seconds have to land somewhere deliberately.
-- The pipeline for the whole thing is `playbook/video.md`, drafted 2026-10-26. It has never been run.
+Resolved on 2026-10-27. The Malaysia wages short is 57.5 seconds, portrait 1080x1920, 30fps, with the voice-over laid on the shot boundaries. `playbook/video.md` was rewritten to match what actually ran.
+
+The finished video and the recorded voice tracks are local artefacts and are not tracked in git. One report makes one video, and tracking them would add six megabytes of incompressible blob to the history for every report that ships. The shot list, the script, the durations and the storyboard are tracked, so `voice.py` and `mux.py` rebuild the file in about three minutes.
+
+What the first run found, which the plan had not:
+
+- **Playwright records at CSS resolution and never scales up.** The screencast is the viewport size in CSS pixels, so a 540 wide viewport recorded into a 1080 wide video leaves the page in the top left corner with the rest of the frame empty. The capture viewport has to be the frame size. `frameContext()` in `playbook/tools/browser.js` is now the single place that knows this.
+- **edge-tts pads every line with about a second of silence.** Seven lines added six and a half seconds of dead air to a 57 second video. `voice.py` trims the tail as it writes, so `dur.json` holds the length of what is actually spoken.
+- **The headless rAF trap does not apply to Playwright.** Measured at 45fps in the headless shell and 41fps in the full Chromium channel, so the recorder captures live animation rather than static frames. The trap was real for `--virtual-time-budget`, not for Playwright.
+- **Two scene framing bugs the storyboard caught.** The lift cropped its tick labels at 9:16 and the city walked out of the left edge of the portrait canvas, because it orbits the camera after it fits. Both are fixed in `reports/malaysia-wages/scene.js`.
+
+Still open:
+
+- The city scene carries no annotations. The Gate 3 mock has "four industries carry 55.6%" over the skyline and the live scene does not, so the video shot is plainer than the mock.
+- `ffmpeg` is installed but only the real binary in the WinGet package folder. The link at `%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe` is still a zero-byte file, so `ffmpeg` and `ffprobe` have to be on `PATH` for `voice.py` and `mux.py` to find them.
+- Whether the video is published anywhere, or only handed over, is not settled.
 
 ### Known gaps in the wages report
 

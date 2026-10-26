@@ -44,7 +44,12 @@
 | `raw/malaysia-wages/` | DOSM Salaries and Wages Survey dataset, catalogue `wages_industry`, CC BY 4.0, 960 rows | ingested | 2026-10-26 | contradictions, features |
 | `playbook/pipeline.md` | Ten-stage, four-gate build pipeline | ingested | 2026-10-26 | features, decisions |
 | `playbook/instructions.md` | Build and ship playbook, version 2 | ingested | 2026-10-26 | features, known-issues |
-| `playbook/video.md` | Seven-stage video pipeline, report to published short | ingested | 2026-10-26 | features, known-issues |
+| `playbook/video.md` | Seven-stage video pipeline, report to published short | ingested | 2026-10-27 | features, known-issues |
+| `playbook/tools/` | Capture and assembly tools for the video pipeline | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-wages/shots.json` | The shot list: six shots and an end card, 1080x1920 portrait | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-wages/vo/` | Voice-over script and per line durations. The recorded tracks are local, not tracked | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-wages/storyboard/` | One 1080x1920 frame per shot, rendered from the live page | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-wages/video/` | The Malaysia wages short, 57.5 seconds, 1080x1920. The video file itself is local, not tracked | ingested | 2026-10-27 | known-issues |
 | `playbook/sales/` | Rate card, services agreement, outreach copy | ingested | 2026-10-26 | features |
 
 ## Pending Ingestion

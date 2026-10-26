@@ -1,7 +1,7 @@
 # Wiki Index
 
 **Summary**: Navigation entry point for the artifisi.com LLM Wiki.  
-**Last updated**: 2026-05-02
+**Last updated**: 2026-10-27
 
 ---
 
@@ -36,7 +36,8 @@
 - `reports/` — The reports subdomain (`reports.artifisi.com`), a separate Cloudflare Pages project. Not yet documented in a wiki page.
 - `playbook/pipeline.md` — The ten-stage, four-gate pipeline for turning a published report into an interactive page.
 - `playbook/instructions.md` — Build and ship playbook, version 2.
-- `playbook/video.md` — The seven-stage video pipeline: report to story to shots to storyboard to script to voice-over to video.
+- `playbook/video.md` — The seven-stage video pipeline: report to story to shots to storyboard to script to voice-over to video. Run end to end on 2026-10-27.
+- `raw/malaysia-wages/video/` — The Malaysia wages short. 57.5 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
 
 ## Quick Reference
 
@@ -44,4 +45,5 @@
 - **Hosts**: Cloudflare Pages. Two projects: `artifisi-com` (main site) and `reports` (output dir `reports/`).
 - **Domains**: `www.artifisi.com`, `artifisi.com`, `reports.artifisi.com`, `tech-sovereignty.artifisi.com`
 - **Sales**: `playbook/sales/` — rate card, services agreement, outreach. Prices are duplicated in `reports/index.html`; change both together.
+- **Video**: one report, one video. The chain is `report → story → shots → storyboard → script → vo → video`, and the tools are in `playbook/tools/`.
 - **Test**: no test suite. Manual QA only, recorded in `raw/<slug>/qa.md`.
