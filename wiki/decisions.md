@@ -140,6 +140,20 @@ Key technical and design decisions observed in the codebase.
 **Rationale**: The end of an explanatory film is the one moment the viewer can see that the thing they watched was made of more than the last frame they saw. A blur is enough: the wall has to read as one surface with everything on it, not as six readable charts competing with the words. The CPI ending catches all six scene frames clean, before the overlay goes on, tiles them, and scrims them.  
 **Tradeoff**: The wall needs a clean capture of every scene, so the recorder takes a second frame per shot. A heavy blur makes the wall unreadable and the words lose their ground, so the blur and the scrim have to stay light.
 
+## The Rules, the Machinery and the Cut Land Together
+
+**Decision**: A change to how a film is made rewrites the shot list in the same change. The rules, the tooling and the cut are one piece of work, not three.  
+**Rationale**: The CPI film got a new opening, a new card shot type and a new ending wall built, shipped and merged, and the film came out almost identical to the one before it, because `shots.json` was never rewritten. The machinery was ready and nothing called it, and the complaint was that the video had not changed. A shot list is the only place the argument lives, so it is the first thing to change and the last thing to leave alone.  
+**Tradeoff**: The rules cannot land ahead of the work, because a rule with nothing enforcing it is an intention. That means a research pass ends in a re-cut, not in a document.  
+**Context**: The rule is written into `playbook/video.md` and `playbook/instructions.md`.
+
+## Every Lesson Goes Into the Playbook
+
+**Decision**: A lesson learned while building is written into `playbook/instructions.md` or `playbook/pipeline.md` in the same change that learned it, not left in a chat log or a wiki entry for later.  
+**Rationale**: The wiki records what happened. The playbook is what the next agent is pointed at before it starts. A lesson that only lives in the wiki is a lesson the next build will not read, and the CPI report's dark-ground rules, its token rules and its label rules were all learned the hard way in a session that will not be remembered.  
+**Tradeoff**: The playbook grows, and a long playbook is a long read. The answer is that the rules are numbered in the order they cost us time, so the expensive ones are near the top.  
+**Context**: `playbook/instructions.md` is at version 3. The CPI report's lessons are rules 11 to 14.
+
 ## One Report, One Video
 
 **Decision**: Every report produces exactly one vertical video, and the video file and its recorded voice tracks are **not** tracked in git. The shot list, the voice-over script, the per-line durations and the storyboard PNGs are tracked.  

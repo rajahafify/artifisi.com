@@ -103,6 +103,21 @@ Two reports from the same publisher must not cut the same way either. The Malays
 opens on the flat line and closes on the price level, the opposite of its page order, because
 that is the order its argument needs.
 
+### The shot list is the argument, so it changes when the rules change
+
+The CPI film had a new opening, a new card shot type and a new ending wall built and shipped,
+and the film came out identical, because `shots.json` was never rewritten. The machinery was
+ready and nothing called it.
+
+A shot list is the only place the film's argument lives. The rules, the tooling and the shot
+list have to land in the same change, or the film does not change and the change is scaffolding.
+When you rewrite how a film is made, rewrite the shot list first and check what the new
+machinery is for.
+
+The corollary is that a rule nobody enforces is an intention. A new beat, a new shot type or a
+new ending has to show up in `shots.json`, and the film has to be re-recorded, before the rule is
+a rule.
+
 ## 3. Shots
 
 One shot per claim. The shot list is the unit of the whole video pipeline, and it is the file
@@ -272,6 +287,23 @@ The recorder walks the shot list, the voice-over is laid over it, the end card c
 
 Gate: watch the whole thing once. Then pull eight to ten frames and check them. A mux that
 succeeds can still produce a video with the audio half a second out.
+
+Pull the frames from across the whole runtime, not from the ends. The storyboard is one frame
+per shot at `t = 1`, so any frame that only appears while the scene is animating has never been
+looked at by anybody.
+
+Two capture rules, and both of them cost a frame.
+
+**Never capture while the page is still swapping scenes.** The page builds all six scenes and
+only then marks the one in the shot as the only one on. A frame taken in between carries one
+scene's geometry and its labels on top of another's, and it looks like a rendering bug rather
+than a timing one. `openShot` waits for the page to have settled on exactly one section before
+anything is captured.
+
+**A card is captured like a scene, not like a still.** The card's reveal is a sequence, so it
+needs the same wait the scene needs, and the frame number goes on the card and not on a caption
+band. The card's kicker sits at the top of the frame, in the same place as a scene's, so the
+furniture of the film does not change when the shot does.
 
 ### The page runs at one second, the video runs at the length of the words
 

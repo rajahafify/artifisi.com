@@ -47,6 +47,8 @@ Output: `story.md` with four lines:
 - the counterpoint, what a careful reader would object to
 - the so what, why this changes a decision
 
+The so what has to name a number. "Inflation is a concern" is a topic. "The gap at the pump is RM2.13 a litre and it is still open" is a so what, and it is the only kind that can be a shot. This line is also the film's fourth beat, so a report that cannot say what its data leads to cannot make the short either.
+
 ## 5. Section
 
 Six to eight sections. Each one is one claim and one shape.
@@ -183,6 +185,10 @@ Output: `<slug>/index.html`, `<slug>/scene.js`, `<slug>/data.json`
 - screenshots, desktop and 390px phone, every section and every view
 - the palette is the one in `playbook/palettes.md` and not one already used by another report
 - no label overlaps, nothing clipped at the edge, every label readable against whatever it sits on
+- every scene's form comes from the mechanism in the story, not from the table in stage 7. A sorted bar chart in 3D is still a sorted bar chart, and this check is what stops it shipping
+- every custom property a class in the page uses is declared in that page. A page carries its own token block, and a token written against a variable the page never defines resolves to nothing and renders as nothing
+- the frame is checked at 1080x1920 as well as at the page's own aspect. A label can be fine on the page and clipped in the portrait crop, because the crop is a different frame of the same scene
+- every scene finishes in about one second on the page, with no console errors
 - loads under 1.5s on 4G, scene under 200kb gzipped
 - keyboard reachable, reduced motion respected
 - no-JS render checked

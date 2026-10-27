@@ -164,10 +164,10 @@ Maps features to their primary implementation files, aiding navigation and impac
 
 | File | Role |
 |---|---|
-| `playbook/pipeline.md` | The eleven stages and four gates for a report page |
+| `playbook/pipeline.md` | The eleven stages and four gates for a report page. Gate 4 also checks the mechanism, the page's own tokens, the 9:16 frame and the one-second timing |
 | `playbook/palettes.md` | The palette registry and how to pick a new one |
-| `playbook/video.md` | The video pipeline, the five-beat arc, the card shot type, and the craft rules for the cut |
-| `playbook/instructions.md` | Build and ship rules |
+| `playbook/video.md` | The video pipeline, the five-beat arc, the card shot type, the craft rules for the cut, and the capture rules |
+| `playbook/instructions.md` | Build and ship rules, version 3. The rules are numbered in the order they cost us time |
 | `playbook/tools/browser.js` | Route, launch flags, `THEMES`, `overlayCSS`, `frameContext`, `openShot`, `cardHTML`, the `.vb-card` and `.vb-wall` overlay styles |
 | `playbook/tools/storyboard.js` | One frame per shot plus the contact sheet. Renders card shots as well as scene shots |
 | `playbook/tools/record-video.js` | Per shot capture. Captures a clean frame of every scene, the card shot type, and injects the blurred wall behind the end card |
