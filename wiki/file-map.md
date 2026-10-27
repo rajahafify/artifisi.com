@@ -136,7 +136,7 @@ Maps features to their primary implementation files, aiding navigation and impac
 | `reports/malaysia-wages/scene.js` | The wages scenes and the `Stage` class |
 | `reports/malaysia-wages/data.json` | Every figure the wages page can show |
 | `reports/malaysia-cpi/index.html` | The CPI report page. Six claims, one scene each, the figures as real text |
-| `reports/malaysia-cpi/scene.js` | The CPI scenes and the `Stage` class. `Stage.backdrop()` hangs display type behind the chart in depth, `Stage.compose()` resizes and offsets the chart to make room for it |
+| `reports/malaysia-cpi/scene.js` | The CPI scenes and the `Stage` class. `Stage.backdrop()` hangs display type behind the chart in depth, `Stage.compose()` resizes and offsets the chart to make room for it. `makeTimeline()` resolves a phrase from the voice into a moment, and every scene's reveal steps are anchored to it |
 | `reports/malaysia-cpi/data.json` | Every figure the CPI page can show |
 | `reports/samples/households/index.html` | The KRI households sample. Unofficial, not checked by KRI |
 
@@ -157,6 +157,7 @@ Maps features to their primary implementation files, aiding navigation and impac
 | `raw/<slug>/shots.json` | The shot list. Theme, size, the shots and the end card |
 | `raw/<slug>/vo/script.txt` | The voice-over script, one line per shot |
 | `raw/<slug>/vo/dur.json` | The measured duration of each voice line. These set the shot lengths |
+| `raw/<slug>/vo/words.json` | The offset of every word in every voice line, and the sentences they make. This is what lets a chart show a number when the voice says it |
 | `raw/<slug>/storyboard/` | One frame per shot, rendered from the live page, plus the contact sheet |
 | `raw/<slug>/video/clips.json` | What was captured and how long. The clips and the mp4 are local, not tracked |
 
@@ -168,11 +169,11 @@ Maps features to their primary implementation files, aiding navigation and impac
 | `playbook/palettes.md` | The palette registry and how to pick a new one |
 | `playbook/video.md` | The video pipeline, the five-beat arc, the card shot type, the craft rules for the cut, and the capture rules |
 | `playbook/instructions.md` | Build and ship rules, version 3. The rules are numbered in the order they cost us time |
-| `playbook/tools/browser.js` | Route, launch flags, `THEMES`, `overlayCSS`, `frameContext`, `openShot`, `cardHTML`, the `.vb-card` and `.vb-wall` overlay styles |
-| `playbook/tools/storyboard.js` | One frame per shot plus the contact sheet. Renders card shots as well as scene shots |
-| `playbook/tools/record-video.js` | Per shot capture. Captures a clean frame of every scene, the card shot type, and injects the blurred wall behind the end card |
-| `playbook/tools/voice.py` | edge-tts to mp3, tail silence trimmed, writes `dur.json` |
-| `playbook/tools/mux.py` | Trim, concat, lay the voice under the shots, write `out.mp4` |
+| `playbook/tools/browser.js` | Route, launch flags, `THEMES`, `overlayCSS`, `frameContext`, `openShot`, `cardHTML`, the `.vb-card` and `.vb-wall` overlay styles. `cardHTML()` writes a card's parts with the moment each one arrives as its animation delay |
+| `playbook/tools/storyboard.js` | One frame per shot plus the contact sheet. Renders card shots as well as scene shots, and runs a card's reveal to its end so the frame is the finished card |
+| `playbook/tools/record-video.js` | Per shot capture, frame by frame. Captures a clean frame of every scene for the wall, resolves each scene's, card's and caption's cues against the voice, and injects the blurred wall behind the end card |
+| `playbook/tools/voice.py` | edge-tts to mp3, the trailing silence and the long pauses trimmed, the word offsets kept. Writes `dur.json` and `words.json` |
+| `playbook/tools/mux.py` | Concat, lay the voice under the shots, write `out.mp4` |
 | `playbook/sales/rate-card.md` | Prices and what is sold. The price list is duplicated in `reports/index.html` |
 
 ## Related Pages

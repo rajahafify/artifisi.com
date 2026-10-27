@@ -20,6 +20,74 @@ const seg = (t, a, b) => clamp01((t - a) / (b - a));
 const lerp = (a, b, t) => a + (b - a) * t;
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
+// ---------- the timeline ----------
+// On the page a scene plays in one second. In the film it plays over the length of its
+// voice line, and the moment the voice names a number is the moment that number
+// appears. The words come from ?words=<json>, which the recorder fills in from the
+// voice track's own timings.
+//
+// Every cue carries the fraction the scene has always used. With no words the page gets
+// that fraction, so the page plays exactly as it always has; with words the film gets the
+// moment the voice says it. The page and the film run the same code and only the clock
+// differs.
+const QUERY = new URLSearchParams(location.search);
+
+const key = (s) => s.toLowerCase().replace(/[^a-z0-9']+/g, "");
+
+function makeTimeline(words, dur) {
+  const t = { words: words || [], dur: dur || 0, hits: [], misses: [] };
+  // Find a phrase in the words. The phrase is written the way it is spoken, and the
+  // words are the ones the voice said, so the two meet on the letters that carry sound.
+  const find = (phrase) => {
+    const want = key(phrase);
+    if (!want) return null;
+    for (let i = 0; i < t.words.length; i++) {
+      let got = "";
+      let n = 0;
+      for (let j = i; j < t.words.length; j++) {
+        got += key(t.words[j][0]);
+        n++;
+        if (got.length >= want.length) break;
+      }
+      if (got === want) return { i, n };
+    }
+    return null;
+  };
+  // at: the moment the phrase is said. end: the moment it is finished. seconds: the
+  // same moment, in seconds from the start of the line, for the parts of a film that
+  // are timed in seconds and not in fractions of a chart.
+  const at = (phrase, fallback) => {
+    const hit = find(phrase);
+    if (!hit) { t.misses.push(phrase); return fallback; }
+    t.hits.push(phrase);
+    return t.dur ? Math.min(1, t.words[hit.i][1] / t.dur) : fallback;
+  };
+  const end = (phrase, fallback) => {
+    const hit = find(phrase);
+    if (!hit) { t.misses.push(phrase); return fallback; }
+    t.hits.push(phrase);
+    const last = t.words[hit.i + hit.n - 1];
+    return t.dur ? Math.min(1, last[2] / t.dur) : fallback;
+  };
+  const seconds = (phrase, fallback) => {
+    const hit = find(phrase);
+    if (!hit) { t.misses.push(phrase); return fallback; }
+    t.hits.push(phrase);
+    return t.words[hit.i][1];
+  };
+  t.at = at;
+  t.end = end;
+  t.seconds = seconds;
+  return t;
+}
+
+let WORDS = null;
+if (QUERY.has("words")) {
+  try { WORDS = JSON.parse(QUERY.get("words")); } catch (e) { WORDS = null; }
+}
+const T = makeTimeline(WORDS && WORDS.words, WORDS && WORDS.dur);
+window.__timeline = T;
+
 // The display face, used for the type that hangs behind a chart.
 const DISPLAY_FONT = '"Space Grotesk", "Helvetica Neue", Arial, sans-serif';
 
@@ -430,16 +498,23 @@ function sceneColumn(stage, D) {
   stage.backdrop("+37.6%", { cover: 0.94, back: 2.6, opacity: 0.14, color: "#e9edf2", at: V(0, -1.15, 0) });
   stage.compose({ scale: 0.82, offset: V(0, 0.45, 0) });
 
+  // The moments the voice names the level and the year. On the page they fall back to
+  // the fractions this scene has always used, so the page plays as it always has.
+  const aLevel = T.at("Thirty seven point six percent", 0.12);
+  const aBody = T.end("Thirty seven point six percent", 0.42);
+  const aYear = T.at("One year of that", 0.86);
+  const aSliver = T.end("one point eight percent", 0.95);
+
   return {
     update(t) {
       // The column comes up to September 2025 first, then the year arrives on top of
       // it. Splitting the motion leaves room to read the scale in between.
-      const e = smooth(seg(t, 0, 0.42));
+      const e = smooth(seg(t, 0, aBody));
       const bh = bodyH * e;
       body.scale.y = Math.max(0.001, bh);
       body.position.y = bh / 2;
 
-      const sh = sliverH * smooth(seg(t, 0.58, 0.95));
+      const sh = sliverH * smooth(seg(t, aLevel + 0.46, aSliver));
       sliver.scale.y = Math.max(0.001, sh);
       sliver.position.y = bh + sh / 2;
 
@@ -447,10 +522,10 @@ function sceneColumn(stage, D) {
       plate.visible = t > 0.02;
 
       stage.place(lBase, V(-W / 2 - 0.12, 0.08, DP / 2));
-      stage.place(lRef, V(-W / 2 - 0.12, bh, DP / 2), t > 0.35);
-      stage.place(lTop, V(0, bh + sh + 0.22, 0), t > 0.12);
-      stage.place(lYear, V(W / 2 + 0.2, bh + sh / 2, 0), t > 0.86);
-      stage.place(lShare, V(0, -0.6, 0), t > 0.86);
+      stage.place(lRef, V(-W / 2 - 0.12, bh, DP / 2), t > aLevel + 0.23);
+      stage.place(lTop, V(0, bh + sh + 0.22, 0), t > aLevel);
+      stage.place(lYear, V(W / 2 + 0.2, bh + sh / 2, 0), t > aYear);
+      stage.place(lShare, V(0, -0.6, 0), t > aYear);
       ticks.forEach((l) => stage.place(l, V(-W / 2 - 0.12, yOf(l.v), DP / 2)));
     },
   };
@@ -500,12 +575,20 @@ function sceneLadder(stage, D) {
   stage.extent(V(-1.9, -1.0, 0), V(XW + 1.5, yOf(0) + 1.0, 0));
   stage.fit(V(0.02, 0.03, 1), 1.03);
 
+  // The ladder is full by the time the voice starts naming divisions, and the markers
+  // travel while it names the two it names. On the page these fall back to the
+  // fractions this scene has always used.
+  const tFull = T.at("Transport rose", 0.52);
+  const tMove0 = T.at("Transport rose", 0.55);
+  const tMove1 = T.end("one point four", 1.0);
+  const tNat = T.at("Inside it", 0.3);
+
   return {
     update(t) {
       rows.forEach((r, i) => {
-        const f = smooth(seg(t, i * 0.035, 0.52 + i * 0.035));
+        const f = smooth(seg(t, i * 0.035, tFull + i * 0.035));
         r.bar.set(0, xOf(r.d.yoy) * f);
-        const m = smooth(seg(t, 0.55, 1));
+        const m = smooth(seg(t, tMove0, tMove1));
         r.tick.position.x = lerp(xOf(r.d.yoy), xOf(r.d.yoyAug), m);
         if (r.conn) {
           const lo = Math.min(xOf(r.d.yoy), xOf(r.d.yoyAug));
@@ -518,7 +601,7 @@ function sceneLadder(stage, D) {
         stage.place(r.name, V(-0.12, r.y, 0), t > 0.02);
         stage.place(r.val, V(xOf(r.d.yoy) * f + 0.16, r.y, 0), f > 0.1);
       });
-      stage.place(lNat, V(natX, yOf(0) + 0.7, 0), t > 0.3);
+      stage.place(lNat, V(natX, yOf(0) + 0.7, 0), t > tNat);
       stage.labels.forEach((l) => {
         if (l.v != null) stage.place(l, V(xOf(l.v), -0.56, 0));
       });
@@ -587,9 +670,16 @@ function scenePath(stage, D) {
   stage.extent(V(-1.7, -1.0, 0), V(xOf(N - 1) + 2.8, H + 0.8, 0));
   stage.fit(V(0.06, 0.09, 1), 1.03);
 
+  // The dot lands when the voice says now, the band appears when it says the rate has
+  // not moved, and the core line is named when the voice reaches the old value. On the
+  // page these fall back to the fractions this scene has always used.
+  const tLand = T.end("percent now", 1.0);
+  const tBand = T.at("The rate has not moved", 0.3);
+  const tCore = T.at("percent then", 0.5);
+
   return {
     update(t) {
-      const e = smooth(t);
+      const e = smooth(seg(t, 0, tLand));
       const k = Math.max(1, Math.round(e * (N - 1)));
       head.geometry.instanceCount = k;
       coreLine.geometry.instanceCount = k;
@@ -599,8 +689,8 @@ function scenePath(stage, D) {
       mark.scale.y = yh;
       dot.position.set(xOf(i), yh, 0);
       stage.place(lNow, V(xOf(i) + 0.14, yh + 0.24, 0), t > 0.12);
-      stage.place(lCore, V(xOf(i) + 0.14, yOf(core[i].yoy) - 0.24, 0), t > 0.5);
-      stage.place(lBand, V(xOf(N - 1) / 2, H + 0.32, 0), t > 0.3);
+      stage.place(lCore, V(xOf(i) + 0.14, yOf(core[i].yoy) - 0.24, 0), t > tCore);
+      stage.place(lBand, V(xOf(N - 1) / 2, H + 0.32, 0), t > tBand);
       monthLabels.forEach((l) => stage.place(l, V(xOf(l.i), -0.42, 0)));
       stage.labels.forEach((l) => {
         if (l.v != null) stage.place(l, V(-0.52, yOf(l.v), 0));
@@ -656,6 +746,14 @@ function sceneDrum(stage, D) {
   stage.extent(V(-R - 1.9, -0.8, -R), V(R + 1.7, H + 0.8, R));
   stage.fit(V(0.22, 0.09, 1), 1.04);
 
+  // The market price lands when the voice says the price, the subsidised line when it
+  // names the petrol, and the wedge when it says how far the price has climbed. On the
+  // page these fall back to the fractions this scene has always used.
+  const tMkt = T.end("four ringgit eighteen", 0.6);
+  const tNow = T.end("up fifty nine point seven percent", 0.85);
+  const tCut = T.at("Ninety five octane petrol", 0.3);
+  const tGap = T.at("up fifty nine point seven percent", 0.78);
+
   return {
     update(t) {
       const e = smooth(t);
@@ -669,10 +767,10 @@ function sceneDrum(stage, D) {
       liquid.position.y = (top + lo) / 2;
       surface.position.y = top;
       stage.place(lName, V(0, H + 0.3, 0));
-      stage.place(lMkt, V(R + 0.12, top, 0), t > 0.6);
-      stage.place(lNow, V(R + 0.12, top - 0.34, 0), t > 0.85);
-      stage.place(lCut, V(-R - 0.12, lo, 0), t > 0.3);
-      stage.place(lGap, V(0, (top + lo) / 2, R * 0.62), t > 0.78);
+      stage.place(lMkt, V(R + 0.12, top, 0), t > tMkt);
+      stage.place(lNow, V(R + 0.12, top - 0.34, 0), t > tNow);
+      stage.place(lCut, V(-R - 0.12, lo, 0), t > tCut);
+      stage.place(lGap, V(0, (top + lo) / 2, R * 0.62), t > tGap);
     },
   };
 }
@@ -841,7 +939,7 @@ const SCENES = {
 
 // Every scene plays in one second on the page. The video stretches a shot to the length of
 // its voice line, so ?dur=<ms> overrides the duration for capture only. Nothing else changes.
-const DUR_OVERRIDE = Number(new URLSearchParams(location.search).get("dur")) || 0;
+const DUR_OVERRIDE = Number(QUERY.get("dur")) || 0;
 
 // ---------- the click indicator ----------
 const coarse = matchMedia("(pointer: coarse)").matches;
@@ -921,7 +1019,7 @@ window.__seek = (t, name) => {
   stages.forEach((s) => { if (!name || s.name === name) s.seek(t); });
 };
 
-const q = new URLSearchParams(location.search);
+const q = QUERY;
 if (q.has("still")) {
   stages.forEach((s) => s.seek(1));
 }

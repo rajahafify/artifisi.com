@@ -986,3 +986,39 @@ Notes:
 Verification:
 - code checked: yes. The three playbook files were read end to end after the edit and every command they name was run today: `voice.py`, `record-video.js`, `mux.py`, `storyboard.js`, and the page QA.
 - human reviewed: no
+
+## [2026-10-27] feature | Let the picture follow the voice, and capture the film frame by frame
+
+Source: `playbook/tools/voice.py`, `playbook/tools/record-video.js`, `playbook/tools/mux.py`, `playbook/tools/browser.js`, `reports/malaysia-cpi/scene.js`, `raw/malaysia-cpi/shots.json`
+Changes:
+- `voice.py` now asks `edge-tts` for word boundaries, keeps them in `raw/malaysia-cpi/vo/words.json`, cuts each pause between sentences back to a breath, and remaps the word offsets onto the trimmed file
+- `record-video.js` captures the film one frame at a time instead of recording the page and trimming the recording, and resolves each scene's, card's and caption's cues against the voice before the frames are taken
+- `mux.py` concatenates the clips it is given instead of trimming each one from the end
+- `scene.js` gained `makeTimeline()`: a scene's reveal steps now ask for a phrase and get a moment, with the fraction the page has always used as the fallback
+- the cards are built on the voice, and the leads card puts its two numbers before its verdict, because the voice names the numbers first
+- the caption band is a list of phrases, each pinned to a cue, and it changes as the voice moves
+- re-recorded the voice, the storyboard and the film; the film is 55.86 seconds
+- wrote the lessons into `playbook/video.md` and `playbook/instructions.md`, and recorded three decisions in `wiki/decisions.md`
+Notes:
+- **The film was a second out on every shot and nobody could tell.** The recorder recorded the page and cut the recording from the end, because the browser's clock and the film's clock drift apart and the tail is where the flush lands. So every shot began about a second after it had actually started and held a frozen frame at the end. A chart that starts ten percent in still looks like a chart. The old playbook explained the screencast by saying a frame by frame render would be too slow, and that was the reason it was never measured: a frame is 67 milliseconds, so the whole film takes under two minutes either way. Asking for the frames is the only way to put a frame at a known time, and a known time is the whole basis of the voice-driven work.
+- **The voice had no breath in it.** `edge-tts` pads every sentence with about nine tenths of a second of silence, and the old trim removed every silent period, so the seven sentences ran together with nothing in the gaps. The line measured 6.55 seconds; with a third of a second of air in each gap the same words measured 7.83. The film is two and a half seconds longer for it. A cut anywhere but the tail moves every word after it, so the offsets have to move with it, and that is the part that can be got wrong quietly.
+- **One scene, two clocks, one set of numbers.** Every cue carries the fraction the scene has always used, so the page plays exactly as it always has and the film plays the moment the voice says the thing. That is what made the change safe to ship: the page did not move.
+- **The caption is not the narration.** The script spells every figure out, because the voice reads digits as digits, so a caption taken straight from the voice says "one point eight percent" where a reader wants "1.8%". The caption is written separately and pinned to a cue, so the voice says the number and the caption says the number in the form each of them wants, and they arrive together.
+- **A card is not a page.** The card's plate used to fade in, which showed the report's page behind it for the first second of the shot. The plate is now opaque from the first frame and only the parts animate.
+Verification:
+- code checked: yes. The film is 55.86 seconds at 1080x1920 and 30 fps, 1675 frames, H.264 with AAC mono at 24 kHz. Every cue in the four film scenes and in the two cards resolves against the voice's own words, and `window.__timeline.misses` holds only the cues belonging to the other scenes, which the page builds but does not show. The page is unchanged by this work: its six scenes still finish in 1007 to 1018 ms with no console errors.
+- audio checked: yes. The finished film was run through the video understanding tool. The transcript matches the script line for line, every figure is spoken as written, and the on-screen numbers land on the words: RM4.18 at 0:03 with "Fuel did not", the band at 0:09 with "The rate has not moved", "Transport rose 2.5%" at 0:20, "Housing fell to 1.4%" at 0:23, RM2.05 subsidised at 0:37 with "Ninety five octane petrol", and RM2.13 at 0:47 with "The gap at the pump".
+- human reviewed: no
+
+## [2026-10-27] fix | Settle the storyboard PNG difference, and say what a PNG diff is worth
+
+Source: `reports/malaysia-cpi/scene.js`, `raw/malaysia-cpi/storyboard/ladder.png`, `playbook/video.md`
+Changes:
+- checked why the ladder's storyboard frame changed during the voice work, and found nothing wrong with it
+- recorded the finding as a trap in `playbook/video.md` and as a known issue in `wiki/known-issues.md`
+Notes:
+- **A storyboard PNG is not evidence of a code change.** The scene's labels are DOM elements over the canvas, and the browser rasterises their text a little differently from one capture session to the next. The ladder's fourteen division names moved by 8883 antialiased pixels against the committed frame while the value labels beside them did not move at all, which is the tell: a scene that really changed moves the chart and the labels together. The old code, rendered in the same session, did not reproduce its own committed PNG either, so the PNG was never the evidence.
+- The new code rendered in one session reproduced the working tree's frame exactly, and differed from the old code's frame only in the caption band, which is the intended change. The column frame is byte-identical across the whole change.
+Verification:
+- code checked: yes. Every cue's fallback fraction was read against the constant it replaced and all of them match, which is why the page did not move.
+- human reviewed: no

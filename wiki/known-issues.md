@@ -78,6 +78,12 @@ Recorded in `raw/malaysia-cpi/qa.md`:
 - `openShot` in `playbook/tools/browser.js` now waits for `!gl.isContextLost()` before it captures, and the CPI `Stage` listens for `webglcontextrestored` and redraws. Both guards are load-bearing. Removing either brings the blank storyboard frames back.
 - A report with more than about six scenes needs a different approach, probably one canvas that swaps scenes rather than one canvas each.
 
+### A storyboard PNG is not a regression signal
+
+- The scene's labels are DOM elements over the canvas, and the browser rasterises their text slightly differently from one capture session to the next. A re-rendered storyboard therefore differs from the committed PNG by a few hundred antialiased pixels in each label row, with the glyphs in the same place.
+- Measured on 2026-10-27: the CPI ladder's fourteen division names changed by 8883 pixels when the scene was re-rendered, while the value labels beside them changed by none. The old code rendered in the same session did not reproduce its own committed PNG either. Rendering the old and new code in one session showed the scene was byte-identical apart from the caption band.
+- A scene that actually changed moves the chart and its labels together. Rasterisation noise moves only the type. Compare two renders made in the same session, never a fresh render against a PNG made weeks ago.
+
 ### Prices live in two places
 
 - `playbook/sales/rate-card.md` and `reports/index.html` both carry the price list. Nothing enforces that they match. Both say so in a comment; neither is generated from the other.

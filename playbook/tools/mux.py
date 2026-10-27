@@ -2,9 +2,11 @@
 
 Usage: python mux.py <out dir> <vo dir> <out.mp4> <shots.json>
 
-Each clip is trimmed to its shot length from the end, so a slow page load at the start of a
-clip is cut off rather than played. A single long recording cannot be trimmed accurately,
-because the browser clock and the audio clock drift apart.
+The clips are captured a frame at a time, so each one already holds exactly its shot:
+the first frame is the first frame of the shot and the last frame is the last frame of
+the shot. Nothing is trimmed off the end of anything here, because there is nothing
+left on the end to trim. All that is left is to lay the clips end to end and put the
+voice under them.
 
 The voice lines are laid at their shot's start, with the gap after each one.
 """
@@ -44,23 +46,22 @@ def main(out_dir, vo, mp4, shots_file):
 
     clips = []
     for i, s in enumerate(items):
-        webm = os.path.join(out_dir, 'clips', s['id'] + '.webm')
-        if not os.path.exists(webm):
-            raise SystemExit('missing clip: ' + webm)
+        clip = os.path.join(out_dir, 'clips', s['id'] + '.mp4')
+        if not os.path.exists(clip):
+            raise SystemExit('missing clip: ' + clip)
         length = dur[i] + (end_hold if i == len(items) - 1 else gap)
-        clips.append({'id': s['id'], 'webm': webm, 'length': length, 'vo': ids[i]})
+        clips.append({'id': s['id'], 'clip': clip, 'length': length, 'vo': ids[i]})
 
     total = sum(c['length'] for c in clips)
 
-    # 1. trim and normalise every clip
+    # 1. normalise every clip to the frame size and rate the film uses
     tmp = os.path.join(out_dir, 'tmp')
     os.makedirs(tmp, exist_ok=True)
     norm = []
     for i, c in enumerate(clips):
         out = os.path.join(tmp, '%02d.mp4' % i)
         run(['ffmpeg', '-y', '-loglevel', 'error',
-             '-sseof', '-%.3f' % c['length'], '-i', c['webm'],
-             '-t', '%.3f' % c['length'],
+             '-i', c['clip'], '-t', '%.3f' % c['length'],
              '-c:v', 'libx264', '-preset', 'medium', '-crf', '20',
              '-pix_fmt', 'yuv420p', '-r', str(FPS), '-s', '%dx%d' % (W, H),
              '-an', out])

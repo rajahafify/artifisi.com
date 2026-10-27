@@ -228,24 +228,24 @@ Seven lines, 141 words, 20 to 25 words a line. Durations are
 
 | Property | Value |
 |---|---|
-| Length | 53.39 seconds |
-| Frame | 1080 x 1920, portrait, 30 fps |
+| Length | 55.86 seconds |
+| Frame | 1080 x 1920, portrait, 30 fps, 1,675 frames |
 | Video codec | H.264 |
 | Audio | AAC, mono, 24 kHz |
-| Size | 2,403,597 bytes |
-| Bit rate | 360 kbps |
-| Speech total | 49.49 seconds across seven lines |
+| Size | 2,711,496 bytes |
+| Bit rate | 388 kbps |
+| Speech total | 51.96 seconds across seven lines |
 
 The voice-over sets the shot lengths. Each shot holds its scene for exactly its own line,
-with a 0.4 second gap between shots. The last line is the 2.3 second end card, followed by a
+with a 0.4 second gap between shots. The last line is the 2.31 second end card, followed by a
 1.5 second hold.
 
-The audio was profiled with `silencedetect`. Every shot boundary is a gap, and every other
-silence is a natural pause inside a sentence:
+The audio was profiled with `silencedetect`. Six of the silences are the shot boundaries, and
+the rest are the breaths between sentences:
 
 ```
-6.31 → 7.19    14.09 → 14.99    23.25 → 24.16
-32.68 → 33.60  42.21 → 43.11    48.95 → 49.88    51.63 → 53.39
+6.72 → 7.57    15.04 → 15.82   24.66 → 25.53
+34.55 → 35.35  44.40 → 45.25   51.45 → 52.24   54.09 → 55.86
 ```
 
 ### The film is not the page in order
@@ -260,6 +260,26 @@ Two of the page's six scenes are not in the film. A minute is not long enough fo
 and two cards, so the state spread and the urban split stayed on the page and their numbers
 moved onto the leads card.
 
+### The picture follows the voice
+
+Every reveal in the film is anchored to a phrase in the voice line. The chart's label, the
+card's parts and the caption band all arrive on the word that names them:
+
+| On screen | Arrives with |
+|---|---|
+| RM4.18 on the premise card | "Fuel did not" |
+| "the band: 1.1% to 2.0%" | "The rate has not moved" |
+| "Transport rose 2.5%" | "Transport rose" |
+| "Housing fell to 1.4%" | "Housing fell" |
+| RM2.05 subsidised | "Ninety five octane petrol" |
+| RM4.18 on the drum | "four ringgit eighteen" |
+| RM2.13 you do not pay | "up fifty nine point seven percent" |
+| RM2.13 on the leads card | "The gap at the pump" |
+
+The page runs the same scenes and is unchanged: every cue carries the fraction the scene has
+always used, and with no voice the page falls back to it. The page's six scenes still finish
+at 1012 to 1017 ms, with no console errors and no label off the canvas.
+
 ### The last frame is the whole report
 
 The four charts the film drew are captured clean, before the caption band goes on, tiled two
@@ -273,6 +293,18 @@ against the script. Every figure is spoken as written: one point eight percent, 
 percent, one point four, thirty seven point six percent, twenty ten, ninety five octane
 petrol, four ringgit eighteen a litre, fifty nine point seven percent. The name of the site is
 never said, and the film ends on "Visit our website to learn more."
+
+The tool was also asked when each number appeared on screen, and the answers are the table
+above: RM4.18 at 0:03 with "Fuel did not", the band at 0:09 with "The rate has not moved",
+"Transport rose 2.5%" at 0:20, "Housing fell to 1.4%" at 0:23, RM2.05 subsidised at 0:37 with
+"Ninety five octane petrol", and RM2.13 at 0:47 with "The gap at the pump".
+
+### The voice has to breathe
+
+`edge-tts` pads every sentence with about nine tenths of a second of silence. The first
+recording of this film removed every silent period, and the result was a voice with no breath
+between its sentences. The line measured 6.55 seconds; with a third of a second of air in each
+gap the same words measured 7.83. The film is two and a half seconds longer for it.
 
 ---
 

@@ -173,6 +173,24 @@ Key technical and design decisions observed in the codebase.
 **Rationale**: The page is read, not watched. A one-second shot is a summary that a reader can re-trigger by clicking, and six of them do not cost a reader a minute of their life. The video is watched, so its shot length has to match the sentence being spoken over it. The scene's internal timings are all in normalised `t`, so stretching the duration stretches the choreography proportionally and nothing breaks.  
 **Tradeoff**: Two rates to reason about, and the video frame is not the page frame. The composition has to hold at both.
 
+## The Picture Follows the Voice
+
+**Decision**: A scene's reveal steps are anchored to phrases in the voice line. `T.at("four ringgit eighteen", 0.6)` is the moment the voice says that phrase, and the second argument is the fraction the scene has always used. The page has no voice and plays its own fractions; the film has a voice and plays the moments the voice says the things. Cards and caption phrases work the same way.
+**Rationale**: A film where the chart finishes its animation while the voice is still on the first clause is a recording with a chart in it. `edge-tts` reports the offset of every word it speaks, so the timing was free and was being thrown away. Anchoring the reveals to it means the label lands on the number, the caption changes on the sentence, and the card builds on the claim.
+**Tradeoff**: The cue has to be written the way the phrase is spoken and has to be unique in its line, and a cue that fails to match falls back to the page's fraction without saying so. The page keeps `window.__timeline.misses` so the failures can be found. The page and the film are now the same code with two clocks, which means a change to a scene's choreography has to be checked on both.
+
+## The Film Is Captured Frame by Frame, Not Recorded
+
+**Decision**: `record-video.js` asks for each frame at the time it belongs and pipes the images into ffmpeg, instead of recording the page and trimming the recording.
+**Rationale**: A screencast has to be trimmed from the end, because the browser's clock and the film's clock drift apart and the tail of the recording is where the flush lands. Measured on the CPI film, every shot began about a second after it had actually started and held a frozen frame at the end. A chart that starts ten percent in still looks like a chart, so nobody noticed. Asking for the frames puts each one at a known time, which is the only way the voice can land on a word.
+**Tradeoff**: The old reason for recording was speed, and it was wrong: a frame is 67 milliseconds under swiftshader, so the film takes under two minutes either way. What is lost is the screen recording's tolerance of a page that does not settle; the recorder now has to wait for the scene and for the fonts, which it already did.
+
+## The Voice Has to Breathe
+
+**Decision**: `voice.py` cuts the silence at the end of a line and cuts each pause between sentences back to about a third of a second, and remaps the word offsets onto the trimmed file.
+**Rationale**: `edge-tts` pads every sentence with about nine tenths of a second of silence. The CPI film was first recorded with a filter that removed every silent period, and the result was a voice with no breath between its sentences: seven sentences run together with nothing in the gaps, which reads as though the voice is being chased. The line measured 6.55 seconds; the same words with a breath in each gap measured 7.83.
+**Tradeoff**: The film is two and a half seconds longer than it was, at 55.86 seconds. And a cut anywhere but the tail moves every word after it, so the offsets have to be remapped, which is a thing that can be got wrong quietly.
+
 ## Important Files
 
 - `playbook/pipeline.md` — the eleven stages and four gates
