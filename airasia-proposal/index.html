@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>airasia Games</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="A proposal from Artifisi to airasia: a daily games channel inside the airasia MOVE app.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a stack of fixed 1920x1080 slides, each scaled to the page width on screen and printed one per PDF page. */
+:root {
+  /* red is the airasia red; yellow is the one accent; ink stands in where the ikhlas deck used a third colour */
+  --ink: #1c1c1c; --ink-2: #4a4a4a; --ink-3: #8a8a8a;
+  --parch: #faf7f6; --parch-2: #f4ecea; --card: #ffffff; --line: #eadedb;
+  --green: #d0102b; --green-2: #ffe1e6; --gold: #ffd23f; --gold-ink: #b30d26; --gold-hi: #ffd23f;
+  --red: #1c1c1c; --page: #160a0c;
+  --display: "Plus Jakarta Sans", "Trebuchet MS", sans-serif;
+  --body: "Plus Jakarta Sans", "Trebuchet MS", sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--page); }
+body { margin: 0; font-family: var(--body); color: var(--ink); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 48px; }
+.deck { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.45); }
+.slide { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transform: scale(var(--s, 0.5)); box-sizing: border-box; padding: 112px 128px 150px; display: flex; flex-direction: column; gap: 48px; background: var(--parch); color: var(--ink); overflow: hidden; }
+.slide.dark { background: var(--ink); color: var(--parch); }
+.slide.green { background: var(--green); color: var(--parch); }
+.slide.tint { background: var(--parch-2); }
+.eyebrow { font-size: 26px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold-ink); margin: 0; font-weight: 700; }
+.dark .eyebrow, .green .eyebrow { color: var(--gold-hi); }
+h1, h2, h3, p { margin: 0; }
+h1 { font-family: var(--display); font-weight: 800; font-size: 132px; line-height: 1.04; letter-spacing: -3px; }
+h2 { font-family: var(--display); font-weight: 800; font-size: 72px; line-height: 1.12; letter-spacing: -1.5px; text-wrap: balance; max-width: 1560px; }
+h2.big { font-size: 96px; letter-spacing: -2.5px; }
+h3 { font-size: 42px; font-weight: 800; line-height: 1.15; }
+.lead { font-size: 42px; line-height: 1.34; max-width: 1450px; }
+.body { font-size: 30px; line-height: 1.5; color: var(--ink-2); max-width: 1450px; }
+.dark .body, .dark .lead { color: #e4e4e4; }
+.green .lead { color: #ffe9ec; }
+.foot { position: absolute; left: 128px; right: 128px; bottom: 56px; display: flex; justify-content: space-between; font-size: 24px; color: var(--ink-3); }
+.dark .foot { color: #9a9a9a; } .green .foot { color: #ffc2cb; }
+.row { display: flex; gap: 32px; }
+.row > * { flex: 1; min-width: 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 44px; display: flex; flex-direction: column; gap: 14px; }
+.card p { font-size: 30px; line-height: 1.4; color: var(--ink-2); }
+.card .tag { font-size: 24px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
+.top-green { border-top: 10px solid var(--green); } .top-gold { border-top: 10px solid var(--gold); } .top-red { border-top: 10px solid var(--red); }
+.num { font-family: var(--display); font-size: 120px; font-weight: 800; letter-spacing: -3px; line-height: 1; }
+table { border-collapse: collapse; width: 100%; font-size: 30px; }
+th { text-align: left; font-size: 26px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-ink); padding: 0 24px 18px 0; border-bottom: 2px solid var(--line); }
+td { padding: 22px 24px 22px 0; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.35; }
+td:first-child { font-weight: 700; white-space: nowrap; }
+.pill { display: inline-block; font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 6px 16px; border-radius: 99px; background: var(--green); color: var(--parch); vertical-align: middle; margin-left: 12px; }
+/* phone frame for the live game */
+.phone { width: 404px; height: 778px; border-radius: 56px; background: #0e0b08; padding: 14px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 2px #333; flex: none; position: relative; }
+.phone iframe, .phone img { width: 376px; height: 750px; border: 0; border-radius: 44px; display: block; background: #a50d22; object-fit: cover; }
+.phone .shot { display: none; }
+.split { display: flex; gap: 96px; align-items: center; flex: 1; }
+.split > .text { flex: 1; display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.bullets { margin: 0; padding-left: 36px; font-size: 30px; line-height: 1.5; color: var(--ink-2); display: flex; flex-direction: column; gap: 10px; }
+.dark .bullets { color: #e4e4e4; }
+.open-link { font-size: 28px; color: var(--gold-hi); font-weight: 700; text-decoration: none; border-bottom: 2px solid currentColor; align-self: flex-start; }
+.flow { display: flex; align-items: center; gap: 24px; }
+.flow .card { flex: 1; }
+.arrow { width: 64px; height: 36px; flex: none; }
+.screens { display: flex; gap: 40px; align-items: center; }
+.shot-wide { width: 1000px; height: 635px; object-fit: contain; border-radius: 16px; flex: none; }
+.cols { display: flex; gap: 96px; flex: 1; }
+.cols > div { flex: 1; display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.steps { margin: 0; padding-left: 44px; font-size: 34px; line-height: 1.6; }
+.foot span:first-child { max-width: 1500px; }
+.board { width: 100%; font-size: 28px; }
+.board td { padding: 12px 20px 12px 0; }
+.board th { font-size: 22px; padding-bottom: 12px; }
+.board .r { text-align: right; padding-right: 0; font-variant-numeric: tabular-nums; }
+.board tr.you td { background: var(--green-2); }
+.board tr.you td:first-child { box-shadow: inset 8px 0 0 var(--green); padding-left: 20px; }
+/* airasia MOVE app mock screens, drawn in the style of the app, not copied from it */
+.mocks { display: flex; gap: 40px; flex: none; }
+.mock { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.mock .cap { font-size: 26px; font-weight: 700; color: #fff; }
+.mphone { width: 350px; height: 712px; border-radius: 48px; background: #0d0d0d; padding: 12px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 2px #333; overflow: hidden; }
+.scr { width: 373px; height: 787px; transform: scale(0.8747); transform-origin: 0 0; border-radius: 42px; overflow: hidden; background: #f5f5f5; font-family: "Plus Jakarta Sans", sans-serif; color: #1c1c1c; position: relative; display: flex; flex-direction: column; }
+.scr * { box-sizing: border-box; }
+.scr .sb { height: 34px; padding: 10px 24px 0; display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #fff; }
+.scr .rd { background: #e1001e; color: #fff; }
+.scr .hdr { display: flex; justify-content: space-between; align-items: center; padding: 8px 20px 0; font-size: 13px; font-weight: 700; }
+.scr .logo { font-weight: 800; font-size: 26px; letter-spacing: -0.8px; }
+.scr .logo small { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; margin-left: 4px; }
+.scr .hi { padding: 14px 20px 4px; font-size: 22px; font-weight: 800; }
+.scr .find { margin: 10px 16px 30px; background: #fff; color: #7d7d7d; border-radius: 99px; padding: 12px 16px; font-size: 14px; font-weight: 600; display: flex; gap: 10px; align-items: center; }
+.scr .find i { width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid #7d7d7d; }
+.scr .sheet { background: #f5f5f5; border-radius: 22px 22px 0 0; margin-top: -18px; flex: 1; position: relative; padding-top: 6px; overflow: hidden; }
+.scr .icons { display: flex; justify-content: space-around; padding: 16px 6px 12px; }
+.scr .ic { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; position: relative; width: 76px; text-align: center; }
+.scr .ic i { width: 50px; height: 50px; border-radius: 16px; background: #fff; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.scr .ic.hot i { background: #1c1c1c; box-shadow: 0 0 0 3px #f5f5f5, 0 0 0 5px #ffd23f; }
+.scr .badge { position: absolute; top: -8px; right: 2px; background: #e1001e; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 99px; }
+.scr .sec { padding: 8px 16px 6px; font-size: 16px; font-weight: 800; display: flex; justify-content: space-between; align-items: baseline; }
+.scr .sec a { font-size: 12px; color: #e1001e; font-weight: 700; }
+.scr .daily { margin: 0 16px; border-radius: 16px; background: #1c1c1c; color: #fff; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.scr .daily .h { display: flex; justify-content: space-between; align-items: center; }
+.scr .daily .nm { font-size: 21px; font-weight: 800; letter-spacing: -0.4px; }
+.scr .daily .st { font-size: 11px; color: #ffd23f; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.scr .lv { display: flex; gap: 8px; }
+.scr .lv span { flex: 1; border-radius: 10px; padding: 8px 6px; font-size: 11px; font-weight: 700; text-align: center; background: #333; color: #d6d6d6; }
+.scr .lv span b { display: block; font-size: 13px; color: #fff; }
+.scr .lv .done { background: #1f8a4c; }
+.scr .play { background: #ffd23f; color: #1c1c1c; font-weight: 800; font-size: 14px; border-radius: 99px; padding: 9px 0; text-align: center; }
+.scr .promo { margin: 12px 16px 0; border-radius: 16px; background: #fff; padding: 12px 14px; font-size: 12.5px; line-height: 1.35; display: flex; gap: 12px; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.scr .promo b { display: block; font-size: 14px; }
+.scr .promo .pt { flex: none; width: 40px; height: 40px; border-radius: 50%; background: #ffe1e6; color: #e1001e; display: grid; place-items: center; font-weight: 800; font-size: 13px; }
+.scr .nav { height: 66px; background: #fff; border-top: 1px solid #e6e6e6; display: flex; justify-content: space-around; align-items: center; font-size: 11px; color: #7d7d7d; flex: none; }
+.scr .nav div { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.scr .nav .on { color: #e1001e; font-weight: 700; }
+.scr .nav i { width: 22px; height: 22px; border-radius: 6px; border: 2.5px solid currentColor; }
+.scr .bar { padding: 4px 16px 14px; display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; }
+.scr .hero { margin: 14px 16px 6px; border-radius: 18px; background: linear-gradient(160deg, #e1001e, #9e0b1f); color: #fff; padding: 18px; position: relative; overflow: hidden; }
+.scr .hero .k { font-size: 11px; letter-spacing: 1.5px; font-weight: 800; color: #ffd23f; text-transform: uppercase; }
+.scr .hero .nm { font-size: 30px; font-weight: 800; letter-spacing: -0.8px; margin: 4px 0 2px; }
+.scr .hero p { font-size: 12.5px; line-height: 1.4; color: #ffe9ec; margin: 0 0 12px; max-width: 220px; }
+.scr .hero .ar { position: absolute; right: -8px; bottom: -18px; font-size: 70px; font-weight: 800; color: rgba(255,255,255,0.14); letter-spacing: -2px; }
+.scr .tiles { display: flex; gap: 10px; padding: 0 16px; }
+.scr .tile { flex: 1; border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid #e6e6e6; font-size: 12px; }
+.scr .tile .im { height: 92px; display: grid; place-items: center; color: #fff; font-size: 15px; font-weight: 800; text-align: center; padding: 6px; line-height: 1.15; }
+.scr .tile .tx { padding: 7px 9px 9px; line-height: 1.3; }
+.scr .tile .tx b { display: block; font-size: 12.5px; }
+.scr .tile .tx span { color: #7d7d7d; font-size: 11px; }
+.scr .tabs { display: flex; margin: 12px 16px 8px; background: #e9e9e9; border-radius: 99px; padding: 3px; font-size: 12.5px; font-weight: 700; }
+.scr .tabs span { flex: 1; text-align: center; padding: 7px 0; border-radius: 99px; color: #5b5b5b; }
+.scr .tabs .on { background: #fff; color: #1c1c1c; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+.scr .chips { display: flex; gap: 6px; padding: 0 16px 8px; font-size: 11.5px; font-weight: 700; }
+.scr .chips span { border: 1.5px solid #d6d6d6; border-radius: 99px; padding: 4px 10px; color: #5b5b5b; }
+.scr .chips .on { border-color: #e1001e; color: #e1001e; background: #ffe1e6; }
+.scr .pod { display: flex; align-items: flex-end; justify-content: center; gap: 10px; padding: 6px 16px 10px; }
+.scr .pod div { width: 96px; text-align: center; font-size: 12px; font-weight: 700; }
+.scr .pod .av { width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 6px; display: grid; place-items: center; font-weight: 800; color: #fff; font-size: 16px; }
+.scr .pod .blk { margin-top: 6px; border-radius: 10px 10px 0 0; background: #ffe1e6; color: #b30d26; font-size: 18px; font-weight: 800; padding-top: 6px; }
+.scr .rows { margin: 0 16px; background: #fff; border-radius: 14px; border: 1px solid #e6e6e6; overflow: hidden; }
+.scr .rw { display: flex; align-items: center; padding: 9px 12px; font-size: 13px; border-bottom: 1px solid #efefef; gap: 10px; }
+.scr .rw .n { width: 22px; font-weight: 800; color: #7d7d7d; }
+.scr .rw .p { flex: 1; } .scr .rw .p small { display: block; color: #7d7d7d; font-size: 11px; }
+.scr .rw .s { font-weight: 800; }
+.scr .rw.me { background: #fff4c9; box-shadow: inset 4px 0 0 #ffd23f; border-bottom: none; }
+.scr .up { margin: 10px 16px 0; border-radius: 14px; background: #1c1c1c; color: #fff; padding: 11px 14px; font-size: 12px; line-height: 1.35; display: flex; gap: 10px; align-items: center; }
+.scr .up b { color: #ffd23f; }
+.scr .up .btn { flex: none; background: #e1001e; color: #fff; font-weight: 800; border-radius: 99px; padding: 7px 12px; font-size: 12px; }
+a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
+
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { background: none; padding: 0; }
+  .deck { max-width: none; gap: 0; }
+  .frame { width: 1920px; height: 1080px; aspect-ratio: auto; border-radius: 0; box-shadow: none; break-after: page; }
+  .slide { transform: none; }
+  .phone iframe { display: none; }
+  .phone .shot { display: block; }
+  .open-link .live-only { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+<!-- 1 Cover -->
+<div class="frame"><section class="slide green" style="justify-content:space-between">
+  <p class="eyebrow">Proposal for airasia</p>
+  <div style="display:flex;flex-direction:column;gap:40px">
+    <h1>airasia Games</h1>
+    <p class="lead">A daily games channel inside the airasia MOVE app. A reason to open it every day, not only when a trip is booked.</p>
+  </div>
+  <p class="body" style="color:#ffd9df">Raja Hafify Bin Zaed · Artifisi Sdn Bhd · October 2026</p>
+</section></div>
+
+<!-- 2 The gap -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">The gap</p>
+  <h2>People open airasia when they plan a trip. Then the app waits.</h2>
+  <div class="row">
+    <div class="card"><h3>Flights</h3><p>When a trip is planned</p></div>
+    <div class="card"><h3>Hotels</h3><p>Once a trip</p></div>
+    <div class="card"><h3>Check-in</h3><p>Once a flight</p></div>
+    <div class="card"><h3>Seat sales</h3><p>When a sale is on</p></div>
+  </div>
+  <p class="body">Between trips there is little reason to open the app, so every sale has to win attention back from zero.</p>
+  <div class="foot"><span>airasia Games</span><span>2</span></div>
+</section></div>
+
+<!-- 3 The idea -->
+<div class="frame"><section class="slide dark" style="justify-content:center">
+  <p class="eyebrow">The idea</p>
+  <h2 class="big">Make airasia the place Asia goes for a daily game.</h2>
+  <p class="lead">One games channel inside the app, with a shelf that grows every season. Like Netflix, for short games about the places you could fly to next.</p>
+  <div class="foot"><span>airasia Games</span><span>3</span></div>
+</section></div>
+
+<!-- 4 Why games -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">Why games</p>
+  <h2>Small daily games build the habit</h2>
+  <div class="row">
+    <div class="card"><p class="num" style="color:var(--green)">2M+</p><p>daily Wordle players within months of joining The New York Times in 2022, up from about 300,000. One short puzzle a day kept people coming back.</p></div>
+    <div class="card"><p class="num" style="color:var(--red)">&lt;1%</p><p>of Netflix members played its games daily in 2022. Big games were bolted on, with no link to why people opened the app.</p></div>
+  </div>
+  <p class="body">The lesson: short, daily, and tied to what the brand already stands for. For airasia, that is places.</p>
+  <div class="foot"><span>Sources: Ivey Business School, March 2025; Apptopia data via CNBC, reported by Front Office Sports, August 2022</span><span>4</span></div>
+</section></div>
+
+<!-- 5 Three hooks -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">Opening the app often</p>
+  <h2>Three reasons to come back</h2>
+  <div class="row">
+    <div class="card top-green"><span class="tag" style="color:var(--green)">Every day</span><h3>A daily puzzle</h3><p>Three minutes, one new destination a day, a streak to keep and a result card to share.</p></div>
+    <div class="card top-gold"><span class="tag" style="color:#8a6a00">Every season</span><h3>Event games</h3><p>A short game that opens each big seat sale, then school holidays, Lunar New Year, Songkran and Hari Raya.</p></div>
+    <div class="card top-red"><span class="tag" style="color:var(--red)">Every week</span><h3>Story games</h3><p>Longer games played in short sittings, like growing an airline out of KL one route at a time.</p></div>
+  </div>
+  <div class="foot"><span>airasia Games</span><span>5</span></div>
+</section></div>
+
+<!-- 6 Guess Where, playable -->
+<div class="frame"><section class="slide dark" style="padding-top:96px;padding-bottom:120px">
+  <div class="split">
+    <div class="text">
+      <p class="eyebrow">The daily game · play it here</p>
+      <h2>Guess Where</h2>
+      <p class="lead" style="font-size:38px">One destination a day, told one clue at a time. Guess the city.</p>
+      <ul class="bullets">
+        <li>Six clues, from food and festivals down to the airport code.</li>
+        <li>Every wrong guess shows how far off you are, which way to go, and if the country is right.</li>
+        <li>Ends with a short note on the place and a button to flights there.</li>
+        <li>A spoiler-free result to share on WhatsApp, with the airasia mark.</li>
+      </ul>
+      <a class="open-link" href="game/guess-where.html" target="_blank" rel="noopener"><span class="live-only">Open full screen: </span>three demo rounds, easy to hard</a>
+    </div>
+    <div class="phone">
+      <iframe src="game/guess-where.html" title="Guess Where, playable demo" loading="lazy"></iframe>
+      <img class="shot" src="assets/guess-where-puzzle.png" alt="Guess Where puzzle screen with a wrong guess showing distance and direction">
+    </div>
+  </div>
+  <div class="foot"><span>Playable demo in English and Bahasa Melayu. Clues are drafts.</span><span>6</span></div>
+</section></div>
+
+<!-- 7 Daily and ranked -->
+<div class="frame"><section class="slide" style="gap:36px">
+  <p class="eyebrow">Guess Where · daily and ranked</p>
+  <h2>Three puzzles a day, one board for Asia</h2>
+  <div class="row">
+    <div class="card top-green" style="padding:32px 40px"><span class="tag" style="color:var(--green)">Easy</span><h3>A famous place</h3><p>Keeps the daily habit open to everyone.</p></div>
+    <div class="card top-gold" style="padding:32px 40px"><span class="tag" style="color:#8a6a00">Medium</span><h3>A known name</h3><p>A city people have heard of but may not place.</p></div>
+    <div class="card top-red" style="padding:32px 40px"><span class="tag" style="color:var(--red)">Hard</span><h3>Neighbours</h3><p>Close cities that are easy to mix up. Counts the most.</p></div>
+  </div>
+  <div class="row" style="gap:72px;align-items:flex-start">
+    <ul class="bullets" style="font-size:28px;line-height:1.38;gap:8px">
+      <li>Solve on the first clue for 6 points, on the last for 1. Medium counts double, Hard triple.</li>
+      <li>Boards for today, this week and this month, by country and with friends.</li>
+      <li>Streaks and top ranks can pay out in airasia points, if airasia wants that.</li>
+      <li>First name only, with an option to hide. Answers are checked on the server.</li>
+    </ul>
+    <table class="board">
+      <tr><th style="width:12%">#</th><th>Player</th><th>Country</th><th class="r">Today</th></tr>
+      <tr><td>1</td><td>Aisyah K.</td><td>Malaysia</td><td class="r">36</td></tr>
+      <tr><td>2</td><td>Nattapong S.</td><td>Thailand</td><td class="r">34</td></tr>
+      <tr><td>3</td><td>Putri W.</td><td>Indonesia</td><td class="r">33</td></tr>
+      <tr class="you"><td>41</td><td>You</td><td>Malaysia</td><td class="r">27</td></tr>
+    </table>
+  </div>
+  <div class="foot"><span>Example board. Today's top score is 36: all three solved on the first clue.</span><span>7</span></div>
+</section></div>
+
+<!-- 8 In the app -->
+<div class="frame"><section class="slide dark" style="padding:88px 112px 110px;gap:28px">
+  <div style="display:flex;gap:56px;flex:1;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:28px;width:430px;flex:none">
+      <p class="eyebrow">In the airasia MOVE app</p>
+      <h2 style="font-size:58px">A Games button on the home screen</h2>
+      <ol class="bullets" style="font-size:27px;line-height:1.4;gap:14px">
+        <li>Games sits next to Flights and Hotels, with today's puzzle right below.</li>
+        <li>The shelf: today's three puzzles first, then what is coming.</li>
+        <li>The ranking, with the link to airasia rewards on the same screen.</li>
+      </ol>
+    </div>
+    <div class="mocks">
+      <div class="mock"><div class="mphone"><div class="scr">
+<div class="rd"><div class="sb"><span>9:41</span><span>5G 100%</span></div>
+<div class="hdr"><span class="logo">airasia<small>MOVE</small></span><span>Account</span></div>
+<div class="hi">Where to next?</div>
+<div class="find"><i></i>Search flights, hotels and more</div>
+</div>
+<div class="sheet">
+<div class="icons"><div class="ic"><i><svg width="26" height="26" viewBox="-13 -13 26 26"><path fill="#e1001e" d="M0-12l2 8 9 6v3l-9-3-.5 6 3.5 3v2l-5-1.5-5 1.5v-2l3.5-3-.5-6-9 3v-3l9-6z"/></svg></i>Flights</div><div class="ic"><i><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#e1001e" d="M3 21V7l9-4 9 4v14h-6v-6H9v6z"/></svg></i>Hotels</div><div class="ic"><i><svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="3" fill="none" stroke="#e1001e" stroke-width="2.4"/><path d="M8 5V3h8v2" stroke="#e1001e" stroke-width="2.4" fill="none"/></svg></i>Holidays</div><div class="ic hot"><span class="badge">New</span><i><svg width="26" height="26" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="11" rx="5.5" fill="#ffd23f"/><path d="M7 10v5M4.5 12.5h5" stroke="#1c1c1c" stroke-width="2"/><circle cx="16" cy="11" r="1.4" fill="#1c1c1c"/><circle cx="18.5" cy="13.8" r="1.4" fill="#1c1c1c"/></svg></i>Games</div></div>
+<div class="sec">Today's puzzle <a>All games ›</a></div>
+<div class="daily"><div class="h"><span class="nm">Guess Where</span><span class="st">Streak 5 days</span></div>
+<div class="lv"><span class="done"><b>Easy</b>Solved · 5 pts</span><span><b>Medium</b>Ready</span><span><b>Hard</b>Ready</span></div>
+<div class="play">Play Medium</div></div>
+<div class="promo"><span class="pt">pts</span><span><b>Keep your streak</b>Seven days in a row adds to your airasia rewards.</span></div>
+</div>
+<div class="nav"><div class="on"><i></i>Home</div><div><i></i>Explore</div><div><i></i>Bookings</div><div><i></i>Rewards</div><div><i></i>Account</div></div></div></div><span class="cap">1 · Home</span></div>
+      <div class="mock"><div class="mphone"><div class="scr">
+<div class="rd"><div class="sb"><span>9:41</span><span>5G 100%</span></div><div class="bar">‹ &nbsp;Games</div></div>
+<div style="flex:1;overflow:hidden">
+<div class="hero"><span class="ar">DPS?</span><div class="k">Daily · new every morning</div><div class="nm">Guess Where</div><p>One city, six clues. Find it before your friends do.</p><div class="play" style="width:130px">Play today</div></div>
+<div class="sec" style="padding-top:12px">Today's three</div>
+<div class="tiles">
+<div class="tile"><div class="im" style="background:#1f8a4c">Easy</div><div class="tx"><b>Solved</b><span>Clue 2 · 5 pts</span></div></div>
+<div class="tile"><div class="im" style="background:#e1001e">Medium</div><div class="tx"><b>Double pts</b><span>Ready</span></div></div>
+<div class="tile"><div class="im" style="background:#1c1c1c">Hard</div><div class="tx"><b>Triple pts</b><span>Ready</span></div></div>
+</div>
+<div class="sec" style="padding-top:14px">Coming to the shelf</div>
+<div class="tiles">
+<div class="tile"><div class="im" style="background:#ffd23f;color:#1c1c1c">Pack<br>7 kg</div><div class="tx"><b>Pack Light</b><span>Puzzle</span></div></div>
+<div class="tile"><div class="im" style="background:#9e0b1f">Seat<br>Sale Rush</div><div class="tx"><b>Sale Rush</b><span>Each big sale</span></div></div>
+<div class="tile"><div class="im" style="background:#2b2b2b">Route<br>Map</div><div class="tx"><b>Hub KL</b><span>Story game</span></div></div>
+</div>
+</div>
+<div class="nav"><div><i></i>Home</div><div><i></i>Explore</div><div><i></i>Bookings</div><div><i></i>Rewards</div><div><i></i>Account</div></div></div></div><span class="cap">2 · Games shelf</span></div>
+      <div class="mock"><div class="mphone"><div class="scr">
+<div class="rd"><div class="sb"><span>9:41</span><span>5G 100%</span></div><div class="bar">‹ &nbsp;Guess Where ranking</div></div>
+<div style="flex:1;overflow:hidden">
+<div class="tabs"><span class="on">Today</span><span>This week</span><span>This month</span></div>
+<div class="chips"><span class="on">Malaysia</span><span>Thailand</span><span>Friends</span><span>All Asia</span></div>
+<div class="pod">
+<div><div class="av" style="background:#8a8a8a">N</div>Nattapong S.<div class="blk" style="height:46px">34</div></div>
+<div><div class="av" style="background:#e1001e">A</div>Aisyah K.<div class="blk" style="height:64px;background:#fff4c9;color:#8a6a00">36</div></div>
+<div><div class="av" style="background:#b07a52">P</div>Putri W.<div class="blk" style="height:34px">33</div></div>
+</div>
+<div class="rows">
+<div class="rw"><span class="n">4</span><span class="p">Faiz M.<small>Malaysia</small></span><span class="s">33</span></div>
+<div class="rw"><span class="n">5</span><span class="p">Joanna R.<small>Philippines</small></span><span class="s">32</span></div>
+<div class="rw"><span class="n">6</span><span class="p">Minh T.<small>Vietnam</small></span><span class="s">31</span></div>
+<div class="rw me"><span class="n">41</span><span class="p">You<small>Malaysia · 5-day streak</small></span><span class="s">27</span></div>
+</div>
+<div class="up"><span><b>Top 100 this week</b> earn a bonus in airasia rewards.</span><span class="btn">Rewards</span></div>
+</div>
+<div class="nav"><div><i></i>Home</div><div><i></i>Explore</div><div><i></i>Bookings</div><div><i></i>Rewards</div><div><i></i>Account</div></div></div></div><span class="cap">3 · Ranking</span></div>
+    </div>
+  </div>
+  <div class="foot"><span>Mockup in the style of the airasia MOVE app. Names, scores and rewards are examples.</span><span>8</span></div>
+</section></div>
+
+<!-- 9 Brand -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">Building the brand</p>
+  <h2>airasia on every play</h2>
+  <table>
+    <tr><th style="width:30%">Moment</th><th>What the player sees</th></tr>
+    <tr><td>Splash screen</td><td>“airasia presents” before every game, every time</td></tr>
+    <tr><td>Share card</td><td>Daily results shared to WhatsApp with the airasia mark and a link back</td></tr>
+    <tr><td>Game to booking</td><td>Today's answer is Bali. One tap opens flights to Bali.</td></tr>
+    <tr><td>Rewards</td><td>Streaks and ranks feed airasia rewards, so the game sits inside the loyalty loop</td></tr>
+    <tr><td>Seat sales</td><td>A short game opens each big sale and sends players straight to the deals</td></tr>
+  </table>
+  <div class="foot"><span>airasia Games</span><span>9</span></div>
+</section></div>
+
+<!-- 10 First shelf -->
+<div class="frame"><section class="slide tint">
+  <p class="eyebrow">The first shelf</p>
+  <h2>Four games in the first year</h2>
+  <table>
+    <tr><th style="width:26%">Game</th><th style="width:49%">What it does</th><th>When</th></tr>
+    <tr><td>Guess Where</td><td>A daily destination puzzle in English and Bahasa Melayu</td><td>Demo ready now</td></tr>
+    <tr><td>Pack Light</td><td>Fit a trip into a 7 kg cabin bag. One packing puzzle a day.</td><td>Next</td></tr>
+    <tr><td>Sale Rush</td><td>A one-minute game that opens each big seat sale</td><td>From the next big sale</td></tr>
+    <tr><td>Hub KL</td><td>Grow an airline out of KL, one route a week</td><td>2027</td></tr>
+  </table>
+  <p class="body">Guess Where can add Thai, Bahasa Indonesia and Filipino puzzles as the board grows past Malaysia.</p>
+  <div class="foot"><span>Dates after the first game are targets to agree together</span><span>10</span></div>
+</section></div>
+
+<!-- 11 How it fits -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">How it fits the app</p>
+  <h2>One small add-on, no app rebuild</h2>
+  <div class="flow">
+    <div class="card"><h3>airasia MOVE app</h3><p>Adds a Games tab that opens our games in a web view</p></div>
+    <svg class="arrow" viewBox="0 0 64 36" aria-hidden="true"><path d="M0 12h40V0l24 18-24 18V24H0z" fill="#d0102b"/></svg>
+    <div class="card"><h3>Games shelf</h3><p>Hosted by Artifisi, opens inside the app</p></div>
+    <svg class="arrow" viewBox="0 0 64 36" aria-hidden="true"><path d="M0 12h40V0l24 18-24 18V24H0z" fill="#d0102b"/></svg>
+    <div class="card"><h3>Back to airasia</h3><p>Play data to your analytics, buttons to flights and rewards</p></div>
+  </div>
+  <ul class="bullets">
+    <li>New games and fixes go live without a new app release.</li>
+    <li>Your developers add it once, and we support them.</li>
+    <li>The same games run in a phone browser for campaigns and social posts.</li>
+  </ul>
+  <div class="foot"><span>airasia Games</span><span>11</span></div>
+</section></div>
+
+<!-- 12 Network -->
+<div class="frame"><section class="slide tint">
+  <p class="eyebrow">Where it goes</p>
+  <h2>From one shelf to a games channel for Asia</h2>
+  <div class="row">
+    <div class="card"><span class="tag" style="color:var(--green)">Step 1 · 2026 to 2027</span><h3>Our shelf</h3><p>Artifisi builds the first games and proves people come back every day.</p></div>
+    <div class="card"><span class="tag" style="color:#8a6a00">Step 2</span><h3>Destination weeks</h3><p>A tourism board or a hotel group takes over a week of puzzles about its city.</p></div>
+    <div class="card"><span class="tag" style="color:var(--red)">Step 3</span><h3>Open the shelf</h3><p>Other studios in Asia publish through airasia. Artifisi curates and keeps the bar.</p></div>
+  </div>
+  <p class="body">airasia becomes the app people open for a game in the morning, and book from when the clue lands on a place they want to see.</p>
+  <div class="foot"><span>airasia Games</span><span>12</span></div>
+</section></div>
+
+<!-- 13 Who and next -->
+<div class="frame"><section class="slide dark">
+  <div class="cols">
+    <div>
+      <p class="eyebrow">Who builds it</p>
+      <h2 style="font-size:58px">Raja Hafify Bin Zaed</h2>
+      <p class="body">Founder of Artifisi Sdn Bhd. About 12 years in software. At AirAsia, scaled an app from about 1,000 users a month to about 1,000 users a second.</p>
+      <p class="body">Artifisi makes games, including Orbwalker, and holds Malaysia Digital status.</p>
+    </div>
+    <div>
+      <p class="eyebrow">Next steps</p>
+      <ol class="steps">
+        <li>Agree how we work together.</li>
+        <li>Put it in a one-page letter of intent.</li>
+        <li>Your team checks the first month of puzzles and the brand use.</li>
+        <li>Guess Where goes live in the app on a date we agree.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="foot"><span>hello@artifisi.com · artifisi.com</span><span>13</span></div>
+</section></div>
+
+</main>
+
+<script>
+// Scale each 1920x1080 slide to its frame on screen. Print uses the slides at full size.
+(() => {
+  const frames = document.querySelectorAll('.frame');
+  const fit = () => frames.forEach(f => f.style.setProperty('--s', f.clientWidth / 1920));
+  fit();
+  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(document.querySelector('.deck'));
+  else addEventListener('resize', fit);
+})();
+</script>
+</body>
+</html>

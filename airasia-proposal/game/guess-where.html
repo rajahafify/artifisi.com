@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html,body{margin:0}</style>
+<title>Guess Where</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap">
+<style>
+  /* Single look, drawn in canvas: airasia red behind white game cards. */
+  :root { --bg: #a50d22; color-scheme: dark; }
+  html, body { height: 100%; }
+  body { background: var(--bg); overflow: hidden; padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px)); }
+  #game { display: block; width: 100%; height: 100%; touch-action: none; }
+  #q { position: fixed; left: -200px; top: 0; width: 10px; height: 10px; opacity: 0; font-size: 16px; border: 0; padding: 0; background: transparent; color: transparent; caret-color: transparent; }
+</style>
+<canvas id="game" aria-label="Guess Where game"></canvas>
+<input id="q" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search city">
+<script>
+(() => {
+// [airport code, city, country en, country ms, lat, lon]
+const CITIES = [
+["KUL","Kuala Lumpur","Malaysia","Malaysia",3.14,101.69],["PEN","Penang","Malaysia","Malaysia",5.41,100.33],["LGK","Langkawi","Malaysia","Malaysia",6.35,99.80],["BKI","Kota Kinabalu","Malaysia","Malaysia",5.98,116.07],["KCH","Kuching","Malaysia","Malaysia",1.55,110.34],["JHB","Johor Bahru","Malaysia","Malaysia",1.49,103.74],["KBR","Kota Bharu","Malaysia","Malaysia",6.13,102.24],["TGG","Kuala Terengganu","Malaysia","Malaysia",5.33,103.14],["IPH","Ipoh","Malaysia","Malaysia",4.60,101.08],["SDK","Sandakan","Malaysia","Malaysia",5.84,118.12],["TWU","Tawau","Malaysia","Malaysia",4.24,117.89],["MYY","Miri","Malaysia","Malaysia",4.40,113.99],["SBW","Sibu","Malaysia","Malaysia",2.29,111.83],["AOR","Alor Setar","Malaysia","Malaysia",6.12,100.37],
+["SIN","Singapore","Singapore","Singapura",1.35,103.82],["BWN","Bandar Seri Begawan","Brunei","Brunei",4.90,114.94],
+["BKK","Bangkok","Thailand","Thailand",13.76,100.50],["CNX","Chiang Mai","Thailand","Thailand",18.79,98.98],["CEI","Chiang Rai","Thailand","Thailand",19.91,99.83],["HKT","Phuket","Thailand","Thailand",7.88,98.39],["KBV","Krabi","Thailand","Thailand",8.09,98.91],["HDY","Hat Yai","Thailand","Thailand",7.01,100.47],["USM","Koh Samui","Thailand","Thailand",9.51,100.01],["UTH","Udon Thani","Thailand","Thailand",17.41,102.79],
+["CGK","Jakarta","Indonesia","Indonesia",-6.21,106.85],["DPS","Bali","Indonesia","Indonesia",-8.65,115.22],["SUB","Surabaya","Indonesia","Indonesia",-7.25,112.75],["YIA","Yogyakarta","Indonesia","Indonesia",-7.80,110.36],["KNO","Medan","Indonesia","Indonesia",3.59,98.67],["LOP","Lombok","Indonesia","Indonesia",-8.65,116.32],["BDO","Bandung","Indonesia","Indonesia",-6.91,107.61],["LBJ","Labuan Bajo","Indonesia","Indonesia",-8.49,119.89],["PDG","Padang","Indonesia","Indonesia",-0.95,100.35],["PKU","Pekanbaru","Indonesia","Indonesia",0.51,101.45],["BTJ","Banda Aceh","Indonesia","Indonesia",5.55,95.32],
+["MNL","Manila","Philippines","Filipina",14.60,120.98],["CEB","Cebu","Philippines","Filipina",10.32,123.89],["KLO","Boracay","Philippines","Filipina",11.97,121.92],["PPS","Puerto Princesa","Philippines","Filipina",9.74,118.74],["DVO","Davao","Philippines","Filipina",7.19,125.46],
+["HAN","Hanoi","Vietnam","Vietnam",21.03,105.85],["SGN","Ho Chi Minh City","Vietnam","Vietnam",10.82,106.63],["DAD","Da Nang","Vietnam","Vietnam",16.05,108.20],["PQC","Phu Quoc","Vietnam","Vietnam",10.29,103.98],["CXR","Nha Trang","Vietnam","Vietnam",12.24,109.19],
+["PNH","Phnom Penh","Cambodia","Kemboja",11.56,104.92],["SAI","Siem Reap","Cambodia","Kemboja",13.36,103.86],["VTE","Vientiane","Laos","Laos",17.97,102.63],["LPQ","Luang Prabang","Laos","Laos",19.89,102.13],["RGN","Yangon","Myanmar","Myanmar",16.87,96.20],
+["HKG","Hong Kong","Hong Kong","Hong Kong",22.32,114.17],["MFM","Macau","Macau","Macau",22.20,113.54],["TPE","Taipei","Taiwan","Taiwan",25.03,121.57],["ICN","Seoul","South Korea","Korea Selatan",37.57,126.98],["PUS","Busan","South Korea","Korea Selatan",35.18,129.08],["NRT","Tokyo","Japan","Jepun",35.68,139.69],["KIX","Osaka","Japan","Jepun",34.69,135.50],["CTS","Sapporo","Japan","Jepun",43.06,141.35],
+["CAN","Guangzhou","China","China",23.13,113.26],["SZX","Shenzhen","China","China",22.54,114.06],["PVG","Shanghai","China","China",31.23,121.47],["PEK","Beijing","China","China",39.90,116.41],["CTU","Chengdu","China","China",30.57,104.07],["KMG","Kunming","China","China",25.04,102.71],["HGH","Hangzhou","China","China",30.27,120.16],["XIY","Xi'an","China","China",34.34,108.94],
+["DEL","Delhi","India","India",28.61,77.21],["CCU","Kolkata","India","India",22.57,88.36],["MAA","Chennai","India","India",13.08,80.27],["BLR","Bengaluru","India","India",12.97,77.59],["COK","Kochi","India","India",9.93,76.27],["CMB","Colombo","Sri Lanka","Sri Lanka",6.93,79.86],["KTM","Kathmandu","Nepal","Nepal",27.72,85.32],["DAC","Dhaka","Bangladesh","Bangladesh",23.81,90.41],["MLE","Malé","Maldives","Maldives",4.18,73.51],
+["PER","Perth","Australia","Australia",-31.95,115.86],["MEL","Melbourne","Australia","Australia",-37.81,144.96],["SYD","Sydney","Australia","Australia",-33.87,151.21],["OOL","Gold Coast","Australia","Australia",-28.02,153.40],["DRW","Darwin","Australia","Australia",-12.46,130.84],["AKL","Auckland","New Zealand","New Zealand",-36.85,174.76],
+["JED","Jeddah","Saudi Arabia","Arab Saudi",21.49,39.19],["DXB","Dubai","United Arab Emirates","Emiriah Arab Bersatu",25.20,55.27]
+].sort((a, b) => a[1].localeCompare(b[1]));
+const W = 360, H = 640;
+const C = {
+  bg: '#a50d22', bg2: '#d5182f', parch: '#ffffff', parch2: '#f3f3f3', ink: '#1c1c1c', ink2: '#4a4a4a',
+  muted: '#7d7d7d', gold: '#ffd23f', goldLight: '#ffe58a', goldDark: '#c4122b', green: '#1f8a4c', greenSoft: '#dcf1e3', greenInk: '#145c33',
+  red: '#d0021b', redSoft: '#fde0e3', redInk: '#8f0016', grey: '#d6d6d6', night: '#ffdfe3'
+};
+const FONT = '"Plus Jakarta Sans", "Trebuchet MS", sans-serif';
+const F = {
+  kufi: (s, w = 800) => `${w} ${s}px ${FONT}`,
+  sans: (s, w = 400) => `${w} ${s}px ${FONT}`,
+  ar: (s, w = 800) => `${w} ${s}px ${FONT}`
+};
+
+const PUZZLES = [
+  { id: 'easy', answer: 'DPS', diff: { ms: 'Mudah', en: 'Easy' }, day: { ms: 'Isnin', en: 'Monday' },
+    hints: [
+      { ms: 'Kebanyakan penduduk di sini menganut agama yang menjadi minoriti di seluruh negara.', en: 'Most people here follow a faith that is a minority in the rest of the country.' },
+      { ms: 'Setiap pagi, dulang kecil berisi bunga dan nasi diletakkan di depan pintu dan kaki lima.', en: 'Each morning, small trays of flowers and rice are left on doorsteps and pavements.' },
+      { ms: 'Sehari setahun seluruh pulau ini senyap. Lapangan terbang pun ditutup.', en: 'One day a year the whole island goes silent. Even the airport closes.' },
+      { ms: 'Sawah teresnya diairi melalui sistem perkongsian air yang tersenarai dalam Warisan Dunia UNESCO.', en: 'Its rice terraces are watered by a shared system on the UNESCO World Heritage list.' },
+      { ms: 'Peluncur ombak ke Uluwatu. Keluarga ke Kuta.', en: 'Surfers head for Uluwatu. Families head for Kuta.' },
+      { ms: 'Kod lapangan terbangnya DPS.', en: 'Its airport code is DPS.' }
+    ],
+    summary: {
+      ms: 'Bali, Indonesia. Pulau Hindu dalam negara yang majoritinya Muslim, terkenal dengan kuil, sawah teres dan Nyepi, Hari Senyap, apabila lapangan terbang ditutup selama 24 jam.',
+      en: 'Bali, Indonesia. A Hindu island in a mostly Muslim country, known for its temples, rice terraces and Nyepi, the Day of Silence, when the airport shuts for 24 hours.'
+    }
+  },
+  { id: 'medium', answer: 'SAI', diff: { ms: 'Sederhana', en: 'Medium' }, day: { ms: 'Rabu', en: 'Wednesday' },
+    hints: [
+      { ms: 'Nama bandar ini sering diertikan sebagai "Siam dikalahkan".', en: 'The town\'s name is often read as "Siam defeated".' },
+      { ms: 'Berdekatan, sebatang sungai mengalir songsang setiap musim hujan dan tasiknya membesar beberapa kali ganda.', en: 'Nearby, a river flows backwards every rainy season and the lake it feeds grows several times bigger.' },
+      { ms: 'Pelancong bangun jam 4 pagi untuk melihat matahari terbit di belakang lima menara batu.', en: 'Visitors get up at 4am to watch the sun rise behind five stone towers.' },
+      { ms: 'Monumen keagamaan terbesar di dunia hanya sebentar dengan tuk-tuk dari bandar.', en: 'The largest religious monument in the world is a short tuk-tuk ride from town.' },
+      { ms: 'Kuil itu ada pada bendera negaranya.', en: 'That temple is on the national flag.' },
+      { ms: 'Keluar malam di sini bermaksud Pub Street.', en: 'A night out here means Pub Street.' }
+    ],
+    summary: {
+      ms: 'Siem Reap, Kemboja. Pintu masuk ke Angkor Wat, monumen keagamaan terbesar di dunia, dengan tasik Tonle Sap di selatannya.',
+      en: 'Siem Reap, Cambodia. The gateway to Angkor Wat, the largest religious monument in the world, with the Tonle Sap lake just to the south.'
+    }
+  },
+  { id: 'hard', answer: 'CNX', diff: { ms: 'Sukar', en: 'Hard' }, day: { ms: 'Jumaat', en: 'Friday' },
+    hints: [
+      { ms: 'Ia ibu kota sebuah kerajaan lama selama berabad-abad, sebelum negara modennya terbentuk.', en: 'For centuries it was the capital of an old kingdom, long before the modern country took shape.' },
+      { ms: 'Kota lamanya berbentuk segi empat dan dikelilingi parit.', en: 'The old city is a square with a moat all the way round.' },
+      { ms: 'Hidangan wajib cuba ialah mi kari berkuah dengan mi rangup di atasnya.', en: 'The dish to try is a curry noodle soup with crispy noodles on top.' },
+      { ms: 'Pada bulan November, ribuan tanglung kertas dilepaskan ke langit malam.', en: 'In November, thousands of paper lanterns float up into the night sky.' },
+      { ms: 'Sebuah kuil di gunung di atas bandar didaki melalui lebih 300 anak tangga berhias naga.', en: 'A temple on the mountain above town is reached by over 300 steps lined with serpents.' },
+      { ms: 'Penduduk menggelarnya Mawar Utara, ibu kota lama kerajaan Lanna.', en: 'Locals call it the Rose of the North, the old capital of Lanna.' }
+    ],
+    summary: {
+      ms: 'Chiang Mai, utara Thailand. Ibu kota lama kerajaan Lanna, dengan kota lama berparit, khao soi, pesta tanglung Yi Peng dan Doi Suthep di atas bukit.',
+      en: 'Chiang Mai, northern Thailand. The old Lanna capital, with a moated old city, khao soi, the Yi Peng lantern festival and Doi Suthep on the hill above.'
+    }
+  }
+];
+
+const T = {
+  ms: {
+    presents: 'airasia mempersembahkan', tagline: 'Teka destinasi daripada petunjuknya.',
+    demo: 'Demo untuk airasia', review: 'Petunjuk ialah draf. Senarai bandar untuk demo sahaja.',
+    reset: 'Set semula demo', play: 'Main', cont: 'Sambung', hints6: '6 petunjuk, satu demi satu',
+    hint: 'Petunjuk', more: n => `${n} petunjuk lagi dibuka selepas tekaan salah`,
+    pick: 'Pilih bandar', seeAnswer: 'Lihat jawapan', pickTitle: 'Pilih bandar', search: 'Cari bandar, negara atau kod',
+    guessed: 'sudah diteka', close: 'Dekat', wrong: 'Salah', right: 'Betul', sameCountry: 'Negara', otherCountry: 'Negara',
+    dirs: ['Utara', 'Timur laut', 'Timur', 'Tenggara', 'Selatan', 'Barat daya', 'Barat', 'Barat laut'],
+    solvedIn: n => `Betul dengan ${n} petunjuk`, missed: 'Destinasi hari ini', fromKL: km => `${km} km dari Kuala Lumpur`,
+    copy: 'Salin keputusan', copied: 'Keputusan disalin', copyFail: 'Tidak dapat menyalin pada peranti ini.',
+    flights: code => `Penerbangan ke ${code}`, flightsToast: code => `Dalam aplikasi, butang ini membuka carian penerbangan ke ${code}.`,
+    back: 'Kembali', draft: 'Draf. Fakta akan disemak sebelum dilancarkan.',
+    legend: 'Setiap tekaan salah memberitahu jarak, arah dan sama ada negaranya betul.', noResult: 'Tiada bandar sepadan.',
+    pullHint: 'Tarik ke bawah untuk tutup'
+  },
+  en: {
+    presents: 'airasia presents', tagline: 'Guess the destination from its clues.',
+    demo: 'Demo for airasia', review: 'Hints are drafts. The city list is for the demo only.',
+    reset: 'Reset demo', play: 'Play', cont: 'Continue', hints6: '6 hints, one at a time',
+    hint: 'Hint', more: n => `${n} more hints open after wrong guesses`,
+    pick: 'Pick a city', seeAnswer: 'See the answer', pickTitle: 'Pick a city', search: 'Search city, country or code',
+    guessed: 'already guessed', close: 'Close', wrong: 'Wrong', right: 'Correct', sameCountry: 'Country', otherCountry: 'Country',
+    dirs: ['North', 'North-east', 'East', 'South-east', 'South', 'South-west', 'West', 'North-west'],
+    solvedIn: n => `Solved with ${n} ${n === 1 ? 'hint' : 'hints'}`, missed: "Today's destination", fromKL: km => `${km} km from Kuala Lumpur`,
+    copy: 'Copy result', copied: 'Result copied', copyFail: 'Copying is not available on this device.',
+    flights: code => `Flights to ${code}`, flightsToast: code => `In the app, this opens flight search to ${code}.`,
+    back: 'Back', draft: 'Draft. Facts to be checked before launch.',
+    legend: 'Each wrong guess tells you how far off you are, which way to go, and if the country is right.', noResult: 'No city matches.',
+    pullHint: 'Pull down to close'
+  }
+};
+
+// ---------- state ----------
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let lang = store.get('gw-lang', 'en');
+let prog = store.get('gw-prog-v1', {});
+const fresh = () => ({ guesses: [], done: false, solved: false });
+PUZZLES.forEach(p => { if (!prog[p.id]) prog[p.id] = fresh(); });
+const save = () => store.set('gw-prog-v1', prog);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const t = k => T[lang][k];
+
+let now = 0, last = 0, dt = 0.016;
+let screen = 'splash', cur = null, trans = null, pendingResult = 0;
+const enter = { splash: 0, home: 0, puzzle: 0, result: 0 };
+const scroll = { puzzle: 0, picker: 0 }, maxScroll = { puzzle: 0, picker: 0 }, fling = { puzzle: 0, picker: 0 };
+let autoScroll = false, query = '', toast = null;
+const revealAt = {}, guessAt = {}, burstDone = {};
+let particles = [];
+// drawer: slides up from the bottom and pushes the page up with it
+const D0 = 196, DH = H - D0, PUSH = 370;
+let pk = 0, pkTarget = 0, pull = 0, pullHeld = false, contentBottom = 552;
+// while typing, the drawer rises to the top so the results sit above the phone keyboard
+const LIFT = D0 - 14;
+let lift = 0;
+
+// ---------- canvas ----------
+const cv = document.getElementById('game'), ctx = cv.getContext('2d');
+const qi = document.getElementById('q');
+let scale = 1, ox = 0, oy = 0, dpr = 1;
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 3);
+  const r = cv.getBoundingClientRect();
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  scale = Math.min(r.width / W, r.height / H);
+  ox = (r.width - W * scale) / 2; oy = (r.height - H * scale) / 2;
+}
+addEventListener('resize', resize);
+if (window.visualViewport) visualViewport.addEventListener('resize', resize);
+// Bottom of the visible area in game units. The keyboard shrinks the visual viewport on phones that overlay it.
+function visibleBottom() {
+  const vv = window.visualViewport; if (!vv) return H;
+  const r = cv.getBoundingClientRect();
+  return clamp((vv.offsetTop + vv.height - r.top - oy) / scale, 120, H);
+}
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const k01 = (t0, dur) => clamp((now - t0) / dur, 0, 1);
+const easeOut = k => 1 - Math.pow(1 - k, 3);
+const easeInOut = k => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const easeBack = k => { const c1 = 1.9, c3 = c1 + 1; return k <= 0 ? 0 : 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
+function vib(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
+
+function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+function fillRR(x, y, w, h, r, c) { rr(x, y, w, h, r); ctx.fillStyle = c; ctx.fill(); }
+function strokeRR(x, y, w, h, r, c, lw = 1) { rr(x, y, w, h, r); ctx.strokeStyle = c; ctx.lineWidth = lw; ctx.stroke(); }
+function text(s, x, y, font, color, align = 'left', base = 'alphabetic') {
+  ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillText(s, x, y);
+}
+function wrap(s, font, maxW) {
+  ctx.font = font; const words = s.split(' '), lines = []; let line = '';
+  for (const w of words) { const test = line ? line + ' ' + w : w; if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test; }
+  if (line) lines.push(line); return lines;
+}
+function fit(s, font, maxW) {
+  ctx.font = font; if (ctx.measureText(s).width <= maxW) return s;
+  while (s.length > 1 && ctx.measureText(s + '…').width > maxW) s = s.slice(0, -1); return s.trimEnd() + '…';
+}
+function arrow(x, y, up, c) { ctx.beginPath(); if (up) { ctx.moveTo(x, y - 4); ctx.lineTo(x + 4, y + 3); ctx.lineTo(x - 4, y + 3); } else { ctx.moveTo(x, y + 4); ctx.lineTo(x + 4, y - 3); ctx.lineTo(x - 4, y - 3); } ctx.closePath(); ctx.fillStyle = c; ctx.fill(); }
+function tick(x, y, c) { ctx.beginPath(); ctx.moveTo(x - 4, y); ctx.lineTo(x - 1, y + 3); ctx.lineTo(x + 4, y - 3); ctx.strokeStyle = c; ctx.lineWidth = 1.8; ctx.stroke(); }
+function cross(x, y, c) { ctx.beginPath(); ctx.moveTo(x - 3, y - 3); ctx.lineTo(x + 3, y + 3); ctx.moveTo(x + 3, y - 3); ctx.lineTo(x - 3, y + 3); ctx.strokeStyle = c; ctx.lineWidth = 1.6; ctx.stroke(); }
+// small plane pointing along angle a (radians, 0 = up)
+function plane(x, y, a, sc, c) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.scale(sc, sc); ctx.beginPath();
+  ctx.moveTo(0, -12); ctx.lineTo(2, -4); ctx.lineTo(11, 2); ctx.lineTo(11, 5); ctx.lineTo(2, 2); ctx.lineTo(1.5, 8); ctx.lineTo(5, 11); ctx.lineTo(5, 13); ctx.lineTo(0, 11.5);
+  ctx.lineTo(-5, 13); ctx.lineTo(-5, 11); ctx.lineTo(-1.5, 8); ctx.lineTo(-2, 2); ctx.lineTo(-11, 5); ctx.lineTo(-11, 2); ctx.lineTo(-2, -4); ctx.closePath();
+  ctx.fillStyle = c; ctx.fill(); ctx.restore();
+}
+function dot(x, y, c) { ctx.beginPath(); ctx.arc(x, y, 3.5, 0, 7); ctx.fillStyle = c; ctx.fill(); }
+function starPath(x, y, r, rot = 0) { ctx.beginPath(); for (let i = 0; i < 16; i++) { const a = rot + i * Math.PI / 8, rad = i % 2 ? r * 0.55 : r; ctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } ctx.closePath(); }
+
+// ---------- hit regions and presses ----------
+let hits = [], noHits = false, pressed = null; const pressV = {};
+function hit(x, y, w, h, fn, clip, id) { if (!noHits) hits.push({ x, y, w, h, fn, clip, id }); }
+function hitAt(p) {
+  for (let i = hits.length - 1; i >= 0; i--) { const h = hits[i]; if (h.clip && (p.y < h.clip[0] || p.y > h.clip[1])) continue; if (p.x >= h.x && p.x <= h.x + h.w && p.y >= h.y && p.y <= h.y + h.h) return h; }
+  return null;
+}
+function press(id) { const target = pressed === id ? 1 : 0; pressV[id] = (pressV[id] || 0) + (target - (pressV[id] || 0)) * Math.min(1, dt * 22); return 1 - 0.05 * pressV[id]; }
+function withScale(cx, cy, s, fn) { ctx.save(); ctx.translate(cx, cy); ctx.scale(s, s); ctx.translate(-cx, -cy); fn(); ctx.restore(); }
+function button(id, x, y, w, h, fill, label, font, color, fn, shine) {
+  const s = press(id);
+  withScale(x + w / 2, y + h / 2, s, () => {
+    fillRR(x, y + 3, w, h, h / 2, 'rgba(0,0,0,0.22)');
+    fillRR(x, y, w, h, h / 2, fill);
+    if (shine && !reduce) { // light sweep every few seconds
+      const ph = ((now / 3200) % 1) * 2 - 0.4;
+      if (ph > 0 && ph < 1.2) { ctx.save(); rr(x, y, w, h, h / 2); ctx.clip(); const sx = x + ph * (w + 120) - 60; const g = ctx.createLinearGradient(sx - 40, 0, sx + 40, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,248,220,0.45)'); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h); ctx.restore(); }
+    }
+    text(label, x + w / 2, y + h / 2 + 1, font, color, 'center', 'middle');
+  });
+  hit(x, y, w, h, () => { vib(8); fn(); }, null, id);
+}
+
+// ---------- input ----------
+function toLogical(e) { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left - ox) / scale, y: (e.clientY - r.top - oy) / scale }; }
+let down = null;
+const drawerY = () => D0 + (1 - pk) * DH + pull - lift * LIFT;
+function zoneAt(p) {
+  if (screen === 'puzzle' && pkTarget === 1 && pk > 0.6) {
+    const dy = drawerY();
+    if (p.y >= dy && p.y < dy + 104) return 'head';
+    if (p.y >= dy + 104) return 'picker';
+    return null;
+  }
+  if (screen === 'puzzle') return p.y > 78 && p.y < 552 ? 'puzzle' : null;
+  return null;
+}
+cv.addEventListener('pointerdown', e => {
+  const p = toLogical(e);
+  down = { x: p.x, y: p.y, sy: p.y, t: performance.now(), moved: false, zone: zoneAt(p), vy: 0 };
+  const h = hitAt(p); pressed = h && h.id ? h.id : null;
+  if (down.zone) { fling[down.zone === 'head' ? 'picker' : down.zone] = 0; if (down.zone === 'puzzle') autoScroll = false; }
+  cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove', e => {
+  if (!down) return; const p = toLogical(e); const dy = p.y - down.y; const tm = performance.now();
+  down.vy = dy / Math.max(1, tm - down.t); down.t = tm;
+  if (Math.abs(p.y - down.sy) > 8) { down.moved = true; pressed = null; }
+  const z = down.zone;
+  if (z === 'puzzle') { scroll.puzzle = clamp(scroll.puzzle - dy, 0, maxScroll.puzzle); }
+  else if (z === 'head') { pull = Math.max(0, pull + dy); pullHeld = true; }
+  else if (z === 'picker') {
+    if (pull > 0 || (scroll.picker <= 0 && dy > 0)) { pull = Math.max(0, pull + dy); pullHeld = true; }
+    else scroll.picker = clamp(scroll.picker - dy, 0, maxScroll.picker);
+  }
+  down.y = p.y;
+});
+function endPointer(e, cancel) {
+  if (!down) return; const p = toLogical(e); const d = down; down = null; pressed = null;
+  if ((d.zone === 'head' || d.zone === 'picker') && pull > 0) {
+    pullHeld = false;
+    if (pull > 110 || d.vy > 0.7) { pk = clamp(1 - pull / DH, 0, 1); pull = 0; closePicker(); }
+    return;
+  }
+  if (d.moved) { const z = d.zone === 'head' ? null : d.zone; if (z) fling[z] = -d.vy * 1000; return; }
+  if (cancel) return;
+  const h = hitAt(p); if (h) h.fn();
+}
+cv.addEventListener('pointerup', e => endPointer(e, false));
+cv.addEventListener('pointercancel', e => endPointer(e, true));
+cv.addEventListener('wheel', e => { const p = toLogical(e); let z = zoneAt(p); if (z === 'head') z = 'picker'; if (z) { scroll[z] = clamp(scroll[z] + e.deltaY * 0.6, 0, maxScroll[z]); if (z === 'puzzle') autoScroll = false; e.preventDefault(); } }, { passive: false });
+addEventListener('keydown', e => { if (e.key === 'Escape' && pkTarget === 1) closePicker(); });
+qi.addEventListener('input', () => { query = qi.value; scroll.picker = 0; });
+qi.addEventListener('keydown', e => { if (e.key === 'Enter') qi.blur(); });
+// some phones pan the page to show the focused field; the game never scrolls, so put it back
+qi.addEventListener('focus', () => setTimeout(() => scrollTo(0, 0), 60));
+
+// ---------- flow ----------
+const city = c => CITIES.find(x => x[0] === c);
+const rad = d => d * Math.PI / 180;
+function km(a, b) {
+  const dl = rad(b[4] - a[4]), dn = rad(b[5] - a[5]);
+  const h = Math.sin(dl / 2) ** 2 + Math.cos(rad(a[4])) * Math.cos(rad(b[4])) * Math.sin(dn / 2) ** 2;
+  return Math.round(12742 * Math.asin(Math.sqrt(h)));
+}
+// compass bearing from a to b, 0 = north, clockwise
+function bearing(a, b) {
+  const y = Math.sin(rad(b[5] - a[5])) * Math.cos(rad(b[4]));
+  const x = Math.cos(rad(a[4])) * Math.sin(rad(b[4])) - Math.sin(rad(a[4])) * Math.cos(rad(b[4])) * Math.cos(rad(b[5] - a[5]));
+  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+}
+const fmt = n => n.toLocaleString('en-US');
+const key = (id, i) => id + ':' + i;
+function go(to, dir) {
+  if (screen === to) return;
+  if (!reduce) trans = { from: screen, to, at: now, dir };
+  screen = to; enter[to] = now;
+  if (to === 'puzzle') { scroll.puzzle = 99999; autoScroll = true; }
+}
+function open(p) { cur = p; pk = 0; pkTarget = 0; go(prog[p.id].done ? 'result' : 'puzzle', 1); }
+function guess(n) {
+  const st = prog[cur.id]; if (st.done || st.guesses.includes(n)) return;
+  const i = st.guesses.length; st.guesses.push(n);
+  const gT = now + (reduce ? 0 : 300); guessAt[key(cur.id, i)] = gT; autoScroll = true;
+  if (n === cur.answer) { st.done = true; st.solved = true; vib([20, 30, 60]); pendingResult = gT + (reduce ? 300 : 1500); }
+  else {
+    vib([30, 50, 30]);
+    if (st.guesses.length >= 6) { st.done = true; pendingResult = gT + (reduce ? 300 : 1300); }
+    else revealAt[key(cur.id, i + 1)] = gT + (reduce ? 0 : 750);
+  }
+  save(); closePicker();
+}
+function openPicker() { pkTarget = 1; pull = 0; query = ''; qi.value = ''; scroll.picker = 0; fling.picker = 0; }
+function closePicker() { pkTarget = 0; qi.blur(); }
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[ً-ٰٟ]/g, '').replace(/[^a-z0-9؀-ۿ]/g, '');
+function filtered() {
+  const q = norm(query); if (!q) return CITIES;
+  return CITIES.filter(s => norm(s[0]) === q || norm(s[1]).includes(q) || norm(s[2]).includes(q) || norm(s[3]).includes(q));
+}
+function shareText(p) {
+  const st = prog[p.id]; const n = st.guesses.length; let sq = '';
+  for (let i = 0; i < 6; i++) sq += i < n ? (st.solved && i === n - 1 ? '🟩' : '🟥') : '⬜';
+  return `Guess Where · ${p.diff[lang]}\n${sq} ${st.solved ? n : 'X'}/6\nairasia.com`;
+}
+function copyResult(p) {
+  const s = shareText(p);
+  try { navigator.clipboard.writeText(s).then(() => showToast(t('copied')), () => showToast(t('copyFail'))); }
+  catch (e) { showToast(t('copyFail')); }
+}
+function showToast(s) { toast = { s, at: now }; }
+function burst(x, y, colors, n) {
+  if (reduce) return;
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, sp = 90 + Math.random() * 240;
+    particles.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 120, r: 3 + Math.random() * 5, rot: Math.random() * 6, vr: (Math.random() - 0.5) * 8, c: colors[i % colors.length], born: now, life: 900 + Math.random() * 700 });
+  }
+}
+
+// ---------- drawing: shared ----------
+function drawBackdrop() {
+  const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, C.bg2); g.addColorStop(1, C.bg);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.fillStyle = '#ffffff';
+  for (let y = 14; y < H; y += 28) for (let x = (y / 28) % 2 ? 28 : 14; x < W; x += 28) {
+    ctx.globalAlpha = reduce ? 0.08 : 0.05 + 0.07 * (0.5 + 0.5 * Math.sin(now / 1500 + x * 0.05 + y * 0.03));
+    ctx.beginPath(); ctx.arc(x, y, 1.4, 0, 7); ctx.fill();
+  }
+  ctx.restore();
+}
+function langToggle() {
+  const x = 274, y = 18, w = 70, h = 28;
+  fillRR(x, y, w, h, 14, 'rgba(255,255,255,0.16)');
+  const target = lang === 'ms' ? 0 : 1;
+  pressV.langX = pressV.langX === undefined ? target : pressV.langX + (target - pressV.langX) * Math.min(1, dt * 16);
+  fillRR(x + 2 + pressV.langX * 34, y + 2, 32, h - 4, 12, C.parch);
+  text('BM', x + 18, y + 19, F.sans(13, 700), lang === 'ms' ? C.ink : C.night, 'center');
+  text('EN', x + 52, y + 19, F.sans(13, 700), lang === 'en' ? C.ink : C.night, 'center');
+  hit(x, y, w, h, () => { vib(8); lang = lang === 'ms' ? 'en' : 'ms'; store.set('gw-lang', lang); }, null, 'lang');
+}
+function header(sub) {
+  const s = press('back');
+  withScale(33, 37, s, () => {
+    fillRR(14, 18, 38, 38, 19, 'rgba(255,255,255,0.16)');
+    ctx.beginPath(); ctx.moveTo(37, 28); ctx.lineTo(28, 37); ctx.lineTo(37, 46); ctx.strokeStyle = C.parch; ctx.lineWidth = 2.4; ctx.stroke();
+  });
+  hit(10, 14, 46, 46, () => { vib(8); closePicker(); go('home', -1); }, null, 'back');
+  text('Guess Where', W / 2, 40, F.kufi(20), C.parch, 'center');
+  if (sub) text(sub, W / 2, 60, F.sans(12, 500), C.night, 'center');
+}
+
+// ---------- screens ----------
+function drawSplash() {
+  drawBackdrop();
+  const e = enter.splash;
+  const k1 = easeOut(k01(e, 900)), k2 = easeOut(k01(e + 500, 700));
+  ctx.save(); ctx.globalAlpha = k1;
+  ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.setLineDash([6, 7]);
+  ctx.beginPath(); ctx.arc(W / 2, 300, 70, Math.PI * 1.05, Math.PI * (1.05 + 0.9 * k1)); ctx.stroke();
+  ctx.setLineDash([]);
+  const pa = Math.PI * (1.05 + 0.9 * k1);
+  plane(W / 2 + Math.cos(pa) * 70, 300 + Math.sin(pa) * 70, pa + Math.PI / 2, 1.2, '#ffffff');
+  ctx.restore();
+  ctx.globalAlpha = k2;
+  text('airasia', W / 2, 340 + (1 - k2) * 14, F.kufi(38), C.parch, 'center');
+  text(lang === 'ms' ? 'mempersembahkan' : 'presents', W / 2, 370 + (1 - k2) * 14, F.sans(16, 600), C.night, 'center');
+  ctx.globalAlpha = 1;
+  hit(0, 0, W, H, () => go('home', 0));
+  if (now - e > (reduce ? 900 : 2300)) go('home', 0);
+}
+
+function drawHome() {
+  drawBackdrop(); langToggle();
+  const e = enter.home;
+  const kt = reduce ? 1 : easeOut(k01(e, 500));
+  ctx.globalAlpha = kt;
+  text(t('presents').toUpperCase(), 24, 86, F.sans(11, 700), C.night);
+  text('Guess Where', 24, 128 + (1 - kt) * 10, F.kufi(38), C.parch);
+  text(t('tagline'), 24, 156, F.sans(17, 400), C.night);
+  ctx.globalAlpha = 1;
+  PUZZLES.forEach((p, i) => {
+    const ki = reduce ? 1 : easeBack(k01(e + 150 + i * 110, 520));
+    const y = 190 + i * 122 + (1 - ki) * 40, st = prog[p.id], id = 'card' + i;
+    ctx.globalAlpha = clamp(ki, 0, 1);
+    const s = press(id);
+    withScale(180, y + 54, s, () => {
+      fillRR(20, y + 4, 320, 108, 14, 'rgba(0,0,0,0.25)');
+      fillRR(20, y, 320, 108, 14, C.parch);
+      strokeRR(24, y + 4, 312, 100, 11, 'rgba(196,18,43,0.18)');
+      text(`${p.diff[lang].toUpperCase()} · ${p.day[lang]}`, 38, y + 30, F.sans(12, 700), C.goldDark);
+      if (st.done) {
+        const sr = city(p.answer);
+        text(fit(sr[1], F.kufi(22), 200), 38, y + 60, F.kufi(22), C.ink);
+        text(st.solved ? t('solvedIn')(st.guesses.length) : t('missed'), 38, y + 84, F.sans(14, 700), st.solved ? C.greenInk : C.redInk);
+        text(sr[0], 318, y + 72, F.ar(26), C.goldDark, 'right');
+      } else {
+        for (let j = 0; j < 3; j++) text('?', 38 + j * 22, y + 62 + (reduce ? 0 : Math.sin(now / 420 + j * 0.9 + i) * 2.5), F.kufi(26), C.ink);
+        text(st.guesses.length ? `${t('hint')} ${st.guesses.length + 1}/6` : t('hints6'), 38, y + 88, F.sans(14, 500), C.ink2);
+        const pulse = reduce ? 1 : 1 + 0.035 * Math.max(0, Math.sin(now / 380 + i * 1.3));
+        withScale(277, y + 61, pulse, () => {
+          fillRR(232, y + 42, 90, 38, 19, C.gold);
+          text(st.guesses.length ? t('cont') : t('play'), 277, y + 62, F.sans(16, 700), C.ink, 'center', 'middle');
+        });
+      }
+      for (let j = 0; j < 6; j++) {
+        ctx.beginPath(); ctx.arc(238 + j * 15, y + 24, 4.5, 0, 7);
+        const n = st.guesses.length;
+        ctx.fillStyle = j < n ? (st.solved && j === n - 1 ? C.green : C.red) : C.grey; ctx.fill();
+      }
+    });
+    ctx.globalAlpha = 1;
+    hit(20, y, 320, 108, () => { vib(8); open(p); }, null, id);
+  });
+  ctx.globalAlpha = reduce ? 1 : k01(e + 500, 500);
+  text(t('demo'), 24, 584, F.sans(13, 700), C.night);
+  text(t('review'), 24, 602, F.sans(13, 400), C.night);
+  ctx.font = F.sans(13, 700); const rw = ctx.measureText(t('reset')).width;
+  text(t('reset'), 336, 584, F.sans(13, 700), C.parch, 'right');
+  ctx.fillStyle = C.parch; ctx.fillRect(336 - rw, 588, rw, 1);
+  ctx.globalAlpha = 1;
+  hit(336 - rw - 8, 566, rw + 16, 30, () => { vib(8); PUZZLES.forEach(p => prog[p.id] = fresh()); save(); enter.home = now; }, null, 'reset');
+}
+
+function chip(x, y, w, ok, label, icon, k) {
+  if (k <= 0) return;
+  withScale(x + w / 2, y + 12, easeBack(k), () => {
+    ctx.globalAlpha = clamp(k * 1.6, 0, 1);
+    fillRR(x, y, w, 24, 12, ok ? C.greenSoft : C.redSoft);
+    strokeRR(x + 0.5, y + 0.5, w - 1, 23, 12, ok ? C.green : C.red);
+    icon(x + 12, y + 12, ok ? C.green : C.red);
+    text(fit(label, F.sans(12, 700), w - 26), x + 22, y + 16.5, F.sans(12, 700), ok ? C.greenInk : C.redInk);
+    ctx.globalAlpha = 1;
+  });
+}
+
+function drawPuzzle() {
+  drawBackdrop();
+  const p = cur, st = prog[p.id];
+  const shift = -clamp(1 - (drawerY() - D0) / DH, 0, 1) * clamp(contentBottom + 12 - D0, 0, PUSH);
+  ctx.save(); ctx.translate(0, shift);
+  header(`${p.diff[lang]} · ${p.day[lang]}`); langToggle();
+  const shown = Math.min(6, st.done ? st.guesses.length : st.guesses.length + 1);
+  const top = 80, bottom = 552;
+  if (autoScroll && !down) scroll.puzzle += (maxScroll.puzzle - scroll.puzzle) * Math.min(1, dt * 10);
+  ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, bottom - top); ctx.clip();
+  let y = top + 8 - scroll.puzzle; const content0 = y;
+  for (let i = 0; i < shown; i++) {
+    const h0 = p.hints[i], lines = wrap(h0[lang], F.sans(17, 500), 288);
+    const g = st.guesses[i], kk = key(p.id, i), right = g === p.answer;
+    const rT = revealAt[kk];
+    const kOpen = rT === undefined || reduce ? 1 : easeOut(k01(rT, 420));
+    if (kOpen <= 0) continue;
+    const gT = guessAt[kk];
+    const kRow = g ? (gT === undefined || reduce ? 1 : easeOut(k01(gT, 320))) : 0;
+    const rowH = g ? (right ? 46 : 74) : 0;
+    const baseH = 40 + lines.length * 23;
+    const hh = (baseH + rowH * kRow) * kOpen;
+    let sx = 0; // shake on a wrong guess
+    if (g && !right && gT !== undefined && !reduce) { const sk = k01(gT, 420); if (sk > 0 && sk < 1) sx = Math.sin(sk * Math.PI * 7) * 7 * (1 - sk); }
+    ctx.save(); ctx.translate(sx, 0);
+    ctx.globalAlpha = clamp(kOpen * 1.4, 0, 1);
+    fillRR(16, y + 3, 328, hh, 12, 'rgba(0,0,0,0.22)');
+    // a wrong guess tints the card, a right one turns it green
+    let fill = C.parch;
+    if (g && kRow > 0) fill = right ? '#e6f4ea' : '#fdebed';
+    fillRR(16, y, 328, hh, 12, fill);
+    if (g && kRow > 0) {
+      ctx.save(); rr(16, y, 328, hh, 12); ctx.clip(); ctx.fillStyle = right ? C.green : C.red; ctx.fillRect(16, y, 5, hh); ctx.restore();
+      if (gT !== undefined && !reduce) { const gk = k01(gT, 800); if (gk > 0 && gk < 1) strokeRR(16 - 5 * gk, y - 5 * gk, 328 + 10 * gk, hh + 10 * gk, 12 + 5 * gk, right ? `rgba(63,122,70,${1 - gk})` : `rgba(181,69,47,${1 - gk})`, 3); }
+    }
+    ctx.save(); rr(16, y, 328, hh, 12); ctx.clip();
+    text(`${t('hint').toUpperCase()} ${i + 1}`, 32, y + 24, F.sans(11, 700), C.goldDark);
+    const total = lines.join(' ').length; // typewriter
+    let chars = rT === undefined || reduce ? total : Math.floor(clamp((now - rT - 180) / (total * 16), 0, 1) * total);
+    lines.forEach((ln, j) => { if (chars <= 0) return; text(ln.slice(0, chars), 32, y + 48 + j * 23, F.sans(17, 500), C.ink); chars -= ln.length + 1; });
+    if (g && kRow > 0) {
+      const gy = y + baseH;
+      ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(32, gy, 296, 1);
+      const s = city(g), a = city(p.answer);
+      if (right) {
+        const kb = reduce || gT === undefined ? 1 : easeBack(k01(gT + 120, 420));
+        withScale(180, gy + 23, kb, () => {
+          fillRR(32, gy + 10, 296, 26, 13, C.greenSoft); strokeRR(32.5, gy + 10.5, 295, 25, 13, C.green);
+          tick(48, gy + 23, C.green);
+          text(`${s[1]} · ${t('right')}`, 60, gy + 28, F.sans(14, 700), C.greenInk);
+        });
+        if (gT !== undefined && !burstDone[kk] && now >= gT + 120) { burstDone[kk] = 1; burst(180, gy + 23 + shift, [C.gold, C.goldLight, C.green, C.red], 34); }
+      } else {
+        ctx.globalAlpha = gT === undefined || reduce ? 1 : k01(gT + 80, 200);
+        cross(38, gy + 22, C.red);
+        text(fit(`${s[1]}, ${lang === 'ms' ? s[3] : s[2]} · ${t('wrong')}`, F.sans(14, 700), 280), 48, gy + 26, F.sans(14, 700), C.redInk);
+        ctx.globalAlpha = 1;
+        const ck = c => gT === undefined || reduce ? 1 : k01(gT + 280 + c * 120, 280);
+        const d = km(s, a), close = d <= 300, b = bearing(s, a);
+        chip(32, gy + 38, 96, close, `${fmt(d)} km`, (cx, cy, c) => close ? tick(cx, cy, c) : dot(cx, cy, c), ck(0));
+        chip(132, gy + 38, 96, false, t('dirs')[Math.round(b / 45) % 8], (cx, cy, c) => plane(cx, cy, rad(b), 0.42, c), ck(1));
+        const same = s[2] === a[2];
+        chip(232, gy + 38, 96, same, same ? t('sameCountry') : t('otherCountry'), (cx, cy, c) => same ? tick(cx, cy, c) : cross(cx, cy, c), ck(2));
+      }
+    }
+    ctx.restore();
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    y += hh + 12 * kOpen;
+  }
+  if (!st.done && shown < 6) { text(t('more')(6 - shown), W / 2, y + 16, F.sans(13, 500), C.night, 'center'); y += 30; }
+  if (st.guesses.length === 0) {
+    const ll = wrap(t('legend'), F.sans(13, 400), 300);
+    ll.forEach((ln, j) => text(ln, W / 2, y + 12 + j * 18, F.sans(13, 400), C.night, 'center'));
+    y += ll.length * 18 + 12;
+  }
+  ctx.restore();
+  if (pkTarget === 0 && pk < 0.01) contentBottom = Math.min(bottom, y);
+  maxScroll.puzzle = Math.max(0, (y - content0) - (bottom - top) + 16);
+  scroll.puzzle = clamp(scroll.puzzle, 0, maxScroll.puzzle);
+  if (pkTarget === 0 && pk < 0.05) button('main', 16, 566, 328, 54, C.gold, st.done ? t('seeAnswer') : t('pick'), F.sans(19, 700), C.ink, () => { if (st.done) go('result', 1); else openPicker(); }, !st.done);
+  else { fillRR(16, 569, 328, 54, 27, 'rgba(0,0,0,0.22)'); fillRR(16, 566, 328, 54, 27, C.gold); text(t('pick'), W / 2, 594, F.sans(19, 700), C.ink, 'center', 'middle'); }
+  ctx.restore();
+}
+
+function drawDrawer() {
+  const y0 = drawerY();
+  const active = pkTarget === 1 && pk > 0.9;
+  if (active) hit(0, 0, W, y0, () => closePicker(), null, 'shade');
+  const sh = ctx.createLinearGradient(0, y0 - 18, 0, y0); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.3)');
+  ctx.fillStyle = sh; ctx.fillRect(0, y0 - 18, W, 18);
+  fillRR(0, y0, W, H - y0 + 30, 22, C.parch);
+  fillRR(W / 2 - 22, y0 + 8, 44, 5, 3, C.grey);
+  text(t('pickTitle'), 22, y0 + 44, F.kufi(20), C.ink);
+  text(t('pullHint'), 338, y0 + 42, F.sans(12, 500), C.muted, 'right');
+  const sy = y0 + 58;
+  const focused = document.activeElement === qi;
+  fillRR(16, sy, 328, 40, 20, '#f6f6f6'); strokeRR(16.5, sy + 0.5, 327, 39, 20, focused ? C.gold : C.grey, focused ? 2 : 1);
+  ctx.beginPath(); ctx.arc(38, sy + 19, 6, 0, 7); ctx.moveTo(42.5, sy + 23.5); ctx.lineTo(47, sy + 28); ctx.strokeStyle = C.muted; ctx.lineWidth = 1.8; ctx.stroke();
+  const caret = focused && Math.floor(now / 530) % 2 === 0;
+  if (query) { const qs = fit(query, F.sans(16, 500), 270); text(qs, 56, sy + 26, F.sans(16, 500), C.ink); if (caret) { ctx.font = F.sans(16, 500); ctx.fillStyle = C.ink; ctx.fillRect(57 + ctx.measureText(qs).width, sy + 11, 1.5, 19); } }
+  else { text(t('search'), 56, sy + 26, F.sans(15, 400), C.muted); if (caret) { ctx.fillStyle = C.ink; ctx.fillRect(55, sy + 11, 1.5, 19); } }
+  if (active) { placeInput(16, sy, 328, 40); hit(16, sy, 328, 40, () => qi.focus(), null, 'search'); } else qi.style.left = '-200px';
+  const top = sy + 46, list = filtered(), st = prog[cur.id], rowH = 54, bottom = Math.max(top + rowH, visibleBottom());
+  ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, bottom - top); ctx.clip();
+  maxScroll.picker = Math.max(0, list.length * rowH - (bottom - top) + 20);
+  scroll.picker = clamp(scroll.picker, 0, maxScroll.picker);
+  const first = Math.max(0, Math.floor(scroll.picker / rowH) - 1);
+  for (let i = first; i < Math.min(list.length, first + 14); i++) {
+    const s = list[i], y = top + i * rowH - scroll.picker, used = st.guesses.includes(s[0]), rid = 'row' + s[0];
+    const ps = press(rid);
+    if (pressV[rid] > 0.05) { ctx.fillStyle = `rgba(208,2,27,${0.14 * pressV[rid]})`; ctx.fillRect(0, y, W, rowH); }
+    else if (i % 2 === 0) { ctx.fillStyle = 'rgba(208,2,27,0.04)'; ctx.fillRect(0, y, W, rowH); }
+    withScale(180, y + rowH / 2, ps, () => {
+      ctx.globalAlpha = used ? 0.6 : 1;
+      ctx.beginPath(); ctx.arc(36, y + rowH / 2, 17, 0, 7);
+      if (used) { ctx.fillStyle = C.redSoft; ctx.fill(); ctx.strokeStyle = C.red; } else ctx.strokeStyle = C.goldDark;
+      ctx.lineWidth = 1.2; ctx.stroke();
+      text(s[0], 36, y + rowH / 2 + 4, F.sans(11, 800), used ? C.redInk : C.goldDark, 'center');
+      text(fit(s[1], F.sans(16, 700), 270), 62, y + 24, F.sans(16, 700), C.ink);
+      text(fit(used ? t('guessed') : (lang === 'ms' ? s[3] : s[2]), F.sans(13, used ? 700 : 400), 270), 62, y + 42, F.sans(13, used ? 700 : 400), used ? C.red : C.ink2);
+      ctx.globalAlpha = 1;
+    });
+    if (!used && active) hit(0, y, W, rowH, () => { vib(10); guess(s[0]); }, [top, bottom], rid);
+  }
+  if (!list.length) text(t('noResult'), W / 2, top + 40, F.sans(15, 500), C.ink2, 'center');
+  ctx.restore();
+}
+function placeInput(x, y, w, h) {
+  const r = cv.getBoundingClientRect();
+  qi.style.left = (r.left + ox + x * scale) + 'px'; qi.style.top = (r.top + oy + y * scale) + 'px';
+  qi.style.width = (w * scale) + 'px'; qi.style.height = (h * scale) + 'px';
+}
+
+// The answer page fits one screen: the summary drops a size if the card would run long.
+function drawResult() {
+  drawBackdrop();
+  const p = cur, st = prog[p.id], s = city(p.answer), e = enter.result;
+  header(`${p.diff[lang]} · ${p.day[lang]}`); langToggle();
+  const step = (d, dur = 450) => reduce ? 1 : easeOut(k01(e + d, dur));
+  const avail = 556 - 82;
+  let fs = 16, lh = 21, sumL, cardH;
+  const measure = () => {
+    sumL = wrap(p.summary[lang], F.sans(fs, 400), 296);
+    cardH = 250 + sumL.length * lh;
+  };
+  measure(); while (cardH > avail && fs > 13) { fs--; lh--; measure(); }
+  const y = 82 + Math.max(0, (avail - cardH) / 2);
+  const kc = reduce ? 1 : easeBack(k01(e + 60, 560));
+  withScale(180, y + cardH / 2, 0.9 + 0.1 * kc, () => {
+    ctx.globalAlpha = clamp(kc, 0, 1);
+    fillRR(16, y + 4, 328, cardH, 14, 'rgba(0,0,0,0.25)');
+    fillRR(16, y, 328, cardH, 14, C.parch);
+    strokeRR(21, y + 5, 318, cardH - 10, 10, 'rgba(196,18,43,0.18)');
+    ctx.save(); ctx.globalAlpha = 0.25 * clamp(kc, 0, 1); ctx.strokeStyle = C.goldDark; ctx.lineWidth = 1.4; ctx.setLineDash([5, 6]); ctx.lineDashOffset = -now / 60;
+    ctx.beginPath(); ctx.arc(W / 2, y + 70, 48, 0, 7); ctx.stroke(); ctx.restore();
+    ctx.globalAlpha = step(250);
+    text((st.solved ? t('solvedIn')(st.guesses.length) : t('missed')).toUpperCase(), W / 2, y + 28, F.sans(12, 700), st.solved ? C.green : C.red, 'center');
+    const ka = reduce ? 1 : easeBack(k01(e + 350, 600));
+    ctx.globalAlpha = clamp(ka, 0, 1);
+    withScale(W / 2, y + 66, 0.6 + 0.4 * ka, () => text(s[0], W / 2, y + 82, F.ar(34), C.goldDark, 'center'));
+    ctx.globalAlpha = step(550);
+    text(fit(s[1], F.kufi(24), 296), W / 2, y + 128 + (1 - step(550)) * 10, F.kufi(24), C.ink, 'center');
+    text(`${lang === 'ms' ? s[3] : s[2]} · ${t('fromKL')(fmt(km(city('KUL'), s)))}`, W / 2, y + 148, F.sans(13, 500), C.ink2, 'center');
+    ctx.globalAlpha = 1;
+    for (let j = 0; j < 6; j++) {
+      const n = st.guesses.length, x = W / 2 - 3 * 24 + j * 24 + 2;
+      const c = j < n ? (st.solved && j === n - 1 ? C.green : C.red) : C.grey;
+      const kq = reduce ? 1 : easeBack(k01(e + 700 + j * 90, 380));
+      if (kq > 0) withScale(x + 10, y + 168, kq, () => fillRR(x, y + 158, 20, 20, 5, c));
+    }
+    let cy = y + 196;
+    ctx.globalAlpha = step(1100);
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(32, cy - 6, 296, 1);
+    sumL.forEach((ln, j) => text(ln, 32, cy + 14 + j * lh + (1 - step(1100)) * 8, F.sans(fs, 400), C.ink));
+    cy += 4 + sumL.length * lh;
+    cy += 16;
+    ctx.globalAlpha = step(1250);
+    text(fit(t('draft'), F.sans(11, 400), 296), 32, cy + 10, F.sans(11, 400), C.muted);
+    ctx.globalAlpha = 1;
+  });
+  button('copy', 16, 566, 158, 54, C.gold, t('copy'), F.sans(17, 700), C.ink, () => copyResult(p), true);
+  button('fly', 186, 566, 158, 54, C.parch, fit(t('flights')(s[0]), F.sans(16, 700), 140), F.sans(16, 700), C.goldDark, () => showToast(t('flightsToast')(s[1])));
+  const bk = 'res' + p.id + e;
+  if (st.solved && !burstDone[bk] && now > e + 420 && !reduce) { burstDone[bk] = 1; burst(W / 2, y + 70, [C.gold, C.goldLight, C.green, C.red], 40); }
+}
+
+function drawParticles() {
+  particles = particles.filter(q => now - q.born < q.life);
+  for (const q of particles) {
+    const a = (now - q.born) / q.life;
+    q.vy += 520 * dt; q.vx *= 0.985; q.x += q.vx * dt; q.y += q.vy * dt; q.rot += q.vr * dt;
+    ctx.globalAlpha = 1 - a * a; ctx.fillStyle = q.c;
+    starPath(q.x, q.y, q.r, q.rot); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+function drawToast() {
+  if (!toast) return; const age = now - toast.at; if (age > 2200) { toast = null; return; }
+  const a = Math.min(1, age / 160, (2200 - age) / 300), lines = wrap(toast.s, F.sans(14, 700), 280), h = 20 + lines.length * 18;
+  const y = 548 - h + (1 - easeOut(Math.min(1, age / 260))) * 30;
+  ctx.globalAlpha = a; fillRR(30, y, 300, h, 12, C.ink);
+  lines.forEach((ln, j) => text(ln, W / 2, y + 24 + j * 18, F.sans(14, 700), C.parch, 'center'));
+  ctx.globalAlpha = 1;
+}
+
+function drawScreen(name) {
+  if (name === 'splash') drawSplash();
+  else if (name === 'home') drawHome();
+  else if (name === 'puzzle') drawPuzzle();
+  else if (name === 'result') drawResult();
+}
+
+function frame(ts) {
+  now = ts; dt = Math.min(0.05, last ? (ts - last) / 1000 : 0.016); last = ts;
+  pk += (pkTarget - pk) * Math.min(1, dt * (reduce ? 60 : 11));
+  lift += ((pkTarget === 1 && document.activeElement === qi ? 1 : 0) - lift) * Math.min(1, dt * (reduce ? 60 : 12));
+  if (!pullHeld && pull > 0) { pull *= Math.pow(0.0005, dt); if (pull < 0.5) pull = 0; }
+  for (const z in fling) { if (Math.abs(fling[z]) > 5 && !down) { scroll[z] = clamp(scroll[z] + fling[z] * dt, 0, maxScroll[z]); fling[z] *= Math.pow(0.04, dt); if (z === 'puzzle') autoScroll = false; } else if (!down) fling[z] = 0; }
+  if (pendingResult && now >= pendingResult) { pendingResult = 0; if (screen === 'puzzle') go('result', 1); }
+
+  hits = [];
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * ox, dpr * oy);
+  ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip();
+  const drawerShown = screen === 'puzzle' && (pkTarget === 1 || pk > 0.002);
+  if (trans && now - trans.at < 380) {
+    const k = easeInOut((now - trans.at) / 380);
+    noHits = true;
+    if (trans.dir === 0) { drawScreen(trans.from); ctx.globalAlpha = k; drawScreen(trans.to); ctx.globalAlpha = 1; }
+    else {
+      ctx.save(); ctx.translate(-trans.dir * k * W * 0.35, 0); drawScreen(trans.from); ctx.fillStyle = `rgba(60,0,8,${0.5 * k})`; ctx.fillRect(0, 0, W, H); ctx.restore();
+      ctx.save(); ctx.translate(trans.dir * (1 - k) * W, 0); drawScreen(trans.to); ctx.restore();
+    }
+    noHits = false; qi.style.left = '-200px';
+  } else {
+    trans = null;
+    if (drawerShown) { noHits = pkTarget === 1; drawPuzzle(); noHits = false; drawDrawer(); }
+    else { drawScreen(screen); qi.style.left = '-200px'; }
+  }
+  drawParticles();
+  drawToast();
+  ctx.restore();
+  requestAnimationFrame(frame);
+}
+
+resize();
+const fontsReady = document.fonts ? Promise.race([
+  Promise.all([document.fonts.load(F.kufi(20)), document.fonts.load(F.sans(16)), document.fonts.load(F.sans(16, 700))]),
+  new Promise(r => setTimeout(r, 1500))
+]) : Promise.resolve();
+fontsReady.then(() => requestAnimationFrame(ts => { enter.splash = ts; frame(ts); }));
+})();
+</script>
+
+</html>
