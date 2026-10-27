@@ -35,7 +35,7 @@
 - [[context/landing-page-review-todo]] — Prioritized action items derived from the landing page review.
 - `reports/` — The reports subdomain (`reports.artifisi.com`), a separate Cloudflare Pages project. Not yet documented in a wiki page.
 - `playbook/pipeline.md` — The eleven-stage, four-gate pipeline for turning a published report into an interactive page.
-- `playbook/instructions.md` — Build and ship playbook, version 2.
+- `playbook/instructions.md` — Build and ship playbook, version 3. The rules are numbered in the order they cost us time; 11 to 14 are the Malaysia CPI report's lessons, about type behind the chart, dark grounds, page-owned tokens, and landing the cut with the rules.
 - `playbook/video.md` — The video pipeline: report to story to shots to storyboard to script to voice-over to video, plus the five-beat arc a film runs and the craft rules for the cut. Run end to end on 2026-10-27.
 - `playbook/palettes.md` — The palette registry. One report, one palette, and the method for picking the next one. The CPI report's palette is a fuel price board at night.
 - `playbook/tools/` — Capture and assembly tools for the video pipeline. The theme is a parameter: `browser.js` exports `THEMES` and `overlayCSS(theme)`, and `shots.json` names the theme. A shot is a scene or a card, and the recorder builds the card, the clean wall capture and the ending.

@@ -1,6 +1,13 @@
 # Playbook: report to interactive page and short video
 
-Version 2, 26 Oct 2026. Replaces version 1, which was written after the KRI State of Households sample.
+Version 3, 27 Oct 2026. Replaces version 2, which was written after the KRI State of Households sample.
+
+What changed in version 3, and why:
+
+- rules 11 to 13 are the Malaysia CPI report's lessons: the type goes behind the chart, a dark ground breaks things a light one hides, and a page declares its own tokens
+- a label has a direction, and the camera frame has to cover the direction it runs
+- the film is a shot list, so a change to how the film is made has to change the shot list in the same change, or the film does not change
+- a branch is rebased onto main before it merges, because a check that appears only on your branch is usually a stale base and not your change
 
 What changed in version 2, and why:
 
@@ -100,6 +107,10 @@ The camera fit is a `Box3` over the scene. A label floating past the last bar is
 
 `extent(a, b)` adds a zero opacity line only to widen the box. Call it for every label that sits outside the object it describes. This bit us twice, on the drift labels in section 4 and the ratios in section 6.
 
+A label also has a direction, and the box has to cover the direction it runs. The anchors are `l` ends at the point and runs left, `r` starts at it and runs right, `t` above it, `b` below it, `c` centred. The CPI path scene's end label read "Sept 2026 - 1.8%", anchored `r` at the last data point, and it ran off the right edge of the portrait frame: the extent reserved room to the right of the point, but not enough of it for a label that started there and ran right. Either widen the extent by the width of the label, or anchor it the other way and let it run back over the drawing where there is room.
+
+Check this at the video's aspect, not only the page's. The CPI label was fine on the page and clipped in the 9:16 frame, because the frame is a different crop of the same scene.
+
 ### 6. Check the figures after the build, with the source open
 
 Two claims in the wages report were wrong, and both survived the mock and the build:
@@ -131,6 +142,36 @@ Every number in HTML, every claim in a heading, a `<table>` behind every figure.
 
 Six scenes, six claims. No two sections use the same form. If two do, one of them is padding, and the page is longer without being fuller. This is Gate 2 in `pipeline.md` and it is the cheapest edit you will ever make.
 
+### 11. The type goes behind the chart, not on top of it
+
+A label that sits on a filled shape has to be given a plate of its own, because there is nothing to read it against. A plate is a flat rectangle pasted on top of the drawing, and it says "this is a user interface" in the middle of a scene that was supposed to look like a thing in a room.
+
+Hang the display type behind the chart in depth instead. The CPI column scene carries a ghosted "+37.6%" two and a half units back, and the column's own silhouette cuts across it, so the type reads as something behind the glass of the cabinet. It solves the same problem with depth instead of a rectangle, and the chart's geometry draws over it for free.
+
+Two things it costs. The type is a texture, so the font has to have loaded before the scene paints, and a repaint must not re-register the font request or the page loops forever. And the chart has to be re-measured with the compose transform neutralised, or the framing drifts when the chart is scaled to make room.
+
+### 12. A dark ground breaks things a light one hides
+
+The CPI report is the first one on a near-black ground, and it found three things that a cream ground had been hiding.
+
+- body text hardcoded darker than the ink, which reads as body text on cream and reads as unreadable on black. Move those rules to the muted token instead of a fixed grey
+- `color-scheme` has to flip with the ground, or the browser renders the scrollbars and form controls for the wrong scheme
+- a label on a saturated fill has no contrast against it. It needs its own plate, in the shade token, and the plate needs to be declared against a token the page defines
+
+### 13. A page declares its own tokens
+
+The fuel price label sat on the red fill and needed a plate, and the plate was written against a `--shade` token the page's own `:root` never declared. `var(--shade)` resolved to nothing and the plate rendered transparent.
+
+A page carries its own token block, and a token used by a class in that page has to be declared in that page. The shared file is a starting point, not a dependency.
+
+### 14. The rules, the machinery and the cut land together
+
+The CPI film got a new opening, a new card shot type and a new ending wall built and shipped, and the film itself came out identical, because the shot list was never rewritten. The machinery was ready and nothing called it.
+
+When you change how the film is made, change the shot list in the same change. A mechanism with no caller is not shipped work, it is scaffolding. The shot list is the thing that carries the argument, so it is the first thing to change and the last thing to leave unchanged.
+
+The same applies to a rule written into the playbook: a rule that nothing enforces is an intention. Give it a gate, or give it a file it has to change.
+
 ## Files a report needs
 
 ```
@@ -142,6 +183,8 @@ reports/<slug>/
 
 Plus `raw/<slug>/qa.md` with the figure diff, the screenshots, the weight table and the known gaps.
 
+The working folder beside it holds the film: `shots.json` (the shot list, the input to every tool), `vo/script.txt` and `vo/dur.json` (the voice-over and the durations that set the shot lengths), and `storyboard/` (one frame per shot plus the contact sheet). The video and the recorded voice tracks are not tracked; those four rebuild the file in about three minutes.
+
 Two switches matter for capture and QA:
 
 - `?shot=<name>&t=<t>` and `window.__seek(t, name)` freeze a scene at a point, for video
@@ -149,18 +192,24 @@ Two switches matter for capture and QA:
 
 ## Steps
 
-Keep the eleven stages in `pipeline.md`. In practice:
+Keep the eleven stages in `pipeline.md`. In practice, with the video's three stages folded in at the end:
 
-1. **Pick and acquire.** Record the licence, publisher, date and author. If the licence is not open, stop.
-2. **Verify.** `numbers.csv`, one row per figure, with the exact sentence and a page number. Gate 1.
-3. **Analyse.** `story.md`: the claim, the evidence, the counterpoint, the so what.
-4. **Section.** `sections.md`: `n, headline, claim, number_ids, viz, motion, interaction`. Gate 2.
-5. **Mock.** `_mock.cjs` generating one SVG page per section, exported to a single PDF. Gate 3.
-6. **Build.** Copy the closest existing report. Replace `data.json`, then the six scene functions. Keep the `Stage` class.
-7. **QA.** Figure diff, screenshots at 1440x900 and in a 390px iframe, no-JS, reduced motion, keyboard, weight. Gate 4.
-8. **Voice-over.** One line per shot, numbers as words. About 110 words, near 45 seconds.
-9. **Record and mux.** `record-video.js`, then `mux.py`.
-10. **Ship.** PR, preview, merge, then the sales note.
+1. **Pick.** One paragraph: topic, audience, why now, what people search for.
+2. **Acquire.** Record the licence, publisher, date and author. If the licence is not open, stop.
+3. **Verify.** `numbers.csv`, one row per figure, with the exact sentence and a page number. Gate 1.
+4. **Analyse.** `story.md`: the claim, the evidence, the counterpoint, the so what.
+5. **Section.** `sections.md`: `n, headline, claim, number_ids, viz, motion, interaction`. Gate 2.
+6. **Palette.** Pick the palette off a reference image of the subject and check `palettes.md` first. It decides how the scene reads, so it comes before the viz.
+7. **Viz.** The form comes from the mechanism in the story. Say in one sentence what moves and what that shows. If nothing moves, it is a chart.
+8. **Design.** `tokens.css`: three type roles, one scale, one easing curve.
+9. **Mock.** `_mock.cjs` generating one SVG page per section, exported to a single PDF. Gate 3.
+10. **Build.** Copy the closest existing report. Replace `data.json`, then the six scene functions. Keep the `Stage` class.
+11. **QA.** Figure diff, screenshots at 1440x900 and in a 390px iframe, no-JS, reduced motion, keyboard, weight. Gate 4.
+12. **Voice-over.** One line per shot, numbers as words. About 110 words, near 45 seconds.
+13. **Record and mux.** `record-video.js`, then `mux.py`.
+14. **Ship.** Rebase onto main, PR, preview, merge, then the sales note.
+
+The video stages are in `video.md`, and they branch from stage 5 and rejoin after the page is built.
 
 ### Voice-over and video, in detail
 
@@ -168,18 +217,23 @@ The full pipeline is `video.md`. This is the working detail for its stages 5 to 
 
 - Write 7 to 9 lines, one per shot, plain sentences, numbers as words ("seven thousand and seventeen ringgit"). Do not say "Artifisi", because the voice mispronounces it. End on "Visit our website to learn more."
 - the captions are already written. The mock carries a caption band on every frame, marked "BURNED IN AT DELIVERY". Start from that copy, do not rewrite it at this stage
-- Record on fify's PC (DESKTOP-30IVP4M), since the cloud cannot reach the TTS service:
-  `edge-tts --voice en-SG-LunaNeural --rate=-3% --text "<line>" --write-media D:\artifisi\video-edit\<slug>-vo\l01.mp3`
-- Copy the mp3s back, then get each length with `ffprobe`.
-- Edit `SHOTS` in `record-video.js`: one entry per voice line, `[section index, view, 'viz' | 'text']`, plus `[null]` last for the end card. The script holds each shot for its line's length plus 0.35 s, burns in captions and hides the click hints.
-- Put `script.txt` (`l01|text`) and `dur.json` in the VO folder, then run `THREE=<path> node record-video.js <page folder> <rec dir> <vo dir>`, then `python3 mux.py <rec dir> <vo dir> out.mp4 <lines>`.
-- Pull 8 to 10 frames and check them, then listen to the whole thing once.
+- `shots.json` is the shot list and it is the input to every tool. `storyboard.js`, `record-video.js` and `mux.py` all read it. Nothing about a report is hardcoded in a tool
+- a shot is a scene or a card. A card is a full-frame typographic plate the recorder builds, and it is where the opening premise and the closing implication live
+- the voice-over goes in `script.txt` (`l01|text`), one line per shot, in shot order
+- record with `python voice.py <vo dir> --force`. It speaks each line with `edge-tts` (`en-SG-LunaNeural`, rate `-3%`), trims the trailing silence off each one, and writes `dur.json`, which is what sets the shot lengths
+- record and mux with `node record-video.js <page folder> <shots.json> <vo dir> <video dir>` then `python mux.py <video dir> <vo dir> out.mp4 <shots.json>`
+- pull 8 to 10 frames and check them, then listen to the whole thing once
+- a figure has to be checked at the video's aspect as well as the page's. A label can be fine on the page and clipped in the 9:16 frame
 
 ## Shipping
 
 - `reports/` is its own Cloudflare Pages project: build command `exit 0`, output directory `reports`, custom domain `reports.artifisi.com`, CNAME `reports` to `reports.pages.dev`.
 - The main site keeps `/samples/*` as a 301 to `reports.artifisi.com/samples/:splat`.
 - Custom work is sold from `reports/index.html`, with a Formspree form. Prices there and in `playbook/sales/rate-card.md` must match.
+- never commit straight to `main`. Branch, push, open a PR, and merge with a merge commit. Never squash and never rebase-merge, because the branch is the record of what was tried
+- **fetch and rebase onto `origin/main` immediately before merging.** The CPI film branch was based on a main that was two commits behind, and the `ikhlas-proposal` Pages check failed on the branch because the project had no root directory in a tree that did not have the folder yet. The rebase fixed it, and the check passed
+- a check that appears on your branch and on nothing else is usually a stale base, not your change. Rebase, and read it again
+- the video and the recorded voice tracks are not tracked. `shots.json`, `script.txt`, `dur.json` and the storyboard are, and they rebuild the file in about three minutes
 
 ## Known traps
 
@@ -204,8 +258,16 @@ The full pipeline is `video.md`. This is the working detail for its stages 5 to 
 - WebFetch summarises, and long PDFs get cut off. Check every number you did not read yourself
 - the DOSM catalogue API needs `curl -L` (it 301s) and a User-Agent
 - a Remote Control session on fify's PC turns off folder access until it is stopped
+- `ffmpeg` and `ffprobe` have to be the real binary, not the WinGet link. The link at `%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe` is a zero-byte alias, and Python's `subprocess` finds it first and fails with `WinError 193`, "%1 is not a valid Win32 application". Put the package's `bin` folder first on `PATH`:
+  `%LOCALAPPDATA%\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.2-full_build\bin`
+- a capture must not be taken while the page is still swapping scenes. The CPI page builds all six scenes and only then marks the one in the shot as the only one on, so `openShot` waits for the page to have settled on exactly one section. Without that wait a frame can carry one scene's geometry and its labels on top of another's
+- `edge-tts` writes a WordBoundary event for every word it speaks and the CLI throws them away. The Python `Communicate().stream()` API exposes them. The CLI's `--write-subtitles` gives sentence-level cues only, and there is no `--words-in-cue` in 7.3.1
 
 **Windows**
 
 - killing a dev server can leave the folder locked, and `git mv` then fails with "Device or resource busy". Stop the server properly, or move the children one at a time
 - `git mv` refuses a folder git does not track yet. Use `mv`
+- the repo stores CRLF with no BOM and `core.autocrlf = true`. PowerShell's `Set-Content -Encoding UTF8` writes a BOM, so write with `[System.IO.File]::WriteAllText($f, $text, (New-Object System.Text.UTF8Encoding($false)))`
+- `git show <blob> > file` in PowerShell corrupts the file, because the redirect writes text. Use `git archive --format=tar` and `tar -x` when a binary has to come out of git
+- the local safety policy blocks a `cd` followed by a write. Use `git -C <path>` and absolute paths
+- for recoverable deletion, run `mavis-trash.cmd -- '<path>'`. The extensionless `mavis-trash` does not run from PowerShell, and the local policy blocks `Remove-Item`

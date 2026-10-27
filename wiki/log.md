@@ -967,3 +967,22 @@ Verification:
 - code checked: yes. The film is 53.39 seconds at 1080x1920 and 30 fps, H.264 with AAC mono at 24 kHz, 360 kbps. `silencedetect` confirms a gap at every one of the six shot boundaries and none anywhere else. The page is untouched by this change and its six scenes still finish in 1007 to 1018 ms with no console errors.
 - audio checked: yes. The transcript of the finished film matches the script line for line, and every figure is spoken as written.
 - human reviewed: no
+## [2026-10-27] feature | Write today's lessons into the playbook, so the next build inherits them
+
+Source: `playbook/instructions.md`, `playbook/pipeline.md`, `playbook/video.md`
+Changes:
+- `playbook/instructions.md` is version 3: four new rules, the label-direction and 9:16 traps, the git discipline for shipping, and the environment traps that cost time today
+- `playbook/pipeline.md`: stage 4 now says the so what has to name a number, and Gate 4 gained four checks, the mechanism, the page's own tokens, the portrait frame and the one-second timing
+- `playbook/video.md`: two capture rules, and the rule that the shot list changes when the rules change
+- fixed the stale parts of `instructions.md`, which still described editing a `SHOTS` array in `record-video.js` and a ten step build list
+- recorded two decisions in `wiki/decisions.md`, and updated `wiki/file-map.md` and `wiki/index.md`
+Notes:
+- **The playbook is the only thing the next agent is guaranteed to read.** The wiki records what happened and it is a good record, but an agent pointed at a report is pointed at `instructions.md`. A lesson that lives only in the wiki is a lesson the next build will not read, and the CPI report's dark ground rules, its token rules and its label rules were all learned the hard way in a session that will not be remembered.
+- **The new rules are numbered in the order they cost us time**, so the expensive ones sit near the top and the list can grow without being rewritten. The CPI report's lessons are 11 to 14.
+- **Two of the new rules are about the shape of the work, not the drawing.** The rules, the machinery and the cut land together, and every lesson goes into the playbook. The first one exists because the CPI film got a new opening, a new card shot type and a new wall built and shipped, and the film came out identical, because the shot list was never rewritten. The second is the owner's standing instruction.
+- **Gate 4 is where a rule becomes mechanical.** The CPI report shipped four chart scenes that stage 7 forbids, and nothing checked it. The mechanism, the page's tokens, the portrait crop and the one second are now written down as checks, so the next report cannot fail them quietly.
+- **The stale parts of the playbook were traps.** `instructions.md` still told the next agent to edit a `SHOTS` array in `record-video.js` that has not existed since the shot list moved into `shots.json`, and to record the voice on another machine by hand. Both were removed and replaced with the pipeline that actually runs.
+
+Verification:
+- code checked: yes. The three playbook files were read end to end after the edit and every command they name was run today: `voice.py`, `record-video.js`, `mux.py`, `storyboard.js`, and the page QA.
+- human reviewed: no
