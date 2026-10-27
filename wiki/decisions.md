@@ -107,6 +107,32 @@ Key technical and design decisions observed in the codebase.
 **Rationale**: A page is scrolled and a film is watched. `video.md` said the video needs one claim the page does not have, but nothing stopped the film from being a recording of the page in order, which is what the CPI film first was, and what the wages film is. The CPI film now opens on the flat line and closes on the price level, the opposite of its page order, because that is the order the argument needs.  
 **Tradeoff**: The shot list and the page are no longer in the same order, so the film has to be read on its own. Each shot records the `beat` it plays so a later reader can tell a deliberate sequence from an accident.
 
+## A Film Has Five Beats
+
+**Decision**: A film runs premise, what the data shows, what the data meant, what the data leads, and the ending. Never background, then method, then data, then conclusion.  
+**Rationale**: Six ways of describing the shape of an explanatory video, from the Eurographics paper on narrated visualisation through the practitioner guides, all land on the same order and all warn against the same thing: the conclusion-last shape makes the viewer sit through the evidence before it learns why the evidence matters. The CPI film was cold-opened on a flat price line and told the viewer why it mattered forty seconds later, and the complaint was that it started too abruptly. A cold open is a trap. The premise is a promise, and it has to be made in the first seconds, in type, and it has to work muted.  
+**Tradeoff**: The premise spends a shot on the claim, so the film carries one more shot than the page does, and the claim is on screen before the evidence that supports it.  
+**Context**: The research is recorded in `playbook/video.md` under "The five beats", with the sources that agree on it.
+
+## A Card Is a Shot Type
+
+**Decision**: A shot is either a scene from the page or a card. A card is a full-frame typographic plate the recorder builds, like the end card, and it exists for the two frames a film needs and a report does not have: the opening premise and the closing implication. Cards are film-only and leave the page untouched.  
+**Rationale**: The opening premise and the closing implication are both type, not chart. Forcing them into a scene means inventing a mechanism to carry words, and the words get small. A card is the one place in the pipeline where the typography is the whole shot, so it is the right place for the claim and the so-what. The page is a scrolled set of claims and does not need either.  
+**Tradeoff**: The card markup lives in the capture tools rather than in the report, so it is not visible in the page's own source and cannot be checked by the page QA. It is checked by the storyboard and by the rendered frame.
+
+## The Type Goes Behind the Chart, Not on Top of It
+
+**Decision**: Where a scene needs a large number, the display type is hung behind the chart in depth, and the chart is scaled and offset to make room for it. It is never drawn on top of the chart, and it never sits on a plate.  
+**Rationale**: A label on a filled shape needs a plate behind it, and a plate is a flat rectangle that sits on top of the drawing and breaks the illusion that the chart is a thing in a room. Hanging the type in the scene, behind the geometry, solves the same problem with depth: the chart's own edges draw over the type, so the type reads as something behind the glass of the cabinet. The CPI column scene carries a ghosted "+37.6%" two and a half units behind the column, and the column's silhouette cuts across it.  
+**Tradeoff**: The type is a texture, so it needs a font that has loaded before the scene paints, and a repaint must not re-register the font load or the page loops forever. The scale of the chart has to be re-measured with the compose transform neutralised, or the framing drifts.  
+**Context**: `Stage.backdrop()`, `Stage.compose()` and `Stage.fit()` in `reports/malaysia-cpi/scene.js`. The scene also had to state the claim in its heading, because the type on the canvas is not in the page's text.
+
+## The Last Frame Is the Whole Report
+
+**Decision**: The ending shot puts every chart in the film on screen at once, blurred, behind the sign-off. It is a wall, not a single scene and not a black frame.  
+**Rationale**: The end of an explanatory film is the one moment the viewer can see that the thing they watched was made of more than the last frame they saw. A blur is enough: the wall has to read as one surface with everything on it, not as six readable charts competing with the words. The CPI ending catches all six scene frames clean, before the overlay goes on, tiles them, and scrims them.  
+**Tradeoff**: The wall needs a clean capture of every scene, so the recorder takes a second frame per shot. A heavy blur makes the wall unreadable and the words lose their ground, so the blur and the scrim have to stay light.
+
 ## One Report, One Video
 
 **Decision**: Every report produces exactly one vertical video, and the video file and its recorded voice tracks are **not** tracked in git. The shot list, the voice-over script, the per-line durations and the storyboard PNGs are tracked.  

@@ -8,7 +8,7 @@
 //   THREE=<unpacked three> node storyboard.js <page folder> <shots.json> <vo dir> <out dir>
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
-const { route, LAUNCH, THEMES, overlayCSS, frameContext, openShot } = require('./browser');
+const { route, LAUNCH, THEMES, overlayCSS, cardHTML, frameContext, openShot } = require('./browser');
 
 const [,, dirArg, shotsFile, voDirArg, outDirArg] = process.argv;
 if (!dirArg || !shotsFile || !voDirArg || !outDirArg) {
@@ -51,46 +51,68 @@ function dataUri(file) {
 
   const total = shots.shots.length;
   for (const [i, s] of shots.shots.entries()) {
-    await openShot(p, `http://x/index.html?shot=${s.scene}&t=${s.t}`);
-    await p.addStyleTag({ content: OVERLAY_CSS });
-    await p.evaluate(({ cap, kick, num }) => {
-      if (cap) {
-        const c = document.createElement('div');
-        c.className = 'vb-cap'; c.textContent = cap;
-        const r = document.createElement('div');
-        r.className = 'vb-rule';
-        document.body.append(r, c);
-      }
-      if (kick) {
-        const k = document.createElement('div');
-        k.className = 'vb-kick'; k.textContent = kick;
-        document.body.append(k);
-      }
-      if (num) {
+    if (s.card) {
+      // A card is not on the page. The storyboard builds it the same way the recorder
+      // does, and waits for the reveal to finish so the frame is the finished card.
+      await openShot(p, 'http://x/index.html', 800);
+      await p.addStyleTag({ content: OVERLAY_CSS });
+      await p.evaluate(({ html, num }) => {
+        const el = document.createElement('div');
+        el.className = 'vb-card';
+        el.innerHTML = html;
+        document.body.append(el);
         const n = document.createElement('div');
         n.className = 'vb-num'; n.textContent = num;
         document.body.append(n);
-      }
-    }, { cap: s.caption, kick: shots.kicker || '', num: `${i + 1} / ${total}` });
-    await p.waitForTimeout(300);
+      }, { html: cardHTML(s.card), num: `${i + 1} / ${total}` });
+      await p.waitForTimeout(3800);
+    } else {
+      await openShot(p, `http://x/index.html?shot=${s.scene}&t=${s.t}`);
+      await p.addStyleTag({ content: OVERLAY_CSS });
+      await p.evaluate(({ cap, kick, num }) => {
+        if (cap) {
+          const c = document.createElement('div');
+          c.className = 'vb-cap'; c.textContent = cap;
+          const r = document.createElement('div');
+          r.className = 'vb-rule';
+          document.body.append(r, c);
+        }
+        if (kick) {
+          const k = document.createElement('div');
+          k.className = 'vb-kick'; k.textContent = kick;
+          document.body.append(k);
+        }
+        if (num) {
+          const n = document.createElement('div');
+          n.className = 'vb-num'; n.textContent = num;
+          document.body.append(n);
+        }
+      }, { cap: s.caption, kick: shots.kicker || '', num: `${i + 1} / ${total}` });
+      await p.waitForTimeout(300);
+    }
     const file = path.join(outDir, `${s.id}.png`);
     await p.screenshot({ path: file });
-    console.log('frame', s.id, s.scene);
+    console.log('frame', s.id, s.card ? 'card' : s.scene);
   }
   await ctx.close();
   await b.close();
 
   // Contact sheet: every shot, its claim, its caption and its voice line.
-  const rows = shots.shots.map((s, i) => `
+  const rows = shots.shots.map((s, i) => {
+    const kind = s.card ? 'card' : s.scene;
+    const claim = s.card ? (s.card.claim || []).join(' ') : s.claim;
+    const cap = s.card ? (s.card.line || s.card.note || '') : s.caption;
+    return `
     <div class="row">
       <img src="${dataUri(path.join(outDir, s.id + '.png'))}">
       <div class="meta">
-        <div class="id">${i + 1} / ${total} &middot; ${s.id} &middot; ${s.scene} &middot; ${s.plan}s</div>
-        <div class="claim">${s.claim}</div>
-        <div class="cap">${s.caption}</div>
+        <div class="id">${i + 1} / ${total} &middot; ${s.id} &middot; ${kind} &middot; ${s.plan}s</div>
+        <div class="claim">${claim || ''}</div>
+        <div class="cap">${cap || ''}</div>
         <div class="vo">${s.vo} &middot; ${voText[s.vo] || ''}</div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   const sheet = `<!doctype html><meta charset="utf-8"><style>
     body{margin:0;background:${T.paper};color:${T.ink};font:400 16px/1.5 "IBM Plex Sans",sans-serif;padding:48px}
     h1{font:${T.displayWeight} 44px/1.1 ${T.display};letter-spacing:${T.displayLetter};margin:0 0 8px}

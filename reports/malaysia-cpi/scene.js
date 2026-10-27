@@ -20,6 +20,34 @@ const seg = (t, a, b) => clamp01((t - a) / (b - a));
 const lerp = (a, b, t) => a + (b - a) * t;
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
+// The display face, used for the type that hangs behind a chart.
+const DISPLAY_FONT = '"Space Grotesk", "Helvetica Neue", Arial, sans-serif';
+
+// Draw a line of type into a texture. The texture goes on a plane in the scene, so the
+// type is a thing in the same space as the chart: it takes the chart's perspective and
+// the chart's geometry stands in front of it.
+function textTexture(text, opts) {
+  const px = opts.px || 320;
+  const family = opts.family || DISPLAY_FONT;
+  const weight = opts.weight || 700;
+  const c = document.createElement("canvas");
+  const ctx = c.getContext("2d");
+  const setFont = () => { ctx.font = weight + " " + px + "px " + family; };
+  setFont();
+  const w = Math.max(2, Math.ceil(ctx.measureText(text).width) + Math.round(px * 0.1));
+  const h = Math.ceil(px * 1.18);
+  c.width = w; c.height = h;
+  setFont();
+  ctx.fillStyle = opts.color || "#e9edf2";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, w / 2, h / 2);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return { tex, aspect: w / h };
+}
+
 // ---------- stage ----------
 class Stage {
   constructor(canvas, wrap, spec, data) {
@@ -134,8 +162,11 @@ class Stage {
 
   fit(dir, pad = 1.12, target = null) {
     this.fitArgs = [dir, pad, target];
+    // The compose transform shrinks the chart after the framing is worked out, so the
+    // frame is measured with the chart at full size and the shrink is applied after.
+    this.applyCompose(false);
     const box = new THREE.Box3().setFromObject(this.root);
-    if (box.isEmpty()) return;
+    if (box.isEmpty()) { this.applyCompose(); return; }
     const center = target || box.getCenter(V(0, 0, 0));
     const size = box.getSize(V(0, 0, 0));
     const d = dir.clone().normalize();
@@ -153,6 +184,101 @@ class Stage {
     this.center = center;
     this.fitCenter = center.clone();
     this.fitRadius = dist;
+    this.applyCompose();
+    this.placeBackdrop();
+  }
+
+  // Shrink the chart and move it, so the type behind it has somewhere to be. The
+  // shrink is about the centre of the framing, not the origin, so the chart stays
+  // where it was composed and only gets smaller.
+  compose(opts = {}) {
+    this.composeOpts = Object.assign({}, this.composeOpts, opts);
+    this.applyCompose();
+    return this;
+  }
+
+  applyCompose(on = true) {
+    const o = this.composeOpts;
+    if (!o) return;
+    if (!on) {
+      this.root.scale.setScalar(1);
+      this.root.position.set(0, 0, 0);
+      return;
+    }
+    const s = o.scale != null ? o.scale : 1;
+    const c = this.fitCenter || V(0, 0, 0);
+    this.root.scale.setScalar(s);
+    this.root.position.copy(c).sub(c.clone().multiplyScalar(s));
+    if (o.offset) this.root.position.add(o.offset);
+  }
+
+  // Hang a line of display type behind the chart, in depth. It is a plane in the
+  // scene, not a label on top of it, so the chart stands in front of the type and the
+  // two share one perspective.
+  backdrop(text, opts = {}) {
+    this.backdropOpts = Object.assign({ text }, opts);
+    this.buildBackdrop();
+    // The display face may not have arrived when the first texture was drawn, so the
+    // texture is drawn again once the font is in. The repaint does not register
+    // another font request, or the two would chase each other.
+    const o = this.backdropOpts;
+    const family = o.family || DISPLAY_FONT;
+    const weight = o.weight || 700;
+    const px = o.px || 320;
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load(weight + " " + px + "px " + family)
+        .then(() => { this.paintBackdrop(); this.draw(); })
+        .catch(() => {});
+    }
+    return this;
+  }
+
+  buildBackdrop() {
+    const o = this.backdropOpts;
+    if (!o) return;
+    if (!this.backdropMesh) {
+      const mat = new THREE.MeshBasicMaterial({
+        transparent: true, depthWrite: false, depthTest: false,
+      });
+      this.backdropMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
+      this.backdropMesh.renderOrder = -10;
+      this.scene.add(this.backdropMesh);
+    }
+    this.backdropMesh.material.opacity = o.opacity != null ? o.opacity : 1;
+    this.paintBackdrop();
+  }
+
+  paintBackdrop() {
+    const o = this.backdropOpts;
+    if (!o || !this.backdropMesh) return;
+    const t = textTexture(o.text, o);
+    if (this.backdropMesh.material.map) this.backdropMesh.material.map.dispose();
+    this.backdropMesh.material.map = t.tex;
+    this.backdropMesh.material.needsUpdate = true;
+    this.backdropAspect = t.aspect;
+    this.placeBackdrop();
+  }
+
+  placeBackdrop() {
+    const m = this.backdropMesh;
+    if (!m || !this.fitCenter) return;
+    const o = this.backdropOpts;
+    const back = o.back != null ? o.back : 2.6;
+    const dist = this.fitRadius + back;
+    const vFov = (this.camera.fov * Math.PI) / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * this.camera.aspect);
+    const frameH = 2 * Math.tan(vFov / 2) * dist;
+    const frameW = 2 * Math.tan(hFov / 2) * dist;
+    // cover is the share of the frame width the type spans. h is the alternative, the
+    // world height of the type. Either way the plane keeps the texture's proportions.
+    let h, w;
+    if (o.cover) { w = frameW * o.cover; h = w / this.backdropAspect; }
+    else { h = o.h != null ? o.h : frameH * 0.85; w = h * this.backdropAspect; }
+    m.scale.set(w, h, 1);
+    const d = this.camera.position.clone().sub(this.fitCenter).normalize();
+    m.position.copy(this.fitCenter).addScaledVector(d, -back);
+    if (o.at) m.position.add(o.at);
+    m.lookAt(this.camera.position);
   }
 
   resize() {
@@ -299,6 +425,10 @@ function sceneColumn(stage, D) {
 
   stage.extent(V(-W / 2 - 1.8, -0.95, 0), V(W / 2 + 2.6, yOf(now) + 1.0, 0));
   stage.fit(V(0.24, 0.07, 1), 1.04);
+  // The number the column stands for hangs behind it, in depth, so the chart reads as
+  // a panel mounted over the figure rather than a chart floating on nothing.
+  stage.backdrop("+37.6%", { cover: 0.94, back: 2.6, opacity: 0.14, color: "#e9edf2", at: V(0, -1.15, 0) });
+  stage.compose({ scale: 0.82, offset: V(0, 0.45, 0) });
 
   return {
     update(t) {
@@ -452,7 +582,9 @@ function scenePath(stage, D) {
   const lNow = stage.label("Sept 2026 · 1.8%", "cool", "r");
   const lCore = stage.label("core", "warm small", "r");
 
-  stage.extent(V(-1.7, -1.0, 0), V(xOf(N - 1) + 1.7, H + 0.8, 0));
+  // The frame has to leave room on the right for the end label, which runs away from
+  // the last point. Without it the label runs off the edge of the portrait frame.
+  stage.extent(V(-1.7, -1.0, 0), V(xOf(N - 1) + 2.8, H + 0.8, 0));
   stage.fit(V(0.06, 0.09, 1), 1.03);
 
   return {

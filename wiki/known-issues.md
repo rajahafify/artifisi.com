@@ -48,7 +48,7 @@ What the first run found, which the plan had not:
 Still open:
 
 - The city scene carries no annotations. The Gate 3 mock has "four industries carry 55.6%" over the skyline and the live scene does not, so the video shot is plainer than the mock.
-- `ffmpeg` is installed but only the real binary in the WinGet package folder. The link at `%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe` is still a zero-byte file, so `ffmpeg` and `ffprobe` have to be on `PATH` for `voice.py` and `mux.py` to find them.
+- `ffmpeg` is installed but only the real binary in the WinGet package folder. The link at `%LOCALAPPDATA%\Microsoft\WinGet\Links\ffmpeg.exe` is still a zero-byte file, so `ffmpeg` and `ffprobe` have to be on `PATH` for `voice.py` and `mux.py` to find them. The link being zero bytes is not enough: Python's `subprocess` finds it first and fails with `WinError 193`, "%1 is not a valid Win32 application". The fix is to put the real binary first on `PATH`: `%LOCALAPPDATA%\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.2-full_build\bin`.
 - Whether the video is published anywhere, or only handed over, is not settled.
 
 ### Known gaps in the wages report
@@ -68,6 +68,7 @@ Recorded in `raw/malaysia-cpi/qa.md`:
 - The ladder scene draws thirteen division rates with their August ticks. The month-on-month column is only in the fallback table, so those figures are read from the table.
 - Four of the six CPI scenes are still charts in 3D rather than mechanisms: sorted bars, a 36 month line, state dots and two columns. `playbook/pipeline.md` stage 7 and `playbook/instructions.md` rule 1 both say the form has to come from the mechanism in the story. These four were kept for now and are the next thing to rebuild.
 - The 36 month path scene draws the headline and core lines. The band rails are labelled rather than drawn as filled area.
+- The path scene's end label used to run off the right edge of the portrait frame. The camera was framing the extent box, and the extent reserved less room on the right than the label needed. Fixed on 2026-10-27 by widening the right edge of the extent.
 - `?dur=<ms>` and `?only=` are capture helpers left in the page. Inert without the query string.
 - The "loads under 1.5s on 4G" check in stage 11 of the pipeline was not measured. `qa.md` records the weight table, about 21 KB gzipped on first load, and nothing about load time.
 
