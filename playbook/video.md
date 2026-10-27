@@ -21,15 +21,15 @@ shot list.
 
 The storyboard comes **after** the page is built, because a storyboard frame is a frame of the
 real scene, not a drawing of one. So the video pipeline branches from the page pipeline at the
-end of stage 5 and rejoins after stage 9.
+end of stage 5 and rejoins after stage 10.
 
 ```
-page pipeline   1 pick ─ 2 acquire ─ 3 verify ─ 4 analyse ─ 5 section ─ 6 viz ─ 7 design ─ 8 mock ─ 9 build ─ 10 qa
-                                                                                      │                                    │
-video pipeline  └──────────── 1 report ──── 2 story ──── 3 shots ────────────────────┴─ 4 storyboard ─ 5 script ─ 6 vo ─ 7 video
+page pipeline   1 pick ─ 2 acquire ─ 3 verify ─ 4 analyse ─ 5 section ─ 6 palette ─ 7 viz ─ 8 design ─ 9 mock ─ 10 build ─ 11 qa
+                │                                               │                                               │               
+video pipeline  └----------- 1 report ---- 2 story ---- 3 shots ┴-----------------------------------------------4 storyboard - 5 script - 6 vo - 7 video
 ```
 
-Stages 6, 7 and 8 of the page pipeline are page-only. The video needs the built page.
+Stages 6, 7, 8 and 9 of the page pipeline are page-only. The video needs the built page.
 
 Both pipelines read the same source and the same numbers. There is one set of figures, and it
 is checked once, at Gate 4 of the page pipeline.
@@ -54,6 +54,44 @@ The video needs one thing the page does not: a single claim it can land. A repor
 claims and no ending. A video has one argument and a button to press. If the story cannot be
 compressed to one sentence, the video will not work, and it is a story problem, not a
 video problem.
+
+### The five beats
+
+A film has five beats, and they are not the page's sections.
+
+| Beat | What it does |
+|---|---|
+| the premise | one sentence saying what the report found, before any chart |
+| what the data shows | the evidence, the figures, the shape of them |
+| what the data meant | the reading, the part the headline hides |
+| what the data leads | where this goes. an opportunity, a risk, a decision |
+| the ending | the sign-off |
+
+This is the standard arc of a data story and it is not optional. The same order turns up in
+every framework worth reading: finding, significance, evidence, implication. Never background,
+methodology, data, conclusion. The meaning cannot be read off the evidence until the evidence
+is on screen, so the beats are in that order and not the other way round.
+
+The fourth beat is the one a report usually does not have and a film cannot do without. It is
+the so-what: the opportunity, the risk, or the decision the data points at. A report that
+cannot say what its data leads to does not have a finished story, and a film that skips it is
+a recording of a page.
+
+### The premise is a promise, and it comes first
+
+Research on short-form retention puts the scroll-or-stay decision inside the first second and
+the value proposition inside the first two. Most of the viewers who leave a video leave it
+there. So the opening frame carries the claim, in type, on the first frame, and it has to work
+muted.
+
+Two rules, and both of them are about the opening:
+
+- **The first frame shows the claim, not a chart.** A cold open on a chart with no stated
+  claim is the commonest reason a good film flops. Setup, logos and dead air in the opening
+  second are worse.
+- **The baseline comes before the deviation.** Establishing what normal looks like before
+  showing what changed is what makes a number mean something, and it is the step most data
+  videos skip.
 
 The film also needs its own **order**, and it is not the page's order. The page runs top to
 bottom, section by section, because a reader scrolls. A film has an argument, and an argument
@@ -98,6 +136,27 @@ different things.
 The order in the file is the order on screen. It is the argument, so write it as the
 argument and not as the page order. The shot list records why each shot sits where it does, in
 a `beat` field, so a later reader can tell a deliberate sequence from an accident.
+
+### A shot is a scene or a card
+
+A **scene** is a figure from the page. A **card** is a full-frame typographic plate the
+recorder builds, the same way it builds the end card. Cards are for the two frames a film
+needs and a report does not have: the opening premise and the closing implication. A card
+carries its own kicker, its own claim, one or two figures and a line. It gets the frame number
+and no caption band, because the text on the card is the text of the shot.
+
+```json
+{ "id": "premise", "card": {
+    "kicker": "Malaysia · consumer prices · September 2026",
+    "claim": ["Inflation eased.", "Fuel did not."],
+    "figs": [
+      { "n": "1.8%", "l": "headline inflation, year on year", "tone": "cool" },
+      { "n": "RM4.18", "l": "average RON95 market price", "tone": "warm" }
+    ] }, "vo": "l01", "plan": 6 }
+```
+
+`tone` is `cool` or `warm`, the report's two accents. The card's own kicker replaces the
+standard one, so a card does not also carry the frame kicker.
 
 Gate: one claim one shot, the same rule as Gate 2 of the page pipeline. No two shots use the
 same form. If two do, one is padding.
@@ -221,7 +280,55 @@ breaks.
 
 ---
 
-## Three traps
+## The craft of the cut
+
+Five habits, taken from watching short video that holds attention, and all five of which
+the first CPI film did not have.
+
+**The caption is the script, not a subtitle.** In a good short, the burned-in caption at the
+bottom is the narration itself, three or four words at a time, changing about once a second.
+Read in order the captions are the whole video. Turn the sound off and you have lost the
+voice, not the argument. Our film held one static line at the bottom of the frame for the
+whole eight seconds, which is a title, not a caption.
+
+The timings for this are free and we are throwing them away. `edge-tts` emits a WordBoundary
+event for every word it speaks, with the word's offset in the audio. `voice.py` records the
+audio and discards those events. It should write them out, and the recorder should burn the
+caption from them, one phrase at a time, timed to the voice.
+
+**The first frame carries a proof, not a promise.** The strongest openers do not describe what
+is coming. They put the finished thing in the first frame. "I didn't edit a single second of
+this" is a claim in display type with the artefact already visible beside it, and the proof
+arrives in the same second, not twenty seconds later.
+
+**Hold the frame, change the layers.** The best short video holds one base shot for its whole
+length and swaps what is composited on top of it. The camera never moves, so the motion the
+viewer feels comes from the layers, and the viewer never loses their place. We have no
+presenter, so our base shot is the ground: one palette, one type scale, one camera angle, and
+the film changes what sits on top of it.
+
+**Put the type behind the chart, not on top of it.** A label that sits on a filled shape has
+to be given a plate of its own, because there is nothing to read it against. A line of display
+type hung behind the chart in depth has the same problem solved by the depth instead: the
+chart stands in front of the type and the type reads around it. It is the same move as putting
+text behind a presenter's head, and it is the reason the scene is a scene and not a table.
+
+**The last frame is the whole report.** The end card does not sit on an empty ground. Every
+chart the report drew is laid out as one surface and blurred behind the sign-off, so the film
+ends on everything at once instead of a title card in the dark.
+
+Three smaller rules that cost nothing. One accent colour, used for the same job every time.
+A small vocabulary of devices, reused, so the fourth idea arrives in a shape the viewer
+already recognises. And the payoff is shown, not claimed: the reel says "watch" and then
+plays the thing, instead of telling you it works.
+
+## Four traps
+
+**A cold open is a trap.** The CPI film's first version opened straight on the 36 month line.
+It was correct, it was the baseline, and it was invisible: the frame carried no claim, so the
+first two seconds said nothing to anyone who was not already reading. The premise beat fixes
+it, and the fix is a rule, not a taste: the first frame states the claim in type, and the
+baseline follows it rather than replacing it.
 
 **Playwright records at CSS resolution and never scales up.** The screencast is the viewport
 size in CSS pixels. Ask for a 540 wide viewport and a 1080 wide video and the page lands in

@@ -36,12 +36,12 @@
 - `reports/` — The reports subdomain (`reports.artifisi.com`), a separate Cloudflare Pages project. Not yet documented in a wiki page.
 - `playbook/pipeline.md` — The eleven-stage, four-gate pipeline for turning a published report into an interactive page.
 - `playbook/instructions.md` — Build and ship playbook, version 2.
-- `playbook/video.md` — The seven-stage video pipeline: report to story to shots to storyboard to script to voice-over to video. Run end to end on 2026-10-27.
+- `playbook/video.md` — The video pipeline: report to story to shots to storyboard to script to voice-over to video, plus the five-beat arc a film runs and the craft rules for the cut. Run end to end on 2026-10-27.
 - `playbook/palettes.md` — The palette registry. One report, one palette, and the method for picking the next one. The CPI report's palette is a fuel price board at night.
-- `playbook/tools/` — Capture and assembly tools for the video pipeline. The theme is a parameter: `browser.js` exports `THEMES` and `overlayCSS(theme)`, and `shots.json` names the theme.
+- `playbook/tools/` — Capture and assembly tools for the video pipeline. The theme is a parameter: `browser.js` exports `THEMES` and `overlayCSS(theme)`, and `shots.json` names the theme. A shot is a scene or a card, and the recorder builds the card, the clean wall capture and the ending.
 - `reports/malaysia-cpi/` — The Malaysia Consumer Price Index report, September 2026. Six three.js scenes, one claim each, all playing in one second. Built from seven DOSM open API series.
 - `raw/malaysia-cpi/` — The working folder for the CPI report. The source, the story, the sections, a 115-row figure register, the shots, the script, the storyboard and the QA record.
-- `raw/malaysia-cpi/video/` — The Malaysia CPI short. 59.26 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
+- `raw/malaysia-cpi/video/` — The Malaysia CPI short. 58.10 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
 - `raw/malaysia-wages/video/` — The Malaysia wages short. 57.5 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
 
 ## Quick Reference

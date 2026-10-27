@@ -136,7 +136,7 @@ Maps features to their primary implementation files, aiding navigation and impac
 | `reports/malaysia-wages/scene.js` | The wages scenes and the `Stage` class |
 | `reports/malaysia-wages/data.json` | Every figure the wages page can show |
 | `reports/malaysia-cpi/index.html` | The CPI report page. Six claims, one scene each, the figures as real text |
-| `reports/malaysia-cpi/scene.js` | The CPI scenes and the `Stage` class |
+| `reports/malaysia-cpi/scene.js` | The CPI scenes and the `Stage` class. `Stage.backdrop()` hangs display type behind the chart in depth, `Stage.compose()` resizes and offsets the chart to make room for it |
 | `reports/malaysia-cpi/data.json` | Every figure the CPI page can show |
 | `reports/samples/households/index.html` | The KRI households sample. Unofficial, not checked by KRI |
 
@@ -166,11 +166,11 @@ Maps features to their primary implementation files, aiding navigation and impac
 |---|---|
 | `playbook/pipeline.md` | The eleven stages and four gates for a report page |
 | `playbook/palettes.md` | The palette registry and how to pick a new one |
-| `playbook/video.md` | The seven-stage video pipeline, report to published short |
+| `playbook/video.md` | The video pipeline, the five-beat arc, the card shot type, and the craft rules for the cut |
 | `playbook/instructions.md` | Build and ship rules |
-| `playbook/tools/browser.js` | Route, launch flags, `THEMES`, `overlayCSS`, `frameContext`, `openShot` |
-| `playbook/tools/storyboard.js` | One frame per shot plus the contact sheet |
-| `playbook/tools/record-video.js` | Per shot capture |
+| `playbook/tools/browser.js` | Route, launch flags, `THEMES`, `overlayCSS`, `frameContext`, `openShot`, `cardHTML`, the `.vb-card` and `.vb-wall` overlay styles |
+| `playbook/tools/storyboard.js` | One frame per shot plus the contact sheet. Renders card shots as well as scene shots |
+| `playbook/tools/record-video.js` | Per shot capture. Captures a clean frame of every scene, the card shot type, and injects the blurred wall behind the end card |
 | `playbook/tools/voice.py` | edge-tts to mp3, tail silence trimmed, writes `dur.json` |
 | `playbook/tools/mux.py` | Trim, concat, lay the voice under the shots, write `out.mp4` |
 | `playbook/sales/rate-card.md` | Prices and what is sold. The price list is duplicated in `reports/index.html` |

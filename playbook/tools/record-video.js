@@ -9,7 +9,7 @@
 // because the browser clock and the audio clock drift apart.
 const { chromium } = require('playwright');
 const path = require('path'), fs = require('fs');
-const { route, LAUNCH, overlayCSS, frameContext, openShot } = require('./browser');
+const { route, LAUNCH, overlayCSS, cardHTML, frameContext, openShot } = require('./browser');
 
 const [,, dirArg, shotsFile, voDirArg, outDirArg] = process.argv;
 if (!dirArg || !shotsFile || !voDirArg || !outDirArg) {
@@ -46,6 +46,12 @@ items.push({
   length: (voDur ? voDur[voDur.length - 1] : shots.endCard.plan) + (shots.endCard.endHold || 1.5),
 });
 
+// The wall behind the end card: every chart the report drew, laid out as one surface
+// and blurred, so the last frame is the whole report at once. The frames are captured
+// on the way through the scenes, before the caption band goes on, so the wall carries
+// the charts and not the film's furniture.
+const wall = [];
+
 function overlay(p, s, i, total) {
   return p.evaluate(({ cap, kick, num }) => {
     if (cap) {
@@ -68,6 +74,24 @@ function overlay(p, s, i, total) {
   }, { cap: s.caption, kick: shots.kicker || '', num: s.endCard ? '' : `${i + 1} / ${total}` });
 }
 
+// A card is a shot that is not a scene. It is a full-frame typographic plate, built here
+// and not on the page, because the page is a report and a film needs frames the report
+// does not have: an opening premise and a closing implication. The card carries its own
+// kicker and its own text, so it gets the frame number and nothing else.
+function card(p, s, i, total) {
+  return p.evaluate(({ html, num }) => {
+    const el = document.createElement('div');
+    el.className = 'vb-card';
+    el.innerHTML = html;
+    document.body.append(el);
+    if (num) {
+      const n = document.createElement('div');
+      n.className = 'vb-num'; n.textContent = num;
+      document.body.append(n);
+    }
+  }, { html: cardHTML(s.card), num: `${i + 1} / ${total}` });
+}
+
 (async () => {
   fs.mkdirSync(clipDir, { recursive: true });
   const b = await chromium.launch(LAUNCH);
@@ -75,6 +99,7 @@ function overlay(p, s, i, total) {
 
   for (const [i, s] of items.entries()) {
     const isEnd = !!s.endCard;
+    const isCard = !!s.card;
     const ctx = await b.newContext({
       ...frameContext(W, H),
       recordVideo: { dir: clipDir, size: { width: W, height: H } },
@@ -86,16 +111,53 @@ function overlay(p, s, i, total) {
     if (isEnd) {
       await openShot(p, 'http://x/index.html', 800);
       await p.addStyleTag({ content: OVERLAY_CSS });
+      if (wall.length) {
+        const cols = wall.length > 4 ? 2 : 1;
+        const rows = Math.ceil(wall.length / cols);
+        await p.evaluate(({ imgs, cols, rows }) => {
+          const w = document.createElement('div');
+          w.className = 'vb-wall';
+          const g = document.createElement('div');
+          g.className = 'g';
+          g.style.setProperty('--wall-cols', cols);
+          g.style.setProperty('--wall-rows', rows);
+          imgs.forEach((src) => {
+            const im = document.createElement('img');
+            im.src = src;
+            g.appendChild(im);
+          });
+          w.appendChild(g);
+          const scrim = document.createElement('div');
+          scrim.className = 'vb-scrim';
+          document.body.append(w, scrim);
+        }, { imgs: wall, cols, rows });
+        await p.waitForFunction(() => Array.from(document.images).every((i) => i.complete), null, { timeout: 15000 })
+          .catch(() => {});
+      }
       await p.evaluate(({ kicker, title, url, source }) => {
         const el = document.createElement('div');
-        el.className = 'vb-end';
+        el.className = 'vb-end' + (document.querySelector('.vb-wall') ? ' onwall' : '');
         el.innerHTML = `<p class="k">${kicker}</p><h2>${title}</h2><p class="u">${url}</p><p class="s">${source}</p>`;
         document.body.append(el);
       }, s);
+    } else if (isCard) {
+      await openShot(p, 'http://x/index.html', 800);
+      await p.addStyleTag({ content: OVERLAY_CSS });
+      await card(p, s, i, total);
     } else {
       // t=0 puts the scene in its starting state before the animation runs, so trimming
       // the clip never shows a flash of the finished frame.
       await openShot(p, `http://x/index.html?shot=${s.scene}&t=0&dur=${Math.round(s.length * 1000)}`, 600);
+      // A clean frame of the finished chart, taken before the overlay goes on, for the
+      // wall behind the end card. The scene is seeked to the end and captured, then put
+      // back to the start, so the clip still opens on the beginning of the animation.
+      await p.evaluate((name) => {
+        const st = window.__stages.find((x) => x.name === name);
+        if (st) { st.seek(1); st.draw(); }
+      }, s.scene);
+      await p.waitForTimeout(250);
+      const buf = await p.screenshot({ type: 'jpeg', quality: 78 });
+      wall.push('data:image/jpeg;base64,' + buf.toString('base64'));
       await p.addStyleTag({ content: OVERLAY_CSS });
       await overlay(p, s, i, total);
       await p.evaluate((name) => {
@@ -113,6 +175,10 @@ function overlay(p, s, i, total) {
   }
   await b.close();
 
-  fs.writeFileSync(path.join(outDir, 'clips.json'), JSON.stringify(items.map((s) => ({ id: s.id, length: s.length, voice: s.voice })), null, 1));
+  // The file is tracked, so it ends with a newline and keeps the line endings the repo
+  // stores. Otherwise every re-record shows up as a change to a file whose numbers did
+  // not move.
+  const clips = JSON.stringify(items.map((s) => ({ id: s.id, length: s.length, voice: s.voice })), null, 1).replace(/\r?\n/g, "\r\n") + "\r\n";
+  fs.writeFileSync(path.join(outDir, 'clips.json'), clips, 'utf8');
   console.log('clips in', clipDir);
 })();
