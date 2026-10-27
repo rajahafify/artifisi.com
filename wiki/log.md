@@ -947,3 +947,23 @@ Verification:
 - code checked: yes. Six scenes on the CPI page timed at 1015 to 1018 ms with no console errors, on desktop and at 390 px. All 115 figures recomputed from `source.json`: 115 match, 0 mismatch, 0 not recomputed. Two card designs and the ending wall were rendered and reviewed, the wall in the recorded film and not only in a mock. The storyboard was rendered twice and the frames compared.
 - video checked: yes. ffprobe on the output, 58.10 seconds at 1080x1920 and 30 fps. `silencedetect` confirms a gap at every one of the six shot boundaries and no silence anywhere else.
 - human reviewed: no
+## [2026-10-27] feature | Re-cut the CPI film around the five beats, and open it on the claim
+
+Source: `raw/malaysia-cpi/shots.json`, `raw/malaysia-cpi/vo/script.txt`
+Changes:
+- wrote the film's premise into a card and the film's so-what into a second card, so the film now runs the five beats it was supposed to run
+- re-ordered the film to `premise, path, ladder, column, drum, leads` and dropped the state spread and the urban split, which stayed on the page
+- rewrote the voice-over: seven lines, 137 words, the premise and the so-what are new and the price level line was rewritten to sit before the fuel
+- moved the card's kicker to the top of the frame, so a card and a scene carry the same furniture
+- fixed the wall grid, which stacked four frames in one column instead of making a two by two grid
+- recorded the new decision in `wiki/decisions.md`, and updated `raw/malaysia-cpi/qa.md` and `wiki/index.md`
+Notes:
+- **The machinery shipped and the film did not use it.** The last change built the card shot type and the wall and wrote the five beats into the playbook, and then stopped, because three structural questions were put to the owner and never answered. The result was a film that was almost identical to the one before it, with a new mechanism behind it. That was the wrong shape of work: the rules, the machinery and the cut have to land together or the cut is not a cut.
+- **The three questions had answers in the report all along.** The leads beat was in `story.md` under "The so what", the opening frame was the rule already written into `video.md`, and the shot count was a consequence of the rate card's sixty seconds. They did not need the owner. What did need judgement was how many scenes to drop, and that fell out of the arithmetic: six claims and two cards do not fit in a minute, so two scenes had to go, and the two that went are the ones whose numbers belong in the so-what.
+- **A card is a bookend, not a repeat.** The premise card and the leads card are the same device at the two ends of the film. The gate that says no two shots use the same form had to be reworded: it is no two *scene* shots, and the repetition of the plate at the open and the close is deliberate, so the viewer reads them as a pair.
+- **The voice was listened to, not transcribed.** The finished film was run through the video understanding tool and every figure was checked against the script, because a transcript gives the right words back for a mispronounced name and the rule in `video.md` is that the recording has to be judged by ear. Every number came back as written.
+
+Verification:
+- code checked: yes. The film is 53.39 seconds at 1080x1920 and 30 fps, H.264 with AAC mono at 24 kHz, 360 kbps. `silencedetect` confirms a gap at every one of the six shot boundaries and none anywhere else. The page is untouched by this change and its six scenes still finish in 1007 to 1018 ms with no console errors.
+- audio checked: yes. The transcript of the finished film matches the script line for line, and every figure is spoken as written.
+- human reviewed: no

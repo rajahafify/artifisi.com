@@ -11,7 +11,7 @@
   "kicker": "Malaysia · consumer prices · September 2026",
   "gap": 0.4,
   "gapNote": "Seconds held after each voice line ends, before the next shot cuts.",
-  "orderNote": "The film is not the page in order. The page runs column to split, one claim per section. The film opens on the flat line, opens the basket, follows the fuel, then the spread, then the uneven landing, and closes on the price level. One argument, six beats, in the order the argument needs.",
+  "orderNote": "The film is not the page in order. The page runs column to split, one claim per section. The film runs five beats: a premise card states the claim in type before any chart, the baseline and the fracture show what the data is, the price level says what it meant, the fuel says what it leads to, and the leads card names the so-what before the sign-off. The state spread and the urban split stay on the page. A minute is not long enough for six claims and two cards, so the film keeps the four that carry the argument and the leads card carries the two numbers to plan with.",
   "endCard": {
     "id": "end",
     "vo": "l07",
@@ -24,64 +24,98 @@
   },
   "shots": [
     {
+      "id": "premise",
+      "card": {
+        "kicker": "Malaysia · consumer prices · September 2026",
+        "claim": [
+          "Inflation eased.",
+          "Fuel did not."
+        ],
+        "figs": [
+          {
+            "n": "1.8%",
+            "l": "headline inflation, year on year",
+            "tone": "cool"
+          },
+          {
+            "n": "RM4.18",
+            "l": "average RON95 market price",
+            "tone": "warm"
+          }
+        ],
+        "line": "Most drivers still pay the frozen RM2.05.",
+        "note": "Data: DOSM Consumer Price Index, September 2026."
+      },
+      "vo": "l01",
+      "plan": 6,
+      "beat": "the premise. the claim in type, before any chart, and it has to work muted."
+    },
+    {
       "id": "path",
       "scene": "path",
       "claim": "The rate has not moved in three years.",
       "caption": "Three years, and the line has not moved.",
-      "vo": "l01",
+      "vo": "l02",
       "plan": 8,
       "t": 1,
-      "beat": "the surface. the calm number, before anything opens up."
+      "beat": "what the data shows. the baseline. what normal looks like before the deviation."
     },
     {
       "id": "ladder",
       "scene": "ladder",
       "claim": "Inside that number, the divisions pull in opposite directions.",
       "caption": "Transport rose. Housing fell. The net barely moved.",
-      "vo": "l02",
-      "plan": 8,
-      "t": 1,
-      "beat": "the fracture. two shocks, opposite signs, one quiet total."
-    },
-    {
-      "id": "drum",
-      "scene": "drum",
-      "claim": "Fuel is the loud part, and the wedge is still open.",
-      "caption": "RON95 averaged RM4.18 against a subsidised RM2.05.",
       "vo": "l03",
       "plan": 8,
       "t": 1,
-      "beat": "the cause. the one shock big enough to matter."
-    },
-    {
-      "id": "dots",
-      "scene": "dots",
-      "claim": "One national number, seventeen rates.",
-      "caption": "The cheapest state ran at 0.5%. The dearest at 2.4%.",
-      "vo": "l04",
-      "plan": 8,
-      "t": 1,
-      "beat": "the ground. the national number is an average of a spread."
-    },
-    {
-      "id": "split",
-      "scene": "split",
-      "claim": "The same shock, two different roads.",
-      "caption": "City transport 2.75%. Countryside 1.35%.",
-      "vo": "l05",
-      "plan": 8,
-      "t": 1,
-      "beat": "the person. the shock does not land evenly."
+      "beat": "what the data shows. the fracture. two shocks, opposite signs, one quiet total."
     },
     {
       "id": "column",
       "scene": "column",
       "claim": "And the level is 37.6% above 2010.",
       "caption": "One year of that climb is 1.8%.",
-      "vo": "l06",
+      "vo": "l04",
       "plan": 8,
       "t": 1,
-      "beat": "the landing. the level, and how small one year of it is."
+      "beat": "what the data meant. the level under the rate, and how small one year of it is."
+    },
+    {
+      "id": "drum",
+      "scene": "drum",
+      "claim": "Fuel is the loud part, and the wedge is still open.",
+      "caption": "RON95 averaged RM4.18 against a subsidised RM2.05.",
+      "vo": "l05",
+      "plan": 8,
+      "t": 1,
+      "beat": "what the data leads to. the one shock big enough to matter, and the gap it opened."
+    },
+    {
+      "id": "leads",
+      "card": {
+        "kicker": "What this leads to",
+        "claim": [
+          "The rate is the",
+          "wrong number."
+        ],
+        "figs": [
+          {
+            "n": "RM2.13",
+            "l": "the gap at the pump, still open",
+            "tone": "warm"
+          },
+          {
+            "n": "37.6%",
+            "l": "the price level, above 2010",
+            "tone": "cool"
+          }
+        ],
+        "line": "Two numbers worth more than the 1.8%.",
+        "note": "Data: DOSM Consumer Price Index, September 2026."
+      },
+      "vo": "l06",
+      "plan": 9,
+      "beat": "what the data leads to. the so-what. the two numbers to plan with."
     }
   ]
 }

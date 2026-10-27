@@ -1,6 +1,7 @@
 # QA — Malaysia CPI, September 2026
 
-**Built**: 2026-10-27, rebuilt the same day after the palette and the film were redone
+**Built**: 2026-10-27, rebuilt the same day three times: after the palette, after the type went
+behind the chart, and after the film was re-cut around the five beats
 **Page**: `reports/malaysia-cpi/`
 **Video**: `raw/malaysia-cpi/video/out.mp4`
 **Gate**: 4
@@ -227,34 +228,51 @@ Seven lines, 141 words, 20 to 25 words a line. Durations are
 
 | Property | Value |
 |---|---|
-| Length | 58.10 seconds |
+| Length | 53.39 seconds |
 | Frame | 1080 x 1920, portrait, 30 fps |
 | Video codec | H.264 |
 | Audio | AAC, mono, 24 kHz |
-| Size | 2,397,238 bytes |
-| Bit rate | 330 kbps |
-| Speech total | 54.20 seconds across seven lines |
+| Size | 2,403,597 bytes |
+| Bit rate | 360 kbps |
+| Speech total | 49.49 seconds across seven lines |
 
 The voice-over sets the shot lengths. Each shot holds its scene for exactly its own line,
 with a 0.4 second gap between shots. The last line is the 2.3 second end card, followed by a
-1.1 second hold.
+1.5 second hold.
 
 The audio was profiled with `silencedetect`. Every shot boundary is a gap, and every other
 silence is a natural pause inside a sentence:
 
 ```
-7.13 → 8.02    16.30 → 17.16    25.84 → 26.72
-34.10 → 34.99  44.45 → 45.32    53.64 → 54.50    56.33 → 58.10
+6.31 → 7.19    14.09 → 14.99    23.25 → 24.16
+32.68 → 33.60  42.21 → 43.11    48.95 → 49.88    51.63 → 53.39
 ```
 
 ### The film is not the page in order
 
 The page runs `column → ladder → path → drum → dots → split`, because a reader scrolls.
-The film runs `path → ladder → drum → dots → split → column`: the surface, the fracture, the
-cause, the spread, the uneven landing, and the level. It opens on the flat line and closes on
-the price level, which is the opposite of the page order, because that is the order the
-argument needs. `shots.json` records the beat each shot plays, so a later reader can tell a
-deliberate sequence from an accident.
+The film runs `premise → path → ladder → column → drum → leads`: a card that states the claim
+in type before any chart, the baseline, the fracture, the level under the rate, the cause, and
+a card that says what the data leads to. `shots.json` records the beat each shot plays, so a
+later reader can tell a deliberate sequence from an accident.
+
+Two of the page's six scenes are not in the film. A minute is not long enough for six claims
+and two cards, so the state spread and the urban split stayed on the page and their numbers
+moved onto the leads card.
+
+### The last frame is the whole report
+
+The four charts the film drew are captured clean, before the caption band goes on, tiled two
+by two, blurred and scrimmed behind the sign-off. The wall shows what the film drew, not what
+the report drew.
+
+### The voice was listened to, not transcribed
+
+The finished film was run through the video understanding tool and the transcript was checked
+against the script. Every figure is spoken as written: one point eight percent, two point five
+percent, one point four, thirty seven point six percent, twenty ten, ninety five octane
+petrol, four ringgit eighteen a litre, fifty nine point seven percent. The name of the site is
+never said, and the film ends on "Visit our website to learn more."
 
 ---
 

@@ -112,7 +112,9 @@ function card(p, s, i, total) {
       await openShot(p, 'http://x/index.html', 800);
       await p.addStyleTag({ content: OVERLAY_CSS });
       if (wall.length) {
-        const cols = wall.length > 4 ? 2 : 1;
+        // Two columns for anything from three frames up. One frame is one frame, and
+        // two is a pair, but four or six want a grid and not a stack.
+        const cols = wall.length <= 2 ? wall.length : 2;
         const rows = Math.ceil(wall.length / cols);
         await p.evaluate(({ imgs, cols, rows }) => {
           const w = document.createElement('div');
