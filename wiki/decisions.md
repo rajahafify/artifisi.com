@@ -120,6 +120,13 @@ Key technical and design decisions observed in the codebase.
 **Rationale**: The opening premise and the closing implication are both type, not chart. Forcing them into a scene means inventing a mechanism to carry words, and the words get small. A card is the one place in the pipeline where the typography is the whole shot, so it is the right place for the claim and the so-what. The page is a scrolled set of claims and does not need either.  
 **Tradeoff**: The card markup lives in the capture tools rather than in the report, so it is not visible in the page's own source and cannot be checked by the page QA. It is checked by the storyboard and by the rendered frame.
 
+## The Film Keeps Four Claims and the Page Keeps Six
+
+**Decision**: The CPI film carries four of the report's six scenes and two cards. The state spread and the urban split stay on the page and are not in the film.  
+**Rationale**: A minute is not long enough for six claims and two cards, and the film that adds the premise and the so-what has to give two scenes up to stay under sixty seconds. The four it keeps are the ones the argument runs on: the baseline, the fracture, the meaning and the cause. The two it gives up are the ones whose numbers are the so-what rather than the setup, so the leads card can carry them in a line.  
+**Tradeoff**: Two claims the report makes are not in the film. A viewer who has only seen the video does not know the state spread runs from zero point five to two point four, or that city transport rose twice as fast as country transport. That is what the page is for, and the end card names it.  
+**Context**: The wall behind the end card is four charts, not six, because the wall shows what the film drew and not what the report drew.
+
 ## The Type Goes Behind the Chart, Not on Top of It
 
 **Decision**: Where a scene needs a large number, the display type is hung behind the chart in depth, and the chart is scaled and offset to make room for it. It is never drawn on top of the chart, and it never sits on a plate.  

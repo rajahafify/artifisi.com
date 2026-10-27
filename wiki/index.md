@@ -41,7 +41,7 @@
 - `playbook/tools/` — Capture and assembly tools for the video pipeline. The theme is a parameter: `browser.js` exports `THEMES` and `overlayCSS(theme)`, and `shots.json` names the theme. A shot is a scene or a card, and the recorder builds the card, the clean wall capture and the ending.
 - `reports/malaysia-cpi/` — The Malaysia Consumer Price Index report, September 2026. Six three.js scenes, one claim each, all playing in one second. Built from seven DOSM open API series.
 - `raw/malaysia-cpi/` — The working folder for the CPI report. The source, the story, the sections, a 115-row figure register, the shots, the script, the storyboard and the QA record.
-- `raw/malaysia-cpi/video/` — The Malaysia CPI short. 58.10 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
+- `raw/malaysia-cpi/video/` — The Malaysia CPI short. 53.39 seconds, 1080x1920, 30fps. Six shots and two cards: a premise card, four scenes, a so-what card, and the sign-off on the wall. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
 - `raw/malaysia-wages/video/` — The Malaysia wages short. 57.5 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
 
 ## Quick Reference

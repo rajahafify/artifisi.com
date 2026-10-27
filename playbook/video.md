@@ -155,11 +155,14 @@ and no caption band, because the text on the card is the text of the shot.
     ] }, "vo": "l01", "plan": 6 }
 ```
 
-`tone` is `cool` or `warm`, the report's two accents. The card's own kicker replaces the
-standard one, so a card does not also carry the frame kicker.
+`tone` is `cool` or `warm`, the report's two accents. The card's kicker sits at the top of the
+frame, in the same place as the scene shots' kicker, so the furniture of the film does not
+change when the shot does.
 
-Gate: one claim one shot, the same rule as Gate 2 of the page pipeline. No two shots use the
-same form. If two do, one is padding.
+Gate: one claim one shot, the same rule as Gate 2 of the page pipeline. No two **scene** shots
+use the same form. If two do, one is padding. The premise card and the leads card are
+deliberately the same device, at the two ends of the film, and that repetition is the point:
+the viewer sees the same plate at the open and the close and reads them as a pair.
 
 ## 4. Storyboard
 

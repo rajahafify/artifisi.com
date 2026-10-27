@@ -90,8 +90,9 @@ function overlayCSS(theme) {
     opacity: 0; animation: vbfade .7s cubic-bezier(.22,.61,.36,1) .2s forwards; }
   @keyframes vbfade { to { opacity: 1; } }
   @keyframes vbup { from { opacity: 0; transform: translateY(2.4vh); } to { opacity: 1; transform: none; } }
-  .vb-card .k { font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
-    text-transform: uppercase; color: ${T.muted}; margin: 0 0 3.2vh;
+  .vb-card .k { position: absolute; left: 8.33vw; top: 5vh;
+    font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
+    text-transform: uppercase; color: ${T.muted};
     opacity: 0; animation: vbup .8s cubic-bezier(.22,.61,.36,1) .3s forwards; }
   .vb-card .claim { font: ${T.displayWeight} 8.6vw/1.05 ${T.display}; letter-spacing: ${T.displayLetter};
     color: ${T.ink}; margin: 0 0 4.4vh; }

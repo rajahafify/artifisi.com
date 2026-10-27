@@ -1,8 +1,13 @@
 [
  {
+  "id": "premise",
+  "length": 6.954000000000001,
+  "voice": 6.554
+ },
+ {
   "id": "path",
-  "length": 7.797000000000001,
-  "voice": 7.397
+  "length": 7.7940000000000005,
+  "voice": 7.394
  },
  {
   "id": "ladder",
@@ -10,24 +15,19 @@
   "voice": 8.762
  },
  {
+  "id": "column",
+  "length": 9.413,
+  "voice": 9.013
+ },
+ {
   "id": "drum",
   "length": 9.546000000000001,
   "voice": 9.146
  },
  {
-  "id": "dots",
-  "length": 8.26,
-  "voice": 7.86
- },
- {
-  "id": "split",
-  "length": 10.343,
-  "voice": 9.943
- },
- {
-  "id": "column",
-  "length": 9.187000000000001,
-  "voice": 8.787
+  "id": "leads",
+  "length": 6.719,
+  "voice": 6.319
  },
  {
   "id": "end",
