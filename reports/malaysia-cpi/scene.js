@@ -5,9 +5,13 @@ import { Line2 } from "three/addons/lines/Line2.js";
 import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 import { LineGeometry } from "three/addons/lines/LineGeometry.js";
 
+// The palette is the report's, not the house default. It comes from a fuel price
+// board at night: an unlit near-black panel, illuminated acrylic lettering, a
+// backlit blue for the cooling half of the story and an LED red for the heating
+// half. It shares nothing with the wages report's warm cream.
 const C = {
-  paper: 0xf3f0e9, paper2: 0xeae5da, ink: 0x1c1e24, ctx: 0xa7a49a,
-  cool: 0x26557f, warm: 0xbd5320, rule: 0xd6d1c4, shade: 0xe3ded2,
+  paper: 0x0e1114, paper2: 0x161a20, ink: 0xe9edf2, ctx: 0x78828e,
+  cool: 0x2e86de, warm: 0xe8452c, rule: 0x2b323b, shade: 0x1c2128,
 };
 
 const smooth = (t) => t * t * (3 - 2 * t);
@@ -260,7 +264,7 @@ function sceneColumn(stage, D) {
   const body = stage.box(W, 1, DP, C.ctx, 1.4);
   const bodyFill = new THREE.Mesh(
     new THREE.BoxGeometry(W - 0.014, 1, DP - 0.014),
-    new THREE.MeshBasicMaterial({ color: 0xe2dccb })
+    new THREE.MeshBasicMaterial({ color: 0x161a20 })
   );
   body.add(bodyFill);
   body.position.y = bodyH / 2;
@@ -514,7 +518,7 @@ function sceneDrum(stage, D) {
   const lName = stage.label("RON95", "small dim", "c");
   const lMkt = stage.label("RM4.18", "warm big", "r");
   const lCut = stage.label("RM2.05 subsidised", "cool", "l");
-  const lGap = stage.label("RM2.13 you do not pay", "small warm", "c");
+  const lGap = stage.label("RM2.13 you do not pay", "small onfill", "c");
   const lNow = stage.label("22 Oct: RM4.32", "small dim", "r");
 
   stage.extent(V(-R - 1.9, -0.8, -R), V(R + 1.7, H + 0.8, R));

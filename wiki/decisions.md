@@ -94,6 +94,19 @@ Key technical and design decisions observed in the codebase.
 **Rationale**: Project owner confirmed `Matchatro` was only a temporary draft name during early design documentation.  
 **Tradeoff**: Early raw documents may still contain `Matchatro`; those references should be treated as historical aliases to avoid confusion.
 
+## One Report, One Palette
+
+**Decision**: Every report picks its own palette, from a reference image of its own subject, and no report may reuse a palette another report has used. `playbook/palettes.md` is the registry. The palette is stage 6 of `playbook/pipeline.md`, before the viz is designed, not after.  
+**Rationale**: The CPI report shipped a warm cream that was a shade off the wages report's cream, and on a phone the two were the same product. `pipeline.md` already said pages should not share a palette and it was not enough, because nothing made anyone check. A registry does: the palette is a row, and a row that is already there is visible from across the room. Picking the palette before the viz matters because the ground decides how a scene reads. A dark ground with lit marks is a different drawing from a cream ground with pale ones, and you cannot design the mechanism until you know which one you are drawing into.  
+**Tradeoff**: One more stage, and one more file to keep current. The method costs an image search and a palette extraction per report.  
+**Context**: The CPI palette came from a fuel price board at night, which is the subject of the report's loudest beat. Its two accents, a backlit blue and an LED red, are the cooling half and the heating half of the story.
+
+## The Film Has Its Own Order, Not the Page's
+
+**Decision**: The video lands a single claim and is cut in the order that claim needs. It is not the page's order, and it does not reuse the structure of the previous report's film.  
+**Rationale**: A page is scrolled and a film is watched. `video.md` said the video needs one claim the page does not have, but nothing stopped the film from being a recording of the page in order, which is what the CPI film first was, and what the wages film is. The CPI film now opens on the flat line and closes on the price level, the opposite of its page order, because that is the order the argument needs.  
+**Tradeoff**: The shot list and the page are no longer in the same order, so the film has to be read on its own. Each shot records the `beat` it plays so a later reader can tell a deliberate sequence from an accident.
+
 ## One Report, One Video
 
 **Decision**: Every report produces exactly one vertical video, and the video file and its recorded voice tracks are **not** tracked in git. The shot list, the voice-over script, the per-line durations and the storyboard PNGs are tracked.  
@@ -115,7 +128,7 @@ Key technical and design decisions observed in the codebase.
 
 ## Important Files
 
-- `playbook/pipeline.md` — the ten stages and four gates
+- `playbook/pipeline.md` — the eleven stages and four gates
 - `playbook/video.md` — the seven-stage video pipeline
 - `playbook/tools/browser.js` — route, launch flags, themes, `openShot`, `frameContext`
 - `raw/malaysia-cpi/qa.md` — figure diff, render checks and screenshots for the CPI report

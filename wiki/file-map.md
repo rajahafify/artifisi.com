@@ -164,7 +164,8 @@ Maps features to their primary implementation files, aiding navigation and impac
 
 | File | Role |
 |---|---|
-| `playbook/pipeline.md` | The ten stages and four gates for a report page |
+| `playbook/pipeline.md` | The eleven stages and four gates for a report page |
+| `playbook/palettes.md` | The palette registry and how to pick a new one |
 | `playbook/video.md` | The seven-stage video pipeline, report to published short |
 | `playbook/instructions.md` | Build and ship rules |
 | `playbook/tools/browser.js` | Route, launch flags, `THEMES`, `overlayCSS`, `frameContext`, `openShot` |

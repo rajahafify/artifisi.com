@@ -66,8 +66,8 @@ const THEMES = {
     displayLetter: '-.022em',
   },
   cpi: {
-    paper: '#f3f0e9', ink: '#1c1e24', muted: '#6a6d75', rule: '#d6d1c4', ctx: '#a7a49a',
-    accent: '#26557f',
+    paper: '#0e1114', ink: '#e9edf2', muted: '#9aa5b2', rule: '#2b323b', ctx: '#78828e',
+    accent: '#2e86de',
     display: '"Space Grotesk", "Helvetica Neue", Arial, sans-serif', displayWeight: 700,
     displayLetter: '-.03em',
   },

@@ -52,8 +52,18 @@ Output: `raw/<slug>/story.md`. **Shared with the page pipeline. No new work.**
 
 The video needs one thing the page does not: a single claim it can land. A report has six
 claims and no ending. A video has one argument and a button to press. If the story cannot be
-compressed to one sentence, the video will not work, and that is a story problem, not a
+compressed to one sentence, the video will not work, and it is a story problem, not a
 video problem.
+
+The film also needs its own **order**, and it is not the page's order. The page runs top to
+bottom, section by section, because a reader scrolls. A film has an argument, and an argument
+has a shape: the surface first, then the fracture, then the cause, then the consequence, then
+the landing. Reordering six existing scenes into that shape is the work of this stage, and it
+is the difference between a film and a recording of the page.
+
+Two reports from the same publisher must not cut the same way either. The Malaysia CPI film
+opens on the flat line and closes on the price level, the opposite of its page order, because
+that is the order its argument needs.
 
 ## 3. Shots
 
@@ -84,6 +94,10 @@ Two things to keep apart. The **caption** is the line burned into the frame, and
 voice says. The **on-scene text** from `sections.md` is the labels inside the 3D scene, the
 numbers on the axes. Mixing them up is how a video ends up with two layers of text saying
 different things.
+
+The order in the file is the order on screen. It is the argument, so write it as the
+argument and not as the page order. The shot list records why each shot sits where it does, in
+a `beat` field, so a later reader can tell a deliberate sequence from an accident.
 
 Gate: one claim one shot, the same rule as Gate 2 of the page pipeline. No two shots use the
 same form. If two do, one is padding.
@@ -145,6 +159,12 @@ Rules that are not negotiable, because they were all learned the hard way:
 
 - numbers as words, "two thousand nine hundred and forty ringgit", never digits
 - never say "Artifisi", the voice mangles it
+- **never hand the voice a word it cannot say.** Place names are the trap. The Singapore voice
+  says "Negeri Sembilan" as "NED-jree SEM-bih-luhn", the hard g softened into an English dʒ,
+  and "RON 95" comes out as the single word "run". Both were measured on the recorded audio,
+  not guessed. Put the name on screen and in the caption, and say the number instead. If a term
+  has to be spoken, find a phrasing the voice can carry: "ninety five octane petrol" instead of
+  "RON 95", which is intelligible and means the same thing.
 - end on "Visit our website to learn more"
 - 7 to 9 lines, about 110 to 140 words, near 55 seconds
 
@@ -169,7 +189,10 @@ known, the video can be assembled to the millisecond. Before this stage, every t
 plan is an estimate.
 
 Gate: every line recorded, none silent, none clipped, and the total within ten seconds of the
-script's word count estimate.
+script's word count estimate. Then play the recording once and listen to it. Every proper noun
+and every technical term has to be heard and confirmed intelligible before the video is cut.
+A transcript is not enough, because a mispronounced name transcribes back to the right word
+while sounding wrong.
 
 ## 7. Video
 

@@ -65,10 +65,11 @@ Recorded in `raw/malaysia-wages/qa.md`:
 
 Recorded in `raw/malaysia-cpi/qa.md`:
 
-- The ladder scene draws thirteen division rates with their August ticks. The month-on-month column is only in the fallback table, so those figures are read from the table rather than from the 3D frame.
+- The ladder scene draws thirteen division rates with their August ticks. The month-on-month column is only in the fallback table, so those figures are read from the table.
+- Four of the six CPI scenes are still charts in 3D rather than mechanisms: sorted bars, a 36 month line, state dots and two columns. `playbook/pipeline.md` stage 7 and `playbook/instructions.md` rule 1 both say the form has to come from the mechanism in the story. These four were kept for now and are the next thing to rebuild.
 - The 36 month path scene draws the headline and core lines. The band rails are labelled rather than drawn as filled area.
 - `?dur=<ms>` and `?only=` are capture helpers left in the page. Inert without the query string.
-- The "loads under 1.5s on 4G" check in stage 10 of the pipeline was not measured. `qa.md` records the weight table, about 21 KB gzipped on first load, and nothing about load time.
+- The "loads under 1.5s on 4G" check in stage 11 of the pipeline was not measured. `qa.md` records the weight table, about 21 KB gzipped on first load, and nothing about load time.
 
 ### Six WebGL contexts on one page can be dropped by Chromium
 
@@ -101,7 +102,7 @@ Recorded in `raw/malaysia-cpi/qa.md`:
 
 ## Important Files
 
-- `playbook/pipeline.md` — the ten stages and four gates
+- `playbook/pipeline.md` — the eleven stages and four gates
 - `playbook/instructions.md` — build and ship rules
 - `raw/malaysia-wages/qa.md` — figure diff and screenshots for the wages report
 - `raw/malaysia-cpi/qa.md` — figure diff, render checks and screenshots for the CPI report

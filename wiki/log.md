@@ -898,3 +898,28 @@ Verification:
 - code checked: yes. All 115 figures in `numbers.csv` recomputed from `source.json`: 115 match, 0 mismatch, 0 not recomputed. The reverse check leaves no numeric token on the page that the register cannot account for.
 - video checked: yes. ffprobe on the output, the audio profiled per shot window, every gap between shots digital silence.
 - human reviewed: no
+
+## [2026-10-27] fix | Redo the CPI palette, cut the film as its own argument, and make the pipeline enforce both
+
+Source: `raw/malaysia-cpi/` and `playbook/palettes.md`
+Changes:
+- replaced the CPI palette, which reused the wages report's warm cream, with one picked from a fuel price board at night
+- rewrote the CPI film so it lands one claim and runs in its own order, `path` to `column`, which is the reverse of the page order
+- rewrote the voice-over script: the place names are out of the voice, the fuel grade is spoken as "ninety five octane petrol", and "headline" is now "the rate"
+- added stage 6 to `playbook/pipeline.md`, pick a palette, and moved the colour rules out of the old design stage
+- added `playbook/palettes.md`, the registry of palettes already used, so the next report cannot repeat this
+- added a rule to `playbook/video.md` that the film has its own order and its own argument, and that the voice is never handed a word it cannot say
+- added a reverse figure check and a palette check to Gate 4, and a listen-to-the-recording check to the voice stage
+
+Notes:
+- **The palette was wrong and the pipeline let it through.** `playbook/pipeline.md` already said a page about household money and a page about road deaths should not share a palette. The CPI page shipped a cream a shade off the wages cream, and on a phone the two were the same product. The rule existed and nothing made anyone check it, so the palette is now a stage with a registry behind it. The new palette is a fuel price board at night, which is the subject of the report's loudest beat: a near-black panel, illuminated acrylic white, a backlit blue and an LED red. The two accents are the cooling half and the heating half of the story.
+- **The film was the page in order.** `video.md` says the video needs a single claim the page does not have, and the CPI film replayed the page's six claims in sequence, which is the same shape as the wages film. The CPI film now opens on the flat line and closes on the price level, the reverse of the page order, and each shot records the beat it plays.
+- **The voice was mangling the place names, and a transcript did not show it.** Playing the recording and listening to it found "Negeri Sembilan" said as "NED-jree SEM-bih-luhn", the hard g softened into an English dʒ, "RON 95" said as the single word "run", "headline" heard as "hate line", and two lines ending on a number with no unit so the figure sounded truncated. A transcript gives the right words back for a mispronounced name, so the check has to be done by listening. The fix follows the rule the playbook already had for "Artifisi": keep the names on screen and in the caption, and say the number instead.
+- **A dark ground breaks things that a light one hid.** Three body-text rules were hardcoded darker than the ink and had to move to the muted token, `color-scheme` had to flip, and one label sat red on the red fuel fill until it got its own plate. The plate then failed a second time because it was written against a `--shade` token that the report page's own `:root` never defined, so `var(--shade)` resolved to nothing and the plate rendered transparent. The page carries its own token block, and a token used by a class in that page has to be declared in that page.
+- The pipeline is eleven stages now, four gates still. The "ten stages" wording in `instructions.md` and the wiki was updated with it.
+
+Verification:
+- code checked: yes. All 115 figures recomputed from `source.json`: 115 match, 0 mismatch, 0 not recomputed. The reverse check leaves no numeric token on the page the register cannot account for. Six scenes timed at 1005 to 1017 ms with no console errors, on desktop and at 390 px.
+- video checked: yes. ffprobe on the output, 58.10 seconds at 1080x1920 and 30 fps. `silencedetect` confirms a gap at every one of the six shot boundaries and no silence anywhere else. Seven frames pulled across the runtime and reviewed.
+- audio checked: yes. Every recorded line played and judged on the audio itself, with the phonetics quoted for each defect.
+- human reviewed: no

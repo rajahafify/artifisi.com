@@ -149,7 +149,7 @@ Two switches matter for capture and QA:
 
 ## Steps
 
-Keep the ten stages in `pipeline.md`. In practice:
+Keep the eleven stages in `pipeline.md`. In practice:
 
 1. **Pick and acquire.** Record the licence, publisher, date and author. If the licence is not open, stop.
 2. **Verify.** `numbers.csv`, one row per figure, with the exact sentence and a page number. Gate 1.

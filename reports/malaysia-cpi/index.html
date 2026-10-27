@@ -19,15 +19,15 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 <style>
 :root{
-  --paper:#f3f0e9; --paper-2:#eae5da; --ink:#1c1e24; --muted:#6a6d75;
-  --rule:#d6d1c4; --ctx:#a7a49a;
-  --cool:#26557f; --warm:#bd5320;
+  --paper:#0e1114; --paper-2:#161a20; --ink:#e9edf2; --muted:#9aa5b2;
+  --rule:#2b323b; --ctx:#78828e; --shade:#1c2128;
+  --cool:#2e86de; --warm:#e8452c;
   --display:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
   --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
   --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
   --s1:14px; --s2:17px; --s3:22px; --s4:clamp(30px,4.2vw,46px); --s5:clamp(42px,7vw,78px);
   --ease:cubic-bezier(.22,.61,.36,1);
-  color-scheme:light;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -48,7 +48,7 @@ img{max-width:100%;display:block}
 header.hero{padding:clamp(48px,7vw,88px) 0 clamp(32px,4vw,52px)}
 .kicker{font-family:var(--mono);font-size:var(--s1);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
 h1{font-family:var(--display);font-weight:700;font-size:var(--s5);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:17ch}
-.stand{margin:26px 0 0;font-size:clamp(19px,2.2vw,23px);line-height:1.5;max-width:44ch;color:#3a3c44}
+.stand{margin:26px 0 0;font-size:clamp(19px,2.2vw,23px);line-height:1.5;max-width:44ch;color:var(--muted)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:clamp(36px,5vw,56px) 0 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .stat{padding:22px 20px 22px 0}
 .stat+.stat{border-left:1px solid var(--rule);padding-left:20px}
@@ -67,7 +67,7 @@ h2{font-family:var(--display);font-weight:700;font-size:var(--s4);line-height:1.
 .prose{max-width:62ch}
 .prose p{margin:0 0 16px}
 .prose p:last-child{margin-bottom:0}
-.prose .lead{font-size:clamp(18px,2vw,20px);color:#3a3c44}
+.prose .lead{font-size:clamp(18px,2vw,20px);color:var(--muted)}
 .hero-fig{margin:0}
 
 /* figure */
@@ -109,6 +109,7 @@ figure.fig.failed .fig-fallback{display:block}
 .scene-label.dim{color:var(--muted)}
 .scene-label.cool{color:var(--cool)}
 .scene-label.warm{color:var(--warm)}
+.scene-label.onfill{background:var(--shade);color:var(--ink)}
 
 /* video capture: ?shot=name&t=0.5 */
 /* The frame is 1080x1920. The top 8vh carries the kicker and the bottom 16vh carries the
@@ -135,7 +136,7 @@ body.shot-mode .chip,body.shot-mode .finger{display:none}
 .method h2{font-size:clamp(24px,3vw,32px);margin-bottom:26px}
 .method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px}
 .method h3{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;font-weight:400}
-.method p,.method li{font-size:15.5px;line-height:1.6;color:#42444c;margin:0 0 10px}
+.method p,.method li{font-size:15.5px;line-height:1.6;color:var(--muted);margin:0 0 10px}
 .method ul{margin:0;padding-left:18px}
 .method a{color:var(--cool)}
 .method code{font-family:var(--mono);font-size:.92em}

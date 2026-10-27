@@ -1,6 +1,6 @@
 # QA — Malaysia CPI, September 2026
 
-**Built**: 2026-10-27
+**Built**: 2026-10-27, rebuilt the same day after the palette and the film were redone
 **Page**: `reports/malaysia-cpi/`
 **Video**: `raw/malaysia-cpi/video/out.mp4`
 **Gate**: 4
@@ -95,7 +95,48 @@ inflation axis tick 1.0; the date fragments in the 36 month axis; and `4.0` in t
 
 ---
 
-## 2. Screenshots
+## 2. The palette
+
+The palette was wrong on the first build and was redone. The first one reused the wages
+report's warm cream (`#f3f0e9` against `#f6f2ea`), which `playbook/pipeline.md` forbids in as
+many words: *"A page about household money and a page about road deaths should not share a
+palette."* On a phone, scrolling from one report to the other, they were the same product.
+
+The new palette is a **fuel price board at night**, which is the subject of the report's
+loudest beat. It was picked by searching for that object and reading the dominant colours off
+the best photographs, then building the working palette from them.
+
+| Role | Hex | What it is |
+|---|---|---|
+| ground | `#0e1114` | the unlit board, near-black and neutral |
+| panel | `#161a20` | a raised area, one step off the ground |
+| ink | `#e9edf2` | illuminated acrylic white |
+| muted | `#9aa5b2` | painted steel grey-blue |
+| rule | `#2b323b` | the hairline between panels |
+| dimmed | `#78828e` | axis and scale labels |
+| accent | `#2e86de` | the backlit board blue, the cooling half |
+| comparison | `#e8452c` | the LED red, the heating half |
+
+The two accents are the two halves of the story, so the palette is the argument before a word
+is read. It shares nothing with the wages cream and nothing with the front door's navy.
+
+The palette now lives in four places and all four were changed together: `scene.js` (`const C`),
+`index.html` (`:root`), `tokens.css`, and `THEME.cpi` in `playbook/tools/browser.js`.
+
+### What the dark ground broke, and how it was fixed
+
+- **A label sitting on a fill.** "RM2.13 you do not pay" was `--warm` red text on the red
+  market surface, inside a solid `--paper` chip. Red on red. It now uses a new `onfill` class,
+  which gives it a `--shade` plate and `--ink` text.
+- **Body text set darker than the ink.** Three rules in `index.html` hardcoded `#3a3c44` and
+  `#42444c`, which are *darker* than the old ink. On a dark ground they have to be lighter, so
+  they now use `--muted`.
+- **`color-scheme`.** Was `light`. Now `dark`, so the browser's own scrollbars and form
+  controls follow the page.
+
+---
+
+## 3. Screenshots
 
 All in `qa/`.
 
@@ -105,14 +146,22 @@ All in `qa/`.
 | `page-phone-390.png` | the whole page at 390 wide, device scale 2 |
 | `page-nojs.png` | the whole page with JavaScript disabled |
 | `page-text.txt` | the rendered text, the input to the reverse check |
+| `reports-front.png` | the front door with the CPI card, full page at 1440 |
+| `reports-390.png` | the same front door at 390 wide |
+| `vidsheet.png` | seven frames pulled across the finished video |
+| `vidframe1.png` … `vidframe7.png` | those frames on their own |
 
 ---
 
-## 3. Render checks
+## 4. Render checks
 
 - **Scene timing**: each scene was played and timed in the browser. All six finish at
-  1010–1017 ms against a declared duration of 1000 ms.
-  `column 1010`, `ladder 1015`, `path 1017`, `drum 1017`, `dots 1015`, `split 1017`.
+  1016–1017 ms against a declared duration of 1000 ms.
+  `column 1016`, `ladder 1017`, `path 1016`, `drum 1017`, `dots 1017`, `split 1016`.
+- **Label plates**: the fuel price label that sits on the red fill gets its own dark plate
+  (`.scene-label.onfill`). The plate colour is the `--shade` token, and that token has to exist
+  in the page's own `:root` block. It was missing on the first pass, so the plate resolved to
+  nothing and the label sat straight on the fill.
 - **Console**: no page errors and no console errors on desktop or on the phone viewport.
 - **No JavaScript**: `html.no-js` hides each canvas and shows a data table instead. Every claim
   and every number is still on the page as HTML. Verified in `qa/page-nojs.png`.
@@ -133,13 +182,13 @@ both the guard at capture time and the recovery at runtime.
 
 ---
 
-## 4. Weight
+## 5. Weight
 
 | Asset | Raw | Gzip |
 |---|---|---|
-| `index.html` | 27.3 KB | 8.3 KB |
-| `scene.js` | 29.7 KB | 9.6 KB |
-| `data.json` | 21.4 KB | 3.0 KB |
+| `index.html` | 27.7 KB | 8.3 KB |
+| `scene.js` | 30.8 KB | 9.8 KB |
+| `data.json` | 22.8 KB | 3.0 KB |
 | **Total, first load** | | **~21 KB** |
 
 `data.json` carries every figure the page can show, which is why it is larger than the wages
@@ -150,39 +199,75 @@ Fonts, with `preconnect` set. Display text is not blocked on them.
 
 ---
 
-## 5. The video
+## 6. The voice-over
 
-| Property | Value |
-|---|---|
-| Length | 59.26 seconds |
-| Frame | 1080 x 1920, portrait, 30 fps |
-| Video codec | H.264 |
-| Audio | AAC, mono, 24 kHz |
-| Size | 2,474,493 bytes |
-| Bit rate | 334 kbps |
-| Speech total | 55.36 seconds across seven lines |
+Every recorded line was played and judged on the audio itself, not read from the script. Five
+defects were found and fixed. All of them were measured, not guessed.
 
-The voice-over sets the shot lengths. Line durations are `[9.755, 8.827, 7.018, 9.162, 8.623,
-9.674, 2.300]` and each shot holds its scene for exactly its own line, with a 0.4 second gap
-between shots. The last line is the 2.3 second end card.
+| What was said | How it was heard | Fix |
+|---|---|---|
+| "Negeri Sembilan" | `[ˈnɛdʒ.riː ˈsɛm.bɪ.læn]` — "NED-jree SEM-bih-luhn", the hard g softened to an English dʒ | the name is out of the voice. It is on screen and in the caption. The voice says the number |
+| "Sarawak" | strained, final vowel anglicised | same |
+| "Labuan" | strained, vowel reduction | same |
+| "RON 95" | `[rʌn ˈnaɪnti faɪv]` — the single word "run" | now "ninety five octane petrol", which is `[ˈnaɪnti faɪv ˈɒkteɪn ˈpɛtrəl]` and fully intelligible |
+| "headline" | `[ˈheɪt.laɪn]`, read as "hate line" | the line now says "the rate" |
+| "one point three five" with no unit | the line ends abruptly and the figure sounds truncated | "percent" added |
 
-Audio was profiled for level per window: every line sits inside its own shot and every gap
-between shots is digital silence. There is no bleed across a cut.
+A transcript is not enough to catch this. A mispronounced name transcribes back to the right
+word while sounding wrong, so the check has to be done by listening.
 
-Two things had to be fixed to get here. The first script ran 38 words per line, which produced
-13.7 second lines and 79 seconds of speech. Lines are now 21 to 25 words, which is 7 to 10
-seconds each. And the first attempt at per-channel silence used an ffmpeg `adelay` list longer
-than the channel count, which ffmpeg rejects; mono takes a single delay.
+### The script
+
+Seven lines, 141 words, 20 to 25 words a line. Durations are
+`[7.396, 8.762, 9.146, 7.860, 9.944, 8.788, 2.300]`, which is 54.20 seconds of speech.
 
 ---
 
-## 6. Known gaps
+## 7. The film
+
+| Property | Value |
+|---|---|
+| Length | 58.10 seconds |
+| Frame | 1080 x 1920, portrait, 30 fps |
+| Video codec | H.264 |
+| Audio | AAC, mono, 24 kHz |
+| Size | 2,397,238 bytes |
+| Bit rate | 330 kbps |
+| Speech total | 54.20 seconds across seven lines |
+
+The voice-over sets the shot lengths. Each shot holds its scene for exactly its own line,
+with a 0.4 second gap between shots. The last line is the 2.3 second end card, followed by a
+1.1 second hold.
+
+The audio was profiled with `silencedetect`. Every shot boundary is a gap, and every other
+silence is a natural pause inside a sentence:
+
+```
+7.13 → 8.02    16.30 → 17.16    25.84 → 26.72
+34.10 → 34.99  44.45 → 45.32    53.64 → 54.50    56.33 → 58.10
+```
+
+### The film is not the page in order
+
+The page runs `column → ladder → path → drum → dots → split`, because a reader scrolls.
+The film runs `path → ladder → drum → dots → split → column`: the surface, the fracture, the
+cause, the spread, the uneven landing, and the level. It opens on the flat line and closes on
+the price level, which is the opposite of the page order, because that is the order the
+argument needs. `shots.json` records the beat each shot plays, so a later reader can tell a
+deliberate sequence from an accident.
+
+---
+
+## 8. Known gaps
 
 - The ladder scene draws thirteen division rates with their August ticks. The month-on-month
-  column in the fallback table is not drawn in 3D, so those figures are read from the table.
-- The 36 month path scene draws the headline and core lines, but the band rails are labelled
-  rather than drawn as filled area. The label is on the frame.
+  column is only in the fallback table, so those figures are read from the table.
+- The 36 month path scene draws the headline and core lines. The band rails are labelled
+  rather than drawn as filled area.
 - `?dur=<ms>` and `?only=` are capture helpers left in the page. They are inert without the
   query string, and the canonical tag points at the clean URL.
+- Four of the six scenes are still charts in 3D rather than mechanisms. `playbook/pipeline.md`
+  now says the form has to come from the mechanism in the story, and `playbook/instructions.md`
+  rule 1 says the same. These four were kept for now and are the next thing to rebuild.
 - The video is local and is not tracked in git. The file is rebuilt from `shots.json`,
   `vo/script.txt` and `vo/dur.json` in about three minutes.
