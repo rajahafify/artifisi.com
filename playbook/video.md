@@ -288,6 +288,10 @@ The recorder walks the shot list, the voice-over is laid over it, the end card c
 Gate: watch the whole thing once. Then pull eight to ten frames and check them. A mux that
 succeeds can still produce a video with the audio half a second out.
 
+Pull the frames from across the whole runtime, not from the ends. The storyboard is one frame
+per shot at `t = 1`, so any frame that only appears while the scene is animating has never been
+looked at by anybody.
+
 Two capture rules, and both of them cost a frame.
 
 **Never capture while the page is still swapping scenes.** The page builds all six scenes and
