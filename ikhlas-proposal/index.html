@@ -9,7 +9,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;600;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;600;700&family=Alegreya+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Amiri&display=swap">
 <style>
 /* Layout: a stack of fixed 1920x1080 slides, each scaled to the page width on screen and printed one per PDF page. */
 :root {
@@ -77,6 +77,83 @@ table.cost .r, table.cost th:last-child { text-align: right; padding-right: 0; f
 table.cost td:nth-child(2) { font-weight: 400; color: var(--ink-2); }
 table.cost tr.total td { border-top: 3px solid var(--ink); border-bottom: none; font-weight: 700; color: var(--ink); }
 .foot span:first-child { max-width: 1500px; }
+.board { width: 100%; font-size: 28px; }
+.board td { padding: 12px 20px 12px 0; }
+.board th { font-size: 22px; padding-bottom: 12px; }
+.board .r { text-align: right; padding-right: 0; font-variant-numeric: tabular-nums; }
+.board tr.you td { background: var(--green-2); }
+.board tr.you td:first-child { box-shadow: inset 8px 0 0 var(--green); padding-left: 20px; }
+/* ikhlas.com app mock screens */
+.mocks { display: flex; gap: 40px; flex: none; }
+.mock { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.mock .cap { font-size: 26px; font-weight: 700; color: var(--parch); }
+.mphone { width: 350px; height: 712px; border-radius: 48px; background: #0e0b08; padding: 12px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 2px #3a2c1d; overflow: hidden; }
+.scr { width: 373px; height: 787px; transform: scale(0.8747); transform-origin: 0 0; border-radius: 42px; overflow: hidden; background: #f6f7f7; font-family: "Plus Jakarta Sans", sans-serif; color: #1d2626; position: relative; display: flex; flex-direction: column; }
+.scr * { box-sizing: border-box; }
+.scr .sb { height: 34px; padding: 10px 24px 0; display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #fff; }
+.scr .teal { background: #0ba99c; color: #fff; }
+.scr .hdr { display: flex; justify-content: space-between; align-items: center; padding: 6px 20px 0; font-size: 15px; }
+.scr .logo { font-weight: 800; font-size: 24px; letter-spacing: -0.5px; }
+.scr .logo small { font-size: 17px; }
+.scr .clock { padding: 14px 20px 0; font-size: 38px; font-weight: 600; line-height: 1; }
+.scr .asr { padding: 6px 20px 18px; font-size: 15px; opacity: 0.95; }
+.scr .qcard { margin: 0 16px; background: #fff; border-radius: 16px; overflow: hidden; color: #1d2626; }
+.scr .qcard .t { background: #eef6f5; padding: 10px 14px; font-size: 13px; display: flex; justify-content: space-between; }
+.scr .qcard .b { padding: 10px 14px 12px; text-align: right; font-family: Amiri, serif; font-size: 20px; }
+.scr .qcard .go { color: #0ba99c; font-family: "Plus Jakarta Sans", sans-serif; font-size: 13px; font-weight: 700; display: block; margin-top: 4px; }
+.scr .sheet { background: #f6f7f7; border-radius: 22px 22px 0 0; margin-top: -14px; flex: 1; position: relative; padding-top: 6px; }
+.scr .icons { display: flex; justify-content: space-around; padding: 16px 6px 10px; }
+.scr .ic { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; position: relative; width: 72px; }
+.scr .ic i { width: 48px; height: 48px; border-radius: 50%; background: #d7eeeb; display: grid; place-items: center; }
+.scr .ic.hot i { background: #2a1e14; box-shadow: 0 0 0 3px #f6f7f7, 0 0 0 5px #c79232; }
+.scr .badge { position: absolute; top: -8px; right: 4px; background: #ef5a4c; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; }
+.scr .sec { padding: 8px 16px 6px; font-size: 16px; font-weight: 800; display: flex; justify-content: space-between; align-items: baseline; }
+.scr .sec a { font-size: 12px; color: #0ba99c; font-weight: 700; }
+.scr .daily { margin: 0 16px; border-radius: 16px; background: #2a1e14; color: #f4ead6; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.scr .daily .h { display: flex; justify-content: space-between; align-items: center; }
+.scr .daily .nm { font-family: "Reem Kufi", serif; font-size: 22px; font-weight: 600; }
+.scr .daily .st { font-size: 11px; color: #d9a84a; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.scr .lv { display: flex; gap: 8px; }
+.scr .lv span { flex: 1; border-radius: 10px; padding: 8px 6px; font-size: 11px; font-weight: 700; text-align: center; background: #3a2c1d; color: #e2d3b4; }
+.scr .lv span b { display: block; font-size: 13px; color: #f4ead6; }
+.scr .lv .done { background: #2e5a3f; }
+.scr .play { background: #d9a84a; color: #2a1e14; font-weight: 800; font-size: 14px; border-radius: 99px; padding: 9px 0; text-align: center; }
+.scr .nav { height: 66px; background: #fff; border-top: 1px solid #e5e9e9; display: flex; justify-content: space-around; align-items: center; font-size: 11px; color: #6b7676; flex: none; }
+.scr .nav div { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.scr .nav .on { color: #1d2626; font-weight: 700; }
+.scr .nav i { width: 22px; height: 22px; border-radius: 6px; border: 2.5px solid currentColor; }
+.scr .bar { padding: 4px 16px 14px; display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 800; }
+.scr .hero { margin: 14px 16px 6px; border-radius: 18px; background: linear-gradient(160deg, #2e5a3f, #1b3526); color: #f4ead6; padding: 18px; position: relative; overflow: hidden; }
+.scr .hero .k { font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: #d9a84a; text-transform: uppercase; }
+.scr .hero .nm { font-family: "Reem Kufi", serif; font-size: 30px; font-weight: 600; margin: 4px 0 2px; }
+.scr .hero p { font-size: 12.5px; line-height: 1.4; color: #dfe8dc; margin: 0 0 12px; max-width: 220px; }
+.scr .hero .ar { position: absolute; right: -6px; top: 6px; font-family: Amiri, serif; font-size: 64px; color: rgba(244,234,214,0.14); }
+.scr .tiles { display: flex; gap: 10px; padding: 0 16px; }
+.scr .tile { flex: 1; border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid #e5e9e9; font-size: 12px; }
+.scr .tile .im { height: 92px; background-size: cover; background-position: center; display: grid; place-items: center; font-family: "Reem Kufi", serif; color: #f4ead6; font-size: 15px; text-align: center; padding: 6px; }
+.scr .tile .tx { padding: 7px 9px 9px; line-height: 1.3; }
+.scr .tile .tx b { display: block; font-size: 12.5px; }
+.scr .tile .tx span { color: #6b7676; font-size: 11px; }
+.scr .lock { font-size: 10px; font-weight: 800; color: #8a5a12; background: #f6ecd6; border-radius: 99px; padding: 2px 7px; }
+.scr .tabs { display: flex; margin: 12px 16px 8px; background: #e8eded; border-radius: 99px; padding: 3px; font-size: 12.5px; font-weight: 700; }
+.scr .tabs span { flex: 1; text-align: center; padding: 7px 0; border-radius: 99px; color: #5b6666; }
+.scr .tabs .on { background: #fff; color: #1d2626; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+.scr .chips { display: flex; gap: 6px; padding: 0 16px 8px; font-size: 11.5px; font-weight: 700; }
+.scr .chips span { border: 1.5px solid #cfd8d8; border-radius: 99px; padding: 4px 10px; color: #5b6666; }
+.scr .chips .on { border-color: #0ba99c; color: #0ba99c; background: #e4f4f2; }
+.scr .pod { display: flex; align-items: flex-end; justify-content: center; gap: 10px; padding: 6px 16px 10px; }
+.scr .pod div { width: 96px; text-align: center; font-size: 12px; font-weight: 700; }
+.scr .pod .av { width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 6px; display: grid; place-items: center; font-weight: 800; color: #fff; font-size: 16px; }
+.scr .pod .blk { margin-top: 6px; border-radius: 10px 10px 0 0; background: #d7eeeb; color: #0b6d64; font-size: 18px; font-weight: 800; padding-top: 6px; }
+.scr .rows { margin: 0 16px; background: #fff; border-radius: 14px; border: 1px solid #e5e9e9; overflow: hidden; }
+.scr .rw { display: flex; align-items: center; padding: 9px 12px; font-size: 13px; border-bottom: 1px solid #eef1f1; gap: 10px; }
+.scr .rw .n { width: 22px; font-weight: 800; color: #6b7676; }
+.scr .rw .p { flex: 1; } .scr .rw .p small { display: block; color: #6b7676; font-size: 11px; }
+.scr .rw .s { font-weight: 800; }
+.scr .rw.me { background: #e4f4f2; box-shadow: inset 4px 0 0 #0ba99c; border-bottom: none; }
+.scr .up { margin: 10px 16px 0; border-radius: 14px; background: #2a1e14; color: #f4ead6; padding: 11px 14px; font-size: 12px; line-height: 1.35; display: flex; gap: 10px; align-items: center; }
+.scr .up b { color: #d9a84a; }
+.scr .up .btn { flex: none; background: #0ba99c; color: #fff; font-weight: 800; border-radius: 99px; padding: 7px 12px; font-size: 12px; }
 a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
 
 @media print {
@@ -173,7 +250,103 @@ a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
   <div class="foot"><span>Playable demo. Hints are drafts for ustaz review.</span><span>6</span></div>
 </section></div>
 
-<!-- 7 Brand -->
+<!-- 7 Teka Surah, daily and ranked -->
+<div class="frame"><section class="slide" style="gap:36px">
+  <p class="eyebrow">Teka Surah · daily and ranked</p>
+  <h2>Three puzzles a day, one global board</h2>
+  <div class="row">
+    <div class="card top-green" style="padding:32px 40px"><span class="tag" style="color:var(--green)">Free for everyone</span><h3>Mudah</h3><p>A well known story. Keeps the daily habit open to all.</p></div>
+    <div class="card top-gold" style="padding:32px 40px"><span class="tag" style="color:var(--gold-ink)">Subscribers</span><h3>Sederhana</h3><p>A longer story with closer surahs to choose from.</p></div>
+    <div class="card top-red" style="padding:32px 40px"><span class="tag" style="color:var(--red)">Subscribers</span><h3>Sukar</h3><p>A story people half remember. Counts the most.</p></div>
+  </div>
+  <div class="row" style="gap:72px;align-items:flex-start">
+    <ul class="bullets" style="font-size:29px;line-height:1.36;gap:8px">
+      <li>Solve on the first hint for 6 points, on the last for 1. Sederhana counts double, Sukar triple.</li>
+      <li>Boards for today, this week and the Ramadan season, by country, state and friends.</li>
+      <li>Free players rank on the Mudah board. The full board needs all three.</li>
+      <li>First name only, with an option to hide. No cash prizes. Answers are checked on the server.</li>
+    </ul>
+    <table class="board">
+      <tr><th style="width:12%">#</th><th>Player</th><th>State</th><th class="r">Today</th></tr>
+      <tr><td>1</td><td>Aisyah K.</td><td>Selangor</td><td class="r">36</td></tr>
+      <tr><td>2</td><td>Hakim R.</td><td>Johor</td><td class="r">34</td></tr>
+      <tr><td>3</td><td>Nurul A.</td><td>Kelantan</td><td class="r">33</td></tr>
+      <tr class="you"><td>41</td><td>You</td><td>Kuala Lumpur</td><td class="r">27</td></tr>
+    </table>
+  </div>
+  <div class="foot"><span>Example board. Today's top score is 36: all three solved on the first hint.</span><span>7</span></div>
+</section></div>
+
+<!-- 8 In the app -->
+<div class="frame"><section class="slide dark" style="padding:88px 112px 110px;gap:28px">
+  <div style="display:flex;gap:56px;flex:1;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:28px;width:430px;flex:none">
+      <p class="eyebrow">Inside the ikhlas.com app</p>
+      <h2 style="font-size:60px">A Games button on the home screen</h2>
+      <ol class="bullets" style="font-size:28px;line-height:1.4;gap:14px">
+        <li>Games sits next to Prayer, Qibla and Quran, with today's puzzle right below.</li>
+        <li>The shelf: today's three puzzles first, then the story games.</li>
+        <li>The ranking, with the reason to subscribe on the same screen.</li>
+      </ol>
+    </div>
+    <div class="mocks">
+      <div class="mock"><div class="mphone"><div class="scr">
+<div class="teal"><div class="sb"><span>9:41</span><span>5G 100%</span></div>
+<div class="hdr"><span>Account</span><span class="logo">ikhlas<small>.com</small></span><span style="width:52px"></span></div>
+<div class="clock">16:19</div><div class="asr">Asr starts in 1h 50m 24s</div>
+<div class="qcard" style="margin-bottom:26px"><div class="t"><span>Al-Fatihah · The Opener</span><span>~1m read</span></div><div class="b">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ<span class="go">Start Reading ›</span></div></div>
+</div>
+<div class="sheet">
+<div class="icons"><div class="ic"><i><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#0b8f84" d="M4 20h16v-3c0-4-3.6-7.3-8-8.5C7.6 9.7 4 13 4 17z"/><circle cx="14" cy="4" r="1.6" fill="#d9a84a"/></svg></i>Prayer</div><div class="ic"><i><svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#0b8f84" stroke-width="2"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="#0b8f84"/></svg></i>Qibla</div><div class="ic"><i><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#c79232" d="M3 6c3-1 6-1 9 1 3-2 6-2 9-1v11c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M5 20l14-4M19 20L5 16" stroke="#0b8f84" stroke-width="2"/></svg></i>Quran</div><div class="ic hot"><span class="badge">New</span><i><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#d9a84a" d="M12 1.5l2.6 4.2 4.8-1.1-1.1 4.8 4.2 2.6-4.2 2.6 1.1 4.8-4.8-1.1L12 22.5l-2.6-4.2-4.8 1.1 1.1-4.8L1.5 12l4.2-2.6-1.1-4.8 4.8 1.1z"/></svg></i>Games</div></div>
+<div class="sec">Today's puzzle <a>All games ›</a></div>
+<div class="daily"><div class="h"><span class="nm">Teka Surah</span><span class="st">Streak 5 days</span></div>
+<div class="lv"><span class="done"><b>Mudah</b>Solved · 5 pts</span><span><b>Sederhana</b>Ready</span><span><b>Sukar</b>Ready</span></div>
+<div class="play">Play Sederhana</div></div>
+</div>
+<div class="nav"><div class="on"><i></i>Home</div><div><i></i>Umrah</div><div><i></i>Travel</div><div><i></i>Activity</div><div><i></i>Services</div></div></div></div><span class="cap">1 · Home</span></div>
+      <div class="mock"><div class="mphone"><div class="scr">
+<div class="teal"><div class="sb"><span>9:41</span><span>5G 100%</span></div><div class="bar">‹ &nbsp;Games</div></div>
+<div style="flex:1;overflow:hidden">
+<div class="hero"><span class="ar">قصص</span><div class="k">Daily · new at Subuh</div><div class="nm">Teka Surah</div><p>One story, six hints. Guess the surah before your friends do.</p><div class="play" style="width:130px">Play today</div></div>
+<div class="sec" style="padding-top:12px">Today's three</div>
+<div class="tiles">
+<div class="tile"><div class="im" style="background:#2e5a3f">Mudah</div><div class="tx"><b>Solved</b><span>Hint 2 · 5 pts</span></div></div>
+<div class="tile"><div class="im" style="background:#8a5a12">Sederhana</div><div class="tx"><b>Double pts</b><span class="lock">Subscribe</span></div></div>
+<div class="tile"><div class="im" style="background:#a8432f">Sukar</div><div class="tx"><b>Triple pts</b><span class="lock">Subscribe</span></div></div>
+</div>
+<div class="sec" style="padding-top:14px">Story games</div>
+<div class="tiles">
+<div class="tile"><div class="im" style="background-image:url(assets/bazaar-basra.png)"></div><div class="tx"><b>Bazaar Basra</b><span>14 Dec</span></div></div>
+<div class="tile"><div class="im" style="background:#1f2b4a">Ramadan<br>nights</div><div class="tx"><b>30 nights</b><span>Ramadan 1448</span></div></div>
+<div class="tile"><div class="im" style="background:#3f7a46">Adab</div><div class="tx"><b>For kids</b><span>2027</span></div></div>
+</div>
+</div>
+<div class="nav"><div ><i></i>Home</div><div><i></i>Umrah</div><div><i></i>Travel</div><div><i></i>Activity</div><div><i></i>Services</div></div></div></div><span class="cap">2 · Games shelf</span></div>
+      <div class="mock"><div class="mphone"><div class="scr">
+<div class="teal"><div class="sb"><span>9:41</span><span>5G 100%</span></div><div class="bar">‹ &nbsp;Teka Surah ranking</div></div>
+<div style="flex:1;overflow:hidden">
+<div class="tabs"><span class="on">Today</span><span>This week</span><span>Ramadan</span></div>
+<div class="chips"><span class="on">Malaysia</span><span>Selangor</span><span>Friends</span><span>Global</span></div>
+<div class="pod">
+<div><div class="av" style="background:#8a9aa0">H</div>Hakim R.<div class="blk" style="height:46px">34</div></div>
+<div><div class="av" style="background:#c79232">A</div>Aisyah K.<div class="blk" style="height:64px;background:#f6ecd6;color:#8a5a12">36</div></div>
+<div><div class="av" style="background:#b07a52">N</div>Nurul A.<div class="blk" style="height:34px">33</div></div>
+</div>
+<div class="rows">
+<div class="rw"><span class="n">4</span><span class="p">Faiz M.<small>Pulau Pinang</small></span><span class="s">33</span></div>
+<div class="rw"><span class="n">5</span><span class="p">Siti H.<small>Sabah</small></span><span class="s">32</span></div>
+<div class="rw"><span class="n">6</span><span class="p">Amir Z.<small>Perak</small></span><span class="s">31</span></div>
+<div class="rw me"><span class="n">41</span><span class="p">You<small>Kuala Lumpur · 5-day streak</small></span><span class="s">27</span></div>
+</div>
+<div class="up"><span><b>Free players</b> rank on Mudah only. Add Sederhana and Sukar to climb the full board.</span><span class="btn">Upgrade</span></div>
+</div>
+<div class="nav"><div ><i></i>Home</div><div><i></i>Umrah</div><div><i></i>Travel</div><div><i></i>Activity</div><div><i></i>Services</div></div></div></div><span class="cap">3 · Ranking</span></div>
+    </div>
+  </div>
+  <div class="foot"><span>Mockup based on the current ikhlas.com home screen. Names and scores are examples.</span><span>8</span></div>
+</section></div>
+
+<!-- 9 Brand -->
 <div class="frame"><section class="slide">
   <p class="eyebrow">Building the brand</p>
   <h2>ikhlas.com on every play</h2>
@@ -185,10 +358,10 @@ a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
     <tr><td>Ustaz partners</td><td>A short note from an ikhlas.com ustaz on special days</td></tr>
     <tr><td>Press</td><td>A joint launch: Malaysian Islamic games, published by ikhlas.com</td></tr>
   </table>
-  <div class="foot"><span>ikhlas.com Games</span><span>7</span></div>
+  <div class="foot"><span>ikhlas.com Games</span><span>9</span></div>
 </section></div>
 
-<!-- 8 First shelf -->
+<!-- 10 First shelf -->
 <div class="frame"><section class="slide tint">
   <p class="eyebrow">The first shelf</p>
   <h2>Four games in the first year</h2>
@@ -199,11 +372,11 @@ a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
     <tr><td>Ramadan nights</td><td>One short level each night of Ramadan</td><td>Before Ramadan 1448</td></tr>
     <tr><td>Adab for kids</td><td>Manners for young children</td><td>2027</td></tr>
   </table>
-  <p class="body">A paid tier can open once there are three or four games worth paying for.</p>
-  <div class="foot"><span>Dates after the first two games are targets to agree together</span><span>8</span></div>
+  <p class="body">A paid tier can start with Teka Surah Sederhana and Sukar, and grow as the shelf fills.</p>
+  <div class="foot"><span>Dates after the first two games are targets to agree together</span><span>10</span></div>
 </section></div>
 
-<!-- 9 Bazaar Basra -->
+<!-- 11 Bazaar Basra -->
 <div class="frame"><section class="slide dark">
   <div class="split">
     <div class="text" style="max-width:640px">
@@ -214,10 +387,10 @@ a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
     </div>
     <img class="shot-wide" src="assets/bazaar-basra.png" alt="Three phone screens from the Bazaar Basra mockup: the market stall with prices, and the alley walk between places">
   </div>
-  <div class="foot"><span>Screens from the playable mockup</span><span>9</span></div>
+  <div class="foot"><span>Screens from the playable mockup</span><span>11</span></div>
 </section></div>
 
-<!-- 10 How it fits -->
+<!-- 12 How it fits -->
 <div class="frame"><section class="slide">
   <p class="eyebrow">How it fits the app</p>
   <h2>One small add-on, no app rebuild</h2>
@@ -233,28 +406,28 @@ a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
     <li>Your developers add it once, and we support them.</li>
     <li>The same games run in a phone browser for campaigns.</li>
   </ul>
-  <div class="foot"><span>ikhlas.com Games</span><span>10</span></div>
+  <div class="foot"><span>ikhlas.com Games</span><span>12</span></div>
 </section></div>
 
-<!-- 11 Cost projection -->
+<!-- 13 Cost projection -->
 <div class="frame"><section class="slide" style="gap:36px">
   <p class="eyebrow">Cost projection</p>
   <h2>What the first year takes to build</h2>
   <table class="cost">
     <tr><th style="width:44%">Work</th><th style="width:34%">Time</th><th style="text-align:right">Cost (RM)</th></tr>
-    <tr><td>Teka Surah: build the game</td><td>2 weeks</td><td class="r">8,000</td></tr>
-    <tr><td>Teka Surah: first 90 puzzles</td><td>2 weeks</td><td class="r">8,000</td></tr>
-    <tr><td>Teka Surah: 30 new puzzles a month</td><td>3 days a month, 12 months</td><td class="r">28,800</td></tr>
+    <tr><td>Teka Surah: game, leaderboard and subscriber lock</td><td>3 weeks</td><td class="r">12,000</td></tr>
+    <tr><td>Teka Surah: first 90 puzzles (one month)</td><td>2 weeks</td><td class="r">8,000</td></tr>
+    <tr><td>Teka Surah: 90 new puzzles a month</td><td>9 days a month, 11 months</td><td class="r">79,200</td></tr>
     <tr><td>Bazaar Basra</td><td>6 weeks</td><td class="r">24,000</td></tr>
     <tr><td>Ramadan nights</td><td>4 weeks</td><td class="r">16,000</td></tr>
     <tr><td>Adab for kids</td><td>4 weeks</td><td class="r">16,000</td></tr>
     <tr><td>Hosting, fixes and updates</td><td>2 days a month, 12 months</td><td class="r">19,200</td></tr>
-    <tr class="total"><td>First 12 months</td><td>About 30 weeks of studio time</td><td class="r">120,000</td></tr>
+    <tr class="total"><td>First 12 months</td><td>About 44 weeks of studio time</td><td class="r">174,400</td></tr>
   </table>
-  <div class="foot"><span>Projection at a studio cost of about RM4,000 a week. Hosting runs on Cloudflare at no extra cost at this scale. On the ikhlas.com side: one developer to add the package once, and ustaz review time.</span><span>11</span></div>
+  <div class="foot"><span>Projection at a studio cost of about RM4,000 a week. Hosting runs on Cloudflare at no extra cost at this scale. On the ikhlas.com side: one developer to add the package once, and ustaz review time.</span><span>13</span></div>
 </section></div>
 
-<!-- 12 Network -->
+<!-- 14 Network -->
 <div class="frame"><section class="slide tint">
   <p class="eyebrow">Where it goes</p>
   <h2>From one shelf to a games network</h2>
@@ -264,10 +437,10 @@ a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
     <div class="card"><span class="tag" style="color:var(--red)">Step 3</span><h3>Open the shelf</h3><p>Other Muslim studios publish through ikhlas.com. Artifisi curates, and every game passes the same ustaz review.</p></div>
   </div>
   <p class="body">ikhlas.com becomes where Islamic games are found, starting in Malaysia and Indonesia.</p>
-  <div class="foot"><span>ikhlas.com Games</span><span>12</span></div>
+  <div class="foot"><span>ikhlas.com Games</span><span>14</span></div>
 </section></div>
 
-<!-- 13 Who and next -->
+<!-- 15 Who and next -->
 <div class="frame"><section class="slide dark">
   <div class="cols">
     <div>
@@ -286,7 +459,7 @@ a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
       </ol>
     </div>
   </div>
-  <div class="foot"><span>hello@artifisi.com · artifisi.com</span><span>13</span></div>
+  <div class="foot"><span>hello@artifisi.com · artifisi.com</span><span>15</span></div>
 </section></div>
 
 </main>
