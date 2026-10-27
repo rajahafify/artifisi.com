@@ -9,7 +9,7 @@
   ],
   "fps": 30,
   "kicker": "Malaysia · consumer prices · September 2026",
-  "gap": 0.4,
+  "gap": 0.2,
   "gapNote": "Seconds held after each voice line ends, before the next shot cuts.",
   "orderNote": "The film is not the page in order. The page runs column to split, one claim per section. The film runs five beats: a premise card states the claim in type before any chart, the baseline and the fracture show what the data is, the price level says what it meant, the fuel says what it leads to, and the leads card names the so-what before the sign-off. The state spread and the urban split stay on the page. A minute is not long enough for six claims and two cards, so the film keeps the four that carry the argument and the leads card carries the two numbers to plan with.",
   "endCard": {
@@ -43,14 +43,14 @@
             "tone": "warm"
           }
         ],
-        "line": "Most drivers still pay the frozen RM2.05.",
+        "line": "Most drivers still pay the frozen RM2.05 per litre.",
         "note": "Data: DOSM Consumer Price Index, September 2026.",
         "cues": {
           "claim0": "Inflation eased",
           "fig0": "one point eight percent",
-          "claim1": "Fuel did not",
-          "fig1": "Fuel did not",
-          "line": "the average"
+          "claim1": "Fuel prices did not",
+          "fig1": "Fuel prices did not",
+          "line": "two ringgit and five sen"
         }
       },
       "vo": "l01",
@@ -63,8 +63,8 @@
       "claim": "The rate has not moved in three years.",
       "caption": "Three years, and the line has not moved.",
       "captions": [
+        { "cue": "rate has not moved", "text": "The rate has not moved." },
         { "cue": "Three years", "text": "Three years of the same number." },
-        { "cue": "The rate has not moved", "text": "The rate has not moved." },
         { "cue": "percent now", "text": "1.8% then. 1.8% now." }
       ],
       "vo": "l02",
@@ -78,9 +78,9 @@
       "claim": "Inside that number, the divisions pull in opposite directions.",
       "caption": "Transport rose. Housing fell. The net barely moved.",
       "captions": [
-        { "cue": "the divisions pull", "text": "The divisions pull in opposite directions." },
+        { "cue": "things pull opposite ways", "text": "The divisions pull in opposite directions." },
         { "cue": "Transport rose", "text": "Transport rose 2.5%." },
-        { "cue": "Housing fell", "text": "Housing fell to 1.4%. The net barely moved." }
+        { "cue": "Housing slowed", "text": "Housing slowed to 1.4%. The net barely moved." }
       ],
       "vo": "l03",
       "plan": 8,
@@ -93,9 +93,9 @@
       "claim": "And the level is 37.6% above 2010.",
       "caption": "One year of that climb is 1.8%.",
       "captions": [
-        { "cue": "The price level", "text": "The level says what the rate hides." },
+        { "cue": "the price level behind that rate keeps climbing", "text": "The level says what the rate hides." },
         { "cue": "Thirty seven point six percent", "text": "37.6% above 2010." },
-        { "cue": "One year of that", "text": "One year of that climb is 1.8%." }
+        { "cue": "One year of it", "text": "One year of that climb is 1.8%." }
       ],
       "vo": "l04",
       "plan": 8,
@@ -105,12 +105,13 @@
     {
       "id": "drum",
       "scene": "drum",
-      "claim": "Fuel is the loud part, and the wedge is still open.",
+      "claim": "The market price rose almost sixty percent. The subsidised price did not move.",
       "caption": "RON95 averaged RM4.18 against a subsidised RM2.05.",
       "captions": [
-        { "cue": "The fuel is the loud part", "text": "The fuel is the loud part." },
-        { "cue": "four ringgit eighteen", "text": "RON95 averaged RM4.18." },
-        { "cue": "up fifty nine point seven percent", "text": "Up 59.7% since December." }
+        { "cue": "the loudest part is fuel", "text": "The fuel is the loud part." },
+        { "cue": "four ringgit and eighteen sen", "text": "RON95 averaged RM4.18." },
+        { "cue": "up almost sixty percent", "text": "Up 59.7% since December." },
+        { "cue": "The subsidised price never moved", "text": "Subsidised RM2.05. Unmoved." }
       ],
       "vo": "l05",
       "plan": 8,
@@ -141,11 +142,11 @@
         "line": "Two numbers worth more than the 1.8%.",
         "note": "Data: DOSM Consumer Price Index, September 2026.",
         "cues": {
-          "line": "Two numbers to plan with",
-          "fig1": "Two numbers",
-          "fig0": "The gap at the pump",
-          "claim0": "the headline rate",
-          "claim1": "never shows it"
+          "line": "Two numbers",
+          "fig0": "gap at the pump",
+          "fig1": "and the price level",
+          "claim0": "Not the one point eight percent",
+          "claim1": "Not the one point eight percent"
         }
       },
       "vo": "l06",

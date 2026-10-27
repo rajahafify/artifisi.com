@@ -202,25 +202,91 @@ Fonts, with `preconnect` set. Display text is not blocked on them.
 
 ## 6. The voice-over
 
-Every recorded line was played and judged on the audio itself, not read from the script. Five
-defects were found and fixed. All of them were measured, not guessed.
+The first version of this film's voice-over passed every check the pipeline had and was still
+gibberish to the person watching it. Every figure had been diffed against `numbers.csv`, every
+line had been read, the recording had been transcribed, and the transcript had matched. A cold
+listener with no picture heard "the fuel Easter lull passed" in the middle of the fuel line and
+lost the currency entirely.
 
-| What was said | How it was heard | Fix |
-|---|---|---|
-| "Negeri Sembilan" | `[ˈnɛdʒ.riː ˈsɛm.bɪ.læn]` — "NED-jree SEM-bih-luhn", the hard g softened to an English dʒ | the name is out of the voice. It is on screen and in the caption. The voice says the number |
-| "Sarawak" | strained, final vowel anglicised | same |
-| "Labuan" | strained, vowel reduction | same |
-| "RON 95" | `[rʌn ˈnaɪnti faɪv]` — the single word "run" | now "ninety five octane petrol", which is `[ˈnaɪnti faɪv ˈɒkteɪn ˈpɛtrəl]` and fully intelligible |
-| "headline" | `[ˈheɪt.laɪn]`, read as "hate line" | the line now says "the rate" |
-| "one point three five" with no unit | the line ends abruptly and the figure sounds truncated | "percent" added |
+So the voice-over was rewritten, and the check that would have caught it was added.
 
-A transcript is not enough to catch this. A mispronounced name transcribes back to the right
-word while sounding wrong, so the check has to be done by listening.
+### A transcript is not a comprehension test
+
+The gate is now a stranger. The seven recorded lines are concatenated into one file, the way a
+listener hears them, and handed to something that has never seen the script and has no picture.
+It is asked four questions: what is the point, every number it remembers with its unit, any
+stretch it could not follow word for word, and clarity out of ten.
+
+The shipped film, on that test, produced the Easter line and no usable currency. The rewritten
+film produces this:
+
+> The point of the video is that the core inflation rate is 1.8%, while other prices have
+> fluctuated differently. It notes that fuel prices have remained constant despite a large
+> spike in market prices.
+>
+> 1.8% inflation; 2 ringgit and 5 sen per liter for fuel; 1.8% then, 1.8% now; 2.5% for
+> transport; 1.4% for housing; 37.6% above 2010; 1.8% one year rate; 95 octane petrol;
+> 4 ringgit and 18 sen per liter in September; 60% since December; 2 ringgit and 13 sen gap at
+> the pump.
+>
+> Clarity 8/10.
+
+The script is judged on whether a stranger can state the point after one hearing, and on
+whether every figure comes back with its unit. A figure the listener cannot repeat is a figure
+the film does not have.
+
+### The currency had to be said, not read
+
+The house rule was "numbers as words", and it is what destroyed the currency. The same price
+was synthesised three ways and each was played cold.
+
+| Said as | Heard as |
+|---|---|
+| "RM4.18" | "R-M four point eighteen" |
+| "four ringgit eighteen" | "falling it eighteen" |
+| "four ringgit and eighteen sen" | "4 ringgit and 18 sen", clean, twice out of two |
+
+"four ringgit eighteen" leaves the voice to guess where the amount ends, and it guesses wrong.
+Reading a retail price as an abstract decimal is a documented common mistake in Malaysian usage,
+so the digits are worse still. Ringgit and sen is also how a person says the amount out loud.
+Every decimal amount in the film is now ringgit then sen, with the sen never dropped, and the
+caption carries the numeral in the reader's form.
 
 ### The script
 
-Seven lines, 141 words, 20 to 25 words a line. Durations are
-`[7.396, 8.762, 9.146, 7.860, 9.944, 8.788, 2.300]`, which is 54.20 seconds of speech.
+Seven lines, 147 words, 18 to 33 words a line, at most one sentence of 23 words. Durations are
+`[8.686, 6.371, 9.178, 9.269, 13.325, 8.019, 2.312]`, which is 57.16 seconds of speech.
+
+```
+l01|Inflation eased to one point eight percent. Fuel prices did not. Most drivers still pay two ringgit and five sen a litre.
+l02|The rate has not moved in three years: one point eight percent then, one point eight percent now.
+l03|Inside that flat rate, things pull opposite ways. Transport rose two point five percent, housing slowed to one point four percent.
+l04|The price level behind that rate keeps climbing: thirty seven point six percent above twenty ten. One year of it is one point eight percent.
+l05|The loudest part is fuel. The market price of RON 95 petrol averaged four ringgit and eighteen sen a litre in September, up almost sixty percent since December. The subsidised price never moved.
+l06|Two numbers: the two ringgit and thirteen sen gap at the pump, and the price level. Not the one point eight percent.
+l07|Visit our website to learn more.
+```
+
+The word "headline" is not said. It was measured as "hate line", so it is on screen, where the
+card's label reads "headline inflation, year on year", and out of the voice. "RON 95" survives
+but comes out as "run ninety-five", so the line says "RON 95 petrol" and lets the screen carry
+the acronym. The name of the site is never said.
+
+### Every cue lands on a word the voice says
+
+`playbook/tools/check-cues.py` resolves every cue in the shot list and every cue in the scene
+code against the recorded words. It fails on a cue that misses, on a card whose parts fall out
+of the order the voice says them, and on a film that runs past the rate card's limit.
+
+```
+cues checked : 38
+speech       : 57.16s
+film         : 59.86s  (7 lines, gap 0.20s, end hold 1.50s)
+OK  every cue lands on a word the voice says
+```
+
+The rewrite dropped "one point eight percent" from the price-level line by accident, which
+would have moved the sliver in the column scene to the wrong moment. The checker found it.
 
 ---
 
@@ -228,24 +294,24 @@ Seven lines, 141 words, 20 to 25 words a line. Durations are
 
 | Property | Value |
 |---|---|
-| Length | 55.86 seconds |
-| Frame | 1080 x 1920, portrait, 30 fps, 1,675 frames |
+| Length | 59.87 seconds |
+| Frame | 1080 x 1920, portrait, 30 fps, 1,796 frames |
 | Video codec | H.264 |
 | Audio | AAC, mono, 24 kHz |
-| Size | 2,711,496 bytes |
-| Bit rate | 388 kbps |
-| Speech total | 51.96 seconds across seven lines |
+| Size | 2,915,402 bytes |
+| Bit rate | 389 kbps |
+| Speech total | 57.16 seconds across seven lines |
 
-The voice-over sets the shot lengths. Each shot holds its scene for exactly its own line,
-with a 0.4 second gap between shots. The last line is the 2.31 second end card, followed by a
-1.5 second hold.
+The voice-over sets the shot lengths. Each shot holds its scene for exactly its own line, with a
+0.2 second gap between shots. The last line is the 2.31 second end card, followed by a
+1.5 second hold. The rate card allows up to sixty seconds.
 
 The audio was profiled with `silencedetect`. Six of the silences are the shot boundaries, and
 the rest are the breaths between sentences:
 
 ```
-6.72 → 7.57    15.04 → 15.82   24.66 → 25.53
-34.55 → 35.35  44.40 → 45.25   51.45 → 52.24   54.09 → 55.86
+8.47 → 9.13    15.10 → 15.68   24.42 → 25.07
+33.90 → 34.53  47.41 → 48.04   55.62 → 56.25   58.08 → 59.86
 ```
 
 ### The film is not the page in order
@@ -267,14 +333,21 @@ card's parts and the caption band all arrive on the word that names them:
 
 | On screen | Arrives with |
 |---|---|
-| RM4.18 on the premise card | "Fuel did not" |
-| "the band: 1.1% to 2.0%" | "The rate has not moved" |
+| 1.8% on the premise card | "one point eight percent" |
+| "Fuel did not." and RM4.18 | "Fuel prices did not" |
+| "Most drivers still pay the frozen RM2.05 per litre." | "two ringgit and five sen" |
+| "the band: 1.1% to 2.0%" | "rate has not moved" |
+| "Three years of the same number." | "Three years" |
 | "Transport rose 2.5%" | "Transport rose" |
-| "Housing fell to 1.4%" | "Housing fell" |
-| RM2.05 subsidised | "Ninety five octane petrol" |
-| RM4.18 on the drum | "four ringgit eighteen" |
-| RM2.13 you do not pay | "up fifty nine point seven percent" |
-| RM2.13 on the leads card | "The gap at the pump" |
+| "Housing slowed to 1.4%." | "Housing slowed" |
+| "+37.6%" | "thirty seven point six percent" |
+| "One year of that climb is 1.8%." | "One year of it" |
+| RM2.05 subsidised | "RON 95" |
+| RM4.18 on the drum | "four ringgit and eighteen sen" |
+| RM2.13 you do not pay | "up almost sixty percent" |
+| RM2.13 on the leads card | "gap at the pump" |
+| 37.6% on the leads card | "and the price level" |
+| "The rate is the wrong number." | "Not the one point eight percent" |
 
 The page runs the same scenes and is unchanged: every cue carries the fraction the scene has
 always used, and with no voice the page falls back to it. The page's six scenes still finish
@@ -286,18 +359,25 @@ The four charts the film drew are captured clean, before the caption band goes o
 by two, blurred and scrimmed behind the sign-off. The wall shows what the film drew, not what
 the report drew.
 
-### The voice was listened to, not transcribed
+### The film was watched, not transcribed
 
-The finished film was run through the video understanding tool and the transcript was checked
-against the script. Every figure is spoken as written: one point eight percent, two point five
-percent, one point four, thirty seven point six percent, twenty ten, ninety five octane
-petrol, four ringgit eighteen a litre, fifty nine point seven percent. The name of the site is
-never said, and the film ends on "Visit our website to learn more."
+The finished film was put through the video understanding tool and asked the four questions.
+It restated the claim in its own words:
 
-The tool was also asked when each number appeared on screen, and the answers are the table
-above: RM4.18 at 0:03 with "Fuel did not", the band at 0:09 with "The rate has not moved",
-"Transport rose 2.5%" at 0:20, "Housing fell to 1.4%" at 0:23, RM2.05 subsidised at 0:37 with
-"Ninety five octane petrol", and RM2.13 at 0:47 with "The gap at the pump".
+> Malaysia's headline inflation rate of 1.8% is misleading ("the rate is the wrong number").
+> While the annual rate appears low and unchanged over three years, it masks two critical
+> realities: cumulative price levels 37.6% higher since 2010, and fuel prices frozen at
+> RM2.05/litre, hiding an RM2.13/litre subsidy gap against the actual market price of
+> RM4.18/litre, which surged almost 60%.
+
+Clarity 8.5 out of 10. "None of the spoken narration was difficult to follow word for word."
+Every figure on screen was read back with its unit, including all three currency amounts.
+
+What the listener could not account for was chart annotation the voice does not narrate: the
+red core line on the path scene, eleven of the thirteen division rows on the ladder scene, the
+base index note on the column scene, and the "22 Oct: RM4.32" spot price on the drum. That is
+the intended division of labour. The voice carries the argument and the chart carries the
+evidence.
 
 ### The voice has to breathe
 

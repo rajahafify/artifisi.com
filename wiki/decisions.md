@@ -191,6 +191,27 @@ Key technical and design decisions observed in the codebase.
 **Rationale**: `edge-tts` pads every sentence with about nine tenths of a second of silence. The CPI film was first recorded with a filter that removed every silent period, and the result was a voice with no breath between its sentences: seven sentences run together with nothing in the gaps, which reads as though the voice is being chased. The line measured 6.55 seconds; the same words with a breath in each gap measured 7.83.
 **Tradeoff**: The film is two and a half seconds longer than it was, at 55.86 seconds. And a cut anywhere but the tail moves every word after it, so the offsets have to be remapped, which is a thing that can be got wrong quietly.
 
+## A Voice-Over Script Is Judged by a Stranger
+
+**Decision**: The gate for a voice-over is a stranger who has never seen the script and has no picture, asked what the point is, every number they remember, any stretch they could not follow, and clarity out of ten. A transcript is not the gate.
+**Rationale**: The CPI film shipped with a voice-over that the person watching it called gibberish. Every figure had been diffed against the source, every line read, the recording transcribed and the transcript matched, and the film still made no sense to the listener, who heard "the fuel Easter lull passed" in the middle of the fuel line and lost the currency entirely. A transcript says the words were right; only a listener can say the words were understood. The rewritten film scores 8.5 out of 10 on the cold listen, restates the claim in its own words, and comes back with every figure in the right unit, all three currency amounts included.
+**Tradeoff**: The test needs a tool that can take audio and answer open questions, and it is slow and non-deterministic. The speech recognition is noisy, so one hearing is weak evidence and the comparison has to be repeated. It also cannot check the picture, only the words.
+**Context**: `playbook/video.md` under "The script is judged by a stranger" and `playbook/instructions.md` rule 15.
+
+## A Decimal Amount Is Ringgit and Sen
+
+**Decision**: Every decimal amount in a voice-over is spoken as ringgit then sen, with the sen never dropped. "Four ringgit and eighteen sen", never "four ringgit eighteen" and never "RM4.18" as digits. The caption carries the numeral in the reader's form and the voice carries the meaning.
+**Rationale**: Measured, not preferred. The same price synthesised three ways and played cold: "RM4.18" came back as "R-M four point eighteen", "four ringgit eighteen" as "falling it eighteen", and "four ringgit and eighteen sen" as "4 ringgit and 18 sen", clean, twice out of two. The old house rule was "numbers as words", and it is what destroyed the currency: "four ringgit eighteen" leaves the voice to guess where the amount ends and it guesses wrong. Reading a retail price as an abstract decimal is a documented common mistake in Malaysian usage, so the digits are worse still. Ringgit and sen is also how a person would say the amount out loud.
+**Tradeoff**: One word more per amount, and the amount has to be checked against the caption so the two forms agree. A figure that appears only as a caption cannot be spoken this way, so the film has to choose which figures get said.
+**Context**: `playbook/video.md` under "A decimal amount is ringgit and sen", and the caption-versus-narration rule in the same file.
+
+## Every Cue Is Checked Before the Film Is Cut
+
+**Decision**: `playbook/tools/check-cues.py` resolves every cue in the shot list and every cue in the scene code against the recorded words, and fails the run when a cue misses, when a card's parts fall out of the order the voice says them, or when the finished film runs past the length the rate card allows.
+**Rationale**: A missed cue is not a warning. A scene cue that misses falls back to the page's fraction, which is a silent failure. A card cue that misses means the part never appears at all. A caption cue that misses means the caption is dropped from the band. The film still builds, and something is simply not in it. The rewrite of the CPI script dropped the phrase "one point eight percent" from the price-level line, which would have moved the sliver in the column scene to the wrong moment, and the mismatch was only visible by resolving the cues against the words.
+**Tradeoff**: One more tool in the pipeline, and it has to be run by hand between the voice-over and the capture. It reads the scene code as text, so a cue built at runtime would not be found.
+**Context**: `playbook/tools/check-cues.py`, `playbook/video.md` under "The picture follows the voice", and `playbook/instructions.md` rule 17.
+
 ## Important Files
 
 - `playbook/pipeline.md` — the eleven stages and four gates

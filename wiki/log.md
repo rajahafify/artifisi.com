@@ -1039,3 +1039,23 @@ Notes:
 Verification:
 - code checked: yes. Rendered in Chromium at 1200x900, 1200x630 and 390x844. Four sections, no broken in-page anchors, the form posts to https://formspree.io/f/xeaaobag with _next back to #sent, and no console errors.
 - human reviewed: no
+
+## [2026-10-28] fix | Rewrite the CPI film's voice-over so a stranger can follow it, and gate the script on one
+
+Source: `raw/malaysia-cpi/vo/script.txt`, `raw/malaysia-cpi/shots.json`, `reports/malaysia-cpi/scene.js`, `playbook/tools/check-cues.py`, `playbook/video.md`, `playbook/instructions.md`, `wiki/decisions.md`, `raw/malaysia-cpi/qa.md`
+Changes:
+- rewrote the CPI film's voice-over: seven lines, 147 words, one idea per sentence, and every decimal amount said as ringgit and sen
+- rewired every cue in the shot list and in the scene code to the new lines, and gave the drum scene a fourth caption so the subsidised price is named when the voice names it
+- added `playbook/tools/check-cues.py`, which resolves every cue against the recorded words and fails on a miss, on a card whose parts fall out of the voice's order, or on a film that runs past the rate card's limit
+- wrote the cold-listen gate and the currency rule into `playbook/video.md` and `playbook/instructions.md`, and recorded three decisions in the wiki
+- re-shot and re-muxed the film: 59.87 seconds, 1080x1920, 30fps
+Notes:
+- **The shipped film was gibberish to the person watching it, and every check we had passed.** The figures had been diffed against `numbers.csv`, the lines had been read, the recording transcribed and the transcript matched. A cold listener with no picture heard "the fuel Easter lull passed" in the middle of the fuel line and lost the currency entirely. The gate was wrong, not the script: a transcript says the words were right, and only a listener can say the words were understood. The voice-over script is now judged on whether a stranger can state the point after one hearing.
+- **The house rule "numbers as words" is what destroyed the currency.** The same price synthesised three ways and played cold: "RM4.18" came back as "R-M four point eighteen", "four ringgit eighteen" as "falling it eighteen", and "four ringgit and eighteen sen" as "4 ringgit and 18 sen", clean, twice out of two. "four ringgit eighteen" leaves the voice to guess where the amount ends and it guesses wrong, and reading a retail price as an abstract decimal is a documented common mistake in Malaysian usage. Every decimal amount is now ringgit then sen, with the sen never dropped. The caption carries the numeral in the reader's form and the voice carries the meaning.
+- **A missed cue is not a warning.** A scene cue that misses falls back to the page's fraction, which is a silent failure. A card cue that misses means the part never appears at all, and a caption cue that misses means the caption is dropped from the band. The rewrite dropped "one point eight percent" from the price-level line by accident, which would have moved the sliver in the column scene to the wrong moment. The checker found it, which is the reason the checker exists.
+- The gap between shots went from 0.4 to 0.2 seconds. The rewrite needed the words for the unit on the frozen pump price, the unit on the market price and the closing verdict, and the rate card allows sixty seconds, so the hold between shots paid for them.
+- The word "headline" is out of the voice. It was measured as "hate line", so it stays on screen, where the card reads "headline inflation, year on year". The closing line now says "Not the one point eight percent", which is more concrete than the "not the headline rate" it replaced.
+Verification:
+- code checked: yes. The film is 59.87 seconds at 1080x1920 and 30 fps, 1796 frames, H.264 with AAC mono at 24 kHz. `check-cues.py` resolves 38 cues across the four film scenes, the two cards and the caption bands, and every one lands on a word the voice says. The page is unchanged by this work: every cue still carries the fraction the scene has always used, so with no voice the page falls back to it.
+- audio checked: yes. The finished film was put through the video understanding tool. It restated the claim in its own words, scored 8.5 out of 10 for clarity, and said that none of the spoken narration was difficult to follow word for word. Every figure came back with its unit, including all three currency amounts. The voice alone, with no picture, was cold-listened three times and came back with every figure and the point each time.
+- human reviewed: no

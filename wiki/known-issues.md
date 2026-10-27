@@ -1,7 +1,7 @@
 # Known Issues
 
 **Summary**: Bugs, risks, and known problems in the project.  
-**Last updated**: 2026-10-27
+**Last updated**: 2026-10-28
 
 ---
 
@@ -83,6 +83,14 @@ Recorded in `raw/malaysia-cpi/qa.md`:
 - The scene's labels are DOM elements over the canvas, and the browser rasterises their text slightly differently from one capture session to the next. A re-rendered storyboard therefore differs from the committed PNG by a few hundred antialiased pixels in each label row, with the glyphs in the same place.
 - Measured on 2026-10-27: the CPI ladder's fourteen division names changed by 8883 pixels when the scene was re-rendered, while the value labels beside them changed by none. The old code rendered in the same session did not reproduce its own committed PNG either. Rendering the old and new code in one session showed the scene was byte-identical apart from the caption band.
 - A scene that actually changed moves the chart and its labels together. Rasterisation noise moves only the type. Compare two renders made in the same session, never a fresh render against a PNG made weeks ago.
+
+### A correct script can still be unintelligible in the ear
+
+- The CPI film shipped on 2026-10-27 with a voice-over the person watching it called gibberish. Every check the pipeline had passed: the figures were diffed against `numbers.csv`, the lines were read, the recording was transcribed, and the transcript matched.
+- The gate was wrong, not the script. A transcript says the words were right; only a listener can say the words were understood. A cold listener with no picture heard "the fuel Easter lull passed" in the middle of the fuel line and lost the currency entirely.
+- The house rule "numbers as words" turned out to be what destroyed the currency. "four ringgit eighteen" is heard as "falling it eighteen"; "four ringgit and eighteen sen" is clean. Reading a retail price as an abstract decimal is a documented common mistake in Malaysian usage, so "RM4.18" as digits is worse still.
+- Fixed on 2026-10-28. The script was rewritten, every decimal amount is now spoken as ringgit and sen, `playbook/tools/check-cues.py` resolves every cue against the recorded words, and the script is gated on a cold listen. The rewritten film scores 8.5 out of 10 for clarity and the listener restates the claim in its own words.
+- The lesson that generalises: a script written for an ear needs a listener in the loop, and a cue-driven film needs its cues checked against the recording. Neither is checkable by reading.
 
 ### Prices live in two places
 

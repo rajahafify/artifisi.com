@@ -1,33 +1,33 @@
 [
  {
   "id": "premise",
-  "length": 7.359,
-  "voice": 6.959
+  "length": 8.886,
+  "voice": 8.686
  },
  {
   "id": "path",
-  "length": 8.235,
-  "voice": 7.835
+  "length": 6.571000000000001,
+  "voice": 6.371
  },
  {
   "id": "ladder",
-  "length": 9.742,
-  "voice": 9.342
+  "length": 9.378,
+  "voice": 9.178
  },
  {
   "id": "column",
-  "length": 9.821,
-  "voice": 9.421
+  "length": 9.469,
+  "voice": 9.269
  },
  {
   "id": "drum",
-  "length": 9.875,
-  "voice": 9.475
+  "length": 13.524999999999999,
+  "voice": 13.325
  },
  {
   "id": "leads",
-  "length": 7.014,
-  "voice": 6.614
+  "length": 8.219,
+  "voice": 8.019
  },
  {
   "id": "end",

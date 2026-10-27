@@ -502,7 +502,7 @@ function sceneColumn(stage, D) {
   // the fractions this scene has always used, so the page plays as it always has.
   const aLevel = T.at("Thirty seven point six percent", 0.12);
   const aBody = T.end("Thirty seven point six percent", 0.42);
-  const aYear = T.at("One year of that", 0.86);
+  const aYear = T.at("above twenty ten", 0.86);
   const aSliver = T.end("one point eight percent", 0.95);
 
   return {
@@ -581,7 +581,7 @@ function sceneLadder(stage, D) {
   const tFull = T.at("Transport rose", 0.52);
   const tMove0 = T.at("Transport rose", 0.55);
   const tMove1 = T.end("one point four", 1.0);
-  const tNat = T.at("Inside it", 0.3);
+  const tNat = T.at("inside that flat rate", 0.3);
 
   return {
     update(t) {
@@ -674,7 +674,7 @@ function scenePath(stage, D) {
   // not moved, and the core line is named when the voice reaches the old value. On the
   // page these fall back to the fractions this scene has always used.
   const tLand = T.end("percent now", 1.0);
-  const tBand = T.at("The rate has not moved", 0.3);
+  const tBand = T.at("rate has not moved", 0.3);
   const tCore = T.at("percent then", 0.5);
 
   return {
@@ -749,10 +749,10 @@ function sceneDrum(stage, D) {
   // The market price lands when the voice says the price, the subsidised line when it
   // names the petrol, and the wedge when it says how far the price has climbed. On the
   // page these fall back to the fractions this scene has always used.
-  const tMkt = T.end("four ringgit eighteen", 0.6);
-  const tNow = T.end("up fifty nine point seven percent", 0.85);
-  const tCut = T.at("Ninety five octane petrol", 0.3);
-  const tGap = T.at("up fifty nine point seven percent", 0.78);
+  const tMkt = T.end("four ringgit and eighteen sen", 0.6);
+  const tNow = T.end("up almost sixty percent", 0.85);
+  const tCut = T.at("RON 95", 0.3);
+  const tGap = T.at("up almost sixty percent", 0.78);
 
   return {
     update(t) {

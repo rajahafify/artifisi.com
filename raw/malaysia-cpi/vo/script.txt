@@ -1,7 +1,7 @@
-l01|Inflation eased to one point eight percent. Fuel did not. Watch what the average hides.
-l02|Three years. The rate has not moved. It was one point eight percent then, and it is one point eight percent now.
-l03|Inside it, the divisions pull in opposite directions. Transport rose two point five percent. Housing fell to one point four.
-l04|The price level says what the rate hides. Thirty seven point six percent above twenty ten. One year of that is one point eight percent.
-l05|The fuel is the loud part. Ninety five octane petrol averaged four ringgit eighteen a litre, up fifty nine point seven percent since December.
-l06|Two numbers to plan with. The gap at the pump is still open, and the headline rate never shows it.
+l01|Inflation eased to one point eight percent. Fuel prices did not. Most drivers still pay two ringgit and five sen a litre.
+l02|The rate has not moved in three years: one point eight percent then, one point eight percent now.
+l03|Inside that flat rate, things pull opposite ways. Transport rose two point five percent, housing slowed to one point four percent.
+l04|The price level behind that rate keeps climbing: thirty seven point six percent above twenty ten. One year of it is one point eight percent.
+l05|The loudest part is fuel. The market price of RON 95 petrol averaged four ringgit and eighteen sen a litre in September, up almost sixty percent since December. The subsidised price never moved.
+l06|Two numbers: the two ringgit and thirteen sen gap at the pump, and the price level. Not the one point eight percent.
 l07|Visit our website to learn more.

@@ -1,6 +1,13 @@
 # Playbook: report to interactive page and short video
 
-Version 3, 27 Oct 2026. Replaces version 2, which was written after the KRI State of Households sample.
+Version 4, 28 Oct 2026. Replaces version 3, which was written after the Malaysia CPI page.
+
+What changed in version 4, and why:
+
+- rules 15 to 17 are the Malaysia CPI film's second lessons: the shipped voice-over was gibberish to the person watching it, and the script was correct the whole time
+- a voice-over script is judged by a stranger who has to state the point, not by a transcript that matches
+- a decimal amount is spoken as ringgit and sen, because "four ringgit eighteen" is heard as "falling it eighteen"
+- every cue is checked against the recorded words before the film is cut, because a missed card cue means the part never appears
 
 What changed in version 3, and why:
 
@@ -172,6 +179,63 @@ When you change how the film is made, change the shot list in the same change. A
 
 The same applies to a rule written into the playbook: a rule that nothing enforces is an intention. Give it a gate, or give it a file it has to change.
 
+### 15. A voice-over script is judged by a stranger
+
+The CPI film shipped with a voice-over the person watching it called gibberish. Every figure in
+the script had been diffed against the source, every line read, the recording transcribed, and
+the transcript matched. It still made no sense to the listener, who heard "the fuel Easter lull
+passed" in the middle of the fuel line and lost the currency entirely.
+
+**A transcript is not a comprehension test.** A transcript says the words were right. Only a
+listener can say the words were understood.
+
+So: concatenate the voice lines into one file, the way a listener hears them, and give it to
+something that has never seen the script and has no picture. Ask it four questions — what is the
+point, every number you remember with its unit, any stretch you could not follow word for word,
+and clarity out of ten. Then read the answers against the claim the film is making.
+
+The rewritten CPI film scores 8.5 out of 10 on that test, restates the claim in its own words,
+and comes back with every figure in the right unit, all three currency amounts included.
+
+A number the listener cannot repeat is a number the film does not have. A stretch the listener
+cannot follow is pointing at a word. The complaint about density is real, and it is a picture
+problem: the chart and the caption band exist to make up for it.
+
+### 16. A decimal amount is ringgit and sen
+
+Measured, not preferred. The same price, synthesised three ways and played cold:
+
+| Said as | Heard as |
+|---|---|
+| "RM4.18" | "R-M four point eighteen" |
+| "four ringgit eighteen" | "falling it eighteen" |
+| "four ringgit and eighteen sen" | "4 ringgit and 18 sen", clean, twice out of two |
+
+The old house rule, "numbers as words", is what destroyed the currency: "four ringgit eighteen"
+leaves the voice to guess where the amount ends and it guesses wrong. Reading a retail price as
+an abstract decimal is a known mistake in Malaysian usage, so "RM4.18" as digits is worse still.
+
+Every decimal amount is ringgit then sen, and the sen is never dropped — "two ringgit five" is
+heard as an amount with no sen in it. The caption carries the numeral in the reader's form,
+"RM4.18", and the voice carries the meaning. The band is not the narration.
+
+Percentages are read the way they are written, "one point eight percent", and they survive.
+
+### 17. Every cue is checked before the film is cut
+
+A scene cue that misses falls back to the page's fraction, which is a silent failure. A card
+cue that misses means the part **never appears at all**. A caption cue that misses means the
+caption is dropped from the band. The film still builds, and something is simply not in it.
+
+```
+python playbook/tools/check-cues.py raw/<slug>/vo raw/<slug>/shots.json reports/<slug>/scene.js
+```
+
+It resolves every cue in the shot list and every cue in the scene code against the recorded
+words, and fails when one misses, when a card's parts fall out of the order the voice says
+them, or when the finished film runs past the length the rate card allows. Run it after the
+voice-over is recorded and before the film is cut.
+
 ## Files a report needs
 
 ```
@@ -205,7 +269,7 @@ Keep the eleven stages in `pipeline.md`. In practice, with the video's three sta
 9. **Mock.** `_mock.cjs` generating one SVG page per section, exported to a single PDF. Gate 3.
 10. **Build.** Copy the closest existing report. Replace `data.json`, then the six scene functions. Keep the `Stage` class.
 11. **QA.** Figure diff, screenshots at 1440x900 and in a 390px iframe, no-JS, reduced motion, keyboard, weight. Gate 4.
-12. **Voice-over.** One line per shot, numbers as words. About 110 words, near 45 seconds.
+12. **Voice-over.** One line per shot, numbers as words, every decimal amount as ringgit and sen. About 110 to 145 words, near 55 seconds. Then check the cues and cold-listen the recording.
 13. **Record and mux.** `record-video.js`, then `mux.py`.
 14. **Ship.** Rebase onto main, PR, preview, merge, then the sales note.
 
@@ -215,14 +279,16 @@ The video stages are in `video.md`, and they branch from stage 5 and rejoin afte
 
 The full pipeline is `video.md`. This is the working detail for its stages 5 to 7.
 
-- Write 7 to 9 lines, one per shot, plain sentences, numbers as words ("seven thousand and seventeen ringgit"). Do not say "Artifisi", because the voice mispronounces it. End on "Visit our website to learn more."
+- Write 7 to 9 lines, one per shot, plain sentences, numbers as words ("seven thousand and seventeen ringgit"). Every decimal amount is ringgit then sen ("four ringgit and eighteen sen"), never "four ringgit eighteen" and never "RM4.18" as digits. One idea per sentence, fifteen to twenty words. Do not say "Artifisi", because the voice mispronounces it. End on "Visit our website to learn more."
 - the captions are already written. The mock carries a caption band on every frame, marked "BURNED IN AT DELIVERY". Start from that copy, do not rewrite it at this stage
 - `shots.json` is the shot list and it is the input to every tool. `storyboard.js`, `record-video.js` and `mux.py` all read it. Nothing about a report is hardcoded in a tool
 - a shot is a scene or a card. A card is a full-frame typographic plate the recorder builds, and it is where the opening premise and the closing implication live
 - the voice-over goes in `script.txt` (`l01|text`), one line per shot, in shot order
 - record with `python voice.py <vo dir> --force`. It speaks each line with `edge-tts` (`en-SG-LunaNeural`, rate `-3%`), cuts the trailing silence off each one, cuts each pause between sentences back to a breath, and writes `dur.json`, which is what sets the shot lengths, and `words.json`, which is what lets a chart show a number when the voice says it
+- **check the cues before you cut**: `python check-cues.py <vo dir> <shots.json> <scene.js>`. It fails on a cue that misses, on a card whose parts are out of the voice's order, and on a film that runs past the rate card's limit
+- **cold-listen the recording before you cut**: concatenate the lines into one file and hand it to something with no picture and no script. Ask it what the point is, every number it remembers, any stretch it could not follow, and clarity out of ten. A transcript that matches is not the same thing as a listener who understands
 - record and mux with `node record-video.js <page folder> <shots.json> <vo dir> <video dir>` then `python mux.py <video dir> <vo dir> out.mp4 <shots.json>`. The recorder captures the frames one at a time, so the first frame of a clip is the first frame of the shot
-- a scene can ask for a moment in the voice: `T.at("four ringgit eighteen", 0.6)` is the moment the voice says that phrase, and the second argument is the fraction the page uses when there is no voice. Write the phrase the way it is spoken, and make sure it is unique in its line
+- a scene can ask for a moment in the voice: `T.at("four ringgit and eighteen sen", 0.6)` is the moment the voice says that phrase, and the second argument is the fraction the page uses when there is no voice. Write the phrase the way it is spoken, and make sure it is unique in its line
 - a card's parts and a shot's captions work the same way. A caption is a list of phrases, each with a cue, and the band changes as the voice moves
 - pull 8 to 10 frames and check them, then listen to the whole thing once
 - a figure has to be checked at the video's aspect as well as the page's. A label can be fine on the page and clipped in the 9:16 frame
