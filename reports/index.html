@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Artifisi Reports. Public data, drawn as mechanisms.</title>
-<meta name="description" content="Malaysia's public data, drawn as interactive 3D scenes rather than charts. The first report is sixteen years of the DOSM wage survey. We also build these for organisations, from their own published reports." />
+<title>Artifisi Reports. Public data, drawn as infographics.</title>
+<meta name="description" content="A library of public data drawn as interactive infographics. Malaysian wages, consumer prices and household wellbeing, each one traceable to the dataset it came from." />
 <link rel="canonical" href="https://reports.artifisi.com/" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Artifisi Reports" />
-<meta property="og:description" content="Malaysia's public data, drawn as mechanisms you can run. Plus custom reports from your own." />
+<meta property="og:description" content="Public data, drawn as infographics you can open. Every figure traceable to the dataset it came from." />
 <meta property="og:url" content="https://reports.artifisi.com/" />
 <meta property="og:image" content="https://reports.artifisi.com/og.png" />
 <meta property="og:image:width" content="1200" />
@@ -80,39 +80,19 @@
   .three p { color: var(--muted); font-size: 16px; margin: 0; }
   .num { font-family: var(--mono); font-size: 12px; color: var(--red); letter-spacing: .2em; display: block; margin-bottom: 12px; }
 
-  /* sample */
+  /* library */
   .sample { background: var(--bg-2); }
   .sample .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 28px; }
-  .sample .card { border: 1px solid var(--line); padding: 28px; display: flex; flex-direction: column; gap: 8px; }
-  .sample .card .go { margin-top: auto; padding-top: 8px; }
+  .sample .card { border: 1px solid var(--line); background: var(--bg); padding: 28px; display: flex; flex-direction: column; gap: 8px; }
+  .sample .card .go { margin-top: auto; padding-top: 12px; }
   .sample .card h3 { font-size: 24px; }
   .sample .card p { color: var(--muted); margin: 0; font-size: 16px; }
+  .sample .card .tag { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); }
+  .sample .card .src { font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--muted); border-left: 2px solid var(--line); padding-left: 10px; }
+  .sample .card .meta { font-family: var(--mono); font-size: 12.5px; letter-spacing: .06em; color: var(--muted); }
   .sample .card .go { font-family: var(--mono); font-size: 13px; color: var(--ready); text-decoration: none; letter-spacing: .06em; }
   .sample .card .go:hover { text-decoration: underline; }
-
-  /* steps */
-  .steps { display: grid; gap: 0; margin-top: 8px; }
-  .step { display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 22px 0; border-top: 1px solid var(--line); }
-  .step:first-child { border-top: 0; }
-  .step .n { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .2em; padding-top: 5px; }
-  .step p { margin: 0; }
-
-  /* prices */
-  .prices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 8px; }
-  .price { background: var(--bg); padding: 24px 20px; display: flex; flex-direction: column; gap: 6px; }
-  .price .name { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
-  .price .amt { font-family: var(--serif); font-size: 30px; line-height: 1.1; }
-  .price .per { font-size: 13px; color: var(--muted); }
-  .price ul { margin: 10px 0 0; padding-left: 16px; font-size: 14px; color: var(--muted); }
-  .price li { margin-bottom: 4px; }
-  .price.pick { background: var(--bg-2); }
-  .price.pick .amt { color: var(--ready); }
   .note { font-size: 14px; color: var(--muted); margin-top: 18px; }
-
-  /* limits */
-  .limits { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 44px; margin-top: 8px; }
-  .limits div p { margin: 0; color: var(--muted); font-size: 16px; }
-  .limits h3 { font-size: 18px; font-family: var(--sans); font-weight: 600; }
 
   /* contact */
   .contact { background: var(--bg-2); }
@@ -127,8 +107,6 @@
     .fact:nth-child(3) { border-left: 0; padding-left: 0; }
     .three { grid-template-columns: 1fr; gap: 28px; }
     .sample .cards { grid-template-columns: 1fr; }
-    .prices { grid-template-columns: repeat(2, 1fr); }
-    .limits { grid-template-columns: 1fr; gap: 24px; }
   }
   /* form */
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
@@ -136,9 +114,10 @@
   form { display: grid; gap: 14px; }
   .field { display: block; }
   label { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px; }
-  input, textarea { width: 100%; font: inherit; font-size: 15px; line-height: 1.4; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 2px; padding: 11px 12px; }
-  input:focus, textarea:focus { outline: none; border-color: var(--red); }
+  input, textarea, select { width: 100%; font: inherit; font-size: 15px; line-height: 1.4; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 2px; padding: 11px 12px; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--red); }
   textarea { min-height: 108px; resize: vertical; }
+  select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 34px; }
   .hp { position: absolute; left: -9999px; }
   button.btn { border: 0; font-family: inherit; font-size: 16px; cursor: pointer; justify-self: start; }
   .formnote { font-size: 13px; color: var(--muted); margin: 2px 0 0; }
@@ -150,7 +129,6 @@
     .contact-grid { grid-template-columns: 1fr; gap: 36px; }
   }
   @media (max-width: 520px) {
-    .prices { grid-template-columns: 1fr; }
     section { padding: 48px 0; }
     .bar .wrap { font-size: 11px; letter-spacing: .06em; }
     .bar nav { gap: 14px; }
@@ -164,9 +142,8 @@
   <div class="wrap">
     <a class="brand" href="https://www.artifisi.com">Artifisi Reports</a>
     <nav>
-      <a href="#reports">Reports</a>
-      <a href="#custom">Custom work</a>
-      <a href="#prices">Prices</a>
+      <a href="#reports">The library</a>
+      <a href="#how">How they are made</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
@@ -176,149 +153,77 @@
 
 <section class="hero">
   <div class="wrap">
-    <p class="kicker">Public data, drawn as mechanisms</p>
-    <h1>Reports you can read <span class="red">on a phone</span>.</h1>
-    <p class="lead">Every figure is real text, so it is searchable and readable by a screen reader. Every chart is a machine that runs, not a bar with a label. We publish these from Malaysia's public data, and we build them for organisations that want their own.</p>
+    <p class="kicker">A library of Malaysian public data</p>
+    <h1>Public data, drawn as <span class="red">infographics</span>.</h1>
+    <p class="lead">Every figure on these pages is real text, so it is searchable and readable by a screen reader. Every chart is a machine that runs when you tap it, not a bar with a label. And every number traces back to the dataset it came from, with the source named on the page.</p>
     <div class="cta">
-      <a class="btn" href="#reports">Read the reports</a>
-      <a class="btn ghost" href="#custom">Commission one</a>
+      <a class="btn" href="#reports">Browse the library</a>
+      <a class="btn ghost" href="#how">How they are made</a>
     </div>
     <div class="facts">
-      <div class="fact"><b>12</b><span>scenes across two DOSM reports</span></div>
-      <div class="fact"><b>16</b><span>years of wage survey data</span></div>
-      <div class="fact"><b>5</b><span>working days, start to live</span></div>
-      <div class="fact"><b>RM2,900</b><span>from, for a custom report</span></div>
+      <div class="fact"><b>2</b><span>published reports, each one a full read</span></div>
+      <div class="fact"><b>12</b><span>interactive scenes, one claim each</span></div>
+      <div class="fact"><b>2</b><span>vertical films, one per published report</span></div>
+      <div class="fact"><b>Every</b><span>figure traceable to a public source</span></div>
     </div>
   </div>
 </section>
 
 <section class="sample" id="reports">
   <div class="wrap">
-    <p class="kicker">Reports</p>
-    <h2>What we have published.</h2>
-    <p class="lead">Each one starts from a source anyone can download, and every figure on the page is traceable back to it.</p>
+    <p class="kicker">The library</p>
+    <h2>What is published.</h2>
+    <p class="lead">Each one starts from a dataset anyone can download. Open it, read it, and check the numbers against the source.</p>
     <div class="cards">
     <div class="card">
+      <span class="tag">Labour</span>
       <h3>What Malaysia pays, by industry</h3>
+      <p class="src">Department of Statistics Malaysia<br />Salaries and Wages Survey, 2010 to 2025</p>
       <p>Sixteen years of the DOSM Salaries and Wages Survey, nineteen industries, six scenes. Education pays twice the national median. Two in three workers sit below it. The gap narrowed, broke in 2020, and never got back to 2019.</p>
-      <a class="go" href="/malaysia-wages/">Read the report</a>
+      <p class="meta">6 scenes · 57 second film</p>
+      <a class="go" href="/malaysia-wages/">Open the report</a>
     </div>
     <div class="card">
+      <span class="tag">Consumer prices</span>
       <h3>Inflation eased. Fuel did not.</h3>
-      <p>Malaysia's consumer price index rose 1.8% in the year to September 2026. Inside that number, transport heated to 2.5% while housing cooled to 1.4%, the market price of RON95 averaged RM4.18, and the cheapest state ran nearly five to one against the dearest. Six scenes and a 59 second film.</p>
-      <a class="go" href="/malaysia-cpi/">Read the report</a>
+      <p class="src">Department of Statistics Malaysia<br />Consumer Price Index, September 2026</p>
+      <p>Malaysia's consumer price index rose 1.8% in the year to September 2026. Inside that number, transport heated to 2.5% while housing cooled to 1.4%, the market price of RON95 averaged RM4.18, and the cheapest state ran nearly five to one against the dearest.</p>
+      <p class="meta">6 scenes · 56 second film</p>
+      <a class="go" href="/malaysia-cpi/">Open the report</a>
     </div>
     <div class="card">
+      <span class="tag">Households</span>
       <h3>From income to wellbeing</h3>
+      <p class="src">Khazanah Research Institute<br />State of Households 2026 · unofficial sample</p>
       <p>A sample built from Khazanah Research Institute's State of Households 2026. Income, happiness, poverty by district, the squeeze on the bottom 10%, food, health and ageing, in seven charts and a 45 second film.</p>
+      <p class="meta">7 charts · 45 second film</p>
       <a class="go" href="/samples/households/">Open the sample</a>
     </div>
     </div>
-    <p class="note">The households page is unofficial. KRI did not ask for it and did not check it. The wages and consumer price reports are our own analysis of DOSM's published data.</p>
+    <p class="note">The households page is an unofficial sample. KRI did not ask for it and did not check it. The wages and consumer price reports are our own analysis of DOSM's published data.</p>
   </div>
 </section>
 
-<section>
+<section id="how">
   <div class="wrap">
-    <p class="kicker">The problem</p>
-    <h2>A report is a bad shape for the internet.</h2>
+    <p class="kicker">How they are made</p>
+    <h2>A PDF is a bad shape for the internet. A page is not.</h2>
     <p class="lead">Most of the people you want to reach will read the executive summary, if that. The numbers are good. They are just locked in a file nobody opens on a phone.</p>
-    <p class="lead muted">Your comms team still has a month of posts to fill, and a graph from page 42 is not a post.</p>
-  </div>
-</section>
-
-<section id="custom">
-  <div class="wrap">
-    <p class="kicker">Custom work</p>
-    <h2>Your report, built like these.</h2>
-    <p class="lead">You send the PDF and the spreadsheet behind it. We send back a page your comms team can post, and the films to go with it.</p>
     <div class="three" style="margin-top:40px">
       <div>
         <span class="num">01</span>
-        <h3>The page</h3>
-        <p>Every figure is real text, so search engines and screen readers can read it. The charts are drawn in 3D and play when the reader taps them. Tap again to replay. On a phone the text comes first, then the chart fills the screen.</p>
+        <h3>The figures are text</h3>
+        <p>Every number on the page is a real element in the HTML. Search engines index it, screen readers read it, and you can select it. The data table behind each chart is there for anyone who wants the numbers in full.</p>
       </div>
       <div>
         <span class="num">02</span>
-        <h3>The videos</h3>
-        <p>Three vertical films, up to 60 seconds, captioned, with a voice over. Sized for LinkedIn, Instagram and TikTok. Each one covers a single number, so they can run in any order.</p>
+        <h3>The charts run</h3>
+        <p>Each figure is a mechanism in 3D that plays when the reader taps it. The animation is the argument: the level behind the rate, the band the headline never left, the wedge at the pump. Tap again to replay.</p>
       </div>
       <div>
         <span class="num">03</span>
-        <h3>The stills</h3>
-        <p>Every chart as a press ready image, so the report page, the deck and the launch post all match. No one has to screenshot a PDF again.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <p class="kicker">How it works</p>
-    <h2>One week, four steps.</h2>
-    <div class="steps">
-      <div class="step"><span class="n">01</span><p>You send the final PDF, and the spreadsheet behind it if one exists.</p></div>
-      <div class="step"><span class="n">02</span><p>We pick the numbers that each make one chart, and send them back for you to check. This is the only step that needs your time.</p></div>
-      <div class="step"><span class="n">03</span><p>We build the page and the videos. First draft in five working days.</p></div>
-      <div class="step"><span class="n">04</span><p>You approve every figure. We publish to your domain or ours, and hand over the files.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="prices">
-  <div class="wrap">
-    <p class="kicker">Prices</p>
-    <h2>Four ways to buy it.</h2>
-    <div class="prices">
-      <div class="price">
-        <span class="name">Pilot</span>
-        <span class="amt">RM2,900</span>
-        <span class="per">first two clients each quarter</span>
-        <ul><li>1 page, 7 charts</li><li>1 vertical video</li><li>Case study in return</li></ul>
-      </div>
-      <div class="price pick">
-        <span class="name">Standard</span>
-        <span class="amt">RM4,500</span>
-        <span class="per">5 working days</span>
-        <ul><li>1 page, 10 charts</li><li>3 vertical videos</li><li>Press stills</li></ul>
-      </div>
-      <div class="price">
-        <span class="name">Flagship</span>
-        <span class="amt">RM12,000</span>
-        <span class="per">10 working days</span>
-        <ul><li>1 page, 14 charts</li><li>6 videos, 1 film</li><li>Launch pack</li></ul>
-      </div>
-      <div class="price">
-        <span class="name">Calendar</span>
-        <span class="amt">RM3,000</span>
-        <span class="per">per month</span>
-        <ul><li>Every report you publish</li><li>48 hours after the PDF</li><li>Quarterly recap film</li></ul>
-      </div>
-    </div>
-    <p class="note">Two rounds of changes are included in every package. Prices exclude service tax where it applies.</p>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <p class="kicker">The fine print, early</p>
-    <h2>What we do not do.</h2>
-    <div class="limits">
-      <div>
-        <h3>We do not check your numbers</h3>
-        <p>We copy figures exactly as the report prints them. You approve every one before we publish. If a number is wrong in the source, it will be wrong on the page.</p>
-      </div>
-      <div>
-        <h3>We do not claim your work</h3>
-        <p>Until you approve it, the page says it is unofficial and was not made by or for you. We do not use your name or logo without written consent.</p>
-      </div>
-      <div>
-        <h3>We do not keep your page</h3>
-        <p>You own the page and the videos once the invoice is paid. We keep the engine and the chart code, and we may show the work in our portfolio.</p>
-      </div>
-      <div>
-        <h3>We do not overrun quietly</h3>
-        <p>If we miss a date we agreed, the fee drops 10% for each working day we are late. If we cannot finish, you get back the part we did not deliver.</p>
+        <h3>The sources are named</h3>
+        <p>Every report names its dataset, the fields used, the licence and the caveats. Where a figure was computed rather than published, the page says so and shows how it was computed.</p>
       </div>
     </div>
   </div>
@@ -328,11 +233,10 @@
   <div class="wrap">
     <div class="contact-grid">
       <div>
-        <p class="kicker">Custom report</p>
-        <h2>Tell us what you published.</h2>
-        <p class="lead">Send the report and the date it went out. We reply within one working day with the numbers we would pick, what we would build, and the price.</p>
-        <p class="lead muted">If you have no report yet and just want to see whether your data would work, say that instead. Same form.</p>
-        <p style="margin-top:26px"><a class="mail" href="mailto:hello@artifisi.com?subject=Custom%20report">hello@artifisi.com</a></p>
+        <p class="kicker">Contact</p>
+        <h2>Tell us what you are looking for.</h2>
+        <p class="lead">If a dataset you care about is not in the library, say so and we will look for it. If you want one of these drawn from your own data, say that too. We read everything and reply within one working day.</p>
+        <p style="margin-top:26px"><a class="mail" href="mailto:hello@artifisi.com?subject=Hello">hello@artifisi.com</a></p>
         <p class="note">Artifisi Sdn Bhd, Kuala Lumpur. Also on X at <a href="https://x.com/artifisi_my">@artifisi_my</a>.</p>
       </div>
 
@@ -341,7 +245,7 @@
           <b>Sent.</b> We have it. You will hear back within one working day.
         </div>
         <form action="https://formspree.io/f/xeaaobag" method="POST">
-          <input type="hidden" name="_subject" value="Custom report enquiry, reports.artifisi.com" />
+          <input type="hidden" name="_subject" value="Contact from reports.artifisi.com" />
           <input type="hidden" name="_next" value="https://reports.artifisi.com/#sent" />
           <div class="hp"><label for="f-gotcha">Leave this empty</label><input id="f-gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></div>
 
@@ -354,20 +258,24 @@
             <input id="f-email" type="email" name="email" required autocomplete="email" />
           </div>
           <div class="field">
-            <label for="f-org">Organisation</label>
-            <input id="f-org" type="text" name="organisation" autocomplete="organization" />
+            <label for="f-topic">What is it about</label>
+            <select id="f-topic" name="topic">
+              <option>A dataset that is not in the library yet</option>
+              <option>My own report or data, drawn like these</option>
+              <option>Something else</option>
+            </select>
           </div>
           <div class="field">
-            <label for="f-report">Link to the report</label>
-            <input id="f-report" type="url" name="report_url" placeholder="https://" />
+            <label for="f-link">Link to a report or dataset</label>
+            <input id="f-link" type="url" name="report_url" placeholder="https://" />
           </div>
           <div class="field">
             <label for="f-msg">What do you want from it?</label>
-            <textarea id="f-msg" name="message" rows="4" placeholder="The report, the date, and anything you already know you want."></textarea>
+            <textarea id="f-msg" name="message" rows="4" placeholder="The dataset, the year, and anything you already know you want."></textarea>
           </div>
 
           <button class="btn" type="submit">Send it</button>
-          <p class="formnote">Or email <a href="mailto:hello@artifisi.com?subject=Custom%20report">hello@artifisi.com</a> directly.</p>
+          <p class="formnote">Or email <a href="mailto:hello@artifisi.com">hello@artifisi.com</a> directly.</p>
         </form>
       </div>
     </div>

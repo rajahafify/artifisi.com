@@ -1,10 +1,11 @@
 # reports.artifisi.com
 
-One static folder, no build step. It holds the reports we publish ourselves, the samples that prove the work, and the page that sells custom reports.
+One static folder, no build step. It holds the reports we publish ourselves, the samples that prove the work, and the front door that lists them.
 
 ```
 reports/
-  index.html              front door, prices, Formspree contact form
+  index.html              front door, the library, Formspree contact form
+  malaysia-cpi/           our own report, DOSM consumer price index
   malaysia-wages/         our own report, DOSM wage survey
   samples/households/     unofficial KRI sample, kept as proof
   favicon.svg, og.png
@@ -22,7 +23,7 @@ A separate project because Pages gives a custom domain the whole project, and be
 
 ## Editing
 
-- Copy and prices live in `index.html`. The same prices live in `../playbook/sales/rate-card.md`. Change both together.
+- The front door is a library, not a shop. It lists what is published, says how the pages are made, and takes a contact message. It carries no prices: the prices live in `../playbook/sales/rate-card.md`.
 - The contact form posts to the same Formspree form as the main site (`xeaaobag`). `_subject` marks which site it came from; `_next` sends the sender back to `#sent`.
 - `og.png` is the share image. Retake it if the headline changes: headless Chrome at 1200x630.
 - Reports sit one level down and use absolute paths (`/malaysia-wages/`). Samples live at `samples/<slug>/`. The main site 301s `/samples/*` here.

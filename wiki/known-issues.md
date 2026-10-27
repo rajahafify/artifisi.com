@@ -86,7 +86,8 @@ Recorded in `raw/malaysia-cpi/qa.md`:
 
 ### Prices live in two places
 
-- `playbook/sales/rate-card.md` and `reports/index.html` both carry the price list. Nothing enforces that they match. Both say so in a comment; neither is generated from the other.
+- Was: `playbook/sales/rate-card.md` and `reports/index.html` both carried the price list. Nothing enforced that they match. Both said so in a comment; neither was generated from the other.
+- Resolved on 2026-10-27. The front door at reports.artifisi.com became a library of published reports with a general contact form and no prices, so the rate card is the only copy. The duplication risk is gone with the second copy.
 
 ### Service tax treatment is unverified
 

@@ -104,7 +104,7 @@ artifisi.com is the marketing landing site for Artifisi Sdn Bhd, an independent 
 ## Reports
 
 - **Directory**: `reports/` — the `reports.artifisi.com` subdomain, a separate Cloudflare Pages project. No build step; `reports/` is plain HTML, CSS, ES modules and JSON.
-- **Front door**: `reports/index.html` — the customer-facing page. Prices, the packages, the enquiry form, and a card for every published report. The price list is duplicated from `playbook/sales/rate-card.md`.
+- **Front door**: `reports/index.html` — the library page at `reports.artifisi.com`. A card for every published report with its dataset and period, a short section on how the pages are made, and a general contact form. It carries no prices and no packages. Changed on 2026-10-27 from a sales page to a library; see [[contradictions]].
 - **Report pages**: `reports/<slug>/` — `index.html`, `scene.js`, `data.json`. Every figure is real text in the HTML, so it is searchable and readable by a screen reader. Each figure's canvas is hidden when JavaScript is off and a data table is shown instead.
 
 ### Published reports
