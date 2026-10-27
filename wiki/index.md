@@ -1,7 +1,7 @@
 # Wiki Index
 
 **Summary**: Navigation entry point for the artifisi.com LLM Wiki.  
-**Last updated**: 2026-10-27
+**Last updated**: 2026-10-28
 
 ---
 
@@ -35,13 +35,13 @@
 - [[context/landing-page-review-todo]] — Prioritized action items derived from the landing page review.
 - `reports/` — The reports subdomain (`reports.artifisi.com`), a separate Cloudflare Pages project. Not yet documented in a wiki page.
 - `playbook/pipeline.md` — The eleven-stage, four-gate pipeline for turning a published report into an interactive page.
-- `playbook/instructions.md` — Build and ship playbook, version 3. The rules are numbered in the order they cost us time; 11 to 14 are the Malaysia CPI report's lessons, about type behind the chart, dark grounds, page-owned tokens, and landing the cut with the rules.
-- `playbook/video.md` — The video pipeline: report to story to shots to storyboard to script to voice-over to video, plus the five-beat arc a film runs and the craft rules for the cut. Run end to end on 2026-10-27.
+- `playbook/instructions.md` — Build and ship playbook, version 4. The rules are numbered in the order they cost us time; 11 to 14 are the Malaysia CPI report's lessons, about type behind the chart, dark grounds, page-owned tokens, and landing the cut with the rules. 15 to 17 are the CPI film's second lessons: a voice-over script is judged by a stranger who has to state the point, a decimal amount is spoken as ringgit and sen, and every cue is checked before the film is cut.
+- `playbook/video.md` — The video pipeline: report to story to shots to storyboard to script to voice-over to video, plus the five-beat arc a film runs and the craft rules for the cut. Run end to end on 2026-10-27, and rewritten for the voice on 2026-10-28.
 - `playbook/palettes.md` — The palette registry. One report, one palette, and the method for picking the next one. The CPI report's palette is a fuel price board at night.
-- `playbook/tools/` — Capture and assembly tools for the video pipeline. The theme is a parameter: `browser.js` exports `THEMES` and `overlayCSS(theme)`, and `shots.json` names the theme. A shot is a scene or a card, and the recorder builds the card, the clean wall capture and the ending.
+- `playbook/tools/` — Capture and assembly tools for the video pipeline. The theme is a parameter: `browser.js` exports `THEMES` and `overlayCSS(theme)`, and `shots.json` names the theme. A shot is a scene or a card, and the recorder builds the card, the clean wall capture and the ending. `check-cues.py` is the gate: it resolves every cue against the recorded words and fails on a miss or on a film over the rate card's limit.
 - `reports/malaysia-cpi/` — The Malaysia Consumer Price Index report, September 2026. Six three.js scenes, one claim each, all playing in one second. Built from seven DOSM open API series.
 - `raw/malaysia-cpi/` — The working folder for the CPI report. The source, the story, the sections, a 115-row figure register, the shots, the script, the storyboard and the QA record.
-- `raw/malaysia-cpi/video/` — The Malaysia CPI short. 55.86 seconds, 1080x1920, 30fps. Six shots and two cards: a premise card, four scenes, a so-what card, and the sign-off on the wall. The chart, the card and the caption all arrive on the word the voice says. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script, the durations and the word timings are.
+- `raw/malaysia-cpi/video/` — The Malaysia CPI short. 59.87 seconds, 1080x1920, 30fps. Six shots and two cards: a premise card, four scenes, a so-what card, and the sign-off on the wall. The chart, the card and the caption all arrive on the word the voice says. The voice-over was rewritten on 2026-10-28 after the shipped one was heard as gibberish, and the script is now gated on a cold listen. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script, the durations and the word timings are.
 - `raw/malaysia-wages/video/` — The Malaysia wages short. 57.5 seconds, 1080x1920, 30fps. The video and the voice tracks are local artefacts and are not tracked in git; `shots.json`, the script and the durations are.
 
 ## Quick Reference

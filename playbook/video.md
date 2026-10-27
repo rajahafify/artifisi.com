@@ -235,13 +235,19 @@ one caption band per frame, marked "BURNED IN AT DELIVERY". Do not rewrite them 
 Rules that are not negotiable, because they were all learned the hard way:
 
 - numbers as words, "two thousand nine hundred and forty ringgit", never digits
+- **a decimal amount is two words, ringgit and sen, and both have to be said.** "four ringgit
+  eighteen" collapses into "falling it eighteen". "four ringgit and eighteen sen" is clean.
+  "RM4.18" read as digits is worse: "R-M four point eighteen". The caption carries the numeral
+  and the voice carries the meaning. This was measured, not preferred. See "A decimal amount is
+  ringgit and sen" below.
 - never say "Artifisi", the voice mangles it
 - **never hand the voice a word it cannot say.** Place names are the trap. The Singapore voice
-  says "Negeri Sembilan" as "NED-jree SEM-bih-luhn", the hard g softened into an English dʒ,
-  and "RON 95" comes out as the single word "run". Both were measured on the recorded audio,
-  not guessed. Put the name on screen and in the caption, and say the number instead. If a term
-  has to be spoken, find a phrasing the voice can carry: "ninety five octane petrol" instead of
-  "RON 95", which is intelligible and means the same thing.
+  says "Negeri Sembilan" as "NED-jree SEM-bih-luhn", the hard g softened into an English dʒ.
+  Put the name on screen and in the caption, and say the number instead. If a term has to be
+  spoken, find a phrasing the voice can carry. "RON 95" survives, but it comes out as "run
+  ninety-five", so the CPI film says "RON 95 petrol" and lets the screen carry the acronym.
+- **one idea per sentence.** Fifteen to twenty words, active voice, a connective where the ear
+  needs one, and a name where a pronoun would leave the listener guessing.
 - end on "Visit our website to learn more"
 - 7 to 9 lines, about 110 to 140 words, near 55 seconds
 
@@ -249,6 +255,9 @@ Every figure in the script has to be checked against the shipped data, not the d
 `bill` field in `data.json` is a raw product, `share × r25`, and it sums to 107.9. Read raw it
 gives 59.96 percent. Normalised, the four bill leaders are 17.4, 15.9, 11.2 and 11.0, which
 is 55.6 percent.
+
+Gate: **a stranger has to be able to say what the point is.** Not a transcript check. See "The
+script is judged by a stranger" below.
 
 ## 6. Voice-over
 
@@ -388,13 +397,26 @@ difference is when the pieces of it arrive.
 
 Three rules for writing a cue:
 
-- **A cue is a phrase from the voice line, written the way it is spoken.** "four ringgit
-  eighteen", not "RM4.18". The matcher compares the letters that carry sound, so a cue with
+- **A cue is a phrase from the voice line, written the way it is spoken.** "four ringgit and
+  eighteen sen", not "RM4.18". The matcher compares the letters that carry sound, so a cue with
   different numerals still finds its word.
 - **A cue has to be unique in its line.** "one point eight percent" appears twice in the CPI
   path line and matches the first one. "percent now" matches the second.
-- **Every cue has to hit.** The page keeps a list of the cues it could not find, and a cue that
-  misses falls back to the page's fraction, which is a silent failure. Check the list.
+- **Every cue has to hit.** A scene cue that misses falls back to the page's fraction, which is
+  a silent failure. A card cue that misses means the part **never appears at all**, and a
+  caption cue that misses means the caption is dropped from the band. The film still builds.
+
+That last one is why there is a gate. `check-cues.py` resolves every cue in the shot list and
+every cue in the scene code against the recorded words, and fails when one misses, when the
+parts of a card fall out of the order the voice says them, or when the finished film runs past
+the length the rate card allows.
+
+```
+python playbook/tools/check-cues.py raw/<slug>/vo raw/<slug>/shots.json reports/<slug>/scene.js
+```
+
+Run it after the voice-over is recorded and before the film is cut. It is the difference
+between a missing cue being caught and a missing cue shipping.
 
 The cards work the same way. A card's parts each name a cue and arrive when the voice says
 them, so the premise card's two lines land on "Inflation eased" and "Fuel did not" instead of
@@ -407,6 +429,75 @@ each phrase names a cue.
 **A card is not a page.** A card's plate is opaque from the first frame, because a plate that
 fades in shows the page behind it, and the page behind a card is a report the film has already
 left.
+
+---
+
+## The script is judged by a stranger
+
+The CPI film shipped once with a voice-over that the person watching it called gibberish. The
+script had been checked: every figure diffed against `numbers.csv`, every line read, the
+recording transcribed, the transcript matched. The film still made no sense to the person
+watching it.
+
+The reason is that **a transcript is not a comprehension test.** A transcript says the words were
+right. It cannot say the listener understood them. Cold, with no picture, the fuel line was
+heard as "the fuel Easter lull passed. 95 octane petrol average fouring it 18 a litre". A
+listener invented a story, because the words were mangled in a way that still sounded like
+words, and the currency had gone missing entirely.
+
+So the gate for a voice-over is not a transcript. It is a stranger.
+
+**The test.** Concatenate the voice lines into one file, the way a listener hears them, and hand
+that file to something that has never seen the script and has no picture. Ask it four questions.
+
+1. What is the point of this video?
+2. Every number you remember hearing, with its unit.
+3. Any stretch you could not follow, word for word.
+4. Rate the clarity out of ten, and say what made it unclear.
+
+Then read the answers against the claim the film is making.
+
+The CPI film, rewritten and re-recorded, scores 8.5 out of 10 on that test. It restates the
+claim in its own words — "the headline inflation rate appears steady at 1.8%, actual price
+levels have climbed significantly, hidden by contrasting sector movements and a large gap
+between market-rate and subsidized fuel prices" — and it comes back with every figure in the
+right unit, all three currency amounts included, and "none; the entire narration was
+intelligible". The same test on the shipped film produced "the fuel Easter lull passed" and
+lost the currency.
+
+**A number the listener cannot repeat is a number the film does not have.** That is the whole
+lesson. It is why the currency is said as ringgit and sen, why every figure carries its unit,
+and why the opening line names the frozen pump price instead of describing it.
+
+**A stretch the listener cannot follow is pointing at a word.** "The market price of run
+ninety-five" is the finding that bought "RON 95 petrol". The script was worth one word.
+
+**A complaint about density is a picture problem, not a script problem.** A voice-over carrying
+seven figures in a minute is dense on its own. The test is run on the audio alone because that
+is the harder case, and the film has the chart and the caption band to make up the difference.
+
+### A decimal amount is ringgit and sen
+
+Measured, not preferred. The same price was synthesised three ways and each was played cold.
+
+| Said as | Heard as |
+|---|---|
+| "RM4.18" | "R-M four point eighteen" |
+| "four ringgit eighteen" | "falling it eighteen" |
+| "four ringgit and eighteen sen" | "4 ringgit and 18 sen", clean, twice out of two |
+
+The house rule was "numbers as words", and it is what destroyed the currency: "four ringgit
+eighteen" leaves the voice to guess where the amount ends, and it guesses wrong. "RM4.18" read
+as digits is worse, because a retail price read as an abstract decimal is a known mistake in
+Malaysian usage. "Ringgit and sen" is also the way the amount is said out loud, so the voice is
+finally saying what a person would say.
+
+Two rules fall out of it. Every decimal amount is ringgit then sen, and the sen is never
+dropped: "two ringgit five" is heard as an amount with no sen in it. And the caption carries the
+numeral in the reader's form, "RM4.18", while the voice carries the meaning. The band is not
+the narration.
+
+Percentages are read the way they are written, "one point eight percent", and they survive.
 
 ---
 
@@ -469,13 +560,19 @@ A small vocabulary of devices, reused, so the fourth idea arrives in a shape the
 already recognises. And the payoff is shown, not claimed: the reel says "watch" and then
 plays the thing, instead of telling you it works.
 
-## Six traps
+## Seven traps
 
 **A cold open is a trap.** The CPI film's first version opened straight on the 36 month line.
 It was correct, it was the baseline, and it was invisible: the frame carried no claim, so the
 first two seconds said nothing to anyone who was not already reading. The premise beat fixes
 it, and the fix is a rule, not a taste: the first frame states the claim in type, and the
 baseline follows it rather than replacing it.
+
+**A script can be correct and still be gibberish.** Every figure in the shipped CPI script was
+diffed against the source, every line was read, the recording was transcribed and the
+transcript matched. A listener with no picture still heard "the fuel Easter lull passed" and
+lost the currency. Correctness is not comprehension, and only a listener can tell the two
+apart. See "The script is judged by a stranger".
 
 **Playwright records at CSS resolution and never scales up.** The screencast is the viewport
 size in CSS pixels. Ask for a 540 wide viewport and a 1080 wide video and the page lands in
@@ -554,6 +651,7 @@ playbook/tools/browser.js        route handler, overlay CSS, the capture context
 playbook/tools/storyboard.js     frames plus contact sheet
 playbook/tools/record-video.js   one clip per shot, captured frame by frame
 playbook/tools/voice.py          edge-tts, trimmed, measured, timed to the word
+playbook/tools/check-cues.py     every cue lands, and the film fits the rate card
 playbook/tools/mux.py            concatenate, lay the voice over
 playbook/tools/package.json      playwright and three
 ```
