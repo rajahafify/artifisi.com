@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ikhlas.com Games</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="A proposal from Artifisi to ikhlas.com: a games channel inside the ikhlas.com app.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;600;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: a stack of fixed 1920x1080 slides, each scaled to the page width on screen and printed one per PDF page. */
+:root {
+  --ink: #2a1e14; --ink-2: #5a4632; --ink-3: #8a7a62;
+  --parch: #f4ead6; --parch-2: #efe2c6; --card: #fbf5e8; --line: #dccaa4;
+  --green: #2e5a3f; --green-2: #dfe8dc; --gold: #c79232; --gold-ink: #8a5a12; --gold-hi: #d9a84a;
+  --red: #a8432f; --page: #1b140d;
+  --display: "Reem Kufi", Georgia, serif;
+  --body: "Alegreya Sans", "Trebuchet MS", sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--page); }
+body { margin: 0; font-family: var(--body); color: var(--ink); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 48px; }
+.deck { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.45); }
+.slide { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transform: scale(var(--s, 0.5)); box-sizing: border-box; padding: 112px 128px 150px; display: flex; flex-direction: column; gap: 48px; background: var(--parch); color: var(--ink); overflow: hidden; }
+.slide.dark { background: var(--ink); color: var(--parch); }
+.slide.green { background: var(--green); color: var(--parch); }
+.slide.tint { background: var(--parch-2); }
+.eyebrow { font-size: 26px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold-ink); margin: 0; font-weight: 700; }
+.dark .eyebrow, .green .eyebrow { color: var(--gold-hi); }
+h1, h2, h3, p { margin: 0; }
+h1 { font-family: var(--display); font-weight: 600; font-size: 132px; line-height: 1.04; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 76px; line-height: 1.12; text-wrap: balance; max-width: 1560px; }
+h2.big { font-size: 100px; }
+h3 { font-size: 44px; font-weight: 700; line-height: 1.15; }
+.lead { font-size: 44px; line-height: 1.32; max-width: 1450px; }
+.body { font-size: 32px; line-height: 1.45; color: var(--ink-2); max-width: 1450px; }
+.dark .body, .dark .lead { color: #e2d3b4; }
+.green .lead { color: var(--green-2); }
+.foot { position: absolute; left: 128px; right: 128px; bottom: 56px; display: flex; justify-content: space-between; font-size: 24px; color: var(--ink-3); }
+.dark .foot, .green .foot { color: #a8977a; }
+.row { display: flex; gap: 32px; }
+.row > * { flex: 1; min-width: 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 44px; display: flex; flex-direction: column; gap: 14px; }
+.card p { font-size: 32px; line-height: 1.4; color: var(--ink-2); }
+.card .tag { font-size: 24px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
+.top-green { border-top: 10px solid var(--green); } .top-gold { border-top: 10px solid var(--gold); } .top-red { border-top: 10px solid var(--red); }
+.num { font-family: var(--display); font-size: 128px; font-weight: 600; line-height: 1; }
+table { border-collapse: collapse; width: 100%; font-size: 32px; }
+th { text-align: left; font-size: 26px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-ink); padding: 0 24px 18px 0; border-bottom: 2px solid var(--line); }
+td { padding: 22px 24px 22px 0; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.35; }
+td:first-child { font-weight: 700; white-space: nowrap; }
+.pill { display: inline-block; font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 6px 16px; border-radius: 99px; background: var(--green); color: var(--parch); vertical-align: middle; margin-left: 12px; }
+/* phone frame for the live game */
+.phone { width: 404px; height: 778px; border-radius: 56px; background: #0e0b08; padding: 14px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 2px #3a2c1d; flex: none; position: relative; }
+.phone iframe, .phone img { width: 376px; height: 750px; border: 0; border-radius: 44px; display: block; background: #14231c; object-fit: cover; }
+.phone .shot { display: none; }
+.split { display: flex; gap: 96px; align-items: center; flex: 1; }
+.split > .text { flex: 1; display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.bullets { margin: 0; padding-left: 36px; font-size: 32px; line-height: 1.5; color: var(--ink-2); display: flex; flex-direction: column; gap: 10px; }
+.dark .bullets { color: #e2d3b4; }
+.open-link { font-size: 28px; color: var(--gold-hi); font-weight: 700; text-decoration: none; border-bottom: 2px solid currentColor; align-self: flex-start; }
+.flow { display: flex; align-items: center; gap: 24px; }
+.flow .card { flex: 1; }
+.arrow { width: 64px; height: 36px; flex: none; }
+.screens { display: flex; gap: 40px; align-items: center; }
+.shot-wide { width: 1000px; height: 635px; object-fit: contain; border-radius: 16px; flex: none; }
+.cols { display: flex; gap: 96px; flex: 1; }
+.cols > div { flex: 1; display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.steps { margin: 0; padding-left: 44px; font-size: 34px; line-height: 1.6; }
+table.cost { font-size: 30px; }
+table.cost td { padding: 15px 24px 15px 0; }
+table.cost .r, table.cost th:last-child { text-align: right; padding-right: 0; font-variant-numeric: tabular-nums; }
+table.cost td:nth-child(2) { font-weight: 400; color: var(--ink-2); }
+table.cost tr.total td { border-top: 3px solid var(--ink); border-bottom: none; font-weight: 700; color: var(--ink); }
+.foot span:first-child { max-width: 1500px; }
+a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
+
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { background: none; padding: 0; }
+  .deck { max-width: none; gap: 0; }
+  .frame { width: 1920px; height: 1080px; aspect-ratio: auto; border-radius: 0; box-shadow: none; break-after: page; }
+  .slide { transform: none; }
+  .phone iframe { display: none; }
+  .phone .shot { display: block; }
+  .open-link .live-only { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+<!-- 1 Cover -->
+<div class="frame"><section class="slide dark" style="justify-content:space-between">
+  <p class="eyebrow">Proposal for ikhlas.com</p>
+  <div style="display:flex;flex-direction:column;gap:40px">
+    <h1>ikhlas.com Games</h1>
+    <p class="lead">The home of Islamic games, inside the ikhlas.com app. A reason to open it every day.</p>
+  </div>
+  <p class="body" style="color:#cbb994">Raja Hafify Bin Zaed · Artifisi Sdn Bhd · 28 October 2026</p>
+</section></div>
+
+<!-- 2 The gap -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">The gap</p>
+  <h2>People come to ikhlas.com for big moments. Then the app stays closed.</h2>
+  <div class="row">
+    <div class="card"><h3>Umrah</h3><p>Once in years</p></div>
+    <div class="card"><h3>Zakat</h3><p>Once a year</p></div>
+    <div class="card"><h3>Qurban</h3><p>Once a year</p></div>
+    <div class="card"><h3>Fidyah</h3><p>Once a Ramadan</p></div>
+  </div>
+  <p class="body">Between those moments there is nothing to open the app for, so the brand has to buy attention again every season.</p>
+  <div class="foot"><span>ikhlas.com Games</span><span>2</span></div>
+</section></div>
+
+<!-- 3 The idea -->
+<div class="frame"><section class="slide green" style="justify-content:center">
+  <p class="eyebrow">The idea</p>
+  <h2 class="big">Make ikhlas.com the place Muslim families go for games.</h2>
+  <p class="lead">One games channel inside the app, with a shelf that grows every season. Like Netflix, for games parents trust and every age can play.</p>
+  <div class="foot"><span>ikhlas.com Games</span><span>3</span></div>
+</section></div>
+
+<!-- 4 Why games -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">Why games</p>
+  <h2>Small daily games build the habit</h2>
+  <div class="row">
+    <div class="card"><p class="num" style="color:var(--green)">2M+</p><p>daily Wordle players within months of joining The New York Times in 2022, up from about 300,000. One short puzzle a day kept people coming back.</p></div>
+    <div class="card"><p class="num" style="color:var(--red)">&lt;1%</p><p>of Netflix members played its games daily in 2022. Big games were bolted on, with no link to why people opened the app.</p></div>
+  </div>
+  <p class="body">The lesson: short, daily, and tied to what the brand already stands for.</p>
+  <div class="foot"><span>Sources: Ivey Business School, March 2025; Apptopia data via CNBC, reported by Front Office Sports, August 2022</span><span>4</span></div>
+</section></div>
+
+<!-- 5 Three hooks -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">Opening the app often</p>
+  <h2>Three reasons to come back</h2>
+  <div class="row">
+    <div class="card top-green"><span class="tag" style="color:var(--green)">Every day</span><h3>A daily puzzle</h3><p>Three minutes, one new puzzle a day, a streak to keep and a result card to share.</p></div>
+    <div class="card top-gold"><span class="tag" style="color:var(--gold-ink)">Every season</span><h3>Event games</h3><p>A Ramadan game with one level a night, then Hari Raya, Zulhijjah and the Hijri new year.</p></div>
+    <div class="card top-red"><span class="tag" style="color:var(--red)">Every week</span><h3>Story games</h3><p>Longer games played in short sittings, like running a stall in Basra for a year.</p></div>
+  </div>
+  <div class="foot"><span>ikhlas.com Games</span><span>5</span></div>
+</section></div>
+
+<!-- 6 Teka Surah, playable -->
+<div class="frame"><section class="slide dark" style="padding-top:96px;padding-bottom:120px">
+  <div class="split">
+    <div class="text">
+      <p class="eyebrow">The daily game · play it here</p>
+      <h2>Teka Surah</h2>
+      <p class="lead" style="font-size:38px">One story a day, told one hint at a time. Guess which surah it comes from.</p>
+      <ul class="bullets">
+        <li>Six hints, each an event from the story, never a quote.</li>
+        <li>Every wrong guess shows where the surah sits, where it was revealed, and how long it is.</li>
+        <li>Ends with a short summary and the verse references, checked by your ustaz.</li>
+        <li>A spoiler-free result to share on WhatsApp, with the ikhlas.com mark.</li>
+      </ul>
+      <a class="open-link" href="game/teka-surah.html" target="_blank" rel="noopener"><span class="live-only">Open full screen: </span>three demo rounds, easy to hard</a>
+    </div>
+    <div class="phone">
+      <iframe src="game/teka-surah.html" title="Teka Surah, playable demo" loading="lazy"></iframe>
+      <img class="shot" src="assets/teka-puzzle.png" alt="Teka Surah puzzle screen with a wrong guess marked in red">
+    </div>
+  </div>
+  <div class="foot"><span>Playable demo. Hints are drafts for ustaz review.</span><span>6</span></div>
+</section></div>
+
+<!-- 7 Brand -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">Building the brand</p>
+  <h2>ikhlas.com on every play</h2>
+  <table>
+    <tr><th style="width:30%">Moment</th><th>What the player sees</th></tr>
+    <tr><td>Splash screen</td><td>“ikhlas.com presents” before every game, every time</td></tr>
+    <tr><td>Share card</td><td>Daily results shared to WhatsApp with the ikhlas.com mark and a link back</td></tr>
+    <tr><td>Game to product</td><td>The zakat count leads to pay zakat. A qurban game leads to Korban Perdana.</td></tr>
+    <tr><td>Ustaz partners</td><td>A short note from an ikhlas.com ustaz on special days</td></tr>
+    <tr><td>Press</td><td>A joint launch: Malaysian Islamic games, published by ikhlas.com</td></tr>
+  </table>
+  <div class="foot"><span>ikhlas.com Games</span><span>7</span></div>
+</section></div>
+
+<!-- 8 First shelf -->
+<div class="frame"><section class="slide tint">
+  <p class="eyebrow">The first shelf</p>
+  <h2>Four games in the first year</h2>
+  <table>
+    <tr><th style="width:28%">Game</th><th style="width:47%">What it teaches</th><th>When</th></tr>
+    <tr><td>Teka Surah</td><td>The stories of the Quran, one a day</td><td>Demo ready now</td></tr>
+    <tr><td>Bazaar Basra</td><td>Zakat and honest trade</td><td>Live 14 Dec 2026</td></tr>
+    <tr><td>Ramadan nights</td><td>One short level each night of Ramadan</td><td>Before Ramadan 1448</td></tr>
+    <tr><td>Adab for kids</td><td>Manners for young children</td><td>2027</td></tr>
+  </table>
+  <p class="body">A paid tier can open once there are three or four games worth paying for.</p>
+  <div class="foot"><span>Dates after the first two games are targets to agree together</span><span>8</span></div>
+</section></div>
+
+<!-- 9 Bazaar Basra -->
+<div class="frame"><section class="slide dark">
+  <div class="split">
+    <div class="text" style="max-width:640px">
+      <p class="eyebrow">The story game</p>
+      <h2>Bazaar Basra</h2>
+      <p class="body">Basra in the time of Umar. Buy stock on the weekend, run your stall through the week, and at the end of the year count what you own and pay zakat.</p>
+      <p class="body">No faces, no combat, and Umar appears only in letters. Every zakat ruling is checked by your ustaz.</p>
+    </div>
+    <img class="shot-wide" src="assets/bazaar-basra.png" alt="Three phone screens from the Bazaar Basra mockup: the market stall with prices, and the alley walk between places">
+  </div>
+  <div class="foot"><span>Screens from the playable mockup</span><span>9</span></div>
+</section></div>
+
+<!-- 10 How it fits -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">How it fits the app</p>
+  <h2>One small add-on, no app rebuild</h2>
+  <div class="flow">
+    <div class="card"><h3>ikhlas.com app</h3><p>Adds a Games tab with our Flutter package</p></div>
+    <svg class="arrow" viewBox="0 0 64 36" aria-hidden="true"><path d="M0 12h40V0l24 18-24 18V24H0z" fill="#c79232"/></svg>
+    <div class="card"><h3>Games shelf</h3><p>Hosted by Artifisi, opens in the app</p></div>
+    <svg class="arrow" viewBox="0 0 64 36" aria-hidden="true"><path d="M0 12h40V0l24 18-24 18V24H0z" fill="#c79232"/></svg>
+    <div class="card"><h3>Back to ikhlas.com</h3><p>Play data to your analytics, buttons to your pages</p></div>
+  </div>
+  <ul class="bullets">
+    <li>New games and fixes go live without a new app release.</li>
+    <li>Your developers add it once, and we support them.</li>
+    <li>The same games run in a phone browser for campaigns.</li>
+  </ul>
+  <div class="foot"><span>ikhlas.com Games</span><span>10</span></div>
+</section></div>
+
+<!-- 11 Cost projection -->
+<div class="frame"><section class="slide" style="gap:36px">
+  <p class="eyebrow">Cost projection</p>
+  <h2>What the first year takes to build</h2>
+  <table class="cost">
+    <tr><th style="width:44%">Work</th><th style="width:34%">Time</th><th style="text-align:right">Cost (RM)</th></tr>
+    <tr><td>Teka Surah: build the game</td><td>2 weeks</td><td class="r">8,000</td></tr>
+    <tr><td>Teka Surah: first 90 puzzles</td><td>2 weeks</td><td class="r">8,000</td></tr>
+    <tr><td>Teka Surah: 30 new puzzles a month</td><td>3 days a month, 12 months</td><td class="r">28,800</td></tr>
+    <tr><td>Bazaar Basra</td><td>6 weeks</td><td class="r">24,000</td></tr>
+    <tr><td>Ramadan nights</td><td>4 weeks</td><td class="r">16,000</td></tr>
+    <tr><td>Adab for kids</td><td>4 weeks</td><td class="r">16,000</td></tr>
+    <tr><td>Hosting, fixes and updates</td><td>2 days a month, 12 months</td><td class="r">19,200</td></tr>
+    <tr class="total"><td>First 12 months</td><td>About 30 weeks of studio time</td><td class="r">120,000</td></tr>
+  </table>
+  <div class="foot"><span>Projection at a studio cost of about RM4,000 a week. Hosting runs on Cloudflare at no extra cost at this scale. On the ikhlas.com side: one developer to add the package once, and ustaz review time.</span><span>11</span></div>
+</section></div>
+
+<!-- 12 Network -->
+<div class="frame"><section class="slide tint">
+  <p class="eyebrow">Where it goes</p>
+  <h2>From one shelf to a games network</h2>
+  <div class="row">
+    <div class="card"><span class="tag" style="color:var(--green)">Step 1 · 2026 to 2027</span><h3>Our shelf</h3><p>Artifisi builds the first games and proves people come back.</p></div>
+    <div class="card"><span class="tag" style="color:var(--gold-ink)">Step 2</span><h3>Paid tier</h3><p>A subscription in the app once the shelf is full enough.</p></div>
+    <div class="card"><span class="tag" style="color:var(--red)">Step 3</span><h3>Open the shelf</h3><p>Other Muslim studios publish through ikhlas.com. Artifisi curates, and every game passes the same ustaz review.</p></div>
+  </div>
+  <p class="body">ikhlas.com becomes where Islamic games are found, starting in Malaysia and Indonesia.</p>
+  <div class="foot"><span>ikhlas.com Games</span><span>12</span></div>
+</section></div>
+
+<!-- 13 Who and next -->
+<div class="frame"><section class="slide dark">
+  <div class="cols">
+    <div>
+      <p class="eyebrow">Who builds it</p>
+      <h2 style="font-size:60px">Raja Hafify Bin Zaed</h2>
+      <p class="body">Founder of Artifisi Sdn Bhd. About 12 years in software. At AirAsia, scaled an app from about 1,000 users a month to about 1,000 users a second.</p>
+      <p class="body">Artifisi holds Malaysia Digital status.</p>
+    </div>
+    <div>
+      <p class="eyebrow">Next steps</p>
+      <ol class="steps">
+        <li>Agree how we work together.</li>
+        <li>Put it in a one-page letter of intent by mid November.</li>
+        <li>Your ustaz reviews the first puzzles and the zakat content.</li>
+        <li>The games go live in the app on 14 December.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="foot"><span>hello@artifisi.com · artifisi.com</span><span>13</span></div>
+</section></div>
+
+</main>
+
+<script>
+// Scale each 1920x1080 slide to its frame on screen. Print uses the slides at full size.
+(() => {
+  const frames = document.querySelectorAll('.frame');
+  const fit = () => frames.forEach(f => f.style.setProperty('--s', f.clientWidth / 1920));
+  fit();
+  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(document.querySelector('.deck'));
+  else addEventListener('resize', fit);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html,body{margin:0}</style>
+<title>Teka Surah</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=Alegreya+Sans:wght@400;500;700&family=Amiri:wght@400;700&display=swap">
+<style>
+  /* Single look, drawn in canvas: deep green night behind a parchment game frame. */
+  :root { --bg: #14231c; color-scheme: dark; }
+  html, body { height: 100%; }
+  body { background: var(--bg); overflow: hidden; padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px)); }
+  #game { display: block; width: 100%; height: 100%; touch-action: none; }
+  #q { position: fixed; left: -200px; top: 0; width: 10px; height: 10px; opacity: 0; font-size: 16px; border: 0; padding: 0; background: transparent; color: transparent; caret-color: transparent; }
+</style>
+<canvas id="game" aria-label="Teka Surah game"></canvas>
+<input id="q" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search surah">
+<script>
+(() => {
+const SURAHS = [[1,"Al-Fatihah","Pembukaan","The Opening","الفَاتِحة",7,1],[2,"Al-Baqarah","Lembu Betina","The Cow","البَقَرَة",286,0],[3,"Ali 'Imran","Keluarga Imran","The Family of Imraan","آل عِمران",200,0],[4,"An-Nisa","Wanita","The Women","النِّسَاء",176,0],[5,"Al-Ma'idah","Hidangan","The Table","المَائدة",120,0],[6,"Al-An'am","Binatang Ternakan","The Cattle","الأنعَام",165,1],[7,"Al-A'raf","Tempat Tertinggi","The Heights","الأعرَاف",206,1],[8,"Al-Anfal","Rampasan Perang","The Spoils of War","الأنفَال",75,0],[9,"At-Tawbah","Pengampunan","The Repentance","التوبَة",129,0],[10,"Yunus","Nabi Yunus a.s.","Jonas","يُونس",109,1],[11,"Hud","Nabi Hud a.s.","Hud","هُود",123,1],[12,"Yusuf","Nabi Yusuf a.s.","Joseph","يُوسُف",111,1],[13,"Ar-Ra'd","Guruh","The Thunder","الرَّعد",43,0],[14,"Ibrahim","Nabi Ibrahim a.s.","Abraham","إبراهِيم",52,1],[15,"Al-Hijr","Kawasan Berbatu","The Rock","الحِجر",99,1],[16,"An-Nahl","Lebah","The Bee","النَّحل",128,1],[17,"Al-Isra","Perjalanan Malam","The Night Journey","الإسرَاء",111,1],[18,"Al-Kahf","Gua","The Cave","الكَهف",110,1],[19,"Maryam","Siti Maryam","Mary","مَريَم",98,1],[20,"Taha","Taahaa","Taa-Haa","طه",135,1],[21,"Al-Anbya","Para Nabi","The Prophets","الأنبيَاء",112,1],[22,"Al-Hajj","Haji","The Pilgrimage","الحج",78,0],[23,"Al-Mu'minun","Golongan yang Beriman","The Believers","المؤمنُون",118,1],[24,"An-Nur","Cahaya","The Light","النور",64,0],[25,"Al-Furqan","Pembeza Kebenaran dan Kebatilan","The Criterion","الفُرقَان",77,1],[26,"Ash-Shu'ara","Para Penyair","The Poets","الشعراء",227,1],[27,"An-Naml","Semut","The Ant","النَّمل",93,1],[28,"Al-Qasas","Cerita-cerita","The Stories","القَصَص",88,1],[29,"Al-'Ankabut","Labah-labah","The Spider","العَنكبُوت",69,1],[30,"Ar-Rum","Bangsa Rom","The Romans","الرُّوم",60,1],[31,"Luqman","Luqman","Luqman","لُقمَان",34,1],[32,"As-Sajdah","Sujud","The Prostration","السَّجدة",30,1],[33,"Al-Ahzab","Golongan yang Bersekutu","The Clans","الأحزَاب",73,0],[34,"Saba","Kaum Saba’","Sheba","سَبإ",54,1],[35,"Fatir","Pencipta","The Originator","فَاطِر",45,1],[36,"Ya-Sin","Yaasin","Yaseen","يسٓ",83,1],[37,"As-Saffat","Yang Teratur Berbaris","Those drawn up in Ranks","الصَّافَات",182,1],[38,"Sad","Saad","The letter Saad","صٓ",88,1],[39,"Az-Zumar","Rombongan","The Groups","الزُّمَر",75,1],[40,"Ghafir","Orang yang Beriman","The Forgiver","غَافِر",85,1],[41,"Fussilat","Dijelaskan","Explained in detail","فُصِّلَت",54,1],[42,"Ash-Shuraa","Permesyuaratan","Consultation","الشُّورى",53,1],[43,"Az-Zukhruf","Perhiasan Emas","Ornaments of gold","الزُّخرُف",89,1],[44,"Ad-Dukhan","Kabut / Asap","The Smoke","الدُّخان",59,1],[45,"Al-Jathiyah","Yang Berlutut","Crouching","الجاثِية",37,1],[46,"Al-Ahqaf","Bukit-bukit Pasir","The Dunes","الأحقَاف",35,1],[47,"Muhammad","Nabi Muhammad SAW","Muhammad","مُحمد",38,0],[48,"Al-Fath","Kemenangan","The Victory","الفَتح",29,0],[49,"Al-Hujurat","Bilik-bilik","The Inner Apartments","الحُجُرَات",18,0],[50,"Qaf","Qaaf","The letter Qaaf","قٓ",45,1],[51,"Adh-Dhariyat","Angin yang Menerbangkan","The Winnowing Winds","الذَّاريَات",60,1],[52,"At-Tur","Bukit","The Mount","الطُّور",49,1],[53,"An-Najm","Bintang","The Star","النَّجم",62,1],[54,"Al-Qamar","Bulan","The Moon","القَمَر",55,1],[55,"Ar-Rahman","Yang Maha Pemurah","The Beneficent","الرَّحمٰن",78,0],[56,"Al-Waqi'ah","Peristiwa yang Tidak Dapat Dielakkan","The Inevitable","الوَاقِعة",96,1],[57,"Al-Hadid","Besi","The Iron","الحدِيد",29,0],[58,"Al-Mujadila","Perempuan yang Merayu","The Pleading Woman","المُجَادلة",22,0],[59,"Al-Hashr","Pengusiran","The Exile","الحَشر",24,0],[60,"Al-Mumtahanah","Perempuan yang Diuji","She that is to be examined","المُمتَحنَة",13,0],[61,"As-Saf","Barisan","The Ranks","الصَّف",14,0],[62,"Al-Jumu'ah","Hari Jumaat","Friday","الجُمعَة",11,0],[63,"Al-Munafiqun","Golongan Munafik","The Hypocrites","المُنَافِقُونَ",11,0],[64,"At-Taghabun","Dinampakkan Kesalahan","Mutual Disillusion","التغَابُن",18,0],[65,"At-Talaq","Cerai / Talak","Divorce","الطَّلَاق",12,0],[66,"At-Tahrim","Mengharamkan","The Prohibition","التَّحرِيم",12,0],[67,"Al-Mulk","Kerajaan","The Sovereignty","المُلك",30,1],[68,"Al-Qalam","Pena / Kalam","The Pen","القَلَم",52,1],[69,"Al-Haqqah","Keadaan Sebenar / Hari Kiamat","The Reality","الحَاقة",52,1],[70,"Al-Ma'arij","Tempat-tempat Naik","The Ascending Stairways","المَعَارج",44,1],[71,"Nuh","Nabi Nuh a.s.","Noah","نُوح",28,1],[72,"Al-Jinn","Jin","The Jinn","الجِن",28,1],[73,"Al-Muzzammil","Yang Berselimut","The Enshrouded One","المُزمل",20,1],[74,"Al-Muddaththir","Yang Berselubung","The Cloaked One","المُدثر",56,1],[75,"Al-Qiyamah","Hari Kebangkitan / Kiamat","The Resurrection","القِيَامة",40,1],[76,"Al-Insan","Manusia","Man","الإنسَان",31,0],[77,"Al-Mursalat","Malaikat Yang Diutus","The Emissaries","المُرسَلات",50,1],[78,"An-Naba","Berita Besar","The Announcement","النَّبَإ",40,1],[79,"An-Nazi'at","Malaikat Yang Mencabut","Those who drag forth","النَّازعَات",46,1],[80,"'Abasa","Dia Bermasam Muka","He frowned","عَبَسَ",42,1],[81,"At-Takwir","Menggulung","The Overthrowing","التَّكوير",29,1],[82,"Al-Infitar","Terpecah & Terbelah","The Cleaving","الانفِطَار",19,1],[83,"Al-Mutaffifin","Golongan yang Curang","Defrauding","المُطَففين",36,1],[84,"Al-Inshiqaq","Terbelah","The Splitting Open","الانشِقَاق",25,1],[85,"Al-Buruj","Gugusan Bintang","The Constellations","البُرُوج",22,1],[86,"At-Tariq","Pengunjung Malam","The Morning Star","الطَّارق",17,1],[87,"Al-A'la","Yang Tertinggi","The Most High","الأعلى",19,1],[88,"Al-Ghashiyah","Peristiwa Menggelisahkan/Hari Pembalasan","The Overwhelming","الغَاشِية",26,1],[89,"Al-Fajr","Fajar / Sinar Mentari","The Dawn","الفَجر",30,1],[90,"Al-Balad","Negeri","The City","البَلَد",20,1],[91,"Ash-Shams","Matahari","The Sun","الشَّمس",15,1],[92,"Al-Layl","Malam","The Night","اللَّيل",21,1],[93,"Ad-Duhaa","Pagi yang Cemerlang / Matahari Meninggi","The Morning Hours","الضُّحى",11,1],[94,"Ash-Sharh","Melapangkan","The Consolation","الشَّرح",8,1],[95,"At-Tin","Buah Tin / Buah Ara","The Fig","التِّين",8,1],[96,"Al-'Alaq","Segumpal Darah","The Clot","العَلَق",19,1],[97,"Al-Qadr","Kemuliaan","The Power, Fate","القَدر",5,1],[98,"Al-Bayyinah","Bukti yang Nyata","The Evidence","البَينَة",8,0],[99,"Az-Zalzalah","Kegoncangan","The Earthquake","الزَّلزَلة",8,0],[100,"Al-'Adiyat","Yang Berlari Kencang","The Chargers","العَاديَات",11,1],[101,"Al-Qari'ah","Hari Yang Hingar Bingar / Kiamat","The Calamity","القَارعَة",11,1],[102,"At-Takathur","Bermegah-megah","Competition","التَّكاثُر",8,1],[103,"Al-'Asr","Masa","The Declining Day, Epoch","العَصر",3,1],[104,"Al-Humazah","Pengumpat","The Traducer","الهُمَزة",9,1],[105,"Al-Fil","Gajah","The Elephant","الفِيل",5,1],[106,"Quraysh","Kaum Quraisy","Quraysh","قُرَيش",4,1],[107,"Al-Ma'un","Barangan Berguna","Almsgiving","المَاعُون",7,1],[108,"Al-Kawthar","Sungai Di Syurga","Abundance","الكَوثر",3,1],[109,"Al-Kafirun","Golongan Kafir","The Disbelievers","الكافِرون",6,1],[110,"An-Nasr","Pertolongan","Divine Support","النَّصر",3,0],[111,"Al-Masad","Nyalaan Api","The Palm Fibre","المَسَد",5,1],[112,"Al-Ikhlas","Tulus Ikhlas / Memurnikan Keesaan Allah","Sincerity","الإخلَاص",4,1],[113,"Al-Falaq","Waktu Subuh / Dinihari","The Dawn","الفَلَق",5,1],[114,"An-Nas","Manusia","Mankind","النَّاس",6,1]]; // [no, name, meaning ms, meaning en, arabic, ayat, makki]
+const W = 360, H = 640;
+const C = {
+  bg: '#14231c', bg2: '#1d3328', parch: '#f2e6c9', parch2: '#e6d6b0', ink: '#2b2117', ink2: '#5b4a35',
+  muted: '#8c7d64', gold: '#c99a3b', goldLight: '#e2bb63', goldDark: '#8a6416', green: '#3f7a46', greenSoft: '#d7e6cf', greenInk: '#25502b',
+  red: '#b5452f', redSoft: '#f3d3c8', redInk: '#7a2617', grey: '#cfc2a4', night: '#b9cbb9'
+};
+const F = {
+  kufi: (s, w = 700) => `${w} ${s}px "Reem Kufi", Georgia, serif`,
+  sans: (s, w = 400) => `${w} ${s}px "Alegreya Sans", "Trebuchet MS", sans-serif`,
+  ar: (s, w = 400) => `${w} ${s}px "Amiri", "Times New Roman", serif`
+};
+
+const PUZZLES = [
+  { id: 'easy', answer: 105, diff: { ms: 'Mudah', en: 'Easy' }, day: { ms: 'Isnin', en: 'Monday' },
+    hints: [
+      { ms: 'Satu tentera besar keluar dengan yakin tiada siapa dapat menghalang mereka.', en: 'A mighty army sets out, sure that nothing can stop it.', ref: '105:1-2' },
+      { ms: 'Tipu daya mereka digagalkan sepenuhnya.', en: 'Their plan is brought to nothing.', ref: '105:2' },
+      { ms: 'Kawanan burung datang memenuhi langit.', en: 'Flocks of birds fill the sky.', ref: '105:3' },
+      { ms: 'Burung-burung itu melontar mereka dengan batu daripada tanah yang dibakar.', en: 'The birds pelt them with stones of baked clay.', ref: '105:4' },
+      { ms: 'Tentera itu ditinggalkan seperti daun yang dimakan ulat.', en: 'The army is left like straw eaten by cattle.', ref: '105:5' },
+      { ms: 'Mereka mara bersama seekor gajah.', en: 'They march with an elephant.', ref: '105:1' }
+    ],
+    summary: {
+      ms: 'Kisah tentera bergajah yang datang untuk memusnahkan Kaabah. Allah menghantar kawanan burung yang melontar batu daripada tanah yang dibakar, lalu mereka menjadi seperti daun yang dimakan ulat.',
+      en: 'The story of the army with the elephant that came to destroy the Kaaba. Allah sent flocks of birds that threw stones of baked clay, and the army was left like eaten straw.'
+    },
+    note: null
+  },
+  { id: 'medium', answer: 12, diff: { ms: 'Sederhana', en: 'Medium' }, day: { ms: 'Rabu', en: 'Wednesday' },
+    hints: [
+      { ms: 'Seorang ayah bersedih begitu lama atas anaknya yang hilang hingga matanya menjadi putih.', en: 'A father grieves so long for his lost son that his eyes turn white.', ref: '12:84' },
+      { ms: 'Sehelai baju diletakkan di wajah seorang tua, lalu penglihatannya kembali.', en: 'A shirt is laid over an old man’s face, and his sight returns.', ref: '12:93, 96' },
+      { ms: 'Seorang pemuda dipenjara walaupun tidak bersalah, dan mentafsir mimpi dua banduan.', en: 'A young man is jailed though innocent, and explains the dreams of two prisoners.', ref: '12:35-41' },
+      { ms: 'Seorang raja bermimpi tujuh ekor lembu gemuk dimakan tujuh ekor lembu kurus.', en: 'A king dreams of seven fat cows eaten by seven thin ones.', ref: '12:43' },
+      { ms: 'Seorang budak bermimpi sebelas bintang, matahari dan bulan sujud kepadanya.', en: 'A boy dreams of eleven stars, the sun and the moon bowing to him.', ref: '12:4' },
+      { ms: 'Abang-abangnya yang cemburu mencampakkannya ke dalam perigi.', en: 'His jealous brothers throw him into a well.', ref: '12:15' }
+    ],
+    summary: {
+      ms: 'Kisah Nabi Yusuf AS diceritakan hampir sepenuhnya dalam satu surah: mimpinya, pengkhianatan abang-abangnya, tahun-tahun di Mesir, dan bagaimana baginda memaafkan mereka.',
+      en: 'The story of Prophet Yusuf (AS) is told almost entirely in one surah: his dream, his brothers\' betrayal, his years in Egypt, and how he forgave them.'
+    },
+    note: null
+  },
+  { id: 'hard', answer: 18, diff: { ms: 'Sukar', en: 'Hard' }, day: { ms: 'Jumaat', en: 'Friday' },
+    hints: [
+      { ms: 'Seorang lelaki berbangga dengan dua kebunnya, dan esok paginya kedua-duanya musnah.', en: 'A man boasts about his two gardens, and by morning they are ruined.', ref: '18:32-42' },
+      { ms: 'Seorang pengembara sampai ke tempat matahari terbenam di sebuah mata air yang berlumpur.', en: 'A traveller reaches the place where the sun sets in a muddy spring.', ref: '18:86' },
+      { ms: 'Dia menutup celah gunung dengan besi dan tembaga cair.', en: 'He seals a mountain pass with iron and molten copper.', ref: '18:96' },
+      { ms: 'Seekor ikan terlepas ke laut di tempat pertemuan dua laut.', en: 'A fish slips into the sea where two seas meet.', ref: '18:61-63' },
+      { ms: 'Seorang guru melubangi sebuah perahu dan membaiki dinding tanpa upah.', en: 'A teacher makes a hole in a boat and repairs a wall for no payment.', ref: '18:71, 77' },
+      { ms: 'Beberapa orang pemuda tidur bertahun-tahun di dalam gua, anjing mereka terlentang di pintunya.', en: 'Young men sleep for years in a cave, their dog stretched at the entrance.', ref: '18:18, 25' }
+    ],
+    summary: {
+      ms: 'Empat kisah dalam satu surah: pemuda-pemuda gua, pemilik dua kebun, Nabi Musa AS bersama hamba yang diberi ilmu, dan Zulqarnain yang membina tembok.',
+      en: 'Four stories in one surah: the young men of the cave, the owner of two gardens, Prophet Musa (AS) with the servant given knowledge, and Dhul-Qarnayn who built the barrier.'
+    },
+    note: null
+  }
+];
+
+const T = {
+  ms: {
+    presents: 'ikhlas.com mempersembahkan', tagline: 'Teka surah daripada kisahnya.',
+    demo: 'Demo untuk ikhlas.com', review: 'Semua petunjuk ialah draf dan menunggu semakan ustaz.',
+    reset: 'Set semula demo', play: 'Main', cont: 'Sambung', hints6: '6 petunjuk, satu demi satu',
+    hint: 'Petunjuk', more: n => `${n} petunjuk lagi dibuka selepas tekaan salah`,
+    pick: 'Pilih surah', seeAnswer: 'Lihat jawapan', pickTitle: 'Pilih surah', search: 'Cari nama atau nombor surah',
+    guessed: 'sudah diteka', earlier: 'Lebih awal', later: 'Lebih akhir', makki: 'Makkiyah', madani: 'Madaniyah',
+    shorter: 'Lebih pendek', longer: 'Lebih panjang', close: 'Hampir sama', wrong: 'Salah', right: 'Betul',
+    solvedIn: n => `Betul dengan ${n} petunjuk`, missed: 'Jawapan hari ini', surahNo: (n, a, m) => `Surah ke-${n} · ${a} ayat · ${m}`,
+    refs: 'Rujukan petunjuk', copy: 'Salin keputusan', copied: 'Keputusan disalin', copyFail: 'Tidak dapat menyalin pada peranti ini.',
+    back: 'Kembali', draft: 'Draf. Menunggu semakan ustaz ikhlas.com.',
+    legend: 'Setiap tekaan salah memberitahu kedudukan surah, tempat turunnya, dan panjangnya.', noResult: 'Tiada surah sepadan.',
+    pullHint: 'Tarik ke bawah untuk tutup'
+  },
+  en: {
+    presents: 'ikhlas.com presents', tagline: 'Guess the surah from its story.',
+    demo: 'Demo for ikhlas.com', review: 'All hints are drafts waiting for ustaz review.',
+    reset: 'Reset demo', play: 'Play', cont: 'Continue', hints6: '6 hints, one at a time',
+    hint: 'Hint', more: n => `${n} more hints open after wrong guesses`,
+    pick: 'Pick a surah', seeAnswer: 'See the answer', pickTitle: 'Pick a surah', search: 'Search surah name or number',
+    guessed: 'already guessed', earlier: 'Earlier', later: 'Later', makki: 'Makki', madani: 'Madani',
+    shorter: 'Shorter', longer: 'Longer', close: 'Close', wrong: 'Wrong', right: 'Correct',
+    solvedIn: n => `Solved with ${n} ${n === 1 ? 'hint' : 'hints'}`, missed: "Today's surah", surahNo: (n, a, m) => `Surah ${n} · ${a} verses · ${m}`,
+    refs: 'Hint references', copy: 'Copy result', copied: 'Result copied', copyFail: 'Copying is not available on this device.',
+    back: 'Back', draft: 'Draft. Waiting for review by the ikhlas.com ustaz.',
+    legend: 'Each wrong guess tells you where the surah sits, where it was revealed, and how long it is.', noResult: 'No surah matches.',
+    pullHint: 'Pull down to close'
+  }
+};
+
+// ---------- state ----------
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let lang = store.get('ts-lang', 'ms');
+let prog = store.get('ts-prog-v1', {});
+const fresh = () => ({ guesses: [], done: false, solved: false });
+PUZZLES.forEach(p => { if (!prog[p.id]) prog[p.id] = fresh(); });
+const save = () => store.set('ts-prog-v1', prog);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const t = k => T[lang][k];
+
+let now = 0, last = 0, dt = 0.016;
+let screen = 'splash', cur = null, trans = null, pendingResult = 0;
+const enter = { splash: 0, home: 0, puzzle: 0, result: 0 };
+const scroll = { puzzle: 0, picker: 0 }, maxScroll = { puzzle: 0, picker: 0 }, fling = { puzzle: 0, picker: 0 };
+let autoScroll = false, query = '', toast = null;
+const revealAt = {}, guessAt = {}, burstDone = {};
+let particles = [];
+// drawer: slides up from the bottom and pushes the page up with it
+const D0 = 196, DH = H - D0, PUSH = 370;
+let pk = 0, pkTarget = 0, pull = 0, pullHeld = false, contentBottom = 552;
+
+// ---------- canvas ----------
+const cv = document.getElementById('game'), ctx = cv.getContext('2d');
+const qi = document.getElementById('q');
+let scale = 1, ox = 0, oy = 0, dpr = 1;
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 3);
+  const r = cv.getBoundingClientRect();
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  scale = Math.min(r.width / W, r.height / H);
+  ox = (r.width - W * scale) / 2; oy = (r.height - H * scale) / 2;
+}
+addEventListener('resize', resize);
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const k01 = (t0, dur) => clamp((now - t0) / dur, 0, 1);
+const easeOut = k => 1 - Math.pow(1 - k, 3);
+const easeInOut = k => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const easeBack = k => { const c1 = 1.9, c3 = c1 + 1; return k <= 0 ? 0 : 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
+function vib(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
+
+function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+function fillRR(x, y, w, h, r, c) { rr(x, y, w, h, r); ctx.fillStyle = c; ctx.fill(); }
+function strokeRR(x, y, w, h, r, c, lw = 1) { rr(x, y, w, h, r); ctx.strokeStyle = c; ctx.lineWidth = lw; ctx.stroke(); }
+function text(s, x, y, font, color, align = 'left', base = 'alphabetic') {
+  ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillText(s, x, y);
+}
+function wrap(s, font, maxW) {
+  ctx.font = font; const words = s.split(' '), lines = []; let line = '';
+  for (const w of words) { const test = line ? line + ' ' + w : w; if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test; }
+  if (line) lines.push(line); return lines;
+}
+function fit(s, font, maxW) {
+  ctx.font = font; if (ctx.measureText(s).width <= maxW) return s;
+  while (s.length > 1 && ctx.measureText(s + '…').width > maxW) s = s.slice(0, -1); return s.trimEnd() + '…';
+}
+function arrow(x, y, up, c) { ctx.beginPath(); if (up) { ctx.moveTo(x, y - 4); ctx.lineTo(x + 4, y + 3); ctx.lineTo(x - 4, y + 3); } else { ctx.moveTo(x, y + 4); ctx.lineTo(x + 4, y - 3); ctx.lineTo(x - 4, y - 3); } ctx.closePath(); ctx.fillStyle = c; ctx.fill(); }
+function tick(x, y, c) { ctx.beginPath(); ctx.moveTo(x - 4, y); ctx.lineTo(x - 1, y + 3); ctx.lineTo(x + 4, y - 3); ctx.strokeStyle = c; ctx.lineWidth = 1.8; ctx.stroke(); }
+function cross(x, y, c) { ctx.beginPath(); ctx.moveTo(x - 3, y - 3); ctx.lineTo(x + 3, y + 3); ctx.moveTo(x + 3, y - 3); ctx.lineTo(x - 3, y + 3); ctx.strokeStyle = c; ctx.lineWidth = 1.6; ctx.stroke(); }
+function starPath(x, y, r, rot = 0) { ctx.beginPath(); for (let i = 0; i < 16; i++) { const a = rot + i * Math.PI / 8, rad = i % 2 ? r * 0.55 : r; ctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad); } ctx.closePath(); }
+
+// ---------- hit regions and presses ----------
+let hits = [], noHits = false, pressed = null; const pressV = {};
+function hit(x, y, w, h, fn, clip, id) { if (!noHits) hits.push({ x, y, w, h, fn, clip, id }); }
+function hitAt(p) {
+  for (let i = hits.length - 1; i >= 0; i--) { const h = hits[i]; if (h.clip && (p.y < h.clip[0] || p.y > h.clip[1])) continue; if (p.x >= h.x && p.x <= h.x + h.w && p.y >= h.y && p.y <= h.y + h.h) return h; }
+  return null;
+}
+function press(id) { const target = pressed === id ? 1 : 0; pressV[id] = (pressV[id] || 0) + (target - (pressV[id] || 0)) * Math.min(1, dt * 22); return 1 - 0.05 * pressV[id]; }
+function withScale(cx, cy, s, fn) { ctx.save(); ctx.translate(cx, cy); ctx.scale(s, s); ctx.translate(-cx, -cy); fn(); ctx.restore(); }
+function button(id, x, y, w, h, fill, label, font, color, fn, shine) {
+  const s = press(id);
+  withScale(x + w / 2, y + h / 2, s, () => {
+    fillRR(x, y + 3, w, h, h / 2, 'rgba(0,0,0,0.22)');
+    fillRR(x, y, w, h, h / 2, fill);
+    if (shine && !reduce) { // light sweep every few seconds
+      const ph = ((now / 3200) % 1) * 2 - 0.4;
+      if (ph > 0 && ph < 1.2) { ctx.save(); rr(x, y, w, h, h / 2); ctx.clip(); const sx = x + ph * (w + 120) - 60; const g = ctx.createLinearGradient(sx - 40, 0, sx + 40, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,248,220,0.45)'); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h); ctx.restore(); }
+    }
+    text(label, x + w / 2, y + h / 2 + 1, font, color, 'center', 'middle');
+  });
+  hit(x, y, w, h, () => { vib(8); fn(); }, null, id);
+}
+
+// ---------- input ----------
+function toLogical(e) { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left - ox) / scale, y: (e.clientY - r.top - oy) / scale }; }
+let down = null;
+const drawerY = () => D0 + (1 - pk) * DH + pull;
+function zoneAt(p) {
+  if (screen === 'puzzle' && pkTarget === 1 && pk > 0.6) {
+    const dy = drawerY();
+    if (p.y >= dy && p.y < dy + 104) return 'head';
+    if (p.y >= dy + 104) return 'picker';
+    return null;
+  }
+  if (screen === 'puzzle') return p.y > 78 && p.y < 552 ? 'puzzle' : null;
+  return null;
+}
+cv.addEventListener('pointerdown', e => {
+  const p = toLogical(e);
+  down = { x: p.x, y: p.y, sy: p.y, t: performance.now(), moved: false, zone: zoneAt(p), vy: 0 };
+  const h = hitAt(p); pressed = h && h.id ? h.id : null;
+  if (down.zone) { fling[down.zone === 'head' ? 'picker' : down.zone] = 0; if (down.zone === 'puzzle') autoScroll = false; }
+  cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove', e => {
+  if (!down) return; const p = toLogical(e); const dy = p.y - down.y; const tm = performance.now();
+  down.vy = dy / Math.max(1, tm - down.t); down.t = tm;
+  if (Math.abs(p.y - down.sy) > 8) { down.moved = true; pressed = null; }
+  const z = down.zone;
+  if (z === 'puzzle') { scroll.puzzle = clamp(scroll.puzzle - dy, 0, maxScroll.puzzle); }
+  else if (z === 'head') { pull = Math.max(0, pull + dy); pullHeld = true; }
+  else if (z === 'picker') {
+    if (pull > 0 || (scroll.picker <= 0 && dy > 0)) { pull = Math.max(0, pull + dy); pullHeld = true; }
+    else scroll.picker = clamp(scroll.picker - dy, 0, maxScroll.picker);
+  }
+  down.y = p.y;
+});
+function endPointer(e, cancel) {
+  if (!down) return; const p = toLogical(e); const d = down; down = null; pressed = null;
+  if ((d.zone === 'head' || d.zone === 'picker') && pull > 0) {
+    pullHeld = false;
+    if (pull > 110 || d.vy > 0.7) { pk = clamp(1 - pull / DH, 0, 1); pull = 0; closePicker(); }
+    return;
+  }
+  if (d.moved) { const z = d.zone === 'head' ? null : d.zone; if (z) fling[z] = -d.vy * 1000; return; }
+  if (cancel) return;
+  const h = hitAt(p); if (h) h.fn();
+}
+cv.addEventListener('pointerup', e => endPointer(e, false));
+cv.addEventListener('pointercancel', e => endPointer(e, true));
+cv.addEventListener('wheel', e => { const p = toLogical(e); let z = zoneAt(p); if (z === 'head') z = 'picker'; if (z) { scroll[z] = clamp(scroll[z] + e.deltaY * 0.6, 0, maxScroll[z]); if (z === 'puzzle') autoScroll = false; e.preventDefault(); } }, { passive: false });
+addEventListener('keydown', e => { if (e.key === 'Escape' && pkTarget === 1) closePicker(); });
+qi.addEventListener('input', () => { query = qi.value; scroll.picker = 0; });
+qi.addEventListener('keydown', e => { if (e.key === 'Enter') qi.blur(); });
+
+// ---------- flow ----------
+const sur = n => SURAHS[n - 1];
+const key = (id, i) => id + ':' + i;
+function go(to, dir) {
+  if (screen === to) return;
+  if (!reduce) trans = { from: screen, to, at: now, dir };
+  screen = to; enter[to] = now;
+  if (to === 'puzzle') { scroll.puzzle = 99999; autoScroll = true; }
+}
+function open(p) { cur = p; pk = 0; pkTarget = 0; go(prog[p.id].done ? 'result' : 'puzzle', 1); }
+function guess(n) {
+  const st = prog[cur.id]; if (st.done || st.guesses.includes(n)) return;
+  const i = st.guesses.length; st.guesses.push(n);
+  const gT = now + (reduce ? 0 : 300); guessAt[key(cur.id, i)] = gT; autoScroll = true;
+  if (n === cur.answer) { st.done = true; st.solved = true; vib([20, 30, 60]); pendingResult = gT + (reduce ? 300 : 1500); }
+  else {
+    vib([30, 50, 30]);
+    if (st.guesses.length >= 6) { st.done = true; pendingResult = gT + (reduce ? 300 : 1300); }
+    else revealAt[key(cur.id, i + 1)] = gT + (reduce ? 0 : 750);
+  }
+  save(); closePicker();
+}
+function openPicker() { pkTarget = 1; pull = 0; query = ''; qi.value = ''; scroll.picker = 0; fling.picker = 0; }
+function closePicker() { pkTarget = 0; qi.blur(); }
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[ً-ٰٟ]/g, '').replace(/[^a-z0-9؀-ۿ]/g, '');
+function filtered() {
+  const q = norm(query); if (!q) return SURAHS;
+  return SURAHS.filter(s => String(s[0]) === q || norm(s[1]).includes(q) || norm(s[2]).includes(q) || norm(s[3]).includes(q) || norm(s[4]).includes(q));
+}
+function shareText(p) {
+  const st = prog[p.id]; const n = st.guesses.length; let sq = '';
+  for (let i = 0; i < 6; i++) sq += i < n ? (st.solved && i === n - 1 ? '🟩' : '🟥') : '⬜';
+  return `Teka Surah · ${p.diff[lang]}\n${sq} ${st.solved ? n : 'X'}/6\nikhlas.com`;
+}
+function copyResult(p) {
+  const s = shareText(p);
+  try { navigator.clipboard.writeText(s).then(() => showToast(t('copied')), () => showToast(t('copyFail'))); }
+  catch (e) { showToast(t('copyFail')); }
+}
+function showToast(s) { toast = { s, at: now }; }
+function burst(x, y, colors, n) {
+  if (reduce) return;
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, sp = 90 + Math.random() * 240;
+    particles.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 120, r: 3 + Math.random() * 5, rot: Math.random() * 6, vr: (Math.random() - 0.5) * 8, c: colors[i % colors.length], born: now, life: 900 + Math.random() * 700 });
+  }
+}
+
+// ---------- drawing: shared ----------
+function drawBackdrop() {
+  const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, C.bg2); g.addColorStop(1, C.bg);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.save(); ctx.strokeStyle = C.gold; ctx.lineWidth = 1;
+  for (let y = 20; y < H; y += 56) for (let x = (y / 56) % 2 ? 46 : 18; x < W; x += 56) {
+    ctx.globalAlpha = reduce ? 0.06 : 0.04 + 0.05 * (0.5 + 0.5 * Math.sin(now / 1500 + x * 0.31 + y * 0.73));
+    starPath(x, y, 9); ctx.stroke();
+  }
+  ctx.restore();
+}
+function langToggle() {
+  const x = 274, y = 18, w = 70, h = 28;
+  fillRR(x, y, w, h, 14, 'rgba(242,230,201,0.12)');
+  const target = lang === 'ms' ? 0 : 1;
+  pressV.langX = pressV.langX === undefined ? target : pressV.langX + (target - pressV.langX) * Math.min(1, dt * 16);
+  fillRR(x + 2 + pressV.langX * 34, y + 2, 32, h - 4, 12, C.parch);
+  text('BM', x + 18, y + 19, F.sans(13, 700), lang === 'ms' ? C.ink : C.night, 'center');
+  text('EN', x + 52, y + 19, F.sans(13, 700), lang === 'en' ? C.ink : C.night, 'center');
+  hit(x, y, w, h, () => { vib(8); lang = lang === 'ms' ? 'en' : 'ms'; store.set('ts-lang', lang); }, null, 'lang');
+}
+function header(sub) {
+  const s = press('back');
+  withScale(33, 37, s, () => {
+    fillRR(14, 18, 38, 38, 19, 'rgba(242,230,201,0.12)');
+    ctx.beginPath(); ctx.moveTo(37, 28); ctx.lineTo(28, 37); ctx.lineTo(37, 46); ctx.strokeStyle = C.parch; ctx.lineWidth = 2.4; ctx.stroke();
+  });
+  hit(10, 14, 46, 46, () => { vib(8); closePicker(); go('home', -1); }, null, 'back');
+  text('Teka Surah', W / 2, 40, F.kufi(20, 700), C.parch, 'center');
+  if (sub) text(sub, W / 2, 60, F.sans(12, 500), C.night, 'center');
+}
+
+// ---------- screens ----------
+function drawSplash() {
+  drawBackdrop();
+  const e = enter.splash;
+  const k1 = easeOut(k01(e, 900)), k2 = easeOut(k01(e + 500, 700));
+  ctx.save(); ctx.globalAlpha = k1;
+  ctx.strokeStyle = C.gold; ctx.lineWidth = 1.6;
+  starPath(W / 2, 250, 30 + 24 * k1, (1 - k1) * 1.4); ctx.stroke();
+  starPath(W / 2, 250, 16 + 10 * k1, -(1 - k1) * 1.4); ctx.stroke();
+  ctx.restore();
+  ctx.globalAlpha = k2;
+  text('ikhlas.com', W / 2, 340 + (1 - k2) * 14, F.kufi(34, 700), C.parch, 'center');
+  text(lang === 'ms' ? 'mempersembahkan' : 'presents', W / 2, 370 + (1 - k2) * 14, F.sans(16, 500), C.gold, 'center');
+  ctx.globalAlpha = 1;
+  hit(0, 0, W, H, () => go('home', 0));
+  if (now - e > (reduce ? 900 : 2300)) go('home', 0);
+}
+
+function drawHome() {
+  drawBackdrop(); langToggle();
+  const e = enter.home;
+  const kt = reduce ? 1 : easeOut(k01(e, 500));
+  ctx.globalAlpha = kt;
+  text(t('presents').toUpperCase(), 24, 86, F.sans(11, 700), C.gold);
+  text('Teka Surah', 24, 128 + (1 - kt) * 10, F.kufi(40, 700), C.parch);
+  text(t('tagline'), 24, 156, F.sans(17, 400), C.night);
+  ctx.globalAlpha = 1;
+  PUZZLES.forEach((p, i) => {
+    const ki = reduce ? 1 : easeBack(k01(e + 150 + i * 110, 520));
+    const y = 190 + i * 122 + (1 - ki) * 40, st = prog[p.id], id = 'card' + i;
+    ctx.globalAlpha = clamp(ki, 0, 1);
+    const s = press(id);
+    withScale(180, y + 54, s, () => {
+      fillRR(20, y + 4, 320, 108, 14, 'rgba(0,0,0,0.25)');
+      fillRR(20, y, 320, 108, 14, C.parch);
+      strokeRR(24, y + 4, 312, 100, 11, 'rgba(138,100,22,0.35)');
+      text(`${p.diff[lang].toUpperCase()} · ${p.day[lang]}`, 38, y + 30, F.sans(12, 700), C.goldDark);
+      if (st.done) {
+        const sr = sur(p.answer);
+        text(sr[1], 38, y + 60, F.kufi(24, 700), C.ink);
+        text(st.solved ? t('solvedIn')(st.guesses.length) : t('missed'), 38, y + 84, F.sans(14, 700), st.solved ? C.greenInk : C.redInk);
+        text(sr[4], 318, y + 72, F.ar(30, 700), C.ink, 'right');
+      } else {
+        for (let j = 0; j < 3; j++) text('?', 38 + j * 22, y + 62 + (reduce ? 0 : Math.sin(now / 420 + j * 0.9 + i) * 2.5), F.kufi(26, 700), C.ink);
+        text(st.guesses.length ? `${t('hint')} ${st.guesses.length + 1}/6` : t('hints6'), 38, y + 88, F.sans(14, 500), C.ink2);
+        const pulse = reduce ? 1 : 1 + 0.035 * Math.max(0, Math.sin(now / 380 + i * 1.3));
+        withScale(277, y + 61, pulse, () => {
+          fillRR(232, y + 42, 90, 38, 19, C.gold);
+          text(st.guesses.length ? t('cont') : t('play'), 277, y + 62, F.sans(16, 700), C.ink, 'center', 'middle');
+        });
+      }
+      for (let j = 0; j < 6; j++) {
+        ctx.beginPath(); ctx.arc(238 + j * 15, y + 24, 4.5, 0, 7);
+        const n = st.guesses.length;
+        ctx.fillStyle = j < n ? (st.solved && j === n - 1 ? C.green : C.red) : C.grey; ctx.fill();
+      }
+    });
+    ctx.globalAlpha = 1;
+    hit(20, y, 320, 108, () => { vib(8); open(p); }, null, id);
+  });
+  ctx.globalAlpha = reduce ? 1 : k01(e + 500, 500);
+  text(t('demo'), 24, 584, F.sans(13, 700), C.night);
+  text(t('review'), 24, 602, F.sans(13, 400), C.night);
+  ctx.font = F.sans(13, 700); const rw = ctx.measureText(t('reset')).width;
+  text(t('reset'), 336, 584, F.sans(13, 700), C.gold, 'right');
+  ctx.fillStyle = C.gold; ctx.fillRect(336 - rw, 588, rw, 1);
+  ctx.globalAlpha = 1;
+  hit(336 - rw - 8, 566, rw + 16, 30, () => { vib(8); PUZZLES.forEach(p => prog[p.id] = fresh()); save(); enter.home = now; }, null, 'reset');
+}
+
+function chip(x, y, w, ok, label, icon, k) {
+  if (k <= 0) return;
+  withScale(x + w / 2, y + 12, easeBack(k), () => {
+    ctx.globalAlpha = clamp(k * 1.6, 0, 1);
+    fillRR(x, y, w, 24, 12, ok ? C.greenSoft : C.redSoft);
+    strokeRR(x + 0.5, y + 0.5, w - 1, 23, 12, ok ? C.green : C.red);
+    icon(x + 12, y + 12, ok ? C.green : C.red);
+    text(fit(label, F.sans(12, 700), w - 26), x + 22, y + 16.5, F.sans(12, 700), ok ? C.greenInk : C.redInk);
+    ctx.globalAlpha = 1;
+  });
+}
+
+function drawPuzzle() {
+  drawBackdrop();
+  const p = cur, st = prog[p.id];
+  const shift = -clamp(1 - (drawerY() - D0) / DH, 0, 1) * clamp(contentBottom + 12 - D0, 0, PUSH);
+  ctx.save(); ctx.translate(0, shift);
+  header(`${p.diff[lang]} · ${p.day[lang]}`); langToggle();
+  const shown = Math.min(6, st.done ? st.guesses.length : st.guesses.length + 1);
+  const top = 80, bottom = 552;
+  if (autoScroll && !down) scroll.puzzle += (maxScroll.puzzle - scroll.puzzle) * Math.min(1, dt * 10);
+  ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, bottom - top); ctx.clip();
+  let y = top + 8 - scroll.puzzle; const content0 = y;
+  for (let i = 0; i < shown; i++) {
+    const h0 = p.hints[i], lines = wrap(h0[lang], F.sans(17, 500), 288);
+    const g = st.guesses[i], kk = key(p.id, i), right = g === p.answer;
+    const rT = revealAt[kk];
+    const kOpen = rT === undefined || reduce ? 1 : easeOut(k01(rT, 420));
+    if (kOpen <= 0) continue;
+    const gT = guessAt[kk];
+    const kRow = g ? (gT === undefined || reduce ? 1 : easeOut(k01(gT, 320))) : 0;
+    const rowH = g ? (right ? 46 : 74) : 0;
+    const baseH = 40 + lines.length * 23;
+    const hh = (baseH + rowH * kRow) * kOpen;
+    let sx = 0; // shake on a wrong guess
+    if (g && !right && gT !== undefined && !reduce) { const sk = k01(gT, 420); if (sk > 0 && sk < 1) sx = Math.sin(sk * Math.PI * 7) * 7 * (1 - sk); }
+    ctx.save(); ctx.translate(sx, 0);
+    ctx.globalAlpha = clamp(kOpen * 1.4, 0, 1);
+    fillRR(16, y + 3, 328, hh, 12, 'rgba(0,0,0,0.22)');
+    // a wrong guess tints the card, a right one turns it green
+    let fill = C.parch;
+    if (g && kRow > 0) fill = right ? '#e9efd9' : '#f5ddd2';
+    fillRR(16, y, 328, hh, 12, fill);
+    if (g && kRow > 0) {
+      ctx.save(); rr(16, y, 328, hh, 12); ctx.clip(); ctx.fillStyle = right ? C.green : C.red; ctx.fillRect(16, y, 5, hh); ctx.restore();
+      if (gT !== undefined && !reduce) { const gk = k01(gT, 800); if (gk > 0 && gk < 1) strokeRR(16 - 5 * gk, y - 5 * gk, 328 + 10 * gk, hh + 10 * gk, 12 + 5 * gk, right ? `rgba(63,122,70,${1 - gk})` : `rgba(181,69,47,${1 - gk})`, 3); }
+    }
+    ctx.save(); rr(16, y, 328, hh, 12); ctx.clip();
+    text(`${t('hint').toUpperCase()} ${i + 1}`, 32, y + 24, F.sans(11, 700), C.goldDark);
+    const total = lines.join(' ').length; // typewriter
+    let chars = rT === undefined || reduce ? total : Math.floor(clamp((now - rT - 180) / (total * 16), 0, 1) * total);
+    lines.forEach((ln, j) => { if (chars <= 0) return; text(ln.slice(0, chars), 32, y + 48 + j * 23, F.sans(17, 500), C.ink); chars -= ln.length + 1; });
+    if (g && kRow > 0) {
+      const gy = y + baseH;
+      ctx.fillStyle = 'rgba(91,74,53,0.18)'; ctx.fillRect(32, gy, 296, 1);
+      const s = sur(g), a = sur(p.answer);
+      if (right) {
+        const kb = reduce || gT === undefined ? 1 : easeBack(k01(gT + 120, 420));
+        withScale(180, gy + 23, kb, () => {
+          fillRR(32, gy + 10, 296, 26, 13, C.greenSoft); strokeRR(32.5, gy + 10.5, 295, 25, 13, C.green);
+          tick(48, gy + 23, C.green);
+          text(`${s[1]} · ${t('right')}`, 60, gy + 28, F.sans(14, 700), C.greenInk);
+        });
+        if (gT !== undefined && !burstDone[kk] && now >= gT + 120) { burstDone[kk] = 1; burst(180, gy + 23 + shift, [C.gold, C.goldLight, C.green, C.parch], 34); }
+      } else {
+        ctx.globalAlpha = gT === undefined || reduce ? 1 : k01(gT + 80, 200);
+        cross(38, gy + 22, C.red);
+        text(fit(`${s[0]}. ${s[1]} · ${t('wrong')}`, F.sans(14, 700), 280), 48, gy + 26, F.sans(14, 700), C.redInk);
+        ctx.globalAlpha = 1;
+        const ck = c => gT === undefined || reduce ? 1 : k01(gT + 280 + c * 120, 280);
+        const before = p.answer < g;
+        chip(32, gy + 38, 96, false, before ? t('earlier') : t('later'), (cx, cy, c) => arrow(cx, cy, before, c), ck(0));
+        const same = s[6] === a[6];
+        chip(132, gy + 38, 96, same, s[6] ? t('makki') : t('madani'), (cx, cy, c) => same ? tick(cx, cy, c) : cross(cx, cy, c), ck(1));
+        const d = a[5] - s[5], close = Math.abs(d) <= 10;
+        chip(232, gy + 38, 96, close, close ? t('close') : d < 0 ? t('shorter') : t('longer'), (cx, cy, c) => close ? tick(cx, cy, c) : arrow(cx, cy, d < 0, c), ck(2));
+      }
+    }
+    ctx.restore();
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    y += hh + 12 * kOpen;
+  }
+  if (!st.done && shown < 6) { text(t('more')(6 - shown), W / 2, y + 16, F.sans(13, 500), C.night, 'center'); y += 30; }
+  if (st.guesses.length === 0) {
+    const ll = wrap(t('legend'), F.sans(13, 400), 300);
+    ll.forEach((ln, j) => text(ln, W / 2, y + 12 + j * 18, F.sans(13, 400), C.night, 'center'));
+    y += ll.length * 18 + 12;
+  }
+  ctx.restore();
+  if (pkTarget === 0 && pk < 0.01) contentBottom = Math.min(bottom, y);
+  maxScroll.puzzle = Math.max(0, (y - content0) - (bottom - top) + 16);
+  scroll.puzzle = clamp(scroll.puzzle, 0, maxScroll.puzzle);
+  if (pkTarget === 0 && pk < 0.05) button('main', 16, 566, 328, 54, C.gold, st.done ? t('seeAnswer') : t('pick'), F.sans(19, 700), C.ink, () => { if (st.done) go('result', 1); else openPicker(); }, !st.done);
+  else { fillRR(16, 569, 328, 54, 27, 'rgba(0,0,0,0.22)'); fillRR(16, 566, 328, 54, 27, C.gold); text(t('pick'), W / 2, 594, F.sans(19, 700), C.ink, 'center', 'middle'); }
+  ctx.restore();
+}
+
+function drawDrawer() {
+  const y0 = drawerY();
+  const active = pkTarget === 1 && pk > 0.9;
+  if (active) hit(0, 0, W, y0, () => closePicker(), null, 'shade');
+  const sh = ctx.createLinearGradient(0, y0 - 18, 0, y0); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.3)');
+  ctx.fillStyle = sh; ctx.fillRect(0, y0 - 18, W, 18);
+  fillRR(0, y0, W, H - y0 + 30, 22, C.parch);
+  fillRR(W / 2 - 22, y0 + 8, 44, 5, 3, C.grey);
+  text(t('pickTitle'), 22, y0 + 44, F.kufi(20, 700), C.ink);
+  text(t('pullHint'), 338, y0 + 42, F.sans(12, 500), C.muted, 'right');
+  const sy = y0 + 58;
+  const focused = document.activeElement === qi;
+  fillRR(16, sy, 328, 40, 20, '#fbf5e6'); strokeRR(16.5, sy + 0.5, 327, 39, 20, focused ? C.gold : C.grey, focused ? 2 : 1);
+  ctx.beginPath(); ctx.arc(38, sy + 19, 6, 0, 7); ctx.moveTo(42.5, sy + 23.5); ctx.lineTo(47, sy + 28); ctx.strokeStyle = C.muted; ctx.lineWidth = 1.8; ctx.stroke();
+  const caret = focused && Math.floor(now / 530) % 2 === 0;
+  if (query) { const qs = fit(query, F.sans(16, 500), 270); text(qs, 56, sy + 26, F.sans(16, 500), C.ink); if (caret) { ctx.font = F.sans(16, 500); ctx.fillStyle = C.ink; ctx.fillRect(57 + ctx.measureText(qs).width, sy + 11, 1.5, 19); } }
+  else { text(t('search'), 56, sy + 26, F.sans(15, 400), C.muted); if (caret) { ctx.fillStyle = C.ink; ctx.fillRect(55, sy + 11, 1.5, 19); } }
+  if (active) { placeInput(16, sy, 328, 40); hit(16, sy, 328, 40, () => qi.focus(), null, 'search'); } else qi.style.left = '-200px';
+  const top = sy + 46, list = filtered(), st = prog[cur.id], rowH = 54;
+  ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, H - top); ctx.clip();
+  maxScroll.picker = Math.max(0, list.length * rowH - (H - (D0 + 104)) + 20);
+  scroll.picker = clamp(scroll.picker, 0, maxScroll.picker);
+  const first = Math.max(0, Math.floor(scroll.picker / rowH) - 1);
+  for (let i = first; i < Math.min(list.length, first + 14); i++) {
+    const s = list[i], y = top + i * rowH - scroll.picker, used = st.guesses.includes(s[0]), rid = 'row' + s[0];
+    const ps = press(rid);
+    if (pressV[rid] > 0.05) { ctx.fillStyle = `rgba(201,154,59,${0.25 * pressV[rid]})`; ctx.fillRect(0, y, W, rowH); }
+    else if (i % 2 === 0) { ctx.fillStyle = 'rgba(201,154,59,0.07)'; ctx.fillRect(0, y, W, rowH); }
+    withScale(180, y + rowH / 2, ps, () => {
+      ctx.globalAlpha = used ? 0.6 : 1;
+      ctx.beginPath(); ctx.arc(36, y + rowH / 2, 15, 0, 7);
+      if (used) { ctx.fillStyle = C.redSoft; ctx.fill(); ctx.strokeStyle = C.red; } else ctx.strokeStyle = C.goldDark;
+      ctx.lineWidth = 1.2; ctx.stroke();
+      text(String(s[0]), 36, y + rowH / 2 + 4.5, F.sans(12, 700), used ? C.redInk : C.goldDark, 'center');
+      text(fit(s[1], F.sans(17, 700), 170), 62, y + 24, F.sans(17, 700), C.ink);
+      text(fit(used ? t('guessed') : (lang === 'ms' ? s[2] : s[3]), F.sans(13, used ? 700 : 400), 170), 62, y + 42, F.sans(13, used ? 700 : 400), used ? C.red : C.ink2);
+      text(s[4], 340, y + 35, F.ar(22, 700), C.ink, 'right');
+      ctx.globalAlpha = 1;
+    });
+    if (!used && active) hit(0, y, W, rowH, () => { vib(10); guess(s[0]); }, [top, H], rid);
+  }
+  if (!list.length) text(t('noResult'), W / 2, top + 40, F.sans(15, 500), C.ink2, 'center');
+  ctx.restore();
+}
+function placeInput(x, y, w, h) {
+  const r = cv.getBoundingClientRect();
+  qi.style.left = (r.left + ox + x * scale) + 'px'; qi.style.top = (r.top + oy + y * scale) + 'px';
+  qi.style.width = (w * scale) + 'px'; qi.style.height = (h * scale) + 'px';
+}
+
+// The answer page fits one screen: the summary drops a size if the card would run long.
+function drawResult() {
+  drawBackdrop();
+  const p = cur, st = prog[p.id], s = sur(p.answer), e = enter.result;
+  header(`${p.diff[lang]} · ${p.day[lang]}`); langToggle();
+  const step = (d, dur = 450) => reduce ? 1 : easeOut(k01(e + d, dur));
+  const avail = 556 - 82;
+  let fs = 16, lh = 21, sumL, noteL, cardH;
+  const measure = () => {
+    sumL = wrap(p.summary[lang], F.sans(fs, 400), 296);
+    noteL = p.note ? wrap(p.note[lang], F.sans(fs - 3, 400), 296) : [];
+    cardH = 186 + sumL.length * lh + (noteL.length ? 6 + noteL.length * (lh - 4) : 0) + 16 + 20 + 2 * 20 + 42;
+  };
+  measure(); while (cardH > avail && fs > 13) { fs--; lh--; measure(); }
+  const y = 82 + Math.max(0, (avail - cardH) / 2);
+  const kc = reduce ? 1 : easeBack(k01(e + 60, 560));
+  withScale(180, y + cardH / 2, 0.9 + 0.1 * kc, () => {
+    ctx.globalAlpha = clamp(kc, 0, 1);
+    fillRR(16, y + 4, 328, cardH, 14, 'rgba(0,0,0,0.25)');
+    fillRR(16, y, 328, cardH, 14, C.parch);
+    strokeRR(21, y + 5, 318, cardH - 10, 10, 'rgba(138,100,22,0.35)');
+    ctx.save(); ctx.globalAlpha = 0.12 * clamp(kc, 0, 1); ctx.strokeStyle = C.goldDark; ctx.lineWidth = 1.4;
+    starPath(W / 2, y + 70, 56, now / 9000); ctx.stroke(); starPath(W / 2, y + 70, 40, -now / 7000); ctx.stroke(); ctx.restore();
+    ctx.globalAlpha = step(250);
+    text((st.solved ? t('solvedIn')(st.guesses.length) : t('missed')).toUpperCase(), W / 2, y + 28, F.sans(12, 700), st.solved ? C.green : C.red, 'center');
+    const ka = reduce ? 1 : easeBack(k01(e + 350, 600));
+    ctx.globalAlpha = clamp(ka, 0, 1);
+    withScale(W / 2, y + 66, 0.6 + 0.4 * ka, () => text(s[4], W / 2, y + 78, F.ar(40, 700), C.ink, 'center'));
+    ctx.globalAlpha = step(550);
+    text(s[1], W / 2, y + 124 + (1 - step(550)) * 10, F.kufi(26, 700), C.ink, 'center');
+    text(t('surahNo')(s[0], s[5], s[6] ? t('makki') : t('madani')), W / 2, y + 146, F.sans(14, 500), C.ink2, 'center');
+    ctx.globalAlpha = 1;
+    for (let j = 0; j < 6; j++) {
+      const n = st.guesses.length, x = W / 2 - 3 * 24 + j * 24 + 2;
+      const c = j < n ? (st.solved && j === n - 1 ? C.green : C.red) : C.grey;
+      const kq = reduce ? 1 : easeBack(k01(e + 700 + j * 90, 380));
+      if (kq > 0) withScale(x + 10, y + 168, kq, () => fillRR(x, y + 158, 20, 20, 5, c));
+    }
+    let cy = y + 196;
+    ctx.globalAlpha = step(1100);
+    ctx.fillStyle = 'rgba(91,74,53,0.18)'; ctx.fillRect(32, cy - 6, 296, 1);
+    sumL.forEach((ln, j) => text(ln, 32, cy + 14 + j * lh + (1 - step(1100)) * 8, F.sans(fs, 400), C.ink));
+    cy += 4 + sumL.length * lh;
+    if (noteL.length) { cy += 6; noteL.forEach((ln, j) => text(ln, 32, cy + 12 + j * (lh - 4), F.sans(fs - 3, 400), C.ink2)); cy += noteL.length * (lh - 4); }
+    cy += 16;
+    ctx.globalAlpha = step(1250);
+    text(t('refs').toUpperCase(), 32, cy + 12, F.sans(11, 700), C.goldDark);
+    cy += 20;
+    p.hints.forEach((h0, j) => { const col = j % 3, row = Math.floor(j / 3); text(`${j + 1} · ${h0.ref || '–'}`, 32 + col * 100, cy + 14 + row * 20, F.sans(13, 500), C.ink); });
+    cy += 2 * 20 + 6;
+    text(fit(t('draft'), F.sans(11, 400), 296), 32, cy + 10, F.sans(11, 400), C.muted);
+    ctx.globalAlpha = 1;
+  });
+  button('copy', 16, 566, 158, 54, C.gold, t('copy'), F.sans(17, 700), C.ink, () => copyResult(p), true);
+  button('home', 186, 566, 158, 54, '#2f4a3b', t('back'), F.sans(17, 700), C.parch, () => go('home', -1));
+  const bk = 'res' + p.id + e;
+  if (st.solved && !burstDone[bk] && now > e + 420 && !reduce) { burstDone[bk] = 1; burst(W / 2, y + 70, [C.gold, C.goldLight, C.green, C.parch], 40); }
+}
+
+function drawParticles() {
+  particles = particles.filter(q => now - q.born < q.life);
+  for (const q of particles) {
+    const a = (now - q.born) / q.life;
+    q.vy += 520 * dt; q.vx *= 0.985; q.x += q.vx * dt; q.y += q.vy * dt; q.rot += q.vr * dt;
+    ctx.globalAlpha = 1 - a * a; ctx.fillStyle = q.c;
+    starPath(q.x, q.y, q.r, q.rot); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+function drawToast() {
+  if (!toast) return; const age = now - toast.at; if (age > 2200) { toast = null; return; }
+  const a = Math.min(1, age / 160, (2200 - age) / 300), lines = wrap(toast.s, F.sans(14, 700), 280), h = 20 + lines.length * 18;
+  const y = 548 - h + (1 - easeOut(Math.min(1, age / 260))) * 30;
+  ctx.globalAlpha = a; fillRR(30, y, 300, h, 12, C.ink);
+  lines.forEach((ln, j) => text(ln, W / 2, y + 24 + j * 18, F.sans(14, 700), C.parch, 'center'));
+  ctx.globalAlpha = 1;
+}
+
+function drawScreen(name) {
+  if (name === 'splash') drawSplash();
+  else if (name === 'home') drawHome();
+  else if (name === 'puzzle') drawPuzzle();
+  else if (name === 'result') drawResult();
+}
+
+function frame(ts) {
+  now = ts; dt = Math.min(0.05, last ? (ts - last) / 1000 : 0.016); last = ts;
+  pk += (pkTarget - pk) * Math.min(1, dt * (reduce ? 60 : 11));
+  if (!pullHeld && pull > 0) { pull *= Math.pow(0.0005, dt); if (pull < 0.5) pull = 0; }
+  for (const z in fling) { if (Math.abs(fling[z]) > 5 && !down) { scroll[z] = clamp(scroll[z] + fling[z] * dt, 0, maxScroll[z]); fling[z] *= Math.pow(0.04, dt); if (z === 'puzzle') autoScroll = false; } else if (!down) fling[z] = 0; }
+  if (pendingResult && now >= pendingResult) { pendingResult = 0; if (screen === 'puzzle') go('result', 1); }
+
+  hits = [];
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * ox, dpr * oy);
+  ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip();
+  const drawerShown = screen === 'puzzle' && (pkTarget === 1 || pk > 0.002);
+  if (trans && now - trans.at < 380) {
+    const k = easeInOut((now - trans.at) / 380);
+    noHits = true;
+    if (trans.dir === 0) { drawScreen(trans.from); ctx.globalAlpha = k; drawScreen(trans.to); ctx.globalAlpha = 1; }
+    else {
+      ctx.save(); ctx.translate(-trans.dir * k * W * 0.35, 0); drawScreen(trans.from); ctx.fillStyle = `rgba(10,18,14,${0.5 * k})`; ctx.fillRect(0, 0, W, H); ctx.restore();
+      ctx.save(); ctx.translate(trans.dir * (1 - k) * W, 0); drawScreen(trans.to); ctx.restore();
+    }
+    noHits = false; qi.style.left = '-200px';
+  } else {
+    trans = null;
+    if (drawerShown) { noHits = pkTarget === 1; drawPuzzle(); noHits = false; drawDrawer(); }
+    else { drawScreen(screen); qi.style.left = '-200px'; }
+  }
+  drawParticles();
+  drawToast();
+  ctx.restore();
+  requestAnimationFrame(frame);
+}
+
+resize();
+const fontsReady = document.fonts ? Promise.race([
+  Promise.all([document.fonts.load(F.kufi(20)), document.fonts.load(F.sans(16)), document.fonts.load(F.sans(16, 700)), document.fonts.load(F.ar(20, 700))]),
+  new Promise(r => setTimeout(r, 1500))
+]) : Promise.resolve();
+fontsReady.then(() => requestAnimationFrame(ts => { enter.splash = ts; frame(ts); }));
+})();
+</script>
+
+</html>
