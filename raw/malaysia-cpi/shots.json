@@ -1,80 +1,87 @@
 {
-    "report":  "malaysia-cpi",
-    "theme":  "cpi",
-    "page":  "reports/malaysia-cpi/",
-    "title":  "Inflation eased. Fuel did not.",
-    "size":  [
-                 1080,
-                 1920
-             ],
-    "fps":  30,
-    "kicker":  "Malaysia · consumer prices · September 2026",
-    "gap":  0.4,
-    "gapNote":  "Seconds held after each voice line ends, before the next shot cuts.",
-    "endCard":  {
-                    "id":  "end",
-                    "vo":  "l07",
-                    "plan":  2.3,
-                    "endHold":  1.5,
-                    "kicker":  "Malaysia, consumer prices, September 2026",
-                    "title":  "Inflation eased. Fuel did not.",
-                    "url":  "reports.artifisi.com/malaysia-cpi/",
-                    "source":  "Data: Department of Statistics Malaysia, Consumer Price Index. CC BY 4.0."
-                },
-    "shots":  [
-                  {
-                      "id":  "column",
-                      "scene":  "column",
-                      "claim":  "The price level is 37.6% above 2010. One year of that is 1.8%.",
-                      "caption":  "137.6 against 100 in 2010. One year is 6.4% of the climb.",
-                      "vo":  "l01",
-                      "plan":  9.76,
-                      "t":  1.0
-                  },
-                  {
-                      "id":  "ladder",
-                      "scene":  "ladder",
-                      "claim":  "Transport is heating while housing cools.",
-                      "caption":  "Transport 2.5%. Housing 1.4%. The tick is August.",
-                      "vo":  "l02",
-                      "plan":  8.83,
-                      "t":  1.0
-                  },
-                  {
-                      "id":  "path",
-                      "scene":  "path",
-                      "claim":  "The headline has not moved in three years.",
-                      "caption":  "Three years inside a 1.1% to 2.0% band.",
-                      "vo":  "l03",
-                      "plan":  7.02,
-                      "t":  1.0
-                  },
-                  {
-                      "id":  "drum",
-                      "scene":  "drum",
-                      "claim":  "The fuel shock is a subsidy wedge, and it is still open.",
-                      "caption":  "RON95 averaged RM4.18. The subsidised price is RM2.05.",
-                      "vo":  "l04",
-                      "plan":  9.16,
-                      "t":  1.0
-                  },
-                  {
-                      "id":  "dots",
-                      "scene":  "dots",
-                      "claim":  "The national number hides a spread of nearly five to one.",
-                      "caption":  "0.5% in Sarawak. 2.4% in Negeri Sembilan and Labuan.",
-                      "vo":  "l05",
-                      "plan":  8.62,
-                      "t":  1.0
-                  },
-                  {
-                      "id":  "split",
-                      "scene":  "split",
-                      "claim":  "The same fuel shock does not land evenly.",
-                      "caption":  "Urban transport 2.75%. Rural transport 1.35%.",
-                      "vo":  "l06",
-                      "plan":  9.67,
-                      "t":  1.0
-                  }
-              ]
+  "report": "malaysia-cpi",
+  "theme": "cpi",
+  "page": "reports/malaysia-cpi/",
+  "title": "Inflation eased. Fuel did not.",
+  "size": [
+    1080,
+    1920
+  ],
+  "fps": 30,
+  "kicker": "Malaysia · consumer prices · September 2026",
+  "gap": 0.4,
+  "gapNote": "Seconds held after each voice line ends, before the next shot cuts.",
+  "orderNote": "The film is not the page in order. The page runs column to split, one claim per section. The film opens on the flat line, opens the basket, follows the fuel, then the spread, then the uneven landing, and closes on the price level. One argument, six beats, in the order the argument needs.",
+  "endCard": {
+    "id": "end",
+    "vo": "l07",
+    "plan": 2.3,
+    "endHold": 1.5,
+    "kicker": "Malaysia, consumer prices, September 2026",
+    "title": "Inflation eased. Fuel did not.",
+    "url": "reports.artifisi.com/malaysia-cpi/",
+    "source": "Data: Department of Statistics Malaysia, Consumer Price Index. CC BY 4.0."
+  },
+  "shots": [
+    {
+      "id": "path",
+      "scene": "path",
+      "claim": "The rate has not moved in three years.",
+      "caption": "Three years, and the line has not moved.",
+      "vo": "l01",
+      "plan": 8,
+      "t": 1,
+      "beat": "the surface. the calm number, before anything opens up."
+    },
+    {
+      "id": "ladder",
+      "scene": "ladder",
+      "claim": "Inside that number, the divisions pull in opposite directions.",
+      "caption": "Transport rose. Housing fell. The net barely moved.",
+      "vo": "l02",
+      "plan": 8,
+      "t": 1,
+      "beat": "the fracture. two shocks, opposite signs, one quiet total."
+    },
+    {
+      "id": "drum",
+      "scene": "drum",
+      "claim": "Fuel is the loud part, and the wedge is still open.",
+      "caption": "RON95 averaged RM4.18 against a subsidised RM2.05.",
+      "vo": "l03",
+      "plan": 8,
+      "t": 1,
+      "beat": "the cause. the one shock big enough to matter."
+    },
+    {
+      "id": "dots",
+      "scene": "dots",
+      "claim": "One national number, seventeen rates.",
+      "caption": "The cheapest state ran at 0.5%. The dearest at 2.4%.",
+      "vo": "l04",
+      "plan": 8,
+      "t": 1,
+      "beat": "the ground. the national number is an average of a spread."
+    },
+    {
+      "id": "split",
+      "scene": "split",
+      "claim": "The same shock, two different roads.",
+      "caption": "City transport 2.75%. Countryside 1.35%.",
+      "vo": "l05",
+      "plan": 8,
+      "t": 1,
+      "beat": "the person. the shock does not land evenly."
+    },
+    {
+      "id": "column",
+      "scene": "column",
+      "claim": "And the level is 37.6% above 2010.",
+      "caption": "One year of that climb is 1.8%.",
+      "vo": "l06",
+      "plan": 8,
+      "t": 1,
+      "beat": "the landing. the level, and how small one year of it is."
+    }
+  ]
 }

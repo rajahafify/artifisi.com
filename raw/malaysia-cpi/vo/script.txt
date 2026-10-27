@@ -1,7 +1,7 @@
-l01|Malaysia's consumer price index closed September at one hundred and thirty seven point six. That is thirty seven point six percent above twenty ten.
-l02|The thirteen divisions do not agree. Transport prices rose two point five percent, up from two. Housing fell to one point four.
-l03|The headline has not moved in three years. It was one point eight percent then, and one point eight percent now.
-l04|Here is the fuel. The market price of ron ninety five averaged four ringgit eighteen a litre, up fifty nine point seven percent since December.
-l05|The national number hides a spread. Sarawak ran at zero point five percent. Negeri Sembilan and Labuan ran at two point four.
-l06|And the shock does not land evenly. Urban transport prices rose two point seven five percent. Rural transport prices rose one point three five.
+l01|Three years. The rate has not moved. It was one point eight percent then, and it is one point eight percent now.
+l02|Inside it, the divisions pull in opposite directions. Transport rose two point five percent. Housing fell to one point four.
+l03|The fuel is the loud part. Ninety five octane petrol averaged four ringgit eighteen a litre, up fifty nine point seven percent since December.
+l04|The national number hides a spread. The cheapest state ran at zero point five percent. The dearest ran at two point four.
+l05|The shock does not land evenly. City transport prices rose two point seven five percent. Countryside transport rose one point three five percent.
+l06|So where does that leave the price level. Thirty seven point six percent above twenty ten. One year of that is one point eight percent.
 l07|Visit our website to learn more.

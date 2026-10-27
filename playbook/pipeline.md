@@ -2,11 +2,10 @@
 
 Supersedes the build steps in `instructions.md`. That one assumes the story is already found. This one is about finding it, proving it, and only then drawing it.
 
-Ten stages, four gates. Every stage produces a file. If a stage has no file, it did not happen.
+Eleven stages, four gates. Every stage produces a file. If a stage has no file, it did not happen.
 
 The video pipeline is `video.md`. It shares stages 1 to 5 with this one, then branches and
 rejoins after the page is built.
-
 ---
 
 ## 1. Pick
@@ -60,9 +59,47 @@ n, headline, claim, number_ids, viz_type, motion, interaction
 
 Output: `sections.md`
 
-## 6. Viz
+## 6. Palette
 
-Pick the form from the question, not from the engine.
+Before the viz, not after. The palette decides how a scene reads. A dark ground with lit marks
+is a different drawing from a cream ground with pale ones, and you cannot design the mechanism
+until you know which one you are drawing into.
+
+Two rules, and both of them are about not copying.
+
+**A report does not reuse a previous report's palette.** The pages share a publisher, not a
+skin. `palettes.md` is the registry of what has been used. Check it before you start, and add
+the new palette to it when you are done.
+
+**The palette comes from the subject.** The colours have to be something this subject could
+produce. Not the house colours, not the colours that read as "data report".
+
+### Picking one
+
+The picker is a reference image. Find a photograph of the thing the report is about, the kind
+of thing a reader would have seen that morning, and take the palette off it:
+
+1. image search the subject, several candidates
+2. read the dominant colours off the best ones, in hex, largest area first
+3. keep one that is unmistakably not a palette already in the registry
+
+Then build the working palette from it. It needs a background, a panel, ink, a hairline, a
+muted and a dimmed, plus one accent for the subject and one for the comparison.
+
+The accents are not decoration. They are the two halves of the story. The CPI report's accents
+are a backlit blue and an LED red because the story is a cooling half and a heating half, and
+the palette is the argument before a word is read.
+
+Output: the palette in `tokens.css` and in `playbook/palettes.md`, with the subject it came
+from and the reference image it was picked from.
+
+## 7. Viz
+
+Design a viz that fits the story this data is telling. Not a chart that could be about
+anything with the data dropped in.
+
+The form is chosen from the mechanism in the story, not from the table below. The table is a
+set of answers to questions, not a shopping list.
 
 | Question | Form |
 |---|---|
@@ -75,23 +112,24 @@ Pick the form from the question, not from the engine.
 | between things | flow |
 | inside something | cutaway |
 
-3D only when depth, count or motion carries meaning. A flat chart that is precise beats a cube field that is pretty.
+A sorted bar chart in 3D is a sorted bar chart with worse labels and a heavier download. A
+line in 3D is a line. If the section's claim can be made by reading the flat version, draw the
+flat version and spend the effort on the sentence.
+
+The test is what moves. In one sentence, say what moves in the scene and what that shows. If
+nothing moves, it is a chart. If the reader cannot say what the motion demonstrates, it is
+decoration.
+
+3D only when depth, count or motion carries meaning. A flat chart that is precise beats a cube
+field that is pretty.
 
 Output: one scene per section in `sections.md`: the claim, the mechanism, the shot, and why not a
-chart. The drawn sketch is the mock at stage 8.
+chart. The drawn sketch is the mock at stage 9.
 
-## 7. Design
+## 8. Design
 
-After the viz, never before. Colour, type and motion all carry meaning, and all three should be decided once the shapes are known.
-
-### Colour
-
-- one accent for the subject
-- one second colour for the comparison
-- grey for context
-- background, ink, hairline
-
-Pick from the subject. A page about household money and a page about road deaths should not share a palette. Avoid the default dark navy plus coral unless the subject earns it.
+After the viz, never before. Type and motion carry meaning, and both should be decided once the
+shapes are known. The colour was decided at stage 6 and does not change here.
 
 ### Type
 
@@ -115,9 +153,9 @@ Rules:
 - motion explains a change or it does not happen
 - `prefers-reduced-motion` respected, and the page still reads
 
-Output: `tokens.css` with colour, type scale, spacing and motion. One file, shared by every page, so a set of pages reads as a family without looking identical.
+Output: `tokens.css` with colour, type scale, spacing and motion. One file, shared by every page, so a set of pages reads as a family without looking identical. The colour inside it is the one from stage 6 and is not the same one another report used.
 
-## 8. Mock
+## 9. Mock
 
 One page per section, 1440x900, static. The claim in the real display face, the number in the real mono, the sketch, the palette, the caption. Export as a single PDF.
 
@@ -125,7 +163,7 @@ One page per section, 1440x900, static. The claim in the real display face, the 
 
 Output: `mock.pdf`
 
-## 9. Build
+## 10. Build
 
 Text first. Every number in HTML, every claim in a heading. Then the scene on top.
 
@@ -136,16 +174,19 @@ Text first. Every number in HTML, every claim in a heading. Then the scene on to
 
 Output: `<slug>/index.html`, `<slug>/scene.js`, `<slug>/data.json`
 
-## 10. QA
+## 11. QA
 
 **Gate 4.**
 
 - every figure on the page diffed against `numbers.csv`
+- every figure on the page also matched backwards against `numbers.csv`, so no number on the page is unaccounted for
 - screenshots, desktop and 390px phone, every section and every view
-- no label overlaps, nothing clipped at the edge
+- the palette is the one in `playbook/palettes.md` and not one already used by another report
+- no label overlaps, nothing clipped at the edge, every label readable against whatever it sits on
 - loads under 1.5s on 4G, scene under 200kb gzipped
 - keyboard reachable, reduced motion respected
 - no-JS render checked
+- the voice-over played once and listened to, every proper noun heard and confirmed intelligible
 
 Output: `qa.md` with the screenshots.
 
@@ -158,5 +199,7 @@ Publish, add to the index, log the change. The `numbers.csv` and `sections.md` a
 ## Why the gates matter
 
 Gate 1 stops invented numbers. Gate 2 stops the samey page. Gate 3 stops building the wrong thing. Gate 4 stops shipping a wrong figure.
+
+Stage 6 stops the second page looking like the first. It is not a gate because it is cheap to check: the registry is a table, and a palette that is already in it is visible from across the room.
 
 Everything else in this pipeline is recoverable. Those four are not.

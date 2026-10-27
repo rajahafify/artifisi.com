@@ -55,9 +55,10 @@
 | `raw/malaysia-cpi/numbers.csv` | The figure register for the CPI report. 115 rows, one per figure on the page, each with the series, row key and field it came from | ingested | 2026-10-27 | features |
 | `raw/malaysia-cpi/shots.json` | The shot list for the CPI short: six shots and an end card, 1080x1920 portrait, theme `cpi` | ingested | 2026-10-27 | known-issues |
 | `raw/malaysia-cpi/storyboard/` | One 1080x1920 frame per shot for the CPI short, rendered from the live page | ingested | 2026-10-27 | known-issues |
-| `raw/malaysia-cpi/video/` | The Malaysia CPI short, 59.26 seconds, 1080x1920. The video file itself is local, not tracked | ingested | 2026-10-27 | known-issues |
+| `raw/malaysia-cpi/video/` | The Malaysia CPI short, 58.10 seconds, 1080x1920. The video file itself is local, not tracked | ingested | 2026-10-27 | known-issues |
 | `open.dosm.gov.my/data-catalogue` | The DOSM open data catalogue. The dataset pages carry the field descriptions and the division code map, and the API returns a bare JSON array of rows | ingested | 2026-10-27 | contradictions |
 | `playbook/sales/` | Rate card, services agreement, outreach copy | ingested | 2026-10-26 | features |
+| `playbook/palettes.md` | The palette registry and the method for picking one. Stage 6 of the pipeline | ingested | 2026-10-27 | decisions, known-issues |
 
 ## Pending Ingestion
 
@@ -66,7 +67,7 @@
 - `.kamal/hooks/*.sample` — Hook templates (not yet customized)
 - `raw/projects/Orbwalker/Orbwalker.pdf` full text/content comparison (blocked by image-based PDF in current extraction path)
 - `reports/` — the reports subdomain has no wiki page. `features.md` and `file-map.md` still describe the removed Rails app.
-- The ten-stage pipeline has no dedicated wiki page; it is currently only in `playbook/pipeline.md`.
+- The eleven-stage pipeline has no dedicated wiki page; it is currently only in `playbook/pipeline.md`.
 
 ## Ingestion Notes
 

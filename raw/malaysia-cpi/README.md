@@ -14,17 +14,17 @@ nothing here is current by default.
 | `source.md` | 2. Acquire | current. Citation block, field shapes, division table, caveats |
 | `story.md` | 4. Analyse | current. Claim, evidence, counterpoint, so-what |
 | `sections.md` | 5. Section | current. Six sections, one claim and one mechanism each |
+| `tokens.css` | 6. Palette | current. The palette, the type scale and the motion tokens |
 | `numbers.csv` | 3. Verify | current. 115 rows, one per figure on the page |
-| `tokens.css` | 7. Design | current. The palette and type scale |
-| `qa.md` | 10. QA | current. The figure diff, the render checks and the known gaps |
-| `qa/` | 10. QA | current. Desktop, phone, no-JS screenshots and the rendered page text |
-| `shots.json` | video 3. Shots | current. Six shots and an end card, 1080x1920 portrait |
+| `qa.md` | 11. QA | current. The figure diff, the palette audit and the known gaps |
+| `qa/` | 11. QA | current. Desktop, phone, no-JS screenshots, page text, video frames |
+| `shots.json` | video 3. Shots | current. Six shots and an end card, in the film's own order |
 | `storyboard/` | video 4. Storyboard | current. One 1080x1920 frame per shot, from the live page |
 | `storyboard/storyboard.png` | video 4. Storyboard | current. The contact sheet |
-| `vo/script.txt` | video 5. Script | current. Seven voice lines, `l01|text` |
+| `vo/script.txt` | video 5. Script | current. Seven voice lines, `l01\|text` |
 | `vo/dur.json` | video 6. Voice-over | current. Per line durations. These set the shot lengths |
 | `vo/*.mp3` | video 6. Voice-over | the recorded lines, tail silence trimmed. Local, not tracked |
-| `video/out.mp4` | video 7. Video | 59.26 seconds, 1080x1920, 30fps. Local, not tracked |
+| `video/out.mp4` | video 7. Video | 58.10 seconds, 1080x1920, 30fps. Local, not tracked |
 | `video/clips/` | video 7. Video | the per shot captures. Local, not tracked |
 | `video/clips.json` | video 7. Video | current. What was captured and how long |
 | `video/tmp/` | video 7. Video | the ffmpeg working files. Local, not tracked |
@@ -43,6 +43,40 @@ then the spread between states, then the split between city and countryside.
 The page also never says how much any division *contributed* to the headline, because these
 datasets do not publish the basket weights. It says what each division did, never what it
 caused.
+
+## The palette is a fuel price board at night
+
+The palette is not the house style. It was picked by searching for the subject — a fuel price
+board at night — and reading the dominant colours off the best photographs, then building the
+working palette from them. The ground is a near-black panel, the ink is illuminated acrylic
+white, and the two accents are a backlit blue and an LED red, which are the cooling half and
+the heating half of the story.
+
+The first build reused the wages report's warm cream and was wrong. `playbook/pipeline.md`
+now has a palette stage before the viz, and `playbook/palettes.md` is the registry of what has
+been used, so the next report cannot do the same thing.
+
+## The film is not the page in order
+
+The page runs `column → ladder → path → drum → dots → split`. The film runs
+`path → ladder → drum → dots → split → column`: the surface, the fracture, the cause, the
+spread, the uneven landing, and the level. It opens on the flat line and closes on the price
+level.
+
+A page is scrolled and a film is watched, so they do not have the same shape. The captions in
+`shots.json` are the film's own argument, not the page's section headings, and each shot
+records the `beat` it plays.
+
+## The voice never says a word it cannot say
+
+Every recorded line was played and judged on the audio. Five defects were found that way, and
+none of them would have shown up in a transcript: "Negeri Sembilan" came out as
+"NED-jree SEM-bih-luhn", "RON 95" came out as the single word "run", "headline" came out as
+"hate line", and two lines ended on a number with no unit.
+
+The fix is the same rule the pipeline already had for "Artifisi". The place names are out of
+the voice and stay on screen and in the caption, and the fuel grade is spoken as "ninety five
+octane petrol", which is intelligible and means the same thing.
 
 ## Core is not "fuel minus non-fuel"
 

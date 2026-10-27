@@ -1,7 +1,7 @@
 :root{
-  --paper:#f3f0e9; --paper-2:#eae5da; --ink:#1c1e24; --muted:#6a6d75; --rule:#d6d1c4;
-  --ctx:#a7a49a; --shade:#e3ded2;
-  --cool:#26557f; --warm:#bd5320;
+  --paper:#0e1114; --paper-2:#161a20; --ink:#e9edf2; --muted:#9aa5b2; --rule:#2b323b;
+  --ctx:#78828e; --shade:#1c2128;
+  --cool:#2e86de; --warm:#e8452c;
   --display:"Space Grotesk","Helvetica Neue",Arial,sans-serif;
   --text:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
   --mono:"IBM Plex Mono",Menlo,Consolas,monospace;
