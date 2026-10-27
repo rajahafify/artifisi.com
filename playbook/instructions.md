@@ -183,7 +183,7 @@ reports/<slug>/
 
 Plus `raw/<slug>/qa.md` with the figure diff, the screenshots, the weight table and the known gaps.
 
-The working folder beside it holds the film: `shots.json` (the shot list, the input to every tool), `vo/script.txt` and `vo/dur.json` (the voice-over and the durations that set the shot lengths), and `storyboard/` (one frame per shot plus the contact sheet). The video and the recorded voice tracks are not tracked; those four rebuild the file in about three minutes.
+The working folder beside it holds the film: `shots.json` (the shot list, the input to every tool), `vo/script.txt`, `vo/dur.json` and `vo/words.json` (the voice-over, the durations that set the shot lengths, and the timing of every word), and `storyboard/` (one frame per shot plus the contact sheet). The video and the recorded voice tracks are not tracked; those four rebuild the file in about three minutes.
 
 Two switches matter for capture and QA:
 
@@ -220,8 +220,10 @@ The full pipeline is `video.md`. This is the working detail for its stages 5 to 
 - `shots.json` is the shot list and it is the input to every tool. `storyboard.js`, `record-video.js` and `mux.py` all read it. Nothing about a report is hardcoded in a tool
 - a shot is a scene or a card. A card is a full-frame typographic plate the recorder builds, and it is where the opening premise and the closing implication live
 - the voice-over goes in `script.txt` (`l01|text`), one line per shot, in shot order
-- record with `python voice.py <vo dir> --force`. It speaks each line with `edge-tts` (`en-SG-LunaNeural`, rate `-3%`), trims the trailing silence off each one, and writes `dur.json`, which is what sets the shot lengths
-- record and mux with `node record-video.js <page folder> <shots.json> <vo dir> <video dir>` then `python mux.py <video dir> <vo dir> out.mp4 <shots.json>`
+- record with `python voice.py <vo dir> --force`. It speaks each line with `edge-tts` (`en-SG-LunaNeural`, rate `-3%`), cuts the trailing silence off each one, cuts each pause between sentences back to a breath, and writes `dur.json`, which is what sets the shot lengths, and `words.json`, which is what lets a chart show a number when the voice says it
+- record and mux with `node record-video.js <page folder> <shots.json> <vo dir> <video dir>` then `python mux.py <video dir> <vo dir> out.mp4 <shots.json>`. The recorder captures the frames one at a time, so the first frame of a clip is the first frame of the shot
+- a scene can ask for a moment in the voice: `T.at("four ringgit eighteen", 0.6)` is the moment the voice says that phrase, and the second argument is the fraction the page uses when there is no voice. Write the phrase the way it is spoken, and make sure it is unique in its line
+- a card's parts and a shot's captions work the same way. A caption is a list of phrases, each with a cue, and the band changes as the voice moves
 - pull 8 to 10 frames and check them, then listen to the whole thing once
 - a figure has to be checked at the video's aspect as well as the page's. A label can be fine on the page and clipped in the 9:16 frame
 

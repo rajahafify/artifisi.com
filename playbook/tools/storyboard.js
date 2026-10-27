@@ -56,16 +56,23 @@ function dataUri(file) {
       // does, and waits for the reveal to finish so the frame is the finished card.
       await openShot(p, 'http://x/index.html', 800);
       await p.addStyleTag({ content: OVERLAY_CSS });
-      await p.evaluate(({ html, num }) => {
+      await p.evaluate(({ html, num, layout }) => {
         const el = document.createElement('div');
-        el.className = 'vb-card';
+        el.className = 'vb-card' + (layout ? ' ' + layout : '');
         el.innerHTML = html;
         document.body.append(el);
         const n = document.createElement('div');
         n.className = 'vb-num'; n.textContent = num;
         document.body.append(n);
-      }, { html: cardHTML(s.card), num: `${i + 1} / ${total}` });
-      await p.waitForTimeout(3800);
+        // The storyboard is the finished card, so the reveal is run to its end rather
+        // than waited for. The parts arrive on the voice, and the voice may not have
+        // finished when the frame is taken.
+        el.getAnimations({ subtree: true }).forEach((a) => {
+          a.pause();
+          a.currentTime = 20000;
+        });
+      }, { html: cardHTML(s.card, {}), num: `${i + 1} / ${total}`, layout: s.card.layout || '' });
+      await p.waitForTimeout(200);
     } else {
       await openShot(p, `http://x/index.html?shot=${s.scene}&t=${s.t}`);
       await p.addStyleTag({ content: OVERLAY_CSS });
@@ -87,7 +94,8 @@ function dataUri(file) {
           n.className = 'vb-num'; n.textContent = num;
           document.body.append(n);
         }
-      }, { cap: s.caption, kick: shots.kicker || '', num: `${i + 1} / ${total}` });
+      }, { cap: s.captions && s.captions.length ? s.captions[s.captions.length - 1].text : s.caption,
+             kick: shots.kicker || '', num: `${i + 1} / ${total}` });
       await p.waitForTimeout(300);
     }
     const file = path.join(outDir, `${s.id}.png`);

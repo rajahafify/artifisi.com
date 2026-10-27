@@ -86,26 +86,20 @@ function overlayCSS(theme) {
   .vb-cap { position: fixed; left: 8.33vw; right: 8.33vw; top: 87.6vh; z-index: 6;
     font: 600 2.78vw/1.35 "IBM Plex Sans", sans-serif; color: ${T.ink}; text-align: left; }
   .vb-card { position: fixed; inset: 0; z-index: 5; background: ${T.paper};
-    display: flex; flex-direction: column; justify-content: center; padding: 8.33vw;
-    opacity: 0; animation: vbfade .7s cubic-bezier(.22,.61,.36,1) .2s forwards; }
-  @keyframes vbfade { to { opacity: 1; } }
+    display: flex; flex-direction: column; justify-content: center; padding: 8.33vw; }
   @keyframes vbup { from { opacity: 0; transform: translateY(2.4vh); } to { opacity: 1; transform: none; } }
   .vb-card .k { position: absolute; left: 8.33vw; top: 5vh;
     font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
     text-transform: uppercase; color: ${T.muted};
-    opacity: 0; animation: vbup .8s cubic-bezier(.22,.61,.36,1) .3s forwards; }
+    opacity: 0; animation: vbup .8s cubic-bezier(.22,.61,.36,1) forwards; }
   .vb-card .claim { font: ${T.displayWeight} 8.6vw/1.05 ${T.display}; letter-spacing: ${T.displayLetter};
     color: ${T.ink}; margin: 0 0 4.4vh; }
   .vb-card .claim span { display: block; opacity: 0;
     animation: vbup .85s cubic-bezier(.22,.61,.36,1) forwards; }
-  .vb-card .claim span:nth-child(1) { animation-delay: .5s; }
-  .vb-card .claim span:nth-child(2) { animation-delay: .85s; color: ${T.accent2}; }
-  .vb-card .claim span:nth-child(3) { animation-delay: 1.2s; }
+  .vb-card .claim span:nth-child(2) { color: ${T.accent2}; }
   .vb-card .figs { display: flex; gap: 6.4vw; border-top: 1px solid ${T.rule}; padding-top: 3vh; }
   .vb-card .fig { flex: 1 1 0; opacity: 0;
     animation: vbup .85s cubic-bezier(.22,.61,.36,1) forwards; }
-  .vb-card .fig:nth-child(1) { animation-delay: 1.5s; }
-  .vb-card .fig:nth-child(2) { animation-delay: 1.85s; }
   .vb-card .fig .n { display: block; font: ${T.displayWeight} 7.6vw/1 ${T.display};
     letter-spacing: ${T.displayLetter}; color: ${T.ink}; }
   .vb-card .fig .l { display: block; font: 500 1.67vw/1.45 "IBM Plex Mono", monospace;
@@ -114,10 +108,16 @@ function overlayCSS(theme) {
   .vb-card .fig.warm .n { color: ${T.accent2}; }
   .vb-card .line { font: 400 2.41vw/1.5 "IBM Plex Sans", sans-serif; color: ${T.muted};
     margin: 3.6vh 0 0; max-width: 24ch; opacity: 0;
-    animation: vbup .9s cubic-bezier(.22,.61,.36,1) 2.35s forwards; }
+    animation: vbup .9s cubic-bezier(.22,.61,.36,1) forwards; }
   .vb-card .note { font: 500 1.67vw/1.5 "IBM Plex Mono", monospace; color: ${T.ctx};
     margin: 2.4vh 0 0; opacity: 0;
-    animation: vbup .9s cubic-bezier(.22,.61,.36,1) 2.7s forwards; }
+    animation: vbup .9s cubic-bezier(.22,.61,.36,1) forwards; }
+  /* A card can put its numbers before its verdict. The voice names the numbers first,
+     so the plate reads in the order the voice reads. */
+  .vb-card.numbers-first .figs { order: 1; }
+  .vb-card.numbers-first .line { order: 2; }
+  .vb-card.numbers-first .claim { order: 3; }
+  .vb-card.numbers-first .note { order: 4; }
   .vb-end { position: fixed; inset: 0; z-index: 10; background: ${T.paper};
     display: flex; flex-direction: column; justify-content: center; padding: 8.33vw; }
   .vb-end .k { font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
@@ -146,18 +146,29 @@ function overlayCSS(theme) {
 // A card is a shot that is not a scene: a full-frame typographic plate, built here and
 // not on the page, because the page is a report and a film needs frames the report does
 // not have. An opening premise and a closing implication.
-function cardHTML(c) {
-  let html = `<p class="k">${c.kicker || ''}</p>`;
+//
+// The card's parts arrive when the voice says them. The times are the moments the page
+// resolved each cue at, in seconds from the start of the shot, and every part carries
+// its own moment as its animation delay. A part with no time falls back to the stagger
+// the card has always used.
+function cardHTML(c, times) {
+  const t = times || {};
+  const at = (part, fallback) => {
+    const v = t[part];
+    return 'animation-delay:' + (v == null ? fallback : v).toFixed(3) + 's;';
+  };
+  let html = `<p class="k" style="${at('kicker', 0.15)}">${c.kicker || ''}</p>`;
   if (c.claim) {
-    html += '<div class="claim">' + c.claim.map((l) => `<span>${l}</span>`).join('') + '</div>';
+    html += '<div class="claim">' + c.claim.map((l, i) =>
+      `<span style="${at('claim' + i, 0.5 + i * 0.35)}">${l}</span>`).join('') + '</div>';
   }
   if (c.figs && c.figs.length) {
-    html += '<div class="figs">' + c.figs.map((f) =>
-      `<div class="fig ${f.tone || ''}"><span class="n">${f.n}</span><span class="l">${f.l}</span></div>`
+    html += '<div class="figs">' + c.figs.map((f, i) =>
+      `<div class="fig ${f.tone || ''}" style="${at('fig' + i, 1.5 + i * 0.35)}"><span class="n">${f.n}</span><span class="l">${f.l}</span></div>`
     ).join('') + '</div>';
   }
-  if (c.line) html += `<p class="line">${c.line}</p>`;
-  if (c.note) html += `<p class="note">${c.note}</p>`;
+  if (c.line) html += `<p class="line" style="${at('line', 2.35)}">${c.line}</p>`;
+  if (c.note) html += `<p class="note" style="${at('note', 2.7)}">${c.note}</p>`;
   return html;
 }
 

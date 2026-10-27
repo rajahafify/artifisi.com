@@ -252,10 +252,9 @@ is 55.6 percent.
 
 ## 6. Voice-over
 
-The recorded audio, and its timings.
+The recorded audio, its timings, and the timing of every word.
 
-Output: `raw/<slug>/vo/l01.mp3` and `raw/<slug>/vo/dur.json`, the two files `record-video.js`
-reads.
+Output: `raw/<slug>/vo/l01.mp3`, `raw/<slug>/vo/dur.json` and `raw/<slug>/vo/words.json`.
 
 ```
 python playbook/tools/voice.py raw/<slug>/vo
@@ -265,17 +264,41 @@ This stage exists because **the audio is what sets the shot lengths**. Once the 
 known, the video can be assembled to the millisecond. Before this stage, every timing in the
 plan is an estimate.
 
+It also exists because **the audio is what the picture follows**. `edge-tts` reports where every
+word starts and where it ends, and those offsets are what let a chart show its number at the
+moment the voice says it. `words.json` keeps them, one list per line, and it is tracked,
+because a film that has to be re-cut has to be re-cut the same way.
+
 Gate: every line recorded, none silent, none clipped, and the total within ten seconds of the
 script's word count estimate. Then play the recording once and listen to it. Every proper noun
 and every technical term has to be heard and confirmed intelligible before the video is cut.
 A transcript is not enough, because a mispronounced name transcribes back to the right word
 while sounding wrong.
 
+### A pause between sentences is a breath, and the padding is not
+
+`edge-tts` pads every sentence with about nine tenths of a second of silence. Trim the tail of
+the line and that padding is still there, between the sentences, and the voice reads as though
+it is being chased. Trim it out entirely and the voice is breathless.
+
+The CPI film was first recorded with `silenceremove=stop_periods=-1`, which removes every silent
+period wherever it is. The result was a voice with no breath between its sentences: seven
+sentences run together with nothing in the gaps. That line measured 6.55 seconds. The same
+words, with a third of a second of air in each gap, measured 7.83.
+
+`voice.py` now cuts each long pause back to a third of a second and **keeps** it, and remaps
+the word offsets onto the trimmed file, because the offsets `edge-tts` reports are true of the
+audio it sent and not of the file on disk. The film got two and a half seconds longer and
+sounds like a person.
+
+The trimming rule in general: **cut the tail, never the head.** A cut anywhere but the end
+moves every word that comes after it, and the offsets have to move with it.
+
 ## 7. Video
 
 The assembly.
 
-Output: `raw/<slug>/video/clips/<id>.webm`, `raw/<slug>/video/clips.json` and
+Output: `raw/<slug>/video/clips/<id>.mp4`, `raw/<slug>/video/clips.json` and
 `raw/<slug>/video/out.mp4`.
 
 ```
@@ -283,7 +306,33 @@ node   playbook/tools/record-video.js reports/<slug> raw/<slug>/shots.json raw/<
 python playbook/tools/mux.py raw/<slug>/video raw/<slug>/vo raw/<slug>/video/out.mp4 raw/<slug>/shots.json
 ```
 
-The recorder walks the shot list, the voice-over is laid over it, the end card closes.
+The recorder walks the shot list, takes the frames, and the voice-over is laid over them. The
+end card closes.
+
+### The film is captured frame by frame, not recorded
+
+This is the one piece of machinery that had to be rewritten from scratch, and it was rewritten
+because a screencast could not be made to line up with the audio.
+
+A screencast has to be trimmed from the end, because the browser's clock and the film's clock
+drift apart and the tail of the recording is where the flush lands. So a clip cut from the end
+**begins after the shot has already started**. Measured on the CPI film: the first second of
+every chart's animation was missing and the last second was a frozen frame, in every shot,
+and nobody noticed, because a chart that starts ten percent in still looks like a chart.
+
+The fix is to stop recording and start asking. Every scene is a function of `t`, so the
+recorder seeks it to the frame it wants and photographs it. Every frame is asked for at the
+time it belongs, so the first frame of a clip is the first frame of the shot, the last frame is
+the last frame, and the voice lands on the word it names.
+
+The cost was the reason this was not done the first time. The old playbook said a frame by
+frame render is too slow: "57 seconds at 30fps is 1700 screenshots and swiftshader is slow".
+Measured, it is **67 milliseconds a frame**, so the whole film takes under two minutes. The
+screencast was not faster. It was just wrong, and the wrongness cost a second of every shot.
+
+A card is not a scene, so it is not captured like one. Its reveal is a CSS animation, so the
+recorder pauses the animation and moves it to the frame's own time with the Web Animations
+API. The same handles the wall behind the end card.
 
 Gate: watch the whole thing once. Then pull eight to ten frames and check them. A mux that
 succeeds can still produce a video with the audio half a second out.
@@ -307,11 +356,57 @@ furniture of the film does not change when the shot does.
 
 ### The page runs at one second, the video runs at the length of the words
 
-The page's scenes play in one second. The video stretches the same scene over its whole shot
-with `?dur=<ms>`, so the choreography plays out across nine seconds instead of one. The page
-and the video are deliberately at different rates. The scene's internal timings are all in
-normalised `t`, so changing the duration stretches the choreography proportionally and nothing
-breaks.
+The page's scenes play in one second. The video plays the same scene over its whole shot, and
+the scene's internal timings are all in normalised `t`, so the choreography plays out across
+nine seconds instead of one. The page and the video are deliberately at different rates.
+
+What the video does with `t` is the point of the next section.
+
+---
+
+## The picture follows the voice
+
+A film where the chart finishes its animation while the voice is still on the first clause is a
+recording with a chart in it. The chart has to be **on the word**.
+
+`edge-tts` gives the timing of every word, so the chart can be told which word it belongs to.
+The report's scene code asks for a phrase and gets a moment:
+
+```js
+const aLevel = T.at("Thirty seven point six percent", 0.12);
+const aBody = T.end("Thirty seven point six percent", 0.42);
+```
+
+`T.at` is the moment the phrase starts and `T.end` the moment it is finished. The second
+argument is the fraction the scene has always used, and **it is not a fallback, it is the
+page's own timing**. The page has no voice, so it plays the scene exactly as it always has;
+the film has a voice, so the same scene plays when the voice says the thing.
+
+That is the whole trick, and it is worth the trouble: **one scene, two clocks, one set of
+numbers.** A page reader and a film viewer are looking at the same chart, and the only
+difference is when the pieces of it arrive.
+
+Three rules for writing a cue:
+
+- **A cue is a phrase from the voice line, written the way it is spoken.** "four ringgit
+  eighteen", not "RM4.18". The matcher compares the letters that carry sound, so a cue with
+  different numerals still finds its word.
+- **A cue has to be unique in its line.** "one point eight percent" appears twice in the CPI
+  path line and matches the first one. "percent now" matches the second.
+- **Every cue has to hit.** The page keeps a list of the cues it could not find, and a cue that
+  misses falls back to the page's fraction, which is a silent failure. Check the list.
+
+The cards work the same way. A card's parts each name a cue and arrive when the voice says
+them, so the premise card's two lines land on "Inflation eased" and "Fuel did not" instead of
+on a fixed stagger. A card can also change its layout, so the leads card puts its two numbers
+before its verdict, because the voice names the numbers first.
+
+And the caption band works the same way again, one level down: the caption is a phrase, and
+each phrase names a cue.
+
+**A card is not a page.** A card's plate is opaque from the first frame, because a plate that
+fades in shows the page behind it, and the page behind a card is a report the film has already
+left.
 
 ---
 
@@ -321,15 +416,32 @@ Five habits, taken from watching short video that holds attention, and all five 
 the first CPI film did not have.
 
 **The caption is the script, not a subtitle.** In a good short, the burned-in caption at the
-bottom is the narration itself, three or four words at a time, changing about once a second.
-Read in order the captions are the whole video. Turn the sound off and you have lost the
-voice, not the argument. Our film held one static line at the bottom of the frame for the
-whole eight seconds, which is a title, not a caption.
+bottom is the narration itself, changing as the voice moves. Read in order the captions are
+the whole video. Turn the sound off and you have lost the voice, not the argument. Our film
+held one static line at the bottom of the frame for the whole eight seconds, which is a title,
+not a caption.
 
-The timings for this are free and we are throwing them away. `edge-tts` emits a WordBoundary
+The timings for this are free and we were throwing them away. `edge-tts` emits a WordBoundary
 event for every word it speaks, with the word's offset in the audio. `voice.py` records the
-audio and discards those events. It should write them out, and the recorder should burn the
-caption from them, one phrase at a time, timed to the voice.
+audio and discarded those events. It writes them out now, and the recorder burns the caption
+from them, one phrase at a time, timed to the voice.
+
+**But not the narration itself.** The script spells every figure out, because the voice reads
+digits as digits, so a caption taken straight from the voice says "one point eight percent"
+where a reader wants "1.8%". So the caption is written separately, in the numerals a reader
+wants, and each phrase is pinned to a cue in the voice:
+
+```json
+"captions": [
+  { "cue": "four ringgit eighteen", "text": "RON95 averaged RM4.18." },
+  { "cue": "up fifty nine point seven percent", "text": "Up 59.7% since December." }
+]
+```
+
+The voice says the number and the caption says the number, in the two forms each of them
+wants, and they arrive together. A shot with timed captions starts with an empty band: the
+static line is never the first thing in it, or the band shows a sentence the voice is not
+saying for a frame.
 
 **The first frame carries a proof, not a promise.** The strongest openers do not describe what
 is coming. They put the finished thing in the first frame. "I didn't edit a single second of
@@ -357,7 +469,7 @@ A small vocabulary of devices, reused, so the fourth idea arrives in a shape the
 already recognises. And the payoff is shown, not claimed: the reel says "watch" and then
 plays the thing, instead of telling you it works.
 
-## Four traps
+## Six traps
 
 **A cold open is a trap.** The CPI film's first version opened straight on the 36 month line.
 It was correct, it was the baseline, and it was invisible: the frame carried no claim, so the
@@ -371,16 +483,37 @@ the top left corner with the rest of the frame empty. The capture viewport there
 be the frame size, 1080x1920, at device scale one. `frameContext()` in `playbook/tools/browser.js`
 is the one place that knows this, and both the storyboard and the recorder use it.
 
-**edge-tts pads every line with about a second of silence.** Left in, that padding is dead air
-and it pushes the runtime past the target on its own: seven lines added six and a half seconds
-to a 57 second video. `voice.py` trims the tail as it writes, so `dur.json` holds the length
-of what is actually spoken.
+**edge-tts pads every sentence, not just the line.** The tail of the line is padded with about
+a second of silence, and left in it is dead air that pushes the runtime past the target on its
+own. But the gap between two sentences is padded with about nine tenths of a second too, and
+that one is not obvious: the line still plays, still sounds fine in isolation, and reads as
+though it is being chased. `voice.py` cuts the tail and cuts each long pause back to a breath,
+and remaps the word offsets onto the trimmed file, because a cut anywhere but the end moves
+every word that comes after it.
+
+**A screencast cannot be lined up with the audio.** The recorder used to record the page and
+trim the recording from the end, because the browser's clock and the film's clock drift apart
+and the tail is where the flush lands. So every shot began about a second after it had
+actually started and held a frozen frame at the end, and the charts all looked fine. Capture
+the frames instead: ask for each one at the time it belongs.
 
 **A camera sweep needs room.** The city scene orbits the camera. On the page's wide canvas
 the block stays in frame; in a narrow portrait canvas it walks out of the left edge and the
 building is cut in half. The scene now scales its sweep to the aspect it has, so the page's
 wide figure gets the full sweep and a narrow canvas gets what it can hold. The same fix
 belongs to any scene that moves the camera after it fits.
+
+**A storyboard PNG is not evidence of a code change.** The scene's labels are DOM elements
+sitting over the canvas, and the browser rasterises their text a little differently from one
+capture session to the next. A re-rendered storyboard therefore differs from the committed one
+by a few hundred antialiased pixels in every label row, with the glyphs in the same place, even
+when the code has not moved. The CPI ladder's fourteen division names changed by exactly that
+much when the scene was re-rendered for the voice work, and the value labels beside them did not
+change at all, which is the tell: a scene that actually changed moves the chart and the labels
+together, and a change in rasterisation moves only the type. Do not settle this by diffing a
+fresh render against a PNG that was made weeks ago. Render the old code and the new code in the
+same session and compare those, and if the old code does not reproduce its own committed PNG
+either, the PNG was never the evidence.
 
 ---
 
@@ -393,9 +526,10 @@ raw/<slug>/storyboard.png     contact sheet, for review
 
 raw/<slug>/vo/script.txt      l01|text, one line per voice line
 raw/<slug>/vo/dur.json        per line durations in seconds
+raw/<slug>/vo/words.json      per line word offsets, and the sentences they make
 raw/<slug>/vo/l01.mp3         the audio, local, not tracked
 
-raw/<slug>/video/clips/*.webm the per shot captures, local, not tracked
+raw/<slug>/video/clips/*.mp4  the per shot captures, local, not tracked
 raw/<slug>/video/clips.json   what was captured and how long
 raw/<slug>/video/out.mp4      the video, local, not tracked
 ```
@@ -418,9 +552,9 @@ The storyboard PNGs stay tracked, so the shots can be reviewed without running a
 ```
 playbook/tools/browser.js        route handler, overlay CSS, the capture context
 playbook/tools/storyboard.js     frames plus contact sheet
-playbook/tools/record-video.js   one clip per shot
-playbook/tools/voice.py          edge-tts, trimmed, measured
-playbook/tools/mux.py            trim, concatenate, lay the voice over
+playbook/tools/record-video.js   one clip per shot, captured frame by frame
+playbook/tools/voice.py          edge-tts, trimmed, measured, timed to the word
+playbook/tools/mux.py            concatenate, lay the voice over
 playbook/tools/package.json      playwright and three
 ```
 
@@ -428,9 +562,11 @@ playbook/tools/package.json      playwright and three
 `three` is served from a local unpacked build, pointed at by the `THREE` environment
 variable, so a run cannot quietly depend on the network.
 
-Capture stays a screen recording rather than a frame-by-frame render, because 57 seconds at
-30fps is 1700 screenshots and swiftshader is slow. The scenes are deterministic functions of
-`t`, so `__seek` still gives exact frames for the storyboard stills.
+Capture is a frame by frame render, not a screen recording. This used to be the other way
+round, on the grounds that "57 seconds at 30fps is 1700 screenshots and swiftshader is slow".
+Measured, a frame is 67 milliseconds, so the whole film is under two minutes, and the frame by
+frame render is the only way to put a frame at a known time. The scenes are deterministic
+functions of `t`, so `__seek` gives exact frames for the storyboard stills as well.
 
 ## Open
 
