@@ -132,6 +132,9 @@ let particles = [];
 // drawer: slides up from the bottom and pushes the page up with it
 const D0 = 196, DH = H - D0, PUSH = 370;
 let pk = 0, pkTarget = 0, pull = 0, pullHeld = false, contentBottom = 552;
+// while typing, the drawer rises to the top so the results sit above the phone keyboard
+const LIFT = D0 - 14;
+let lift = 0;
 
 // ---------- canvas ----------
 const cv = document.getElementById('game'), ctx = cv.getContext('2d');
@@ -145,6 +148,13 @@ function resize() {
   ox = (r.width - W * scale) / 2; oy = (r.height - H * scale) / 2;
 }
 addEventListener('resize', resize);
+if (window.visualViewport) visualViewport.addEventListener('resize', resize);
+// Bottom of the visible area in game units. The keyboard shrinks the visual viewport on phones that overlay it.
+function visibleBottom() {
+  const vv = window.visualViewport; if (!vv) return H;
+  const r = cv.getBoundingClientRect();
+  return clamp((vv.offsetTop + vv.height - r.top - oy) / scale, 120, H);
+}
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const k01 = (t0, dur) => clamp((now - t0) / dur, 0, 1);
@@ -199,7 +209,7 @@ function button(id, x, y, w, h, fill, label, font, color, fn, shine) {
 // ---------- input ----------
 function toLogical(e) { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left - ox) / scale, y: (e.clientY - r.top - oy) / scale }; }
 let down = null;
-const drawerY = () => D0 + (1 - pk) * DH + pull;
+const drawerY = () => D0 + (1 - pk) * DH + pull - lift * LIFT;
 function zoneAt(p) {
   if (screen === 'puzzle' && pkTarget === 1 && pk > 0.6) {
     const dy = drawerY();
@@ -247,6 +257,8 @@ cv.addEventListener('wheel', e => { const p = toLogical(e); let z = zoneAt(p); i
 addEventListener('keydown', e => { if (e.key === 'Escape' && pkTarget === 1) closePicker(); });
 qi.addEventListener('input', () => { query = qi.value; scroll.picker = 0; });
 qi.addEventListener('keydown', e => { if (e.key === 'Enter') qi.blur(); });
+// some phones pan the page to show the focused field; the game never scrolls, so put it back
+qi.addEventListener('focus', () => setTimeout(() => scrollTo(0, 0), 60));
 
 // ---------- flow ----------
 const sur = n => SURAHS[n - 1];
@@ -514,9 +526,9 @@ function drawDrawer() {
   if (query) { const qs = fit(query, F.sans(16, 500), 270); text(qs, 56, sy + 26, F.sans(16, 500), C.ink); if (caret) { ctx.font = F.sans(16, 500); ctx.fillStyle = C.ink; ctx.fillRect(57 + ctx.measureText(qs).width, sy + 11, 1.5, 19); } }
   else { text(t('search'), 56, sy + 26, F.sans(15, 400), C.muted); if (caret) { ctx.fillStyle = C.ink; ctx.fillRect(55, sy + 11, 1.5, 19); } }
   if (active) { placeInput(16, sy, 328, 40); hit(16, sy, 328, 40, () => qi.focus(), null, 'search'); } else qi.style.left = '-200px';
-  const top = sy + 46, list = filtered(), st = prog[cur.id], rowH = 54;
-  ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, H - top); ctx.clip();
-  maxScroll.picker = Math.max(0, list.length * rowH - (H - (D0 + 104)) + 20);
+  const top = sy + 46, list = filtered(), st = prog[cur.id], rowH = 54, bottom = Math.max(top + rowH, visibleBottom());
+  ctx.save(); ctx.beginPath(); ctx.rect(0, top, W, bottom - top); ctx.clip();
+  maxScroll.picker = Math.max(0, list.length * rowH - (bottom - top) + 20);
   scroll.picker = clamp(scroll.picker, 0, maxScroll.picker);
   const first = Math.max(0, Math.floor(scroll.picker / rowH) - 1);
   for (let i = first; i < Math.min(list.length, first + 14); i++) {
@@ -535,7 +547,7 @@ function drawDrawer() {
       text(s[4], 340, y + 35, F.ar(22, 700), C.ink, 'right');
       ctx.globalAlpha = 1;
     });
-    if (!used && active) hit(0, y, W, rowH, () => { vib(10); guess(s[0]); }, [top, H], rid);
+    if (!used && active) hit(0, y, W, rowH, () => { vib(10); guess(s[0]); }, [top, bottom], rid);
   }
   if (!list.length) text(t('noResult'), W / 2, top + 40, F.sans(15, 500), C.ink2, 'center');
   ctx.restore();
@@ -634,6 +646,7 @@ function drawScreen(name) {
 function frame(ts) {
   now = ts; dt = Math.min(0.05, last ? (ts - last) / 1000 : 0.016); last = ts;
   pk += (pkTarget - pk) * Math.min(1, dt * (reduce ? 60 : 11));
+  lift += ((pkTarget === 1 && document.activeElement === qi ? 1 : 0) - lift) * Math.min(1, dt * (reduce ? 60 : 12));
   if (!pullHeld && pull > 0) { pull *= Math.pow(0.0005, dt); if (pull < 0.5) pull = 0; }
   for (const z in fling) { if (Math.abs(fling[z]) > 5 && !down) { scroll[z] = clamp(scroll[z] + fling[z] * dt, 0, maxScroll[z]); fling[z] *= Math.pow(0.04, dt); if (z === 'puzzle') autoScroll = false; } else if (!down) fling[z] = 0; }
   if (pendingResult && now >= pendingResult) { pendingResult = 0; if (screen === 'puzzle') go('result', 1); }
