@@ -4,7 +4,7 @@ The pitch to ikhlas.com for a games channel inside their app. One static folder,
 
 ```
 ikhlas-proposal/
-  index.html                13 slides at 1920x1080, scaled to the page width on screen
+  index.html                14 slides at 1920x1080, scaled to the page width on screen
   game/teka-surah.html      the Teka Surah demo, playable on slide 6 and full screen
   assets/                   Bazaar Basra mockup, Teka Surah screenshot used in print
   ikhlas-games-pitch.pdf    the same slides as a PDF, one slide per page
