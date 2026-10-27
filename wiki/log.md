@@ -1022,3 +1022,20 @@ Notes:
 Verification:
 - code checked: yes. Every cue's fallback fraction was read against the constant it replaced and all of them match, which is why the page did not move.
 - human reviewed: no
+
+## [2026-10-27] change | Make the reports front door a library of infographics, and leave one way to get in touch
+
+Source: `reports/index.html`, `reports/og.png`, `reports/README.md`, `playbook/instructions.md`, `playbook/sales/README.md`
+Changes:
+- rewrote the front door at reports.artifisi.com: the sales sections are gone and the page is now a library of published reports, a short section on how the pages are made, and a contact form
+- every card in the library now names its dataset, the period and what is inside the report, so a reader can tell what they are about to open before they open it
+- the enquiry form is now a general contact form: the same Formspree endpoint, a new subject line, a topic field and an optional link to a report or dataset
+- retaken the share image, which was a screenshot of a page that had stopped existing
+- updated the three docs that pointed at the sales front door, and recorded the change in the wiki
+Notes:
+- **The front door was selling a service the main site does not sell.** The main site is the AI and games company. The custom report service was sold only from reports.artifisi.com, so removing the sales sections leaves no public page for that service. The rate card and the contract still describe it, and enquiries still arrive through the contact form, so nothing is lost operationally, but if the service is still being sold it needs a page of its own somewhere.
+- **One price list, not two.** The price list was duplicated in the rate card and on the front door, with nothing enforcing that the two matched. Removing the front door's copy settled that known issue by removing the second copy rather than by adding a check.
+- The share image was the only artefact on the site describing a page that no longer existed, which is what made it worth retaking rather than leaving to a later pass.
+Verification:
+- code checked: yes. Rendered in Chromium at 1200x900, 1200x630 and 390x844. Four sections, no broken in-page anchors, the form posts to https://formspree.io/f/xeaaobag with _next back to #sent, and no console errors.
+- human reviewed: no

@@ -20,8 +20,9 @@ Questions that arose during codebase ingestion that could not be answered from a
 ### Should the services agreement match the rate card on video length?
 
 - **Status**: Unresolved as of 2026-10-27.
-- **Context**: `playbook/sales/rate-card.md` and `reports/index.html` now say the videos run "up to 60 seconds", which is what the pipeline produces. `playbook/sales/services-agreement.md` still commits to "[n] vertical videos, 40 to 55 seconds, captioned".
+- **Context**: `playbook/sales/rate-card.md` says the videos run "up to 60 seconds", which is what the pipeline produces. `playbook/sales/services-agreement.md` still commits to "[n] vertical videos, 40 to 55 seconds, captioned". The front door used to be a third copy of the promise; it stopped being a sales page on 2026-10-27 and says nothing about videos now.
 - **Needs verification**: The owner's call. It is a contract template, so it was not changed on the CPI branch.
+- **Also open**: with the sales sections gone from the front door, there is no public page that sells the custom report service. The rate card and the agreement still describe it, and enquiries arrive through the general contact form. Whether the service needs a page of its own is the owner's call.
 
 ### What is the `lexxy` gem used for?
 

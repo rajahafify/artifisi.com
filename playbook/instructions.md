@@ -231,7 +231,7 @@ The full pipeline is `video.md`. This is the working detail for its stages 5 to 
 
 - `reports/` is its own Cloudflare Pages project: build command `exit 0`, output directory `reports`, custom domain `reports.artifisi.com`, CNAME `reports` to `reports.pages.dev`.
 - The main site keeps `/samples/*` as a 301 to `reports.artifisi.com/samples/:splat`.
-- Custom work is sold from `reports/index.html`, with a Formspree form. Prices there and in `playbook/sales/rate-card.md` must match.
+- `reports/index.html` is the front door at reports.artifisi.com: a library of the published reports, with a general contact form. It does not carry prices. The prices live in `playbook/sales/rate-card.md`, and the enquiry form posts to the same Formspree form as the main site.
 - never commit straight to `main`. Branch, push, open a PR, and merge with a merge commit. Never squash and never rebase-merge, because the branch is the record of what was tried
 - **fetch and rebase onto `origin/main` immediately before merging.** The CPI film branch was based on a main that was two commits behind, and the `ikhlas-proposal` Pages check failed on the branch because the project had no root directory in a tree that did not have the folder yet. The rebase fixed it, and the check passed
 - a check that appears on your branch and on nothing else is usually a stale base, not your change. Rebase, and read it again

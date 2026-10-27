@@ -49,7 +49,7 @@
 - **Stack**: Astro static site, three.js, vanilla ES modules. No build step for `reports/`; the main site builds with Astro.
 - **Hosts**: Cloudflare Pages. Two projects: `artifisi-com` (main site) and `reports` (output dir `reports/`).
 - **Domains**: `www.artifisi.com`, `artifisi.com`, `reports.artifisi.com`, `tech-sovereignty.artifisi.com`
-- **Sales**: `playbook/sales/` — rate card, services agreement, outreach. Prices are duplicated in `reports/index.html`; change both together. The promised video length is "up to 60 seconds" in the rate card and the front door; the services agreement still says "40 to 55 seconds".
+- **Sales**: `playbook/sales/` — rate card, services agreement, outreach. The prices live in the rate card only; the front door at reports.artifisi.com became a library of published reports on 2026-10-27 and no longer lists them. The promised video length is "up to 60 seconds" in the rate card; the services agreement still says "40 to 55 seconds".
 - **Video**: one report, one video. The chain is `report → story → shots → storyboard → script → vo → video`, and the tools are in `playbook/tools/`. Two reports have been through it: wages and CPI.
 - **Reports**: `reports/malaysia-wages/` and `reports/malaysia-cpi/`. Twelve scenes across two DOSM datasets. The front door lists both.
 - **Test**: no test suite. Manual QA only, recorded in `raw/<slug>/qa.md`.
