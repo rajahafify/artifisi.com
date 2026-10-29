@@ -70,8 +70,9 @@ def main(out_dir, vo, mp4, shots_file):
     # 2. concatenate in shot order
     lst = os.path.join(tmp, 'list.txt')
     with open(lst, 'w', encoding='utf-8') as f:
+        # concat reads each path against the list's own folder, so give it whole paths.
         for p in norm:
-            f.write("file '%s'\n" % p.replace("'", "'\\''"))
+            f.write("file '%s'\n" % os.path.abspath(p).replace("'", "'\\''"))
     silent = os.path.join(tmp, 'silent.mp4')
     run(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', lst,
          '-c', 'copy', silent])
