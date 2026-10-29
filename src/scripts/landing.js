@@ -1,5 +1,5 @@
 // Landing page below the hero: entrances, the episode sheets and the drive you can play,
-// the pinned pilot fragment, the games ledger, the contact form and the Kuala Lumpur clock.
+// the contact form and the Kuala Lumpur clock.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -17,10 +17,6 @@ var $$ = function (s, r) { return Array.prototype.slice.call((r || document).que
     once: true,
     onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 0.8, ease: "expo.out", stagger: 0.08, overwrite: true }); }
   });
-  // A slow drift on the game screens as they pass.
-  $$(".strip img").forEach(function (img, i) {
-    gsap.fromTo(img, { yPercent: i % 2 ? 4 : -2 }, { yPercent: i % 2 ? -2 : 4, ease: "none", scrollTrigger: { trigger: ".strip", start: "top bottom", end: "bottom top", scrub: true } });
-  });
   // The years count in as the intro arrives.
   $$(".years .yr").forEach(function (el) {
     var to = +el.textContent, o = { v: to - 12 };
@@ -29,7 +25,7 @@ var $$ = function (s, r) { return Array.prototype.slice.call((r || document).que
   });
 })();
 
-/* Episode sheets: a tab list on the left, the chosen sheet on the stage. */
+/* Episode sheets: a row of tabs, the chosen sheet on the stage below. */
 (function () {
   var tabs = $$(".outputs [role=tab]");
   function select(tab, focus) {
@@ -95,61 +91,6 @@ var $$ = function (s, r) { return Array.prototype.slice.call((r || document).que
       place();
     });
   });
-})();
-
-/* Pilot: the side tabs swap the words and the fragment; the step nearest the middle sets the fragment's state. */
-(function () {
-  var sec = $(".lp-pilot"); if (!sec) return;
-  var tabs = $$(".side-tabs [role=tab]"), ink = $(".tab-ink"), steps = $$(".step", sec), apply = $("#pilot-apply");
-  var side = "ai", cur = 0;
-  function moveInk() {
-    var t = tabs.filter(function (x) { return x.getAttribute("aria-selected") === "true"; })[0];
-    ink.style.width = t.offsetWidth + "px";
-    ink.style.transform = "translateX(" + t.offsetLeft + "px)";
-  }
-  function show(i) {
-    cur = i;
-    steps.forEach(function (st, j) { st.classList.toggle("is-on", j === i); });
-    $$(".frag", sec).forEach(function (f) {
-      $$(".frag-state", f).forEach(function (st) { st.classList.toggle("is-on", +st.dataset.state === i); });
-    });
-    var c = $('.frag[data-track="' + side + '"] .frag-state[data-state="' + i + '"] .count', sec);
-    if (c) { var o = { v: 0 }, to = +c.dataset.to; if (reduce) c.textContent = to; else gsap.to(o, { v: to, duration: 1.4, ease: "expo.out", onUpdate: function () { c.textContent = Math.round(o.v); } }); }
-  }
-  tabs.forEach(function (t) {
-    t.addEventListener("click", function () {
-      side = t.dataset.side;
-      tabs.forEach(function (x) { x.setAttribute("aria-selected", x === t ? "true" : "false"); });
-      $$("[data-ai]", sec).forEach(function (el) { el.hidden = side !== "ai"; });
-      $$("[data-studio]", sec).forEach(function (el) { el.hidden = side !== "studio"; });
-      $$(".frag", sec).forEach(function (f) { f.hidden = f.dataset.track !== side; });
-      apply.dataset.topic = side;
-      moveInk(); show(cur);
-    });
-  });
-  moveInk();
-  window.addEventListener("resize", moveInk);
-  steps.forEach(function (st, i) {
-    ScrollTrigger.create({ trigger: st, start: "top 55%", end: "bottom 55%", onToggle: function (self) { if (self.isActive) show(i); } });
-  });
-  show(0);
-})();
-
-/* Games ledger: the picture beside the list follows the row in focus. */
-(function () {
-  var pv = $(".preview"); if (!pv) return;
-  var img = $("img", pv), rows = $$(".row"), fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-  function to(row) {
-    if (!fine.matches) return;
-    rows.forEach(function (r) { r.classList.toggle("is-shown", r === row); });
-    if (img.getAttribute("src") !== row.dataset.preview) {
-      pv.classList.add("is-swapping");
-      setTimeout(function () { img.src = row.dataset.preview; pv.classList.remove("is-swapping"); }, 150);
-    }
-    var y = row.getBoundingClientRect().top - $(".rows").getBoundingClientRect().top;
-    pv.style.transform = "translateY(" + Math.max(0, y - 40) + "px)";
-  }
-  rows.forEach(function (r) { r.addEventListener("pointerenter", function () { to(r); }); r.addEventListener("focus", function () { to(r); }); });
 })();
 
 /* Kuala Lumpur time in the footer. */
