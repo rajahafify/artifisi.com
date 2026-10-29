@@ -87,7 +87,9 @@ const THEMES = {
   .vb-card .line { font-size: 3.6vw; max-width: 22ch; }
   .vb-card .note, .vb-end .s { font-size: 2.4vw; }
   .vb-end .u { font-size: 3.4vw; }
-  .vb-end .u { color: #ff7a1f; }`,
+  .vb-end .u { color: #ff7a1f; }
+  /* the wall behind the end card is orange and white, so the text needs a dark field */
+  .vb-scrim { background: linear-gradient(180deg, #050f16b0 0%, #050f16f0 34%, #050f16f0 66%, #050f16b0 100%); }`,
   },
   cpi: {
     paper: '#0e1114', ink: '#e9edf2', muted: '#9aa5b2', rule: '#2b323b', ctx: '#78828e',
