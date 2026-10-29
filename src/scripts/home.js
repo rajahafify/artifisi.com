@@ -2,6 +2,7 @@
 import * as THREE from "three";
 import "./hero.js";
 import "./video.js";
+import "./landing.js";
 window.THREE = THREE;
 
 /* Section flourishes: one small three.js scene per band. Each renders only while on screen and leans a little toward the cursor. */
@@ -115,28 +116,5 @@ window.THREE = THREE;
     }
     size(); update(t); r.render(s, cam);
     if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { var v = es[0].isIntersecting; if (v && !on) { on = true; last = 0; requestAnimationFrame(tick); } on = v; }).observe(cv);
-  });
-})();
-
-/* Contact form: posts to Formspree and shows the result in place. "Talk to us" links pick the topic. */
-(function () {
-  var f = document.getElementById("cform"), msg = document.getElementById("cform-msg"), topic = document.getElementById("ctopic");
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest("[data-topic]"); if (a) { topic.value = a.getAttribute("data-topic"); setTimeout(function () { f.querySelector("input").focus({ preventScroll: true }); }, 500); }
-  });
-  // Links from other pages: /#apply-ai and /#apply-studio open the form with the pilot topic set.
-  var deep = { "#apply-ai": "Pilot: AI or robotics team", "#apply-studio": "Pilot: game studio" }[location.hash];
-  if (deep) {
-    topic.value = deep;
-    setTimeout(function () { document.getElementById("contact").scrollIntoView(); f.querySelector("input").focus({ preventScroll: true }); }, 300);
-  }
-  f.addEventListener("submit", function (e) {
-    e.preventDefault();
-    if (f.action.indexOf("FORM_ID") !== -1) { msg.textContent = "Form not connected yet. Email hello@artifisi.com for now."; return; }
-    var btn = f.querySelector("button"); btn.disabled = true; msg.textContent = "Sending…";
-    fetch(f.action, { method: "POST", body: new FormData(f), headers: { Accept: "application/json" } })
-      .then(function (r) { if (!r.ok) throw 0; f.reset(); msg.textContent = "Thanks. We'll reply from hello@artifisi.com."; })
-      .catch(function () { msg.textContent = "That didn't send. Email hello@artifisi.com instead."; })
-      .then(function () { btn.disabled = false; });
   });
 })();
