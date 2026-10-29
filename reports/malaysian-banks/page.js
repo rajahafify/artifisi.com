@@ -1,5 +1,5 @@
 // Malaysia's banks, six ways: the page around the charts.
-// The bank sheet, the league table and the motion. The 3D charts live in scene.js and
+// The six-ranks chart, the league table and the motion. The 3D charts live in scene.js and
 // this file drives them through window.__byName. Every number is already in the HTML, so
 // with no script the page still reads in full.
 (function () {
@@ -81,9 +81,7 @@
 
   function build(D) {
     const banks = D.banks;
-    const T = D.totals;
-    const share = (b, k) => one((b[k] / T[k]) * 100);
-    sheet(banks, share);
+    ranks(banks);
     league(banks);
     tickers(banks);
   }
@@ -120,73 +118,177 @@
     });
   }
 
-  // ---------- the sheet: pick a bank, read its row ----------
-  function sheet(banks, share) {
+  // ---------- ranks: each bank's line through its six ranks ----------
+  // Twelve lines across six columns. A bank's height in a column is its rank among the
+  // twelve on that measure, first at the top; ties share a rank and sit in size order.
+  // The lines draw in when the chart comes into view, then Hong Leong stands out.
+  // ?shot=ranks&t= freezes the draw at t for the film.
+  const RANK_COLS = [
+    { k: "assets", head: "Assets", phrase: "by assets" },
+    { k: "profit", head: "Profit", phrase: "by profit" },
+    { k: "roe", head: "ROE", phrase: "on return on equity" },
+    { k: "roa", head: "ROA", phrase: "on return on assets" },
+    { k: "cir", head: "Cost", phrase: "on cost", low: true, word: "leanest" },
+    { k: "car", head: "Capital", phrase: "on capital" },
+  ];
+  function ranks(banks) {
+    const fig = $(".ranks");
+    const svg = $(".ranks-svg");
     const list = $(".names");
-    const card = $("#statement");
-    if (!list || !card) return;
+    const read = $('.ranks-read [data-f="read"]');
+    if (!fig || !svg || !list) return;
+    const NS = "http://www.w3.org/2000/svg";
+    const el = (tag, attrs, parent) => {
+      const n = document.createElementNS(NS, tag);
+      Object.keys(attrs).forEach((k) => n.setAttribute(k, attrs[k]));
+      if (parent) parent.appendChild(n);
+      return n;
+    };
+    const bySize = (a, b) => b.assets - a.assets;
+    // Row position in each column: rank order, ties broken by size.
+    const pos = RANK_COLS.map((c) => {
+      const order = banks.slice().sort((a, b) => (c.low ? a[c.k] - b[c.k] : b[c.k] - a[c.k]) || bySize(a, b));
+      return new Map(order.map((b, i) => [b, i]));
+    });
+    const label = (b, c) => {
+      const o = rankOf(banks, b, c.k, c.low);
+      if (c.word && o.r === 1 && !o.tied) return c.word;
+      return ord(o.r) + (o.tied ? "=" : "");
+    };
+    const sentence = (b) => b.short + ": " + RANK_COLS.map((c) => {
+      const o = rankOf(banks, b, c.k, c.low);
+      if (c.word && o.r === 1 && !o.tied) return c.word + " " + c.phrase;
+      return ord(o.r) + (o.tied ? " equal" : "") + (c.word ? " " + c.word : "") + " " + c.phrase;
+    }).join(", ") + ".";
+
     list.replaceChildren();
-    banks.forEach((b, i) => {
+    const buttons = banks.map((b) => {
       const btn = document.createElement("button");
-      btn.setAttribute("role", "tab");
-      btn.setAttribute("aria-selected", i === 0 ? "true" : "false");
-      btn.setAttribute("aria-controls", "statement");
-      btn.tabIndex = i === 0 ? 0 : -1;
-      btn.dataset.rank = b.rank;
+      btn.type = "button";
       btn.textContent = b.short;
+      btn.setAttribute("aria-pressed", "false");
       list.appendChild(btn);
+      return btn;
     });
-    const f = (k) => card.querySelector('[data-f="' + k + '"]');
-    const bySize = banks.slice().sort((a, b) => b.assets - a.assets);
 
-    function show(b) {
-      const pos = bySize.indexOf(b) + 1;
-      const local = pos === 1 ? "Largest of the twelve" : pos === banks.length ? "Smallest of the twelve" : ord(pos) + " largest of the twelve";
-      const set = {
-        name: b.name,
-        world: "World rank " + b.rank,
-        local: local,
-        assets: "US$" + one(b.assets / 1000) + "b",
-        "assets-r": rankText(rankOf(banks, b, "assets")) + ", " + share(b, "assets") + "% of all",
-        profit: "US$" + comma(b.profit) + "m",
-        "profit-r": rankText(rankOf(banks, b, "profit")) + ", " + share(b, "profit") + "% of all",
-        roe: one(b.roe) + "%",
-        "roe-r": rankText(rankOf(banks, b, "roe")),
-        roa: one(b.roa) + "%",
-        "roa-r": rankText(rankOf(banks, b, "roa")),
-        cir: one(b.cir) + "%",
-        "cir-r": rankText(rankOf(banks, b, "cir", true), "leanest"),
-        car: one(b.car) + "%",
-        "car-r": rankText(rankOf(banks, b, "car")),
-        line: "Holds " + share(b, "assets") + "% of the assets and makes " + share(b, "profit") + "% of the profit.",
-      };
-      Object.keys(set).forEach((k) => { const el = f(k); if (el) softSwap(el, set[k]); });
+    let sel = banks.findIndex((b) => b.short === "Hong Leong");
+    if (sel < 0) sel = 0;
+    let t = 1, lines = [], built = null;
+
+    function layout() {
+      const W = Math.max(300, fig.clientWidth);
+      const phone = W < 560;
+      const L = phone ? 84 : 120, R = phone ? 14 : 120, TOP = 40, ROW = phone ? 30 : 38;
+      const H = TOP + ROW * (banks.length - 1) + 24;
+      const xs = RANK_COLS.map((_, i) => L + ((W - L - R) * i) / (RANK_COLS.length - 1));
+      const y = (i) => TOP + i * ROW;
+      return { W, H, phone, L, R, xs, y, dot: phone ? 11 : 14 };
     }
 
-    const buttons = $$("button", list);
-    function pick(i, focus) {
-      buttons.forEach((x, j) => {
-        x.setAttribute("aria-selected", j === i ? "true" : "false");
-        x.tabIndex = j === i ? 0 : -1;
+    function build() {
+      const g = layout();
+      built = g;
+      svg.replaceChildren();
+      svg.setAttribute("viewBox", "0 0 " + g.W + " " + g.H);
+      svg.setAttribute("width", g.W);
+      svg.setAttribute("height", g.H);
+      RANK_COLS.forEach((c, i) => {
+        el("line", { class: "rk-rule", x1: g.xs[i], x2: g.xs[i], y1: g.y(0) - 12, y2: g.y(banks.length - 1) + 12 }, svg);
+        el("text", { class: "rk-head", x: g.xs[i], y: 12 }, svg).textContent = c.head;
       });
-      if (focus) buttons[i].focus();
-      show(banks[i]);
-      if (motion) G.fromTo(card, { y: 10 }, { y: 0, duration: 0.5, ease: "expo.out" });
+      lines = banks.map((b, bi) => {
+        const grp = el("g", { class: "rk-g" }, svg);
+        const pts = RANK_COLS.map((c, i) => [g.xs[i], g.y(pos[i].get(b))]);
+        let d = "M" + pts[0][0] + " " + pts[0][1];
+        for (let i = 1; i < pts.length; i++) {
+          const mx = (pts[i - 1][0] + pts[i][0]) / 2;
+          d += " C" + mx + " " + pts[i - 1][1] + " " + mx + " " + pts[i][1] + " " + pts[i][0] + " " + pts[i][1];
+        }
+        const path = el("path", { class: "rk-line", d }, grp);
+        const hit = el("path", { class: "rk-hit", d }, grp);
+        hit.addEventListener("click", () => pick(bi));
+        const nameL = el("text", { class: "rk-name", x: g.L - (g.dot + 8), y: pts[0][1], "text-anchor": "end", "dominant-baseline": "central" }, svg);
+        nameL.textContent = b.short;
+        nameL.addEventListener("click", () => pick(bi));
+        let nameR = null;
+        if (!g.phone) {
+          nameR = el("text", { class: "rk-name", x: g.W - g.R + g.dot + 8, y: pts[pts.length - 1][1], "dominant-baseline": "central" }, svg);
+          nameR.textContent = b.short;
+          nameR.addEventListener("click", () => pick(bi));
+        }
+        const len = path.getTotalLength();
+        path.style.strokeDasharray = len + " " + len;
+        return { b, grp, path, len, pts, names: [nameL, nameR].filter(Boolean) };
+      });
+      // The chosen bank's dots, drawn last so they sit on top.
+      const dots = el("g", { class: "rk-dots" }, svg);
+      lines.dots = RANK_COLS.map(() => {
+        const d = el("g", { class: "rk-dot" }, dots);
+        el("circle", { r: g.dot }, d);
+        el("text", {}, d);
+        return d;
+      });
+      paint();
     }
-    list.addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (btn) pick(buttons.indexOf(btn));
-    });
-    list.addEventListener("keydown", (e) => {
-      const i = buttons.indexOf(document.activeElement);
-      if (i < 0) return;
-      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
-      if (e.key === "Home") { e.preventDefault(); pick(0, true); }
-      else if (e.key === "End") { e.preventDefault(); pick(buttons.length - 1, true); }
-      else if (step) { e.preventDefault(); pick((i + step + buttons.length) % buttons.length, true); }
-    });
-    // The HTML already shows Maybank. This checks the computed ranks match it.
-    show(banks[0]);
+
+    function paint() {
+      if (!built) return;
+      lines.forEach((ln, i) => {
+        // Each line draws left to right, a beat after the one above it.
+        const own = Math.min(1, Math.max(0, (t - i * 0.025) / 0.6));
+        const e = 1 - Math.pow(1 - own, 3);
+        ln.path.style.strokeDashoffset = (ln.len * (1 - e)).toFixed(1);
+        ln.grp.classList.toggle("on", i === sel && t >= 0.85);
+        ln.names.forEach((n) => n.classList.toggle("on", i === sel && t >= 0.85));
+      });
+      const ln = lines[sel];
+      const show = t >= 0.85;
+      lines.dots.forEach((d, i) => {
+        d.style.opacity = show ? "1" : "0";
+        d.setAttribute("transform", "translate(" + ln.pts[i][0] + "," + ln.pts[i][1] + ")");
+        const lab = label(ln.b, RANK_COLS[i]);
+        d.querySelector("text").textContent = lab === "leanest" ? "1" : lab.replace(/(st|nd|rd|th)/, "");
+      });
+      // Bring the chosen line to the front of the others.
+      if (show) ln.grp.parentNode.insertBefore(ln.grp, lines.dots[0].parentNode);
+    }
+
+    function pick(i) {
+      sel = i;
+      buttons.forEach((x, j) => x.setAttribute("aria-pressed", j === i ? "true" : "false"));
+      if (t < 1) t = 1;
+      paint();
+      if (read) softSwap(read, sentence(banks[i]));
+    }
+    buttons.forEach((btn, i) => btn.addEventListener("click", () => pick(i)));
+
+    const seek = (v) => { t = Math.min(1, Math.max(0, v)); paint(); };
+    window.__seekExtra = Object.assign(window.__seekExtra || {}, { ranks: seek });
+
+    build();
+    buttons[sel].setAttribute("aria-pressed", "true");
+    if (read) read.dataset.text = read.textContent;
+    let lastW = fig.clientWidth;
+    new ResizeObserver(() => { if (Math.abs(fig.clientWidth - lastW) > 2) { lastW = fig.clientWidth; build(); } }).observe(fig);
+    addEventListener("beforeprint", () => seek(1));
+
+    const q = new URLSearchParams(location.search);
+    if (q.get("shot") === "ranks") {
+      document.body.classList.add("shot-mode", "shot-ranks");
+      requestAnimationFrame(() => { build(); seek(q.has("t") ? parseFloat(q.get("t")) : 1); });
+      return;
+    }
+    if (reduced || !("IntersectionObserver" in window)) return;
+    // Plays once, the first time the chart comes into view.
+    seek(0);
+    const io = new IntersectionObserver((es) => {
+      if (!es.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      const t0 = performance.now(), dur = 2200;
+      const step = (now) => { seek((now - t0) / dur); if (t < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }, { threshold: 0.4 });
+    io.observe(fig);
   }
 
   // ---------- the league: six measures, twelve orders ----------
@@ -435,12 +537,6 @@
     countUp($(".figure"), 62, 0, "<sup>%</sup>", ".statement");
     // The two specimens count up side by side.
     $$(".spec-fig").forEach((el) => countUp(el, parseFloat(el.textContent), 1, "%", ".spec-pair"));
-
-    // The sheet slides in on its orange stage.
-    G.from("#statement", {
-      y: 80, rotate: -1.5, duration: 1.2, ease: "expo.out",
-      scrollTrigger: { trigger: ".stage", start: "top 75%", once: true },
-    });
 
     // The wall: tiles drop in, row by row.
     G.from(".wall .tile", {

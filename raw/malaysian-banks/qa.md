@@ -67,3 +67,28 @@ New figures on the redesigned page, checked against data.json:
 - Real click on Fig 5: t went 0 to 0.31 at 500 ms to 1 at end. Chip read "5 / 6 · click to play", then "playing", then "click to replay". Enter restarts it.
 - Reduced motion: no play, every chart seeks to its end state.
 - impeccable detect: four "cramped padding" warnings on sections whose padding is a clamp(); the static detector cannot resolve it. The rendered padding is 72 to 150 px.
+
+## Fix pass (29 Oct 2026, night)
+
+- Orange strip at the right after the masthead: the headline lines slide outward on scroll and made the page 1524 px wide at 1440. The masthead now clips them and the page cannot scroll sideways (scrollWidth 1440 at 1440, 390 at 390).
+- The bank sheet is replaced by a six-ranks chart (`ranks()` in page.js). Ranks computed from data.json, checked by hand against the full table:
+
+| Bank | Assets | Profit | ROE | ROA | Cost | Capital |
+|---|---|---|---|---|---|---|
+| Maybank | 1 | 1 | 2= | 3= | 4 | 2 |
+| CIMB | 2 | 2 | 2= | 3= | 5 | 7 |
+| Public Bank | 3 | 3 | 1 | 2 | 2 | 11 |
+| RHB | 4 | 5 | 5 | 3= | 6 | 4 |
+| Hong Leong | 5 | 4 | 4 | 1 | 1 | 12 |
+| AmBank | 6 | 6 | 6 | 3= | 3 | 8= |
+| Bank Rakyat | 7 | 7 | 10 | 3= | 8 | 1 |
+| AFFIN | 8 | 10 | 11 | 10= | 12 | 10 |
+| Bank Islam | 9 | 9 | 8 | 9 | 11 | 5 |
+| Alliance | 10 | 8 | 7 | 8 | 7 | 8= |
+| MBSB | 11 | 12 | 12 | 12 | 9 | 3 |
+| Muamalat | 12 | 11 | 9 | 10= | 10 | 6 |
+
+- Real clicks: "Bank Rakyat" button and the "Public Bank" label in the chart each move the dark line and rewrite the sentence under it.
+- Film: `?shot=ranks&t=0.4` and `&t=1` at 540x960 and 1920x1080.
+- Export is now one tall PNG (`playbook/tools/still.js`, 2880 x 28136 at 2x), not the PDF. Reduced motion puts every chart at its end frame and each 3D chart sits beside its text.
+- taste-skill inspect: 0 FAIL, 5 WARN.

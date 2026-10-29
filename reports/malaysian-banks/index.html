@@ -77,32 +77,16 @@
 
 <section class="sheet-sec" id="sheet" aria-labelledby="h-sheet">
   <div class="index">
-    <h2 id="h-sheet" data-reveal>Read any bank’s row</h2>
-    <p class="index-note" data-reveal>Pick a bank. Its sheet shows the six numbers TAB gives, and where each one ranks among the twelve.</p>
-    <div class="names" role="tablist" aria-label="Malaysian banks">
-      <button role="tab" aria-selected="true" aria-controls="statement" data-rank="116">Maybank</button>
+    <h2 id="h-sheet" data-reveal>Size is one rank of six</h2>
+    <p class="index-note" data-reveal>Each line is a bank. It runs through the bank’s rank among the twelve on each of TAB’s six measures, first at the top. Hong Leong is fifth by size, first on return on assets and on cost, and last on capital. Pick a bank to follow its line.</p>
+  </div>
+  <figure class="ranks" data-ui>
+    <div class="ranks-plot"><svg class="ranks-svg" aria-hidden="true"></svg></div>
+    <figcaption class="ranks-read" aria-live="polite"><span class="t-text-soft" data-f="read">Hong Leong: 5th by assets, 4th by profit, 4th on return on equity, 1st on return on assets, leanest on cost, 12th on capital.</span></figcaption>
+    <div class="names" role="group" aria-label="Follow a bank">
+      <button aria-pressed="false">Maybank</button>
     </div>
-  </div>
-  <div class="stage">
-    <article class="statement-sheet" id="statement" data-ui role="tabpanel">
-      <p class="sheet-top"><span>TAB Global 1000, 2026</span><span>FY2025, US$</span></p>
-      <h3 class="sheet-name"><span class="t-text-soft" data-f="name">Maybank</span></h3>
-      <p class="sheet-rank"><span class="t-text-soft" data-f="world">World rank 116</span> <span class="t-text-soft" data-f="local">Largest of the twelve</span></p>
-      <table class="sheet-rows">
-        <thead><tr><th scope="col">Measure</th><th scope="col">Value</th><th scope="col">Among the twelve</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Total assets</th><td><span class="t-text-soft" data-f="assets">US$259.5b</span></td><td><span class="t-text-soft" data-f="assets-r">1st, 27.3% of all</span></td></tr>
-          <tr><th scope="row">Net profit</th><td><span class="t-text-soft" data-f="profit">US$2,531m</span></td><td><span class="t-text-soft" data-f="profit-r">1st, 27.0% of all</span></td></tr>
-          <tr><th scope="row">Return on equity</th><td><span class="t-text-soft" data-f="roe">11.2%</span></td><td><span class="t-text-soft" data-f="roe-r">2nd equal</span></td></tr>
-          <tr><th scope="row">Return on assets</th><td><span class="t-text-soft" data-f="roa">1.0%</span></td><td><span class="t-text-soft" data-f="roa-r">3rd equal</span></td></tr>
-          <tr><th scope="row">Cost to income</th><td><span class="t-text-soft" data-f="cir">45.7%</span></td><td><span class="t-text-soft" data-f="cir-r">4th leanest</span></td></tr>
-          <tr><th scope="row">Capital adequacy</th><td><span class="t-text-soft" data-f="car">20.0%</span></td><td><span class="t-text-soft" data-f="car-r">2nd</span></td></tr>
-        </tbody>
-      </table>
-      <p class="sheet-line"><span class="t-text-soft" data-f="line">Holds 27.3% of the assets and makes 27.0% of the profit.</span></p>
-      <p class="sheet-foot">All twelve: US$950,546m in assets, US$9,372m in net profit. Ratios are TAB’s own.</p>
-    </article>
-  </div>
+  </figure>
 </section>
 
 <section class="league" id="banks" aria-labelledby="h-league">
