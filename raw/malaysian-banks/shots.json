@@ -5,6 +5,8 @@
   "title": "Malaysia's banks, six ways",
   "size": [1080, 1920],
   "fps": 30,
+  "scale": 2.5,
+  "scaleNote": "The page is laid out for phones, so the film is shot at 432x768 CSS pixels at 2.5x.",
   "kicker": "Malaysia · banks · TAB Global 1000, 2026",
   "gap": 0.3,
   "gapNote": "Seconds held after each voice line ends, before the next shot cuts.",

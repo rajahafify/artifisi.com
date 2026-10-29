@@ -444,16 +444,29 @@ body.shot-mode .ticker { display: none; }
 /* the skyline shot: the 62% section alone, filling the frame */
 body.shot-sky main > section.statement { display: grid; min-height: 100svh; padding-bottom: 48px; }
 body.shot-sky main > section.pinned { display: none; }
+/* A portrait film frame (1080x1920, shot at 432x768): the top 8vh and bottom 16vh carry the
+   film's kicker and caption, so every shot keeps its picture between them. */
 @media (max-width: 820px) {
-  body.shot-sky main > section.statement { height: 100svh; min-height: 0; padding-bottom: 50vh; overflow: hidden; }
-  body.shot-sky .statement .figure { font-size: 34vw; }
-  body.shot-sky .statement .skyline, body.shot-sky .statement .skyline-labels { height: 48vh; }
+  body.shot-mode .pinned-head { display: none; }
+  body.shot-mode .field { height: 100svh; box-sizing: border-box; padding: 9vh 0 17vh; }
+  body.shot-mode .figs { width: min(94vw, 74vh); height: auto; aspect-ratio: 1 / 1; }
+  body.shot-sky main > section.statement { display: block; height: 100svh; min-height: 0; box-sizing: border-box; padding: 11vh var(--m) 0; overflow: hidden; }
+  body.shot-sky .statement .caption, body.shot-sky .statement .source { display: none; }
+  body.shot-sky .statement .claim { font-size: 2.25rem; }
+  body.shot-sky .statement.has-skyline .figure-block { margin-top: 12px; }
+  body.shot-sky .statement .figure { font-size: 40vw; }
+  body.shot-sky .statement .skyline, body.shot-sky .statement .skyline-labels { top: auto; bottom: 17vh; height: 46vh; }
+}
 }
 
 /* the ranks shot: the six-ranks chart alone, filling the frame */
 body.shot-ranks main > section.sheet-sec { display: grid; min-height: 100svh; align-content: center; }
 body.shot-ranks main > section.pinned, body.shot-ranks .names { display: none; }
-@media (max-width: 820px) { body.shot-ranks main > section.sheet-sec { display: flex; flex-direction: column; justify-content: center; padding-top: 32px; padding-bottom: 32px; } }
+@media (max-width: 820px) {
+  body.shot-ranks main > section.sheet-sec { display: flex; flex-direction: column; justify-content: center; height: 100svh; box-sizing: border-box; padding: 9vh var(--m) 17vh; }
+  body.shot-ranks .index-note, body.shot-ranks .ranks-read { display: none; }
+  body.shot-ranks .index h2 { font-size: 2.25rem; }
+}
 
 /* ---------- print: the PDF is the page at its finished frame ---------- */
 @media print {
