@@ -275,6 +275,7 @@
     const q = new URLSearchParams(location.search);
     if (q.get("shot") === "ranks") {
       document.body.classList.add("shot-mode", "shot-ranks");
+      $("#sheet").classList.add("on");
       requestAnimationFrame(() => { build(); seek(q.has("t") ? parseFloat(q.get("t")) : 1); });
       return;
     }

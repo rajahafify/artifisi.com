@@ -908,6 +908,9 @@ if (q.has("shot")) {
   if (st) {
     document.body.classList.add("shot-mode");
     document.querySelectorAll(".figs .fig").forEach((f) => f.classList.toggle("on", f === st.fig));
+    // The film's recorder waits for exactly one section marked on.
+    const sec = st.fig && st.fig.closest("main > section");
+    if (sec) sec.classList.add("on");
     requestAnimationFrame(() => {
       st.resize();
       st.seek(q.has("t") ? parseFloat(q.get("t")) : 1);

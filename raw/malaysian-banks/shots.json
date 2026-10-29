@@ -1,0 +1,142 @@
+{
+  "report": "malaysian-banks",
+  "theme": "banks",
+  "page": "reports/malaysian-banks/",
+  "title": "Malaysia's banks, six ways",
+  "size": [1080, 1920],
+  "fps": 30,
+  "kicker": "Malaysia · banks · TAB Global 1000, 2026",
+  "gap": 0.3,
+  "gapNote": "Seconds held after each voice line ends, before the next shot cuts.",
+  "orderNote": "The page runs size first and then the five other measures. The film keeps that spine but cuts it to one argument: a premise card says size is one number of six, the skyline shows how lopsided size is, the profit swap and the six ranks show the order breaking, the region and DBS say what the gap means, and the leads card says what to look at instead. The blocks and dials scenes stay on the page; two more scenes would not fit a minute.",
+  "endCard": {
+    "id": "end",
+    "vo": "l08",
+    "plan": 2.3,
+    "endHold": 1.5,
+    "kicker": "Malaysia, banks, TAB Global 1000, 2026",
+    "title": "Malaysia's banks, six ways",
+    "url": "reports.artifisi.com/malaysian-banks/",
+    "source": "Data: TAB Insights, World's 1000 Largest Banks 2026, FY2025 figures."
+  },
+  "shots": [
+    {
+      "id": "premise",
+      "card": {
+        "kicker": "Malaysia · banks · TAB Global 1000, 2026",
+        "claim": ["Size is one number", "of six."],
+        "figs": [
+          { "n": "62%", "l": "of the assets, held by three of twelve banks", "tone": "warm" },
+          { "n": "6", "l": "numbers TAB gives each bank", "tone": "cool" }
+        ],
+        "line": "Twelve Malaysian banks are in the world's top thousand.",
+        "note": "Data: TAB Insights, World's 1000 Largest Banks 2026.",
+        "cues": {
+          "line": "Twelve Malaysian banks",
+          "fig0": "sixty two percent",
+          "claim0": "But size is only",
+          "claim1": "one number of six",
+          "fig1": "one number of six"
+        }
+      },
+      "vo": "l01",
+      "plan": 8,
+      "beat": "the premise. the claim in type before any chart, and it works muted."
+    },
+    {
+      "id": "skyline",
+      "scene": "skyline",
+      "claim": "Three banks hold 62% of the assets.",
+      "caption": "Five banks hold 80% of the assets.",
+      "captions": [
+        { "cue": "Maybank, CIMB and Public Bank", "text": "Maybank, CIMB and Public Bank: 62%." },
+        { "cue": "Add RHB and Hong Leong", "text": "Add RHB and Hong Leong: 80%." }
+      ],
+      "vo": "l02",
+      "plan": 7,
+      "t": 1,
+      "beat": "what the data shows. the baseline: the size order everyone knows."
+    },
+    {
+      "id": "swap",
+      "scene": "swap",
+      "claim": "Profit runs in a different order.",
+      "caption": "Public Bank: 14.6% of assets, 18.5% of profit.",
+      "captions": [
+        { "cue": "Profit runs in a different order", "text": "Profit runs in a different order." },
+        { "cue": "Public Bank holds", "text": "Public Bank: 14.6% of the assets." },
+        { "cue": "and makes", "text": "And 18.5% of the profit." }
+      ],
+      "vo": "l03",
+      "plan": 8,
+      "t": 1,
+      "beat": "what the data shows. the fracture: the size order breaks on profit."
+    },
+    {
+      "id": "ranks",
+      "scene": "ranks",
+      "claim": "Hong Leong is fifth by size and first on two measures.",
+      "caption": "Hong Leong: 5th by size, 1st on ROA and cost, 12th on capital.",
+      "captions": [
+        { "cue": "Follow one bank", "text": "One bank, six ranks." },
+        { "cue": "Hong Leong is fifth by size", "text": "Hong Leong: 5th by size." },
+        { "cue": "first on return on assets", "text": "1st on return on assets and on cost." },
+        { "cue": "last on capital", "text": "12th on capital." }
+      ],
+      "vo": "l04",
+      "plan": 8,
+      "t": 1,
+      "beat": "what the data meant. one bank shows that each measure tells a different story."
+    },
+    {
+      "id": "lanes",
+      "scene": "lanes",
+      "claim": "Malaysia's best earns 1.4 cents a dollar. BCA earns 3.8.",
+      "caption": "Hong Leong 1.4%. Bank Central Asia 3.8%.",
+      "captions": [
+        { "cue": "Look across the region", "text": "Return on assets, four countries." },
+        { "cue": "one point four cents", "text": "Malaysia's best: 1.4%." },
+        { "cue": "Bank Central Asia", "text": "Bank Central Asia, Jakarta: 3.8%." }
+      ],
+      "vo": "l05",
+      "plan": 8,
+      "t": 1,
+      "beat": "what the data leads to. against the region, the best Malaysian bank is mid table."
+    },
+    {
+      "id": "tanks",
+      "scene": "tanks",
+      "claim": "DBS earns 89% of what all twelve earn.",
+      "caption": "DBS alone: 89% of the twelve banks' profit.",
+      "captions": [
+        { "cue": "Singapore's DBS", "text": "Singapore's DBS, one bank." },
+        { "cue": "eighty nine percent", "text": "89% of what all twelve earn." }
+      ],
+      "vo": "l06",
+      "plan": 6,
+      "t": 1,
+      "beat": "what the data leads to. the scale of the gap, in one comparison."
+    },
+    {
+      "id": "leads",
+      "card": {
+        "kicker": "What this leads to",
+        "claim": ["Ask what a bank earns,", "not what it holds."],
+        "figs": [
+          { "n": "1.4%", "l": "Malaysia's best return on assets", "tone": "cool" },
+          { "n": "3.8%", "l": "Bank Central Asia, Jakarta", "tone": "warm" }
+        ],
+        "note": "Data: TAB Insights, World's 1000 Largest Banks 2026.",
+        "cues": {
+          "claim0": "So ask what a bank earns",
+          "claim1": "not how much it holds",
+          "fig0": "not how much it holds",
+          "fig1": "not how much it holds"
+        }
+      },
+      "vo": "l07",
+      "plan": 5,
+      "beat": "the so-what, on the same plate as the premise."
+    }
+  ]
+}

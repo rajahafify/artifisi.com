@@ -148,6 +148,7 @@ async function build() {
   const q = new URLSearchParams(location.search);
   if (q.get("shot") === "skyline") {
     document.body.classList.add("shot-mode", "shot-sky");
+    section.classList.add("on");
     requestAnimationFrame(() => { resize(); seek(q.has("t") ? parseFloat(q.get("t")) : 1); });
     return;
   }
