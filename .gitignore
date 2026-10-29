@@ -28,3 +28,5 @@ raw/*/vo/*.mp3
 
 # Third-party agent skills, fetched by playbook/skills/install.sh. Not committed: see that script.
 .claude/skills/
+.taste-skill/
+.impeccable/

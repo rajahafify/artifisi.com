@@ -5,13 +5,12 @@ import { Line2 } from "three/addons/lines/Line2.js";
 import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 import { LineGeometry } from "three/addons/lines/LineGeometry.js";
 
-// The palette is the report's, not the house default. It comes from a Malaysian
-// cheque leaf: pale blue-grey security paper, dark navy print, the gold of the
-// bank's crest for the Malaysian banks and the red of a teller's stamp for the
-// banks next door.
+// The palette is the page's: hot orange ground, blue-black ink, white fields. The charts
+// sit on a white field, so ink marks what does well on a measure and orange marks what
+// does not, or the bank next door.
 const C = {
-  paper: 0xe6ecee, paper2: 0xdae2e5, ink: 0x13202c, ctx: 0x8796a2,
-  gold: 0x8a5f0e, stamp: 0xb3362b, rule: 0xc3ced4, shade: 0xcdd7dc,
+  paper: 0xffffff, paper2: 0xf3f1ee, ink: 0x050f16, ctx: 0x9a9a9a,
+  gold: 0x050f16, stamp: 0xff7a1f, rule: 0xd9d6d1, shade: 0xebe8e4,
 };
 
 const smooth = (t) => t * t * (3 - 2 * t);
@@ -89,7 +88,7 @@ const T = makeTimeline(WORDS && WORDS.words, WORDS && WORDS.dur);
 window.__timeline = T;
 
 // The display face, used for the type that hangs behind a chart.
-const DISPLAY_FONT = '"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif';
+const DISPLAY_FONT = '"Young Serif", Georgia, serif';
 
 // Draw a line of type into a texture. The texture goes on a plane in the scene, so the
 // type is a thing in the same space as the chart: it takes the chart's perspective and
@@ -97,7 +96,7 @@ const DISPLAY_FONT = '"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif';
 function textTexture(text, opts) {
   const px = opts.px || 320;
   const family = opts.family || DISPLAY_FONT;
-  const weight = opts.weight || 700;
+  const weight = opts.weight || 400;
   const c = document.createElement("canvas");
   const ctx = c.getContext("2d");
   const setFont = () => { ctx.font = weight + " " + px + "px " + family; };
@@ -106,7 +105,7 @@ function textTexture(text, opts) {
   const h = Math.ceil(px * 1.18);
   c.width = w; c.height = h;
   setFont();
-  ctx.fillStyle = opts.color || "#13202c";
+  ctx.fillStyle = opts.color || "#050f16";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(text, w / 2, h / 2);
@@ -291,7 +290,7 @@ class Stage {
     // another font request, or the two would chase each other.
     const o = this.backdropOpts;
     const family = o.family || DISPLAY_FONT;
-    const weight = o.weight || 700;
+    const weight = o.weight || 400;
     const px = o.px || 320;
     if (document.fonts && document.fonts.load) {
       document.fonts.load(weight + " " + px + "px " + family)
@@ -368,6 +367,7 @@ class Stage {
 
   play() {
     if (this.spec.reduced) return;
+    if (this.tw) this.tw.kill();
     this.playing = true;
     this.done = false;
     this.t = 0;
@@ -393,6 +393,17 @@ class Stage {
   seek(t) {
     this.t = clamp01(t);
     this.draw();
+  }
+
+  // Run the shot to a given point, from wherever it is. A control on the page uses this
+  // to show one state of the chart (assets, then profit). It cancels a running play().
+  to(t, ms = 900) {
+    this.run = (this.run || 0) + 1;
+    if (this.onstate) this.onstate("done");
+    if (this.tw) this.tw.kill();
+    const g = window.gsap;
+    if (!g || this.spec.reduced) { this.seek(t); return; }
+    this.tw = g.to(this, { t: clamp01(t), duration: ms / 1000, ease: "expo.out", onUpdate: () => this.draw() });
   }
 
   draw() {
@@ -457,73 +468,14 @@ function arc(stage, cx, cy, r, color, px, segs = 64, from = Math.PI / 2, sweep =
 }
 
 const fmtPct = (v) => v.toFixed(1) + "%";
-const bySize = (D) => D.banks.slice().sort((a, b) => b.assets - a.assets);
 
-// ---------- 1. the stack ----------
-// The twelve banks drop onto one column in order of size. Each slab is that bank's
-// share of the twelve banks' assets, so the column is 100%. After three slabs the
-// column has passed 62%.
-function sceneStack(stage, D) {
-  const H = 8.0, W = 2.4, DP = 1.6;
-  const banks = bySize(D);
-  const tot = D.totals.assets;
-  let acc = 0;
-  const slabs = banks.map((b, i) => {
-    const h = (b.assets / tot) * H;
-    const y0 = acc;
-    acc += h;
-    const color = i < 3 ? C.gold : C.ink;
-    const g = stage.box(W, h, DP, color, i < 3 ? 2 : 1.3);
-    const fill = new THREE.Mesh(
-      new THREE.BoxGeometry(W - 0.012, h - 0.012, DP - 0.012),
-      new THREE.MeshBasicMaterial({ color: i < 3 ? C.gold : C.paper2, transparent: true, opacity: i < 3 ? 0.28 : 0.9 })
-    );
-    g.add(fill);
-    return { b, g, h, y0, i };
-  });
-
-  // the floor
-  stage.quad([V(-W / 2 - 0.4, 0, -DP / 2 - 0.3), V(W / 2 + 0.4, 0, -DP / 2 - 0.3), V(W / 2 + 0.4, 0, DP / 2 + 0.3), V(-W / 2 - 0.4, 0, DP / 2 + 0.3)], C.shade, 1);
-
-  // the two marks: top three and top five
-  const y3 = slabs[2].y0 + slabs[2].h, y5 = slabs[4].y0 + slabs[4].h;
-  const m3 = stage.line([V(W / 2, y3, DP / 2), V(W / 2 + 0.9, y3, DP / 2)], C.gold, 2.4);
-  const m5 = stage.line([V(W / 2, y5, DP / 2), V(W / 2 + 0.9, y5, DP / 2)], C.ink, 1.6);
-  const l3 = stage.label("Top 3 hold 62%", "gold", "r");
-  const l5 = stage.label("Top 5 hold 80%", "", "r");
-
-  const names = slabs.slice(0, 5).map((s) => {
-    const l = stage.label(s.b.short + "  " + fmtPct((s.b.assets / tot) * 100), s.i < 3 ? "small" : "small dim", "l");
-    return l;
-  });
-  const lRest = stage.label("Seven others  19.8%", "small dim", "l");
-
-  stage.extent(V(-W / 2 - 3.0, -0.3, 0), V(W / 2 + 3.4, H + 0.6, 0));
-  stage.fit(V(0.32, 0.18, 1), 1.04);
-  stage.backdrop("62%", { cover: 0.9, back: 3, opacity: 0.1, color: "#13202c", at: V(0, 0.6, 0) });
-
-  return {
-    update(t) {
-      // Each slab falls from above the column and lands on the ones before it.
-      slabs.forEach((s) => {
-        const st = 0.02 + s.i * 0.058;
-        const f = smooth(seg(t, st, st + 0.16));
-        const land = s.y0 + s.h / 2;
-        s.g.position.y = lerp(H + 1.6, land, f);
-        s.g.visible = f > 0;
-        s.f = f;
-      });
-      const on3 = slabs[2].f >= 1, on5 = slabs[4].f >= 1, onAll = slabs[11].f >= 1;
-      m3.visible = on3; m5.visible = on5;
-      stage.place(l3, V(W / 2 + 1.0, y3, DP / 2), on3);
-      stage.place(l5, V(W / 2 + 1.0, y5, DP / 2), on5);
-      slabs.slice(0, 5).forEach((s, i) => {
-        stage.place(names[i], V(-W / 2 - 0.15, s.y0 + s.h / 2, DP / 2), s.f >= 1);
-      });
-      stage.place(lRest, V(-W / 2 - 0.15, (y5 + H) / 2, DP / 2), onAll);
-    },
-  };
+// Dim or restore a line or mesh. Transparency is switched on once, the first time.
+function dim(obj, on, low = 0.16) {
+  const m = obj.material;
+  if (!m.transparent) { m.transparent = true; m.needsUpdate = true; }
+  m.opacity = on ? low : 1;
 }
+const bySize = (D) => D.banks.slice().sort((a, b) => b.assets - a.assets);
 
 // ---------- 2. the swap ----------
 // Each bar starts as the bank's share of the twelve banks' assets, then changes to its
@@ -538,7 +490,7 @@ function sceneSwap(stage, D) {
     const a = (b.assets / ta) * 100, p = (b.profit / tp) * 100;
     const y = (banks.length - 1 - i) * ROW;
     const up = p - a > 0.5, down = a - p > 0.5;
-    const color = up ? C.gold : down ? C.stamp : C.ink;
+    const color = up ? C.gold : down ? C.stamp : C.ctx;
     const ghost = stage.line([V(xOf(a), y - 0.2, 0.01), V(xOf(a), y + 0.2, 0.01)], C.ctx, 1.4, { opacity: 0.9 });
     const bar = hbar(stage, y, 0.4, C.ink, 1.6);
     const fill = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.0 }));
@@ -552,7 +504,7 @@ function sceneSwap(stage, D) {
 
   stage.extent(V(-2.3, -0.6, 0), V(XMAX + 1.9, (banks.length - 1) * ROW + 1.1, 0));
   stage.fit(V(0.0, 0.0, 1), 1.03);
-  stage.backdrop("18.5%", { cover: 0.88, back: 3, opacity: 0.08, color: "#13202c", at: V(0.6, -0.4, 0) });
+  stage.backdrop("18.5%", { cover: 0.88, back: 3, opacity: 0.08, color: "#050f16", at: V(0.6, -0.4, 0) });
 
   return {
     update(t) {
@@ -580,16 +532,18 @@ function sceneSwap(stage, D) {
 
 // ---------- 3. the blocks ----------
 // Each bank is a block, highest return first. Its footprint is its assets and its
-// height is its return on equity. The plane is 7.5%. Five blocks never reach it.
+// height is its return on equity. The plane is a return on equity the reader can move;
+// it opens at 7.5%, where five blocks never reach it. Blocks under the plane are orange.
 function sceneBlocks(stage, D) {
   const banks = D.banks.slice().sort((a, b) => b.roe - a.roe || b.assets - a.assets);
-  const GAP = 0.34, HK = 0.5, LINE = 7.5;
+  const GAP = 0.34, HK = 0.5;
+  let line = 7.5;
   let x = 0;
   const blocks = banks.map((b) => {
     const s = 0.34 + Math.sqrt(b.assets / D.banks[0].assets) * 1.2;
     const cx = x + s / 2;
     x += s + GAP;
-    return { b, s, cx, h: b.roe * HK, low: b.roe < LINE };
+    return { b, s, cx, h: b.roe * HK };
   });
   const span = x - GAP;
   blocks.forEach((k) => { k.cx -= span / 2; });
@@ -599,35 +553,50 @@ function sceneBlocks(stage, D) {
     g.position.set(k.cx, 0, 0);
     const hw = k.s / 2;
     const bot = [[-hw, -hw], [hw, -hw], [hw, hw], [-hw, hw]];
-    const col = k.low ? C.stamp : C.ink;
-    const body = new THREE.Mesh(
+    k.body = new THREE.Mesh(
       new THREE.BoxGeometry(k.s - 0.01, k.h, k.s - 0.01),
-      new THREE.MeshBasicMaterial({ color: k.low ? C.stamp : C.paper, transparent: k.low, opacity: k.low ? 0.5 : 1 })
+      new THREE.MeshBasicMaterial({ color: C.paper })
     );
-    body.position.y = k.h / 2;
-    g.add(body);
-    bot.forEach(([px, pz]) => g.add(stage.line([V(px, 0, pz), V(px, k.h, pz)], col, 1.4)));
-    g.add(stage.loop(bot.map(([px, pz]) => V(px, k.h, pz)), col, 1.8));
-    g.add(stage.loop(bot.map(([px, pz]) => V(px, 0, pz)), col, 1.4));
+    k.body.position.y = k.h / 2;
+    g.add(k.body);
+    bot.forEach(([px, pz]) => g.add(stage.line([V(px, 0, pz), V(px, k.h, pz)], C.ink, 1.4)));
+    g.add(stage.loop(bot.map(([px, pz]) => V(px, k.h, pz)), C.ink, 1.8));
+    g.add(stage.loop(bot.map(([px, pz]) => V(px, 0, pz)), C.ink, 1.4));
     stage.root.add(g);
     k.g = g;
     // The value rides with the name on the tilted label. Twelve values in a row on top
     // of the blocks collide on a phone.
-    k.nm = stage.label("", "small tilt " + (k.low ? "stamp" : "dim"), "l");
+    k.nm = stage.label("", "small tilt", "l");
     k.nm.el.innerHTML = "<span>" + k.b.short + " " + fmtPct(k.b.roe) + "</span>";
   });
 
-  // the 7.5% plane
-  const yL = LINE * HK;
+  // the plane, built at height zero and moved up to the line
   const ex = span / 2 + 0.5, ez = 1.4;
-  const plane = stage.quad([V(-ex, yL, -ez), V(ex, yL, -ez), V(ex, yL, ez), V(-ex, yL, ez)], C.gold, 0.12);
-  const edge = stage.line([V(-ex, yL, ez), V(ex, yL, ez)], C.gold, 2);
-  const lLine = stage.label("7.5%", "gold", "r");
+  const plane = stage.quad([V(-ex, 0, -ez), V(ex, 0, -ez), V(ex, 0, ez), V(-ex, 0, ez)], C.stamp, 0.18);
+  const edge = stage.line([V(-ex, 0, ez), V(ex, 0, ez)], C.stamp, 2.4);
+  const lLine = stage.label("", "stamp", "r");
   stage.line([V(-ex, 0, ez), V(ex, 0, ez)], C.ink, 1.6);
 
   stage.extent(V(-span / 2 - 3.1, -3.6, 0), V(span / 2 + 3.0, 12.3 * HK + 0.4, 0));
   stage.fit(V(0.28, 0.26, 1), 1.02);
-  stage.backdrop("5 of 12", { cover: 0.84, back: 4, opacity: 0.08, color: "#13202c", at: V(0, 0.6, 0) });
+  stage.backdrop("5 of 12", { cover: 0.84, back: 4, opacity: 0.08, color: "#050f16", at: V(0, 0.6, 0) });
+
+  // Colour the blocks against the line and say how many stay under it.
+  const under = () => blocks.filter((k) => k.b.roe < line).length;
+  function paint() {
+    blocks.forEach((k) => {
+      const low = k.b.roe < line;
+      k.body.material.color.setHex(low ? C.stamp : C.paper);
+      k.nm.el.className = "scene-label small tilt " + (low ? "stamp" : "dim");
+    });
+    lLine.el.textContent = fmtPct(line);
+    if (stage.backdropOpts) {
+      const n = under();
+      const text = n + " of 12";
+      if (stage.backdropOpts.text !== text) { stage.backdropOpts.text = text; stage.paintBackdrop(); }
+    }
+  }
+  paint();
 
   return {
     update(t) {
@@ -636,11 +605,15 @@ function sceneBlocks(stage, D) {
         k.g.scale.y = Math.max(0.001, f);
         stage.place(k.nm, V(k.cx + 0.12, -0.42, k.s / 2), true);
       });
+      const yL = line * HK;
       const p = smooth(seg(t, 0.55, 0.8));
-      plane.material.opacity = 0.14 * p;
+      plane.position.y = yL; edge.position.y = yL;
+      plane.material.opacity = 0.18 * p;
       edge.visible = p > 0.02;
       stage.place(lLine, V(ex + 0.08, yL, ez), p > 0.5);
     },
+    // The page's slider calls this. It returns how many banks are under the line.
+    setLine(v) { line = v; paint(); stage.draw(); return under(); },
   };
 }
 
@@ -656,7 +629,7 @@ function sceneDials(stage, D) {
     const x = (c - (COLS - 1) / 2) * SX;
     const y = ((rows - 1) / 2 - r) * SY;
     const lean = b.cir < 40, heavy = b.cir > 60;
-    const color = lean ? C.gold : heavy ? C.stamp : C.ink;
+    const color = lean ? C.gold : heavy ? C.stamp : C.ctx;
     arc(stage, x, y, R, C.rule, 5).show(1);
     const cost = arc(stage, x, y, R, color, 5.5);
     const val = stage.label("", "big " + (lean ? "gold" : heavy ? "stamp" : ""), "c");
@@ -666,9 +639,19 @@ function sceneDials(stage, D) {
 
   stage.extent(V(-(COLS / 2) * SX, -(rows / 2) * SY - 0.9, 0), V((COLS / 2) * SX, (rows / 2) * SY, 0));
   stage.fit(V(0, 0, 1), 1.02);
-  stage.backdrop("30 sen", { cover: 0.92, back: 3, opacity: 0.07, color: "#13202c" });
+  stage.backdrop("30 sen", { cover: 0.92, back: 3, opacity: 0.07, color: "#050f16" });
 
   return {
+    // The page's choice calls this with a test on each bank. Rings that fail it fade.
+    highlight(test) {
+      dials.forEach((d) => {
+        const off = test ? !test(d.b) : false;
+        dim(d.cost, off);
+        d.val.el.style.visibility = off ? "hidden" : "";
+        d.nm.el.style.opacity = off ? "0.35" : "";
+      });
+      stage.draw();
+    },
     update(t) {
       dials.forEach((d) => {
         const f = smooth(seg(t, 0.04 + d.i * 0.035, 0.5 + d.i * 0.035));
@@ -722,7 +705,7 @@ function sceneTanks(stage, D) {
   stage.extent(V(-PAIR / 2 - GAP / 2 - R - 0.3, -1.9, 0), V(PAIR / 2 + GAP / 2 + R + 0.3, H + 0.9, 0));
   stage.camera.fov = 20;
   stage.fit(V(0.0, 0.32, 1), 1.04);
-  stage.backdrop("89%", { cover: 0.86, back: 3.5, opacity: 0.08, color: "#13202c", at: V(0, 0.4, 0) });
+  stage.backdrop("89%", { cover: 0.86, back: 3.5, opacity: 0.08, color: "#050f16", at: V(0, 0.4, 0) });
 
   return {
     update(t) {
@@ -748,7 +731,7 @@ function sceneTanks(stage, D) {
 
 // ---------- 6. the lanes ----------
 // Four lanes, one per country, with the biggest local banks in each. Every bank drops
-// to its return on assets. The gold plane is Malaysia's best, 1.4%.
+// to its return on assets. The dashed line is Malaysia's best, 1.4%.
 function sceneLanes(stage, D) {
   const lanes = ["Malaysia", "Singapore", "Thailand", "Indonesia"];
   const SX = 2.0, YK = 1.7, TOP = 4.2 * YK;
@@ -763,7 +746,7 @@ function sceneLanes(stage, D) {
     stage.line([V(x0 - 0.9, yOf(v), -0.02), V(x0 - 0.75, yOf(v), -0.02)], C.ink, 1.4);
   });
   const ticks = [1, 2, 3, 4].map((v) => { const l = stage.label(v + "%", "small dim", "l"); l.v = v; return l; });
-  const best = stage.line([V(x0 - 0.75, yOf(1.4), 0.02), V(-x0 + 0.9, yOf(1.4), 0.02)], C.gold, 2, { dash: true });
+  const best = stage.line([V(x0 - 0.75, yOf(1.4), 0.02), V(-x0 + 0.9, yOf(1.4), 0.02)], C.ink, 2, { dash: true });
   const lBest = stage.label("Malaysia's best, 1.4%", "small gold", "l");
 
   const RD = 0.13;
@@ -780,7 +763,7 @@ function sceneLanes(stage, D) {
     }
     const x = x0 + li * SX + dx;
     placed.push({ x, y });
-    const color = r.name === "BCA" ? C.stamp : r.country === "Malaysia" ? C.gold : C.ink;
+    const color = r.name === "BCA" ? C.stamp : r.country === "Malaysia" ? C.gold : C.ctx;
     const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color }));
     m.position.set(x, TOP, 0.05);
     stage.root.add(m);
@@ -791,14 +774,20 @@ function sceneLanes(stage, D) {
 
   stage.extent(V(x0 - 1.7, -0.9, 0), V(-x0 + 1.3, TOP + 0.3, 0));
   stage.fit(V(0.0, 0.0, 1), 1.03);
-  stage.backdrop("3.8%", { cover: 0.84, back: 3, opacity: 0.08, color: "#13202c", at: V(0, 0.5, 0) });
+  stage.backdrop("3.8%", { cover: 0.84, back: 3, opacity: 0.08, color: "#050f16", at: V(0, 0.5, 0) });
 
   return {
+    // The page's choice calls this with a country, or null for all four.
+    highlight(country) {
+      dots.forEach((d) => dim(d.m, country && d.r.country !== country, 0.15));
+      names.forEach((l, i) => { l.el.style.opacity = country && lanes[i] !== country ? "0.4" : ""; });
+      stage.draw();
+    },
     update(t) {
       dots.forEach((d, i) => {
         const st = 0.03 + d.li * 0.12 + (i % 4) * 0.025;
         const f = seg(t, st, st + 0.26);
-        // fall and settle: an ease-in drop with a small bounce at the end
+        // fall and settle: a drop that speeds up with a small bounce at the end
         const e = f < 0.8 ? Math.pow(f / 0.8, 2) : 1 - Math.sin(((f - 0.8) / 0.2) * Math.PI) * 0.06;
         d.m.position.y = lerp(TOP, d.y, e);
         d.m.visible = f > 0;
@@ -820,7 +809,6 @@ document.documentElement.classList.add("js");
 
 const DATA = await fetch("./data.json").then((r) => r.json());
 const SCENES = {
-  stack: { build: (s) => sceneStack(s, DATA), durationMs: 1400 },
   swap: { build: (s) => sceneSwap(s, DATA), durationMs: 1600 },
   blocks: { build: (s) => sceneBlocks(s, DATA), durationMs: 1400 },
   dials: { build: (s) => sceneDials(s, DATA), durationMs: 1400 },
@@ -849,7 +837,8 @@ const FINGER_SVG =
 
 function attach(st, fig, index) {
   const wrap = st.wrap;
-  const head = fig.closest("section") && fig.closest("section").querySelector("h2");
+  // Each chart is named by the heading of the text block that goes with it.
+  const head = document.querySelector('.block[data-for="' + st.name + '"] h3') || (fig.closest("section") && fig.closest("section").querySelector("h2"));
   wrap.tabIndex = 0;
   wrap.setAttribute("role", "button");
   wrap.setAttribute("aria-label", (reduced ? "Still frame: " : VERB + " to play: ") + (head ? head.textContent.trim() : "the chart"));
@@ -873,6 +862,7 @@ function attach(st, fig, index) {
     chip.textContent = n + (s === "playing" ? "playing" : s === "done" ? VERB.toLowerCase() + " to replay" : VERB.toLowerCase() + " to play");
     chip.classList.toggle("busy", s === "playing");
     wrap.classList.toggle("is-playing", s === "playing");
+    wrap.classList.toggle("is-idle", s === "idle");
   };
   st.onstate = setState;
   setState("idle");
@@ -910,6 +900,9 @@ document.querySelectorAll("[data-scene]").forEach((fig, index) => {
 });
 
 window.__stages = stages;
+// The page script (page.js) drives the charts from its controls through these.
+window.__byName = Object.fromEntries(stages.map((s) => [s.name, s]));
+window.dispatchEvent(new CustomEvent("scenes-ready"));
 window.__seek = (t, name) => {
   stages.forEach((s) => { if (!name || s.name === name) s.seek(t); });
 };
@@ -929,7 +922,7 @@ if (q.has("shot")) {
   const st = stages.find((s) => s.name === q.get("shot"));
   if (st) {
     document.body.classList.add("shot-mode");
-    st.fig.closest("section").classList.add("on");
+    document.querySelectorAll(".figs .fig").forEach((f) => f.classList.toggle("on", f === st.fig));
     requestAnimationFrame(() => {
       st.resize();
       st.seek(q.has("t") ? parseFloat(q.get("t")) : 1);

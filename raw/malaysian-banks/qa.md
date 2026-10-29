@@ -27,11 +27,32 @@ data.json against the source rows: 12 banks, 6 fields each (assets, profit, ROE,
 | ROE and CIR, all 12 rows of Fig 3 and Fig 4 tables | TAB's own | OK |
 | ROA, 16 banks in Fig 6's table | TAB's own | OK |
 
+## Redesign, 29 Oct 2026 (later)
+
+New figures on the redesigned page, checked against data.json:
+
+| Page says | Computed | Result |
+|---|---|---|
+| Share column: Maybank 27.3%, CIMB 20.2%, Public Bank 14.6%, the other nine 38.0% | 27.30, 20.18, 14.55, 37.97 | OK |
+| Bank sheet ranks for all 12 banks (page.js computes them; ties read "equal") | recomputed in Python, same ranks | OK |
+| Maybank sheet as written in the HTML: 1st 27.3%, 1st 27.0%, ROE 2nd equal, ROA 3rd equal, CIR 4th leanest, CAR 2nd | page.js output in the browser, identical | OK |
+| Hong Leong sheet: 5th largest, ROA 1st, CIR Leanest, CAR 12th | browser, after a real click | OK |
+| Bank Central Asia is smaller than Maybank, CIMB or Public Bank | BCA 94,997 vs Public Bank 138,341 | OK |
+| League, cost to income order: Hong Leong 30.0 first, AFFIN 68.2 last | browser, after a real click on the tab | OK |
+| ROE line at 4.0%: 1 of 12 under it (MBSB 2.2) | browser, slider | OK |
+
 ## Corrections made while building
 
 - AFFIN Bank is a conventional bank with an Islamic arm, not an Islamic bank. The page says "four of the five" low-ROE banks are Islamic (Bank Islam, Bank Muamalat, Bank Rakyat, MBSB). The source report's wording was fixed to match.
 
-## Browser checks
+## Browser checks (redesign, playwright-cli)
+
+- Real clicks: bank tab, measure tab, chart click to play (chip "1 / 5 · playing", then "1 / 5 · click to replay"), each chart's control (share of profit, Islamic banks, ROE slider, Indonesia, assets and profit). Each control brings its own chart forward and runs it to the end.
+- Reduced motion at 390: no motion class, all five charts at their end state with "Still frame" chips, nothing left hidden.
+- No script at 1440: charts, controls, bank list and league bars are hidden; every number stays in the text and the tables.
+- taste-skill inspect at 1440, 768 and 390: 0 FAIL.
+
+## Browser checks (first build)
 
 - Desktop 1440 and phone 390 (Chromium, swiftshader): every figure at its end state, labels inside the frame, no overlaps left.
 - 9:16 capture frames (`?shot=<name>&t=0.5` and end) for all six scenes.
