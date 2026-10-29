@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "title": "Malaysia's 12 banks in the TAB Global 1000, 2026",
+    "asOf": "FY2025",
+    "published": "2026-10",
+    "units": "US$ millions; ratios in percent",
+    "source": "TAB Insights, World's 1000 Largest Banks 2026, https://tabinsights.com/ab1000/largest-banks-in-the-world, read 2026-10-29"
+  },
+  "banks": [
+    { "rank": 116, "name": "Maybank", "short": "Maybank", "assets": 259510, "profit": 2531, "roe": 11.2, "roa": 1.0, "cir": 45.7, "car": 20.0, "kind": "commercial" },
+    { "rank": 150, "name": "CIMB Group", "short": "CIMB", "assets": 191809, "profit": 1876, "roe": 11.2, "roa": 1.0, "cir": 46.8, "car": 18.0, "kind": "commercial" },
+    { "rank": 188, "name": "Public Bank", "short": "Public Bank", "assets": 138341, "profit": 1731, "roe": 12.3, "roa": 1.3, "cir": 34.8, "car": 17.2, "kind": "commercial" },
+    { "rank": 259, "name": "RHB Bank", "short": "RHB", "assets": 88205, "profit": 787, "roe": 10.2, "roa": 1.0, "cir": 47.7, "car": 18.5, "kind": "commercial" },
+    { "rank": 272, "name": "Hong Leong Financial Group", "short": "Hong Leong", "assets": 84322, "profit": 1106, "roe": 10.7, "roa": 1.4, "cir": 30.0, "car": 14.9, "kind": "commercial" },
+    { "rank": 389, "name": "AMMB Holdings", "short": "AmBank", "assets": 51299, "profit": 505, "roe": 10.0, "roa": 1.0, "cir": 44.2, "car": 17.9, "kind": "commercial" },
+    { "rank": 523, "name": "Bank Rakyat Malaysia", "short": "Bank Rakyat", "assets": 32276, "profit": 288, "roe": 4.9, "roa": 1.0, "cir": 51.6, "car": 25.6, "kind": "islamic" },
+    { "rank": 536, "name": "AFFIN Bank", "short": "AFFIN", "assets": 30561, "profit": 126, "roe": 4.5, "roa": 0.5, "cir": 68.2, "car": 17.3, "kind": "commercial" },
+    { "rank": 585, "name": "Bank Islam Malaysia", "short": "Bank Islam", "assets": 25646, "profit": 130, "roe": 7.1, "roa": 0.6, "cir": 66.0, "car": 18.3, "kind": "islamic" },
+    { "rank": 628, "name": "Alliance Bank Malaysia", "short": "Alliance", "assets": 22760, "profit": 199, "roe": 9.9, "roa": 0.9, "cir": 47.9, "car": 17.9, "kind": "commercial" },
+    { "rank": 784, "name": "MBSB Bank", "short": "MBSB", "assets": 14569, "profit": 41, "roe": 2.2, "roa": 0.3, "cir": 59.3, "car": 19.1, "kind": "islamic" },
+    { "rank": 844, "name": "Bank Muamalat Malaysia", "short": "Muamalat", "assets": 11248, "profit": 52, "roe": 6.2, "roa": 0.5, "cir": 63.9, "car": 18.1, "kind": "islamic" }
+  ],
+  "totals": { "assets": 950546, "profit": 9372 },
+  "region": [
+    { "country": "Malaysia", "name": "Maybank", "rank": 116, "assets": 259510, "profit": 2531, "roe": 11.2, "roa": 1.0 },
+    { "country": "Malaysia", "name": "CIMB", "rank": 150, "assets": 191809, "profit": 1876, "roe": 11.2, "roa": 1.0 },
+    { "country": "Malaysia", "name": "Public Bank", "rank": 188, "assets": 138341, "profit": 1731, "roe": 12.3, "roa": 1.3 },
+    { "country": "Malaysia", "name": "RHB", "rank": 259, "assets": 88205, "profit": 787, "roe": 10.2, "roa": 1.0 },
+    { "country": "Malaysia", "name": "Hong Leong", "rank": 272, "assets": 84322, "profit": 1106, "roe": 10.7, "roa": 1.4 },
+    { "country": "Singapore", "name": "DBS", "rank": 59, "assets": 697766, "profit": 8371, "roe": 15.9, "roa": 1.3 },
+    { "country": "Singapore", "name": "OCBC", "rank": 72, "assets": 525324, "profit": 5788, "roe": 12.2, "roa": 1.2 },
+    { "country": "Singapore", "name": "UOB", "rank": 82, "assets": 444758, "profit": 3594, "roe": 9.3, "roa": 0.9 },
+    { "country": "Indonesia", "name": "Mandiri", "rank": 159, "assets": 169418, "profit": 3726, "roe": 20.2, "roa": 2.4 },
+    { "country": "Indonesia", "name": "BRI", "rank": 197, "assets": 127836, "profit": 3470, "roe": 17.7, "roa": 2.7 },
+    { "country": "Indonesia", "name": "BCA", "rank": 244, "assets": 94997, "profit": 3496, "roe": 21.8, "roa": 3.8 },
+    { "country": "Indonesia", "name": "BNI", "rank": 286, "assets": 81541, "profit": 1221, "roe": 11.8, "roa": 1.7 },
+    { "country": "Thailand", "name": "Bangkok Bank", "rank": 176, "assets": 146062, "profit": 1412, "roe": 8.1, "roa": 1.0 },
+    { "country": "Thailand", "name": "Kasikorn", "rank": 181, "assets": 144548, "profit": 1698, "roe": 8.4, "roa": 1.3 },
+    { "country": "Thailand", "name": "Krung Thai", "rank": 204, "assets": 124721, "profit": 1590, "roe": 11.0, "roa": 1.4 },
+    { "country": "Thailand", "name": "SCB", "rank": 220, "assets": 111122, "profit": 1397, "roe": 10.6, "roa": 1.4 }
+  ],
+  "world": [
+    { "rank": 1, "name": "ICBC", "assets": 7645798, "profit": 51593 }
+  ]
+}

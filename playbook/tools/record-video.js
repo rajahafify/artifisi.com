@@ -179,6 +179,8 @@ async function shoot(p, s, t, w) {
     if (name) {
       const st = window.__stages.find((x) => x.name === name);
       if (st) { st.seek(t); st.draw(); }
+      // A scene that is not a stage (a whole-section scene) seeks through __seekExtra.
+      else if (window.__seekExtra && window.__seekExtra[name]) window.__seekExtra[name](t);
     }
     if (cap != null) {
       const el = document.querySelector('.vb-cap');
@@ -216,7 +218,7 @@ function openClip(out) {
   for (const [i, s] of items.entries()) {
     const isEnd = !!s.endCard;
     const isCard = !!s.card;
-    const ctx = await b.newContext(frameContext(W, H));
+    const ctx = await b.newContext(frameContext(W, H, shots.scale));
     const p = await ctx.newPage();
     p.on('pageerror', (e) => console.log('ERR', e.message));
     await p.route('**/*', route(dir));
@@ -268,13 +270,14 @@ function openClip(out) {
     } else {
       // The chart is built and framed before anything is captured, and the wall wants a
       // clean frame of the finished chart, taken before the caption band goes on.
-      await openShot(p, `http://x/index.html${query}&shot=${s.scene}&t=0`, 600);
+      await openShot(p, `http://x/index.html${query}${query ? "&" : "?"}shot=${s.scene}&t=0`, 600);
       // The captions are timed against the voice, so they are resolved before the
       // frames are taken.
       s.caps = await captionTimes(p, s);
       await p.evaluate((name) => {
         const st = window.__stages.find((x) => x.name === name);
         if (st) { st.seek(1); st.draw(); }
+        else if (window.__seekExtra && window.__seekExtra[name]) window.__seekExtra[name](1);
       }, s.scene);
       await p.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
       const buf = await p.screenshot({ type: 'jpeg', quality: 78 });

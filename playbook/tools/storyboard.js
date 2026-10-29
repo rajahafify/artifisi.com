@@ -43,7 +43,7 @@ function dataUri(file) {
   const b = await chromium.launch(LAUNCH);
   // The frame is the viewport, one to one, so the storyboard and the recorded video are
   // the same pixels.
-  const ctx = await b.newContext(frameContext(W, H));
+  const ctx = await b.newContext(frameContext(W, H, shots.scale));
   const p = await ctx.newPage();
   p.on('pageerror', (e) => console.log('ERR', e.message));
   p.on('console', (m) => { if (m.type() === 'error') console.log('CONSOLE', m.text()); });

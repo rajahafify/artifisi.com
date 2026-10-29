@@ -28,6 +28,8 @@ import asyncio, json, os, re, shutil, subprocess, sys, tempfile
 VOICE = os.environ.get('TTS_VOICE', 'en-SG-LunaNeural')
 RATE = os.environ.get('TTS_RATE', '-3%')
 
+FFMPEG = 'ffmpeg'
+
 # The pause a narrator takes between sentences. Anything longer is padding.
 BREATH = 0.32
 # The air left after the last word, so the cut does not clip a final consonant.
@@ -160,7 +162,7 @@ def record(text, mp3):
     try:
         with open(raw, 'wb') as f:
             f.write(audio)
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw,
+        subprocess.run([FFMPEG, '-y', '-loglevel', 'error', '-i', raw,
                         '-filter_complex', filt, '-map', '[out]',
                         '-q:a', '2', mp3], check=True)
     finally:
@@ -170,9 +172,13 @@ def record(text, mp3):
 
 def main(vo, force):
     lines = read_script(vo)
-    ffprobe = shutil.which('ffprobe')
-    ffmpeg = shutil.which('ffmpeg')
-    if not ffprobe or not ffmpeg:
+    global FFMPEG
+    # The resolved path, not the bare name. On Windows a bare 'ffmpeg' can land on a
+    # file that is not a program (WinError 193); shutil.which honours PATHEXT and finds
+    # the real ffmpeg.exe. FFMPEG and FFPROBE in the environment override both.
+    ffprobe = os.environ.get('FFPROBE') or shutil.which('ffprobe')
+    FFMPEG = os.environ.get('FFMPEG') or shutil.which('ffmpeg')
+    if not ffprobe or not FFMPEG:
         raise SystemExit('ffmpeg and ffprobe have to be on PATH. Install ffmpeg and retry.')
 
     words_file = os.path.join(vo, 'words.json')

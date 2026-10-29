@@ -65,6 +65,30 @@ const THEMES = {
     display: '"Fraunces", Georgia, serif', displayWeight: 800,
     displayLetter: '-.022em',
   },
+  // The banks report: the printed annual. Serif throughout, no mono, and the caption and
+  // kicker sit on ink bands, because the scenes behind them are orange, white and ink.
+  banks: {
+    paper: '#050f16', ink: '#ffffff', muted: '#b8b8b8', rule: '#2a3640', ctx: '#8a949c',
+    accent: '#ff7a1f', accent2: '#ff7a1f',
+    display: '"Young Serif", Georgia, serif', displayWeight: 400,
+    displayLetter: '-.01em',
+    mono: '"Source Serif 4", Georgia, serif', sans: '"Source Serif 4", Georgia, serif',
+    extra: `
+  .vb-kick, .vb-num { letter-spacing: .04em; text-transform: none; color: #ffffff; }
+  .vb-kick::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 8vh; background: #050f16; z-index: -1; }
+  .vb-rule { left: 0; right: 0; top: 84vh; bottom: 0; height: auto; background: #050f16; z-index: 5; }
+  .vb-cap { top: 87vh; font: 400 4.6vw/1.25 "Young Serif", Georgia, serif; color: #ffffff; }
+  /* the page styles its own .figs and .fig; a card's figures must not inherit them */
+  .vb-card .figs { position: static; width: auto; height: auto; aspect-ratio: auto; }
+  .vb-card .fig { position: static; inset: auto; visibility: visible; transition: none; }
+  .vb-card .k, .vb-end .k { letter-spacing: .04em; text-transform: none; }
+  .vb-kick, .vb-num, .vb-card .k, .vb-end .k { font-size: 2.6vw; }
+  .vb-card .fig .l { font-size: 2.9vw; line-height: 1.35; }
+  .vb-card .line { font-size: 3.6vw; max-width: 22ch; }
+  .vb-card .note, .vb-end .s { font-size: 2.4vw; }
+  .vb-end .u { font-size: 3.4vw; }
+  .vb-end .u { color: #ff7a1f; }`,
+  },
   cpi: {
     paper: '#0e1114', ink: '#e9edf2', muted: '#9aa5b2', rule: '#2b323b', ctx: '#78828e',
     accent: '#2e86de', accent2: '#e8452c',
@@ -75,21 +99,23 @@ const THEMES = {
 
 function overlayCSS(theme) {
   const T = THEMES[theme] || THEMES.wages;
+  const MONO = T.mono || '"IBM Plex Mono", monospace';
+  const SANS = T.sans || '"IBM Plex Sans", sans-serif';
   return `
   .vb-kick { position: fixed; left: 8.33vw; top: 5vh; z-index: 6;
-    font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
+    font: 500 1.76vw/1.2 ${MONO}; letter-spacing: .22em;
     text-transform: uppercase; color: ${T.muted}; white-space: nowrap; }
   .vb-num { position: fixed; right: 8.33vw; top: 5vh; z-index: 6;
-    font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .1em; color: ${T.ctx}; }
+    font: 500 1.76vw/1.2 ${MONO}; letter-spacing: .1em; color: ${T.ctx}; }
   .vb-rule { position: fixed; left: 8.33vw; right: 8.33vw; top: 84.01vh; z-index: 6;
     height: 1px; background: ${T.rule}; }
   .vb-cap { position: fixed; left: 8.33vw; right: 8.33vw; top: 87.6vh; z-index: 6;
-    font: 600 2.78vw/1.35 "IBM Plex Sans", sans-serif; color: ${T.ink}; text-align: left; }
+    font: 600 2.78vw/1.35 ${SANS}; color: ${T.ink}; text-align: left; }
   .vb-card { position: fixed; inset: 0; z-index: 5; background: ${T.paper};
     display: flex; flex-direction: column; justify-content: center; padding: 8.33vw; }
   @keyframes vbup { from { opacity: 0; transform: translateY(2.4vh); } to { opacity: 1; transform: none; } }
   .vb-card .k { position: absolute; left: 8.33vw; top: 5vh;
-    font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
+    font: 500 1.76vw/1.2 ${MONO}; letter-spacing: .22em;
     text-transform: uppercase; color: ${T.muted};
     opacity: 0; animation: vbup .8s cubic-bezier(.22,.61,.36,1) forwards; }
   .vb-card .claim { font: ${T.displayWeight} 8.6vw/1.05 ${T.display}; letter-spacing: ${T.displayLetter};
@@ -102,14 +128,14 @@ function overlayCSS(theme) {
     animation: vbup .85s cubic-bezier(.22,.61,.36,1) forwards; }
   .vb-card .fig .n { display: block; font: ${T.displayWeight} 7.6vw/1 ${T.display};
     letter-spacing: ${T.displayLetter}; color: ${T.ink}; }
-  .vb-card .fig .l { display: block; font: 500 1.67vw/1.45 "IBM Plex Mono", monospace;
+  .vb-card .fig .l { display: block; font: 500 1.67vw/1.45 ${MONO};
     color: ${T.muted}; margin-top: 1.6vh; }
   .vb-card .fig.cool .n { color: ${T.accent}; }
   .vb-card .fig.warm .n { color: ${T.accent2}; }
-  .vb-card .line { font: 400 2.41vw/1.5 "IBM Plex Sans", sans-serif; color: ${T.muted};
+  .vb-card .line { font: 400 2.41vw/1.5 ${SANS}; color: ${T.muted};
     margin: 3.6vh 0 0; max-width: 24ch; opacity: 0;
     animation: vbup .9s cubic-bezier(.22,.61,.36,1) forwards; }
-  .vb-card .note { font: 500 1.67vw/1.5 "IBM Plex Mono", monospace; color: ${T.ctx};
+  .vb-card .note { font: 500 1.67vw/1.5 ${MONO}; color: ${T.ctx};
     margin: 2.4vh 0 0; opacity: 0;
     animation: vbup .9s cubic-bezier(.22,.61,.36,1) forwards; }
   /* A card can put its numbers before its verdict. The voice names the numbers first,
@@ -120,12 +146,12 @@ function overlayCSS(theme) {
   .vb-card.numbers-first .note { order: 4; }
   .vb-end { position: fixed; inset: 0; z-index: 10; background: ${T.paper};
     display: flex; flex-direction: column; justify-content: center; padding: 8.33vw; }
-  .vb-end .k { font: 500 1.76vw/1.2 "IBM Plex Mono", monospace; letter-spacing: .22em;
+  .vb-end .k { font: 500 1.76vw/1.2 ${MONO}; letter-spacing: .22em;
     text-transform: uppercase; color: ${T.muted}; margin: 0 0 2.2vh; }
   .vb-end h2 { font: ${T.displayWeight} 6.3vw/1.06 ${T.display}; letter-spacing: ${T.displayLetter};
     color: ${T.ink}; margin: 0 0 3.1vh; max-width: 14ch; }
-  .vb-end .u { font: 500 2.41vw/1.3 "IBM Plex Mono", monospace; color: ${T.accent}; margin: 0 0 3.7vh; }
-  .vb-end .s { font: 400 1.67vw/1.5 "IBM Plex Sans", sans-serif; color: ${T.muted}; margin: 0; }
+  .vb-end .u { font: 500 2.41vw/1.3 ${MONO}; color: ${T.accent}; margin: 0 0 3.7vh; }
+  .vb-end .s { font: 400 1.67vw/1.5 ${SANS}; color: ${T.muted}; margin: 0; }
   .vb-end.onwall { background: transparent; }
   .vb-wall { position: fixed; inset: 0; z-index: 8; overflow: hidden; background: ${T.paper};
     filter: blur(11px) saturate(1.15) brightness(1.3);
@@ -140,6 +166,7 @@ function overlayCSS(theme) {
   .vb-wall img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .vb-scrim { position: fixed; inset: 0; z-index: 9;
     background: radial-gradient(118% 80% at 50% 44%, ${T.paper}44 0%, ${T.paper}e0 82%); }
+${T.extra || ''}
 `;
 }
 
@@ -179,8 +206,14 @@ function cardHTML(c, times) {
 // never scales that up. Ask for a 540 wide viewport and a 1080 wide video and the page
 // lands in the top left corner of the frame with the rest left empty. So the viewport is
 // the frame size and the device scale is one.
-function frameContext(W, H) {
-  return { viewport: { width: W, height: H }, deviceScaleFactor: 1 };
+//
+// A report whose page is laid out for phones can ask for a scale in shots.json. The
+// viewport is then the frame divided by the scale, at that device scale, so the page
+// takes its phone layout and the screenshots still come out at the full frame size.
+// Captures are screenshots, not a screencast, so the scale is safe here.
+function frameContext(W, H, scale) {
+  const k = scale || 1;
+  return { viewport: { width: Math.round(W / k), height: Math.round(H / k) }, deviceScaleFactor: k };
 }
 
 // Open a shot and wait until the scene is actually there and the fonts have landed.

@@ -25,3 +25,8 @@ raw/*/video/out.mp4
 raw/*/video/clips/
 raw/*/video/tmp/
 raw/*/vo/*.mp3
+
+# Third-party agent skills, fetched by playbook/skills/install.sh. Not committed: see that script.
+.claude/skills/
+.taste-skill/
+.impeccable/

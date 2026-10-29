@@ -415,6 +415,12 @@ A task is complete when:
 
 ---
 
+## Website Work: Install the Design Skills First
+
+Before changing any page in this repo (main site, `reports/`, `tech-sovereignty/`, proposals), run `playbook/skills/install.sh` and use the skills it installs: impeccable, taste-skill, ui-ux-pro-max, gsap-skills, transitions.dev and playwright-cli. `playbook/skills/README.md` says which skill fits which step. The house rules still win over any skill.
+
+---
+
 ## Summary
 
 ```text
