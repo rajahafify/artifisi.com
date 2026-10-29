@@ -56,7 +56,11 @@
 
 <main>
 
+<div class="ticker" data-m="assets" data-ui aria-hidden="true"></div>
+
 <section class="statement" id="concentration" aria-labelledby="h-conc">
+  <canvas class="skyline" aria-hidden="true"></canvas>
+  <div class="skyline-labels" aria-hidden="true"></div>
   <div class="share-col" aria-hidden="true">
     <span class="seg-a" style="flex-grow:27.3"><b>Maybank</b> 27.3%</span>
     <span class="seg-b" style="flex-grow:20.2"><b>CIMB</b> 20.2%</span>
@@ -251,6 +255,8 @@
   <div class="tile t3"><p class="tile-fig">844</p><p class="tile-cap">Bank Muamalat</p></div>
 </section>
 
+<div class="ticker hot" data-m="profit" data-dir="right" data-ui aria-hidden="true"></div>
+
 <section class="faq" id="method" aria-labelledby="h-faq">
   <div class="row"><h2 id="h-faq" class="q soft">Method and caveats</h2><div></div></div>
   <div class="row" data-reveal><h3 class="q">Where do the numbers come from?</h3><p class="a">TAB Insights’ <a href="https://tabinsights.com/ab1000/largest-banks-in-the-world">World’s 1000 Largest Banks 2026</a>, read on 29 October 2026. It ranks banks by total assets and gives net profit, return on equity, return on assets, cost to income and capital adequacy for each.</p></div>
@@ -312,5 +318,6 @@
 <script src="./page.js" defer></script>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/" } }</script>
 <script type="module" src="./scene.js"></script>
+<script type="module" src="./skyline.js"></script>
 </body>
 </html>

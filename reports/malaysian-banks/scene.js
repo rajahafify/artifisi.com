@@ -119,7 +119,7 @@ function textTexture(text, opts) {
 class Stage {
   constructor(canvas, wrap, spec, data) {
     this.canvas = canvas; this.wrap = wrap; this.spec = spec; this.data = data;
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.localClippingEnabled = true;
     this.scene = new THREE.Scene();
@@ -140,7 +140,7 @@ class Stage {
     // it comes back the scene has to be redrawn or the frame is blank.
     this.renderer.domElement.addEventListener("webglcontextrestored", () => this.draw());
     // Open at the top of the shot: the chart stands in its starting state
-    // until the reader asks for it, and the first click runs it forward.
+    // until it comes into view and plays by itself. A click replays it.
     this.t = 0;
     this.done = false;
     this.draw();
@@ -820,20 +820,9 @@ const SCENES = {
 // its voice line, so ?dur=<ms> overrides the duration for capture only. Nothing else changes.
 const DUR_OVERRIDE = Number(QUERY.get("dur")) || 0;
 
-// ---------- the click indicator ----------
+// ---------- the chip: where the chart is, and that a click replays it ----------
 const coarse = matchMedia("(pointer: coarse)").matches;
 const VERB = coarse ? "Tap" : "Click";
-const TAUGHT = "mb-taught";
-let taught = false;
-try { taught = localStorage.getItem(TAUGHT) === "1"; } catch (e) { taught = false; }
-function learned() {
-  taught = true;
-  try { localStorage.setItem(TAUGHT, "1"); } catch (e) { /* private mode */ }
-  document.querySelectorAll(".finger.show").forEach((el) => el.classList.remove("show"));
-}
-
-const FINGER_SVG =
-  '<svg viewBox="0 0 24 24" width="42" height="42" aria-hidden="true"><path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>';
 
 function attach(st, fig, index) {
   const wrap = st.wrap;
@@ -852,10 +841,6 @@ function attach(st, fig, index) {
     return;
   }
 
-  const finger = document.createElement("div");
-  finger.className = "finger" + (index === 0 && !taught ? " show" : "");
-  finger.innerHTML = '<span class="ripple"></span>' + FINGER_SVG + '<span class="say">' + VERB + " to play</span>";
-  wrap.appendChild(finger);
 
   const setState = (s) => {
     const n = (index + 1) + " / " + TOTAL + " \u00b7 ";
@@ -867,10 +852,7 @@ function attach(st, fig, index) {
   st.onstate = setState;
   setState("idle");
 
-  const go = () => {
-    if (!taught) learned();
-    st.play();
-  };
+  const go = () => st.play();
   wrap.addEventListener("click", go);
   wrap.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
@@ -905,6 +887,9 @@ window.__byName = Object.fromEntries(stages.map((s) => [s.name, s]));
 window.dispatchEvent(new CustomEvent("scenes-ready"));
 window.__seek = (t, name) => {
   stages.forEach((s) => { if (!name || s.name === name) s.seek(t); });
+  // Scenes that live outside the chart field (the skyline) register here.
+  const extra = window.__seekExtra || {};
+  Object.keys(extra).forEach((k) => { if (!name || k === name) extra[k](t); });
 };
 
 const q = QUERY;

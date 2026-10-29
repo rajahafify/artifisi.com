@@ -7,7 +7,8 @@
 
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const G = window.gsap;
-  const motion = !!G && !reduced;
+  // The film (?shot) seeks frames itself, so the page's own motion stays off there.
+  const motion = !!G && !reduced && !new URLSearchParams(location.search).has("shot");
   if (motion) document.documentElement.classList.add("motion");
   if (G && window.ScrollTrigger) G.registerPlugin(ScrollTrigger);
   if (G && window.Flip) G.registerPlugin(Flip);
@@ -84,6 +85,39 @@
     const share = (b, k) => one((b[k] / T[k]) * 100);
     sheet(banks, share);
     league(banks);
+    tickers(banks);
+  }
+
+  // ---------- tickers: the twelve run past like a market board ----------
+  // Each band carries one measure for all twelve, twice over so the loop has no seam.
+  // It drifts on its own and the reader's scroll speeds it up or turns it round.
+  function tickers(banks) {
+    $$(".ticker").forEach((band) => {
+      const m = band.dataset.m;
+      const item = (b) => '<span class="tk"><b>' + b.short + "</b> " +
+        (m === "profit" ? "US$" + comma(b.profit) + "m" : "US$" + one(b.assets / 1000) + "b") + "</span>";
+      const run = banks.map(item).join("");
+      const track = document.createElement("div");
+      track.className = "ticker-track";
+      track.innerHTML = run + run;
+      band.appendChild(track);
+      if (!motion) return;
+      const dir = band.dataset.dir === "right" ? 1 : -1;
+      const loop = G.fromTo(track, { xPercent: dir < 0 ? 0 : -50 }, { xPercent: dir < 0 ? -50 : 0, duration: 38, ease: "none", repeat: -1 });
+      if (window.ScrollTrigger) {
+        ScrollTrigger.create({
+          trigger: band, start: "top bottom", end: "bottom top",
+          onUpdate: (self) => {
+            const sign = self.direction < 0 ? -1 : 1;
+            const boost = 1 + Math.min(5, Math.abs(self.getVelocity()) / 300);
+            G.to(loop, {
+              timeScale: boost * sign, duration: 0.2, overwrite: true,
+              onComplete: () => G.to(loop, { timeScale: sign, duration: 1.2, overwrite: true }),
+            });
+          },
+        });
+      }
+    });
   }
 
   // ---------- the sheet: pick a bank, read its row ----------
@@ -219,18 +253,62 @@
     }
   }
 
-  // ---------- the pinned charts: scroll picks the chart, a click plays it ----------
+  // ---------- the pinned charts: scroll brings a chart forward and it plays itself ----------
   const blocks = $$(".reading .block[data-for]");
   const figs = $$(".figs .fig");
+  let current = null;
   function showFig(name) {
+    const was = current;
+    current = name;
+    // The new chart steps forward a little as it takes the field.
+    if (motion && was && was !== name) {
+      const f = figs.find((x) => x.dataset.scene === name);
+      if (f) G.fromTo(f, { scale: 0.94, rotate: -1 }, { scale: 1, rotate: 0, duration: 0.7, ease: "expo.out" });
+    }
     figs.forEach((f) => f.classList.toggle("on", f.dataset.scene === name));
   }
   if ("IntersectionObserver" in window && blocks.length) {
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) showFig(e.target.dataset.for); });
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        showFig(e.target.dataset.for);
+        autoplay(e.target.dataset.for);
+      });
     }, { rootMargin: "-45% 0px -45% 0px" });
     blocks.forEach((b) => io.observe(b));
   }
+
+  // A chart plays the first time its block comes into view. After that it holds its last
+  // frame, and a click on it replays it. The film (?shot) seeks frames itself.
+  function autoplay(name) {
+    const st = window.__byName && window.__byName[name];
+    if (!st || st.playing || st.done || st.t > 0 || document.body.classList.contains("shot-mode")) return;
+    st.play();
+  }
+
+  // Print (the PDF): each chart moves into its own text block, at its finished frame,
+  // and goes back to the field afterwards.
+  const figHome = figs.map((f) => [f, f.parentNode, f.nextSibling]);
+  addEventListener("beforeprint", () => {
+    figs.forEach((f) => {
+      const b = document.querySelector('.block[data-for="' + f.dataset.scene + '"]');
+      const h = b && b.querySelector("h3");
+      if (!h) return;
+      f.classList.add("print-in", "on");
+      h.after(f);
+    });
+    $$(".block details").forEach((d) => { d.dataset.wasOpen = d.open ? "1" : ""; d.open = true; });
+    // Count-ups the reader has not scrolled to yet print their real figure.
+    $$("[data-final]").forEach((el) => { el.innerHTML = el.dataset.final; });
+    if (window.__seek) window.__seek(1);
+    if (window.__stages) window.__stages.forEach((s) => s.resize());
+  });
+  addEventListener("afterprint", () => {
+    figHome.forEach(([f, parent, next]) => { f.classList.remove("print-in"); parent.insertBefore(f, next); });
+    figs.forEach((f) => f.classList.toggle("on", f.dataset.scene === (current || "swap")));
+    $$(".block details").forEach((d) => { d.open = d.dataset.wasOpen === "1"; });
+    if (window.__stages) window.__stages.forEach((s) => s.resize());
+  });
 
   function stagesReady(fn) {
     if (window.__byName) fn(window.__byName);
@@ -247,6 +325,8 @@
   const ISLAMIC = new Set(["Bank Islam Malaysia", "Bank Muamalat Malaysia", "Bank Rakyat Malaysia", "MBSB Bank"]);
 
   stagesReady((S) => {
+    // The reader may already be at a chart when the 3D code finishes loading.
+    if (current) autoplay(current);
     $$(".reading .seg").forEach((seg) => {
       const name = seg.closest(".block").dataset.for;
       const st = S[name];
@@ -300,6 +380,51 @@
       scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
     });
 
+    // Every photo in the mosaic drifts at its own speed, so the masthead parts as it leaves.
+    $$(".mosaic .cell").forEach((c, i) => {
+      G.to(c, {
+        yPercent: [-18, 10, -6, 24, -14, 6, 16, -10, 12][i % 9], ease: "none",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true },
+      });
+    });
+    // The two lines of the headline pull apart as the reader scrolls on.
+    if (matchMedia("(min-width: 821px)").matches) $$(".lines [data-line]").forEach((l, i) => {
+      G.to(l.parentNode, {
+        x: (i ? 1 : -1) * 0.08 * innerWidth, ease: "none",
+        scrollTrigger: { trigger: ".hero-text", start: "top 40%", end: "bottom top", scrub: true },
+      });
+    });
+
+    // The 62 grows into its place as the skyline rises behind it.
+    G.fromTo(".figure", { scale: 0.72, transformOrigin: "0% 100%" }, {
+      scale: 1, ease: "none",
+      scrollTrigger: { trigger: ".statement", start: "top 80%", end: "center center", scrub: true },
+    });
+
+    // The two specimens slide in from opposite edges and meet (side by side, so wide screens only).
+    const wide = matchMedia("(min-width: 821px)").matches;
+    if (wide) $$(".spec").forEach((el, i) => {
+      G.fromTo(el, { xPercent: i ? 45 : -45 }, {
+        xPercent: 0, ease: "none",
+        scrollTrigger: { trigger: ".spec-pair", start: "top bottom", end: "top 35%", scrub: true },
+      });
+    });
+
+    // The wall's columns travel at different speeds.
+    $$(".wall .tile").forEach((t, i) => {
+      const col = i % 4;
+      G.fromTo(t, { yPercent: [10, -6, 14, -10][col] }, {
+        yPercent: [-10, 6, -14, 10][col], ease: "none",
+        scrollTrigger: { trigger: ".wall", start: "top bottom", end: "bottom top", scrub: true },
+      });
+    });
+
+    // The league heading slides across as the table passes.
+    if (wide) G.fromTo(".league-head h2", { x: 0 }, {
+      x: 0.05 * innerWidth, ease: "none",
+      scrollTrigger: { trigger: ".league", start: "top bottom", end: "bottom top", scrub: true },
+    });
+
     // Headings and notes come up as they enter.
     ScrollTrigger.batch("[data-reveal]", {
       start: "top 88%", once: true,
@@ -333,6 +458,7 @@
   function countUp(el, to, dp, tail, trigger) {
     if (!el) return;
     const o = { v: 0 };
+    el.dataset.final = to.toFixed(dp) + tail;
     el.innerHTML = (0).toFixed(dp) + tail;
     G.to(o, {
       v: to, duration: 1.6, ease: "expo.out",

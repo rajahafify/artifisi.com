@@ -45,6 +45,14 @@ New figures on the redesigned page, checked against data.json:
 
 - AFFIN Bank is a conventional bank with an Islamic arm, not an Islamic bank. The page says "four of the five" low-ROE banks are Islamic (Bank Islam, Bank Muamalat, Bank Rakyat, MBSB). The source report's wording was fixed to match.
 
+## Motion pass (29 Oct 2026, evening)
+
+- Charts autoplay: scrolling at 1440 with real wheel input, each chart went from t=0 to t=1 when its block came into view, in order (swap, blocks, dials, tanks, lanes). Clicks still replay.
+- Skyline (`skyline.js`): heights are each bank's assets over Maybank's. Labels read Maybank 27.3%, CIMB 20.2%, Public Bank 14.6%, same as data.json.
+- Film: `?shot=skyline&t=0.5` and `&t=1` at 540x960 show the section alone with the full street in frame. `window.__seek(t, "skyline")` works.
+- PDF: printed with Chromium to A4 (20 pages). Count-ups print their real figures (62%, 1.4%, 3.8%), each chart prints inside its own text block at its end frame with its table open, and the skyline prints across the page.
+- taste-skill inspect: 0 FAIL at 1440, 768 and 390.
+
 ## Browser checks (redesign, playwright-cli)
 
 - Real clicks: bank tab, measure tab, chart click to play (chip "1 / 5 · playing", then "1 / 5 · click to replay"), each chart's control (share of profit, Islamic banks, ROE slider, Indonesia, assets and profit). Each control brings its own chart forward and runs it to the end.

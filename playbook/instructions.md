@@ -19,7 +19,7 @@ What changed in version 3, and why:
 What changed in version 2, and why:
 
 - the scene must be a mechanism, not a chart field
-- playback is by click, never by scroll
+- playback is by click, never by scroll (reversed on 29 Oct 2026: charts now play themselves when they come into view, see section 3)
 - scenes are composed for a square volume, so one build survives every frame
 - figures are diffed against the source after the build, because two were wrong
 - animation is checked in a real browser, because headless cannot run time
@@ -72,15 +72,17 @@ One scene is seen at 9:16 (phone, video), 4:5 (Instagram), 1:1 (thumbnail) and 1
 - camera `fov` near 14 for anything long. At `fov` 34 a 13 unit object overflowed the frame by 15%
 - check 4:5 and 9:16 before you check desktop, because they fail first
 
-### 3. Click to play, never scroll
+### 3. Play when it comes into view, replay on click
 
-Scroll-triggered playback was rejected on sight. It also fights the reader: they scroll past a section before it starts, and it finishes while they are looking somewhere else.
+Changed on 29 Oct 2026, from the bank report on. The first rule was click to play, never scroll. fify reversed it: a chart that waits for a click reads as a dead diagram. A chart now plays by itself the first time its text comes into view, once, and holds its last frame. A click replays it.
 
-- `play()` on `click`, and on Enter or Space, so keyboard gets the same thing
-- open at the top of the shot: `this.t = 0; this.done = false` in the constructor. The chart stands in its starting state until someone asks, and the first click runs it forward
-- do not open on the finished frame. It was tried: the first click then jumped backwards before running forward, and that read as a reset rather than a replay
-- no `IntersectionObserver`
+- the page script watches each text block. When one comes into view, its chart takes the field and `play()` runs if that chart has never played. See `reports/malaysian-banks/page.js`, `autoplay()`
+- `play()` also runs on `click`, and on Enter or Space, so keyboard users get the same
+- still open at the top of the shot (`this.t = 0`), so the autoplay runs forward from the start
+- a control under a chart (a toggle, a slider) moves the chart with `Stage.to(t)` and does not trigger the autoplay again
+- reduced motion: nothing plays, every chart stands at its end frame
 - a token guards restarts, so a second click mid play cannot leave two loops running
+- 3D does not have to sit in a chart box. A section can carry its own full-bleed scene driven by scroll, like the bank skyline (`reports/malaysian-banks/skyline.js`). It still needs a `?shot=<name>&t=` frame for the film and a finished frame for print
 
 ```js
 play() {
@@ -101,7 +103,7 @@ play() {
 
 ### 4. Teach the click once, then get out of the way
 
-Each chart carries a chip (`1 / 6 · click to play`) and, until the first click, a finger with a ripple. Copy both from `tech-sovereignty/scene.js`.
+Each chart carries a chip (`1 / 6 · click to play`, then `click to replay`). Reports before the bank report also show a finger with a ripple until the first click; with autoplay it is not needed. Copy both from `tech-sovereignty/scene.js`.
 
 - `attach(st, fig, index)` builds the chip and finger, sets `role="button"`, `tabindex="0"` and an `aria-label`
 - after the first click set `localStorage` `mw-taught` and hide the finger. Keep the chip

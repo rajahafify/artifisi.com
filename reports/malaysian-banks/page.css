@@ -73,7 +73,7 @@ figure { margin: 0; }
 }
 
 /* ---------- hero: mosaic masthead, title on the axis ---------- */
-.band { position: relative; height: 52svh; min-height: 380px; }
+.band { position: relative; height: 52svh; min-height: 380px; overflow: hidden; }
 .bar {
   position: absolute; z-index: 2; inset: 0 0 auto 0;
   display: flex; align-items: stretch; height: 56px;
@@ -126,6 +126,15 @@ h1 { font-size: var(--step-display); line-height: 0.95; }
 .share-col .seg-b { background: var(--white); }
 .share-col .seg-c { background: var(--tint); }
 .share-col .seg-d { background: #1b2a33; color: var(--white); }
+/* the skyline fills the section; the words sit over its empty sky */
+.skyline { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.skyline-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.sky-label { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 1rem; color: var(--white); background: var(--ink); padding: 4px 10px; opacity: 0; transition: opacity 0.3s var(--ease-out); }
+.sky-label b { font-weight: 600; color: var(--bg); }
+.statement > .claim, .statement > .figure-block { position: relative; z-index: 2; }
+.statement .source { z-index: 1; }
+.statement.has-skyline { min-height: 125svh; }
+.statement.has-skyline .share-col { display: none; }
 .statement .claim { margin-left: calc(var(--axis) - var(--m)); font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.75rem); color: var(--white); }
 .figure-block { align-self: end; margin-left: calc(var(--axis) - var(--m)); margin-top: 22vh; }
 .figure {
@@ -249,7 +258,7 @@ h1 { font-size: var(--step-display); line-height: 0.95; }
 .block table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 1rem; }
 .block th, .block td { text-align: left; padding: 6px 8px 6px 0; border-bottom: 1px solid rgba(5, 15, 22, 0.25); }
 
-/* chart labels, chip and the first-click finger */
+/* chart labels and the chip */
 .scene-label {
   position: absolute; left: 0; top: 0; font-family: var(--text); font-size: var(--ls, 14px); line-height: 1; color: var(--ink);
   white-space: nowrap; pointer-events: none; will-change: transform; opacity: 0; transition: opacity 0.3s var(--ease-out); padding: 0.16em 0.28em;
@@ -263,20 +272,15 @@ h1 { font-size: var(--step-display); line-height: 0.95; }
 @media (max-width: 820px) { .scene-label { font-size: 13px; } }
 .chip { position: absolute; right: 10px; top: 10px; font-size: 13px; color: #5c5c5c; background: var(--paper-2); padding: 5px 10px; pointer-events: none; }
 .chip.busy { color: var(--ink); }
-/* before the first play the chart is at its start, so the chip is the thing to see */
-.is-idle .chip { right: auto; bottom: auto; left: 50%; top: 24px; transform: translateX(-50%); background: var(--ink); color: var(--bg); font-size: 1rem; font-weight: 600; padding: 12px 20px; }
-.finger { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity 0.35s var(--ease-out); }
-.finger.show { opacity: 1; }
-.finger svg { position: absolute; left: -21px; top: -10px; fill: var(--ink); transform-origin: 50% 20%; }
-.finger .ripple { position: absolute; left: -18px; top: -18px; width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--ink); opacity: 0; }
-/* the finger presses three times, then rests */
-@media (prefers-reduced-motion: no-preference) {
-  .finger svg { animation: press 1.9s ease-in-out 3; }
-  .finger .ripple { animation: ripple 1.9s ease-out 3; }
-}
-.finger .say { position: absolute; left: 26px; top: 4px; white-space: nowrap; font-size: 13px; color: var(--ink); background: var(--paper-2); padding: 3px 7px; }
-@keyframes press { 0%, 100% { transform: translate(13px, 13px) scale(1); } 40% { transform: translate(0, 0) scale(1); } 50% { transform: translate(0, 0) scale(0.82); } 60% { transform: translate(0, 0) scale(1); } }
-@keyframes ripple { 0%, 48% { opacity: 0; transform: scale(0.3); } 52% { opacity: 0.85; transform: scale(0.4); } 100% { opacity: 0; transform: scale(1.8); } }
+/* ---------- tickers: the twelve run past like a market board ---------- */
+.ticker { background: var(--ink); color: var(--white); overflow: hidden; white-space: nowrap; padding: 18px 0; }
+.ticker.hot { background: var(--bg); color: var(--ink); }
+.ticker-track { display: inline-flex; will-change: transform; }
+.tk { font-family: var(--display); font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.5rem); line-height: 1; padding: 0 0.7em; }
+.tk b { font-weight: 400; color: var(--bg); }
+.ticker.hot .tk b { color: var(--white); }
+.tk::after { content: ""; display: inline-block; width: 0.32em; height: 0.32em; margin-left: 1.4em; background: currentColor; vertical-align: middle; }
+html.no-js .ticker { display: none; }
 
 /* ---------- specimens: two figures compared ---------- */
 .specimens { background: var(--ink); color: var(--white); padding: clamp(96px, 14vh, 180px) var(--m) 0; overflow: hidden; }
@@ -291,7 +295,7 @@ h1 { font-size: var(--step-display); line-height: 0.95; }
 .spec + .spec .spec-fig { color: var(--bg); }
 
 /* ---------- wall of tiles ---------- */
-.wall { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 8px; background: var(--bg); }
+.wall { overflow: hidden; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 8px; background: var(--bg); }
 .wall .tile { position: relative; aspect-ratio: 1 / 1; display: grid; place-items: center; overflow: hidden; margin: 0; }
 .tile-fig { font-family: var(--display); font-size: clamp(56px, 9vw, 150px); line-height: 1; letter-spacing: -0.03em; }
 .wall h2.tile-fig { font-size: clamp(2.25rem, 4.6vw, 4.75rem); text-align: center; padding: 0 12px; }
@@ -351,7 +355,7 @@ body.shot-mode .hero, body.shot-mode .foot, body.shot-mode main > section:not(.p
 body.shot-mode .reading { display: none; }
 body.shot-mode .pinned { display: block; padding: 0; }
 body.shot-mode .field { position: static; height: 100svh; }
-body.shot-mode .chip, body.shot-mode .finger { display: none; }
+body.shot-mode .chip { display: none; }
 
 /* ---------- phone ---------- */
 @media (max-width: 820px) {
@@ -369,6 +373,9 @@ body.shot-mode .chip, body.shot-mode .finger { display: none; }
   .statement { min-height: 80svh; padding-top: 56px; }
   .statement .claim, .figure-block { margin-left: 0; }
   .share-col { display: none; }
+  .statement.has-skyline { min-height: 0; padding-bottom: 64svh; }
+  .statement.has-skyline .figure-block { margin-top: 72px; }
+  .statement .skyline, .statement .skyline-labels { top: auto; bottom: 0; height: 60svh; }
   .statement .claim { font-size: 1.75rem; }
   .figure { font-size: 46vw; }
   .caption { max-width: none; width: 80%; font-size: 1rem; }
@@ -432,3 +439,48 @@ html.no-js .field, html.no-js .seg, html.no-js .range, html.no-js .names, html.n
 html.no-js .pinned-head, html.no-js .reading { grid-column: 1 / -1; padding-left: var(--m); }
 html.no-js .pinned-head { padding-top: 96px; margin-bottom: 48px; }
 html.no-js .block { min-height: 0; margin-bottom: 64px; }
+body.shot-mode .ticker { display: none; }
+/* the skyline shot: the 62% section alone, filling the frame */
+body.shot-sky main > section.statement { display: grid; min-height: 100svh; padding-bottom: 48px; }
+body.shot-sky main > section.pinned { display: none; }
+@media (max-width: 820px) {
+  body.shot-sky main > section.statement { height: 100svh; min-height: 0; padding-bottom: 50vh; overflow: hidden; }
+  body.shot-sky .statement .figure { font-size: 34vw; }
+  body.shot-sky .statement .skyline, body.shot-sky .statement .skyline-labels { height: 48vh; }
+}
+
+/* ---------- print: the PDF is the page at its finished frame ---------- */
+@media print {
+  @page { size: A4; margin: 12mm; }
+  html, body { background: #fff; }
+  .ticker, .chip, .bar .tab, .bar .button, .league-note .button, .names, .seg, .range, .wall .photo { display: none !important; }
+  .foot { position: static; min-height: 0; }
+  .hero, main { position: static; }
+  /* motion leaves inline transforms behind; print the resting layout */
+  [data-reveal], [data-load], .lines [data-line], .lines .line, .mosaic .cell, .mosaic img, .figure, .spec, .wall .tile, .league-head h2, #statement, .figs .fig {
+    opacity: 1 !important; transform: none !important; clip-path: none !important; visibility: visible !important;
+  }
+  .band { height: 60mm; min-height: 0; }
+  .statement, .specimens, .faq, .full-table, .league, .sheet-sec { break-inside: avoid; }
+  .statement.has-skyline { min-height: 0; display: block; padding: 10mm 8mm 148mm; position: relative; }
+  .statement.has-skyline .claim, .statement.has-skyline .figure-block { margin-left: 45%; margin-top: 0; }
+  .statement .figure { font-size: 120px; margin-top: 6mm; }
+  .statement .skyline, .statement .skyline-labels { top: auto; bottom: 4mm; left: 0; width: 100%; height: 140mm; }
+  .statement .source { position: static; margin: 4mm 0 0 45%; }
+  .pinned { break-before: page; }
+  .tile-fig { font-size: 44px !important; }
+  .wall h2.tile-fig { font-size: 22px !important; }
+  .spec { --fs: 110px; }
+  .stage { height: auto; min-height: 0; padding: 12mm; }
+  .statement-sheet { position: static; min-height: 0; }
+  /* every chart prints beside its own text: page.js moves each figure into its block */
+  .pinned { display: block; padding: 0; }
+  .pinned .field { display: none; }
+  .pinned-head { padding: 12mm 0 6mm; margin: 0; }
+  .reading { padding: 0; }
+  .block { min-height: 0; margin: 0 0 10mm; max-width: none; break-inside: avoid; }
+  .block .fig.print-in { position: static; width: 120mm; aspect-ratio: 1 / 1; margin: 4mm 0; }
+  .block details { display: block; }
+  .block details > :not(summary) { display: block; }
+  .wall { grid-template-columns: repeat(4, 1fr); }
+}
