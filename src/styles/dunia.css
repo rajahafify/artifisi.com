@@ -1,0 +1,164 @@
+/* /projects/dunia, live surface (scroll-craft). The recorder window is pinned and dunia.js sets
+   data-phase on it from the act's --sc-p: watch, record, export, status. View changes are timed
+   transitions, so they look the same however fast someone scrolls. */
+.dunia-page {
+  --sc-canvas: #0a0a0a; --sc-surface: #141414; --sc-ink: #fff; --sc-ink-soft: #b3b3b3;
+  --sc-accent: #2343d6; --sc-accent-ink: #fff;
+  --sc-font-display: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --sc-font-text: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --d-line: #262626; --d-soft: #a3a3a3; --d-dim: #6b6b6b; --d-hi: #2343d6;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --swap: 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  background: #0a0a0a;
+}
+
+.ds { color: #fff; }
+.ds-stage { background: #0a0a0a; }
+.ds-win {
+  position: absolute; inset: 20px clamp(16px, 2.5vw, 40px);
+  display: grid; grid-template-columns: minmax(0, 1fr) clamp(300px, 27vw, 400px);
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "bar bar" "film side" "low side" "foot foot";
+  border: 1px solid var(--d-line); background: #0d0d0d;
+}
+
+/* Window bar: name, file, the view tabs, the record light */
+.ds-bar { grid-area: bar; display: flex; align-items: center; gap: 20px; padding: 0 16px; min-height: 52px; border-bottom: 1px solid var(--d-line); }
+.ds-name { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.ds-file { font: 400 13px var(--mono); color: var(--d-dim); }
+.ds-tabs { display: flex; gap: 2px; margin-left: auto; }
+.ds-tabs button { font: 500 14px var(--sans); color: var(--d-soft); background: none; border: 0; min-height: 36px; padding: 0 14px; cursor: pointer; transition: color .2s, background-color .2s; }
+.ds-tabs button:hover { color: #fff; }
+.ds-tabs button[aria-current="true"] { color: #fff; background: #1d1d1d; box-shadow: inset 0 -2px 0 var(--d-hi); }
+.ds-rec { display: inline-flex; align-items: center; gap: 8px; font: 400 13px var(--mono); color: var(--d-soft); min-width: 104px; }
+.ds-rec i { width: 8px; height: 8px; border-radius: 50%; background: var(--d-dim); transition: background-color .3s; }
+[data-phase="record"] .ds-rec i { background: #e5484d; animation: ds-blink 1.2s steps(2, jump-none) infinite; }
+[data-phase="export"] .ds-rec i, [data-phase="status"] .ds-rec i { background: var(--d-hi); }
+@keyframes ds-blink { 50% { opacity: .25; } }
+
+/* The film is the main pane, the whole way down */
+.ds-film { grid-area: film; position: relative; background: #000; min-height: 0; }
+.ds-film iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* Side panel: one help note at a time, then the channel list */
+.ds-side { grid-area: side; display: flex; flex-direction: column; border-left: 1px solid var(--d-line); min-height: 0; }
+.ds-help { display: grid; padding: 22px 22px 18px; border-bottom: 1px solid var(--d-line); }
+.ds-note { grid-area: 1 / 1; opacity: 0; transform: translateY(10px); transition: opacity var(--swap), transform var(--swap); pointer-events: none; }
+.ds-note h3 { font-size: 13px; font-weight: 500; color: var(--d-soft); margin-bottom: 10px; }
+.ds-note p { font-size: 16px; line-height: 1.45; }
+.ds-note .ds-hint { font-size: 14px; color: var(--d-soft); margin-top: 12px; }
+[data-phase="watch"] [data-for="watch"], [data-phase="record"] [data-for="record"],
+[data-phase="export"] [data-for="export"], [data-phase="status"] [data-for="status"] { opacity: 1; transform: none; pointer-events: auto; transition-delay: 120ms; }
+.ds-go { display: inline-flex; align-items: center; gap: 14px; margin-top: 16px; min-height: 48px; padding: 0 18px; background: #fff; color: #0a0a0a; font-weight: 600; text-decoration: none; transition: background-color .2s; }
+.ds-go:hover { background: #d9d9d9; }
+.ds-go svg { transition: transform .3s var(--swap); }
+.ds-go:hover svg { transform: translateX(4px); }
+
+.ds-ch { list-style: none; margin: 0; padding: 6px 0; overflow: hidden; }
+.ds-ch li { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; padding: 9px 22px; opacity: .32; transition: opacity var(--swap); }
+.ds-ch li.on { opacity: 1; }
+.ds-ch b { font-size: 14px; font-weight: 600; }
+.ds-ch span { grid-column: 1; font-size: 13px; color: var(--d-soft); }
+.ds-ch output { grid-column: 2; grid-row: 1 / 3; align-self: center; font: 400 12.5px var(--mono); color: #fff; text-align: right; white-space: nowrap; }
+.ds-ch li.on b::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 8px 2px 0; background: var(--d-hi); }
+
+/* Under the film: timeline, then the log or the export tree */
+.ds-low { grid-area: low; display: grid; grid-template-rows: auto 168px; border-top: 1px solid var(--d-line); }
+.ds-time { display: flex; align-items: center; gap: 20px; padding: 10px 16px; border-bottom: 1px solid var(--d-line); }
+.ds-clock { font: 400 13px var(--mono); color: var(--d-soft); white-space: nowrap; }
+.ds-clock b { font-weight: 500; color: #fff; }
+.ds-track { position: relative; flex: 1; height: 18px; container-type: inline-size;
+  background: repeating-linear-gradient(90deg, #333 0 1px, transparent 1px 10px) left center / 100% 6px no-repeat; }
+.ds-head { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #e5484d; margin-left: -1px; }
+
+.ds-log, .ds-tree { grid-row: 2; grid-column: 1; transition: opacity var(--swap); min-height: 0; overflow: hidden; }
+.ds-log { padding: 8px 16px; }
+.ds-row { display: grid; grid-template-columns: 56px 1.1fr 1.4fr 64px; gap: 12px; font: 400 13px var(--mono); padding: 3px 0; }
+.ds-hd { color: var(--d-dim); font-family: var(--sans); font-size: 12px; }
+.ds-row.hit { color: #8ea2ff; }
+.ds-rows .ds-row:last-child { background: #161616; }
+.ds-tree { margin: 0; padding: 10px 16px; font: 400 12.5px/1.45 var(--mono); color: #e6e6e6; opacity: 0; }
+[data-phase="export"] .ds-log, [data-phase="status"] .ds-log { opacity: 0; }
+[data-phase="export"] .ds-tree, [data-phase="status"] .ds-tree { opacity: 1; transition-delay: 120ms; }
+
+.ds-foot { grid-area: foot; padding: 9px 16px; border-top: 1px solid var(--d-line); font-size: 12.5px; color: var(--d-dim); }
+
+/* Records, restyled for the dark page so it reads as the recorder's episode browser */
+.dunia-page .records { --ground: #0a0a0a; --ink: #fff; --gray-4: #a3a3a3; --soft: #a3a3a3; border-top: 1px solid var(--d-line); }
+.dunia-page .records .outputs button { background: #161616; color: var(--d-soft); border-radius: 0; }
+.dunia-page .records .outputs button[aria-selected="true"] { background: #fff; color: #0a0a0a; }
+.dunia-page .records .stage { background: #111; border: 1px solid var(--d-line); border-radius: 0; }
+.dunia-page .sheet { background: #0a0a0a; border: 1px solid var(--d-line); border-radius: 0; }
+.dunia-page .sheet th { border-bottom-color: #333; }
+.dunia-page .sheet td { border-bottom-color: #1f1f1f; }
+.dunia-page .sheet .sample { background: #16204d; color: #b8c4ff; }
+.dunia-page .sheet tr.is-new td { animation-name: row-in-dark; }
+@keyframes row-in-dark { from { opacity: 0; transform: translateY(-6px); background: #16204d; } to { background: transparent; } }
+.dunia-page .play-ctl button { background: #161616; color: #fff; border-color: #333; }
+@media (hover: hover) and (pointer: fine) { .dunia-page .play-ctl button:hover { background: #222; } }
+
+/* The close: the pilot application, in the recorder's idiom */
+.ds-pilot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); padding: clamp(80px, 12vw, 160px) clamp(16px, 4vw, 64px); background: #0a0a0a; color: #fff; }
+.dp-copy h2 { font-size: clamp(40px, 5vw, 80px); font-weight: 600; letter-spacing: -0.045em; line-height: .95; }
+.dp-copy p { font-size: 19px; line-height: 1.45; color: var(--d-soft); margin-top: 24px; max-width: 32em; }
+.dp-form { border: 1px solid var(--d-line); background: #0d0d0d; padding: 24px; align-self: start; }
+.dp-who { border: 0; padding: 0; margin: 0 0 20px; display: flex; gap: 2px; }
+.dp-who legend { font-size: 13px; color: var(--d-soft); margin-bottom: 10px; }
+.dp-who label { position: relative; }
+.dp-who input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.dp-who span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; font-weight: 500; background: #161616; color: var(--d-soft); transition: color .2s, background-color .2s; }
+.dp-who input:checked + span { background: #fff; color: #0a0a0a; }
+.dp-who input:focus-visible + span { outline: 2px solid var(--d-hi); outline-offset: 2px; }
+.dp-ask { display: block; font-size: 16px; line-height: 1.4; margin-bottom: 10px; }
+.dp-form textarea, .dp-form input[type="email"] { width: 100%; font: 400 16px var(--sans); color: #fff; background: #000; border: 1px solid #333; padding: 12px 14px; border-radius: 0; }
+.dp-form textarea:focus, .dp-form input[type="email"]:focus { outline: none; border-color: var(--d-hi); }
+.dp-send { display: flex; gap: 8px; margin-top: 10px; }
+.dp-send button { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 20px; font: 600 16px var(--sans); color: #fff; background: var(--d-hi); border: 0; cursor: pointer; transition: background-color .2s; }
+.dp-send button:hover { background: #1a35b0; }
+.dp-msg { font-size: 13px; color: var(--d-soft); margin-top: 12px; }
+
+@media (max-width: 860px) {
+  .ds-win { inset: 10px; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "bar" "film" "side" "low" "foot"; }
+  .ds-bar { gap: 10px; padding: 0 8px; min-height: 44px; }
+  .ds-file, .ds-rec { display: none; }
+  .ds-tabs { margin-left: auto; }
+  .ds-tabs button { padding: 0 9px; font-size: 13px; }
+  .ds-film { aspect-ratio: 16 / 9; }
+  .ds-side { border-left: 0; }
+  .ds-help { padding: 14px 14px 12px; }
+  .ds-note p { font-size: 14.5px; }
+  .ds-note h3 { margin-bottom: 6px; }
+  .ds-note .ds-hint { display: none; }
+  .ds-go { min-height: 44px; margin-top: 10px; }
+  .ds-ch { display: grid; grid-template-columns: 1fr 1fr; padding: 4px 0; }
+  .ds-ch li { padding: 5px 14px; grid-template-columns: 1fr; }
+  .ds-ch span { display: none; }
+  .ds-ch b { font-size: 13px; }
+  .ds-ch output { grid-column: 1; grid-row: auto; text-align: left; font-size: 11.5px; color: var(--d-soft); overflow: hidden; text-overflow: ellipsis; }
+  .ds-low { grid-template-rows: auto minmax(0, 1fr); }
+  .ds-time { padding: 8px 14px; gap: 12px; }
+  .ds-log { padding: 6px 14px; }
+  .ds-row { grid-template-columns: 34px 1fr 1.3fr; font-size: 12px; }
+  .ds-row span:nth-child(4) { display: none; }
+  .ds-tree { font-size: 11px; padding: 8px 14px; }
+  .ds-foot { font-size: 11.5px; padding: 7px 14px; }
+  .ds-pilot { grid-template-columns: 1fr; }
+  .dp-form { padding: 18px; }
+  .dp-who span { padding: 0 12px; font-size: 14px; }
+  .dp-send { flex-direction: column; }
+}
+
+/* Reduced motion: no pin, every view shown at once */
+@media (prefers-reduced-motion: reduce) {
+  .ds { height: auto !important; }
+  .ds-stage { position: static !important; height: auto !important; }
+  .ds-win { position: relative; inset: auto; margin: 16px; grid-template-rows: auto auto auto auto; }
+  .ds-film { aspect-ratio: 16 / 9; }
+  .ds-ch { overflow: visible; }
+  [data-phase="all"] .ds-note { position: static; opacity: 1; transform: none; margin-bottom: 18px; pointer-events: auto; }
+  [data-phase="all"] .ds-help { display: block; }
+  [data-phase="all"] .ds-low { grid-template-rows: auto auto auto; }
+  [data-phase="all"] .ds-log, [data-phase="all"] .ds-tree { grid-row: auto; opacity: 1; }
+  .ds-film { aspect-ratio: 16 / 9; }
+}

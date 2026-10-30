@@ -1,11 +1,33 @@
 ---
+// The Dunia page. Built with the scroll-craft skill: live-surface grammar. Below the hero the page is the
+// recorder itself, pinned, and the scroll is its playhead. Brief: scrollcraft/builds/artifisi-dunia/BRIEF.md
 import Head from "../../components/Head.astro";
 import Hero from "../../components/Hero.astro";
-import Showcase from "../../components/Showcase.astro";
 import Records from "../../components/Records.astro";
 import Ending from "../../components/Ending.astro";
+import { duniaVideo, formspree } from "../../data.js";
 import "../../styles/home.css";
+import "../../styles/scrollcraft.css";
 import "../../styles/system.css";
+import "../../styles/dunia.css";
+
+// The six channels the recorder writes on every tick. The readouts are filled by dunia.js from a sample flight.
+const channels = [
+  { id: "rgb", name: "Camera", what: "What the player saw" },
+  { id: "depth", name: "Depth", what: "How far away everything was" },
+  { id: "seg", name: "Segmentation", what: "Which thing each pixel belongs to" },
+  { id: "imu", name: "Motion", what: "Acceleration and turn rate" },
+  { id: "act", name: "Action", what: "What the player did" },
+  { id: "gt", name: "Ground truth", what: "Where everything really was" },
+];
+// Tabs in the window bar. Each one jumps the playhead to its part of the act.
+const tabs = [
+  { id: "watch", label: "Watch", at: 0 },
+  { id: "record", label: "Record", at: 0.14 },
+  { id: "export", label: "Export", at: 0.64 },
+  { id: "status", label: "Status", at: 0.88 },
+];
+const arrow = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>';
 ---
 
 <!doctype html>
@@ -13,116 +35,118 @@ import "../../styles/system.css";
   <head>
     <Head
       title="Dunia"
-      description="Dunia is an SDK that sits inside a game engine and turns gameplay into labelled training data for robots and physical AI."
+      description="Dunia records gameplay as labelled training data for robots and physical AI: camera, depth, segmentation, motion, actions and ground truth, exported as RLDS episodes."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" /><!-- taste-skill-ignore: mono is only for the hero readouts and the export sheet -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" /><!-- taste-skill-ignore: mono is for the recorder's readouts, which are telemetry -->
     <script is:inline>document.documentElement.classList.add("js")</script>
   </head>
-  <body>
-    <Hero base="/" start="ai" aiHref="#demo" aiNote="Dunia, watch the demo below">
+  <body class="dunia-page">
+    <Hero base="/" start="ai" aiHref="#demo" aiNote="Dunia, the recorder below">
       <h1><span class="ln" style="--i:0"><span style="color:inherit">Gameplay in,</span></span> <span class="ln" style="--i:1"><span>training data out.</span></span></h1>
     </Hero>
 
-    <main>
-      <Showcase
-        id="demo"
-        variant="An SDK for game engines"
-        fact="MVP running in our demo game"
-        say="The video shows the MVP inside our own demo game: someone plays, and Dunia writes down each step as labelled data."
-        href="#pilot"
-        action="Become a pilot partner"
-      />
+    <main id="rec">
 
-      <section class="sys sec" id="why" aria-labelledby="why-h">
-        <div class="rows">
-          <div class="row">
-            <dl class="facts" data-rise>
-              <div><dt>Product</dt><dd>SDK for game engines</dd></div>
-              <div><dt>Output</dt><dd>State, action, outcome, labelled</dd></div>
-              <div><dt>Status</dt><dd>MVP running in our demo game</dd></div>
-              <div><dt>For</dt><dd>Robotics and physical AI teams</dd></div>
-            </dl>
-            <div>
-              <h2 id="why-h" data-rise>Why games</h2>
-              <p class="lead" data-rise style="margin-top:28px">A robot learns from three things: what the world looked like, what it did, and what happened next. Collecting that with real robots is slow and expensive, and sometimes the robot breaks. A game engine already tracks all three, so nobody has to label anything by hand.</p>
-            </div>
-          </div>
-        </div>
-        <div class="cols">
-          <div data-rise>
-            <h3>State</h3>
-            <ul><li>What the world looked like</li><li>Positions</li><li>Sensors</li><li>Camera</li></ul>
-          </div>
-          <div data-rise>
-            <h3>Action</h3>
-            <ul><li>What the player did</li><li>Steering</li><li>Inputs</li><li>Choices</li></ul>
-          </div>
-          <div data-rise>
-            <h3>Outcome</h3>
-            <ul><li>What happened next</li><li>Reward</li><li>Collision</li><li>Success</li></ul>
-          </div>
-        </div>
-      </section>
+<!-- The recorder. One pinned act; the scroll is the playhead. -->
+<section class="ds" id="demo" data-sc-act="pin" data-sc-span="5.2" aria-labelledby="demo-h">
+  <div class="sc-stage ds-stage" data-sc-stage>
+    <div class="ds-win" data-phase="watch">
+      <header class="ds-bar">
+        <h2 id="demo-h" class="ds-name">Dunia</h2>
+        <span class="ds-file">sample_flight.rlds</span>
+        <nav class="ds-tabs" aria-label="Recorder views">
+          {tabs.map((t) => <button type="button" data-tab={t.id} data-at={t.at}>{t.label}</button>)}
+        </nav>
+        <span class="ds-rec" aria-live="off"><i></i><span class="ds-state">Ready</span></span>
+      </header>
 
-      <section class="sys sec" id="how" aria-labelledby="how-h" style="padding-top:0">
-        <div class="rows">
-          <div class="row">
-            <p class="word" data-rise>How it works</p>
-            <h2 id="how-h" data-rise>Three steps, inside the engine</h2>
-          </div>
-          <div class="row">
-            <p class="word" data-rise>Hook in</p>
-            <p class="lead" data-rise>The SDK hooks into the game engine and records state, inputs and outcomes as the player acts.</p>
-          </div>
-          <div class="row">
-            <p class="word" data-rise>Snapshot each decision</p>
-            <p class="lead" data-rise>It saves a snapshot at each decision, not every frame, so the data is dense and small.</p>
-          </div>
-          <div class="row">
-            <p class="word" data-rise>Export</p>
-            <p class="lead" data-rise>Episodes come out labelled, in the format the team using the data trains on, for example RLDS.</p>
-          </div>
-        </div>
-      </section>
+      <div class="ds-film">
+        <iframe src={duniaVideo.embed} title="Dunia demo video" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      </div>
 
-      <Records />
+      <aside class="ds-side">
+        <div class="ds-help">
+          <div class="ds-note" data-for="watch">
+            <h3>What Dunia does</h3>
+            <p>Dunia sits inside a game engine. While someone plays, it writes down what the world looked like, what they did and what happened next, as labelled training data for robots and physical AI.</p>
+            <p class="ds-hint">The film shows it running. Scroll to record a sample flight.</p>
+          </div>
+          <div class="ds-note" data-for="record">
+            <h3>Why games</h3>
+            <p>A robot learns from what it saw, what it did and what happened next. Collecting that with real robots is slow and costly, and sometimes the robot breaks. A game engine already knows all three, so nobody labels anything by hand.</p>
+          </div>
+          <div class="ds-note" data-for="export">
+            <h3>Export</h3>
+            <p>Each run comes out as an episode of labelled steps, in RLDS, a format robotics teams already train on.</p>
+          </div>
+          <div class="ds-note" data-for="status">
+            <h3>Where it is today</h3>
+            <p>A working capture demo inside our own game: it records ten times a second and exports RLDS. Next is the SDK, so other studios can put Dunia in their games.</p>
+            <a class="ds-go" href="#pilot"><span>Become a pilot partner</span><Fragment set:html={arrow} /></a>
+          </div>
+        </div>
+        <ul class="ds-ch" aria-label="Channels recorded on every step">
+          {channels.map((c) => (
+            <li data-ch={c.id}><b>{c.name}</b><span>{c.what}</span><output data-read={c.id}>-</output></li>
+          ))}
+        </ul>
+      </aside>
 
-      <section class="sys sec field-ai" id="pilot" aria-labelledby="pilot-h">
-        <div class="row" style="margin-bottom:72px">
-          <p class="word" data-rise>Pilot partners</p>
-          <div>
-            <h2 id="pilot-h" data-rise>We're looking for pilot partners on both sides</h2>
-            <p class="lead" data-rise style="margin-top:20px">The MVP works. The next version gets built with the first teams who use it, so it fits a real problem instead of one we guessed at. We ask for a real problem or a real game, and honest feedback.</p>
-          </div>
+      <div class="ds-low">
+        <div class="ds-time">
+          <span class="ds-clock"><b data-t>00:00.0</b> step <b data-step>0</b> at 10 Hz</span>
+          <div class="ds-track" aria-hidden="true"><i class="ds-head"></i></div>
         </div>
-        <div class="row">
-          <span aria-hidden="true"></span>
-          <div class="tracks">
-            <div data-rise>
-              <h3>AI and robotics teams</h3>
-              <p>Tell us the task and the format you train on. We build a game scenario for it, record real play with Dunia, and you test the labelled data in your own pipeline.</p>
-              <p class="soft">You get data shaped for your problem, and a say in what the SDK does next.</p>
-              <a class="act" href="#contact" data-topic="ai"><span>Apply as an AI team</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></a>
-            </div>
-            <div data-rise>
-              <h3>Game studios</h3>
-              <p>We put Dunia inside a game people already play, record play as labelled data, and work with you on turning that data into a new source of revenue for the game.</p>
-              <p class="soft">You get early access to the SDK, and a say in how it fits your engine.</p>
-              <a class="act" href="#contact" data-topic="studio"><span>Apply as a game studio</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></a>
-            </div>
-          </div>
+        <div class="ds-log" aria-label="Steps written">
+          <div class="ds-row ds-hd"><span>Step</span><span>Action</span><span>Outcome</span><span>Reward</span></div>
+          <div class="ds-rows"></div>
         </div>
-      </section>
+        <pre class="ds-tree" aria-label="The exported episode"></pre>
+      </div>
+
+      <footer class="ds-foot">Sample session. The readouts and rows are made up to show the shape of the data. The film is real.</footer>
+    </div>
+  </div>
+</section>
+
+<Records />
+
+<!-- The close: an actual input, in the recorder's idiom. -->
+<section class="ds-pilot" id="pilot" aria-labelledby="pilot-h">
+  <div class="dp-copy">
+    <h2 id="pilot-h" data-rise>Pilot partners</h2>
+    <p data-rise>The capture demo works. The SDK gets built with the first teams who use it, so it fits a real problem instead of one we guessed at. We ask for a real task or a real game, and honest feedback.</p>
+  </div>
+  <form class="dp-form" id="pform" action={formspree} method="POST" novalidate data-rise>
+    <fieldset class="dp-who">
+      <legend>Who you are</legend>
+      <label><input type="radio" name="topic" value="Pilot: AI or robotics team" data-ask="What should the robot learn? Tell us the task and the format you train on." checked /><span>AI or robotics team</span></label>
+      <label><input type="radio" name="topic" value="Pilot: game studio" data-ask="Which game, which engine, and roughly how many people play it?" /><span>Game studio</span></label>
+    </fieldset>
+    <label class="dp-ask" for="pmsg">What should the robot learn? Tell us the task and the format you train on.</label>
+    <textarea id="pmsg" name="message" rows="3" required></textarea>
+    <div class="dp-send">
+      <label for="pemail" class="vh">Your email</label>
+      <input id="pemail" name="email" type="email" autocomplete="email" required placeholder="you@company.com" />
+      <button type="submit"><span>Apply</span><Fragment set:html={arrow} /></button>
+    </div>
+    <p class="dp-msg" role="status">We reply from hello@artifisi.com.</p>
+  </form>
+</section>
+
     </main>
 
     <Ending />
 
+    <script is:inline src="/scrollcraft/scrollcraft.js"></script>
+    <script is:inline>ScrollCraft.mount(document.getElementById("rec"));</script>
     <script>
       import "../../scripts/hero.js";
       import "../../scripts/site.js";
       import "../../scripts/records.js";
+      import "../../scripts/dunia.js";
     </script>
   </body>
 </html>
