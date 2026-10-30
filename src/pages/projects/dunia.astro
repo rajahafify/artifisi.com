@@ -10,6 +10,9 @@ import "../../styles/home.css";
 import "../../styles/scrollcraft.css";
 import "../../styles/system.css";
 import "../../styles/dunia.css";
+import "../../styles/iso.css";
+// Fig 1, drawn with the Anatomy kit. Rebuild with: node tools/anatomy/recorder/build.mjs
+import recorderFig from "../../figures/recorder.html?raw";
 
 // The six channels the recorder writes on every tick. The readouts are filled by dunia.js from a sample flight.
 const channels = [
@@ -111,6 +114,15 @@ const arrow = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true
   </div>
 </section>
 
+<!-- Fig 1: the same idea as a machine on a bench (Anatomy skill) -->
+<section class="ds-fig" id="how" aria-labelledby="how-h">
+  <div class="df-copy">
+    <h2 id="how-h" data-rise>How it works, as a machine</h2>
+    <p data-rise>Ten times a second, Dunia takes a sample of the game. Each sample keeps every channel and the player's action side by side. Steer the stick and watch the tape write it down.</p>
+  </div>
+  <Fragment set:html={recorderFig} />
+</section>
+
 <Records />
 
 <!-- The close: an actual input, in the recorder's idiom. -->
@@ -140,6 +152,7 @@ const arrow = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true
 
     <Ending />
 
+    <script is:inline type="module" src="/figures/recorder.js"></script>
     <script is:inline src="/scrollcraft/scrollcraft.js"></script>
     <script is:inline>ScrollCraft.mount(document.getElementById("rec"));</script>
     <script>
