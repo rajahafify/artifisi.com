@@ -172,19 +172,19 @@
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Footer: places and links, then the name at full width, cut by the bottom edge */
-.foot { background: var(--ai-deep); color: #fff; padding: 96px var(--m) 0; overflow: hidden; font-family: var(--sans); }
+.foot { background: #fff; color: #0a0a0a; padding: 96px var(--m) 0; overflow: hidden; font-family: var(--sans); }
 .foot-row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; row-gap: 40px; }
 .places { grid-column: 1 / span 5; display: grid; gap: 4px; align-content: start; }
-.places a { font-size: clamp(26px, 2.4vw, 36px); line-height: 1.2; letter-spacing: -0.02em; color: var(--ai-light); text-decoration: none; transition: color .2s; }
-.places span { font-size: clamp(26px, 2.4vw, 36px); line-height: 1.2; letter-spacing: -0.02em; color: var(--ai-light); }
-@media (hover: hover) and (pointer: fine) { .places a:hover { color: #fff; } }
+.places a { font-size: clamp(26px, 2.4vw, 36px); line-height: 1.2; letter-spacing: -0.02em; color: var(--ai); text-decoration: none; transition: color .2s; }
+.places span { font-size: clamp(26px, 2.4vw, 36px); line-height: 1.2; letter-spacing: -0.02em; color: var(--ai); }
+@media (hover: hover) and (pointer: fine) { .places a:hover { color: #0a0a0a; } }
 .links3 { grid-column: 7 / span 6; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; font-size: 15px; }
-.links3 h3 { font-size: 15px; font-weight: 400; color: #8fa0e0; margin-bottom: 6px; }
-.links3 a { display: flex; align-items: center; min-height: 36px; text-decoration: none; color: #fff; transition: color .2s; }
-@media (hover: hover) and (pointer: fine) { .links3 a:hover { color: var(--ai-light); } }
-.legal { display: flex; justify-content: space-between; gap: 16px; margin-top: 96px; font-size: 13px; color: #8fa0e0; }
+.links3 h3 { font-size: 15px; font-weight: 400; color: #5a5a5a; margin-bottom: 6px; }
+.links3 a { display: flex; align-items: center; min-height: 36px; text-decoration: none; color: #0a0a0a; transition: color .2s; }
+@media (hover: hover) and (pointer: fine) { .links3 a:hover { color: var(--ai); } }
+.legal { display: flex; justify-content: space-between; gap: 16px; margin-top: 96px; font-size: 13px; color: #5a5a5a; }
 .legal a { color: inherit; }
-.mark { display: block; font-size: 34.4vw; font-kerning: none; font-weight: 600; line-height: .8; letter-spacing: -0.06em; margin: 24px 0 -0.13em -0.04em; white-space: nowrap; color: #fff; user-select: none; }
+.mark { display: block; font-size: 34.4vw; font-kerning: none; font-weight: 600; line-height: .8; letter-spacing: -0.06em; margin: 24px 0 -0.13em -0.04em; white-space: nowrap; color: #0a0a0a; user-select: none; }
 
 /* Inner page header: black band, the nav, then the page title */
 .top { background: var(--black); color: #fff; padding: 22px var(--m) clamp(72px, 9vw, 120px); font-family: var(--sans); }

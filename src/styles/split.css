@@ -5,8 +5,8 @@
   --sc-accent: #8ea2ff; --sc-accent-ink: #0a0a0a;
   --sc-font-display: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --sc-font-text: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
-  --g-ground: #053c43; --g-soft: #bfe6ea; --g-hi: #46d3df;
-  --a-ground: #0d1a5e; --a-soft: #c9d2ff; --a-hi: #8ea2ff;
+  --g-ground: #ffffff; --g-ink: #0a0a0a; --g-soft: #5a5a5a; --g-hi: #2343d6;
+  --a-ground: #0a0a0a; --a-soft: #b3b3b3; --a-hi: #8ea2ff;
   font-family: var(--sans);
   background: #0a0a0a;
 }
@@ -15,7 +15,7 @@
 .sp { --split: 50%; color: #fff; }
 .sp-stage { display: block; background: var(--a-ground); }
 .sp-l, .sp-r { position: absolute; top: 0; bottom: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 96px clamp(24px, 4vw, 64px) 72px; }
-.sp-l { left: 0; width: var(--split); background: var(--g-ground); }
+.sp-l { left: 0; width: var(--split); background: var(--g-ground); color: var(--g-ink); }
 .sp-r { left: var(--split); right: 0; background: var(--a-ground); }
 .sp-l > *, .sp-r > * { width: min(100%, 36rem); }
 .sp-l { align-items: flex-end; text-align: right; }
@@ -36,7 +36,8 @@
 .sp-r .sp-facts dt { color: var(--a-soft); }
 .sp-facts dd { margin: 0; font-size: 17px; }
 
-.sp-tag { position: absolute; top: 88px; font-size: 15px !important; font-weight: 400 !important; letter-spacing: 0 !important; color: #fff; opacity: .8; }
+.sp-tag { position: absolute; top: 88px; font-size: 15px !important; font-weight: 400 !important; letter-spacing: 0 !important; color: var(--a-soft); }
+.sp-l > .sp-tag, .sp-stage > .sp-tag { color: var(--g-soft); }
 .sp-stage > .sp-tag { left: clamp(24px, 4vw, 64px); z-index: 2; }
 .sp-l > .sp-tag { right: clamp(24px, 4vw, 64px); }
 .sp-r > .sp-tag { left: clamp(24px, 4vw, 64px); }
@@ -45,17 +46,17 @@
 .sp-big2 { font-size: clamp(34px, 3.8vw, 64px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.02; max-width: 11em; }
 .sp-r .sp-big2 { font-weight: 400; color: var(--a-soft); }
 .sp-r .sp-phase { padding-top: 31px; }
-.sp-both { position: absolute; left: 50%; bottom: 72px; translate: -50% 0; z-index: 3; background: #fff; color: #0a0a0a; font-size: clamp(17px, 1.4vw, 21px); font-weight: 500; padding: 14px 22px; white-space: nowrap; }
+.sp-both { position: absolute; left: 50%; bottom: 72px; translate: -50% 0; z-index: 3; background: var(--g-hi); color: #fff; font-size: clamp(17px, 1.4vw, 21px); font-weight: 500; padding: 14px 22px; white-space: nowrap; }
 
 /* What we do: a game on the left, the sheet on the right */
 .sp-game { max-width: 34rem; text-align: left; }
-.sp-shot { margin: 0 0 20px; aspect-ratio: 16 / 9; overflow: hidden; background: #032a2f; }
+.sp-shot { margin: 0 0 20px; aspect-ratio: 16 / 9; overflow: hidden; background: #f2f2f2; }
 .sp-shot img { width: 100%; height: 100%; object-fit: cover; }
 .sp-game h3 { font-size: clamp(32px, 3.2vw, 52px); font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
 .sp-kind { font-size: 15px; color: var(--g-soft); margin: 8px 0 12px; }
 .sp-game p { font-size: 17px; line-height: 1.45; }
 .sp-links { display: flex; flex-wrap: wrap; gap: 0 20px; margin-top: 4px; }
-.sp-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.sp-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; color: var(--g-ink); text-decoration: underline; text-underline-offset: 4px; }
 .sp-links a:hover { color: var(--g-hi); }
 
 .sheet-x { width: min(100%, 40rem); font-size: 15px; }
@@ -73,7 +74,7 @@
   transform: translate(calc(var(--t) * 30vw), calc(var(--t) * (var(--row) * 50px - 14svh + 140px))) rotate(calc(var(--t) * 180deg));
   opacity: clamp(0, min(var(--t) * 8, (1 - var(--t)) * 8), 1);
 }
-.sp-fly i:nth-child(3n) { background: #fff; }
+.sp-fly i:nth-child(3n) { background: #0a0a0a; outline: 1px solid #fff; }
 
 /* Dunia: the film takes the screen as the split closes */
 .sp-dunia .sp-l { justify-items: end; }
@@ -95,9 +96,10 @@
 /* The divider: fixed while the split holds */
 .sp-divider { position: fixed; z-index: 30; top: 0; bottom: 0; left: var(--split, 50%); width: 0; pointer-events: none; opacity: 0; transition: opacity .3s; }
 .in-split .sp-divider { opacity: 1; }
-.sd-bar { position: absolute; top: 0; bottom: 0; left: -3px; width: 6px; background: #fff; }
-.sd-bar i { position: absolute; left: 0; right: 0; top: 0; height: 100%; background: #0a0a0a; transform-origin: 50% 0; transform: scaleY(calc(1 - var(--prog, 0))); }
-.sd-l, .sd-r { position: absolute; top: 28px; font-size: 15px; font-weight: 600; padding: 6px 12px; background: #fff; color: #0a0a0a; white-space: nowrap; }
+.sd-bar { position: absolute; top: 0; bottom: 0; left: -3px; width: 6px; background: var(--g-hi); }
+.sd-bar i { position: absolute; left: 0; right: 0; top: 0; height: 100%; background: #8a8a8a; transform-origin: 50% 0; transform: scaleY(calc(1 - var(--prog, 0))); }
+.sd-l, .sd-r { position: absolute; top: 28px; font-size: 15px; font-weight: 600; padding: 6px 12px; white-space: nowrap; }
+.sd-l { background: #0a0a0a; color: #fff; } .sd-r { background: #fff; color: #0a0a0a; }
 .sd-l { right: 10px; } .sd-r { left: 10px; }
 .sd-count { position: absolute; bottom: 24px; left: 10px; white-space: nowrap; font-size: 15px; color: #fff; }
 .sd-count b { font-size: 22px; font-weight: 600; margin-right: 4px; font-variant-numeric: tabular-nums; }
