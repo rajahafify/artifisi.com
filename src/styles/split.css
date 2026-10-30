@@ -68,7 +68,7 @@
 /* The signature move: squares leave the screenshot and cross into the sheet */
 .sp-fly { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
 .sp-fly i {
-  --t: clamp(0, (var(--sc-p, 0) - var(--a)) / 0.08, 1);
+  --t: clamp(0, (var(--sc-p, 0) - var(--a)) / 0.1, 1);
   position: absolute; left: calc(var(--split) - 18vw + var(--k) * 26px); top: calc(36svh + var(--k) * 18px);
   width: 14px; height: 14px; background: var(--g-hi);
   transform: translate(calc(var(--t) * 30vw), calc(var(--t) * (var(--row) * 50px - 14svh + 140px))) rotate(calc(var(--t) * 180deg));

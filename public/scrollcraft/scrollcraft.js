@@ -617,7 +617,7 @@
       });
 
       needsLayout = false;
-      read();
+      snapNext = true; read(); snapNext = false;
     }
 
     // ---- video ------------------------------------------------------------
@@ -814,7 +814,9 @@
     }
 
     // ---- per-frame scroll read -------------------------------------------
+    var CUE_LERP = 0.085, settling = false, snapNext = true, settleQueued = false;
     function read() {
+      settling = false;
       y = scrollY || pageYOffset;
       var driftA = null, driftB = null, driftT = 0;
       var maxY = Math.max((document.documentElement.scrollHeight || 0) - vh, 1);
@@ -829,7 +831,15 @@
           raw = clamp01((y + vh - a.top) / (a.height + vh));
         }
         a.raw = raw;
-        a.p = a.dwell ? dwell(raw, a.dwell) : raw;
+        // Cue time glides toward scroll time instead of jumping with it. A wheel
+        // notch moves the page ~100px at once, and copy keyed straight to that
+        // snaps a whole fade into one or two frames, which reads as a cut.
+        var want = a.dwell ? dwell(raw, a.dwell) : raw;
+        if (reduce || a.p == null || snapNext) a.p = want;
+        else {
+          a.p += (want - a.p) * CUE_LERP;
+          if (Math.abs(want - a.p) < 0.0004) a.p = want; else settling = true;
+        }
 
         // Clip time is NOT cue time. Cues belong to the pin, so they keep using
         // `p`. The clip belongs to the stage, and the stage is on screen for one
@@ -927,7 +937,7 @@
           } else {
             q.el.style.opacity = vis.toFixed(3);
             q.el.style.transform = reduce ? 'none'
-              : 'translate3d(0,' + ((1 - vis) * 2.4 * q.rise).toFixed(2) + 'vh,0)';
+              : 'translate3d(0,' + ((1 - vis) * 2.4 * q.rise * (q.to !== null && a.p > q.to - (q.to - q.from) * q.rOut ? -1 : 1)).toFixed(2) + 'vh,0)';
           }
           var on = vis > 0.5;
           if (on !== (q.state === 1)) { q.state = on ? 1 : 0; q.el.style.pointerEvents = on ? 'auto' : 'none'; }
@@ -1153,8 +1163,15 @@
 
     // ---- wiring -----------------------------------------------------------
     var ticking = false;
+    // Keep reading after the scroll stops until every act's cue time has caught up.
+    function settle() {
+      settleQueued = false;
+      if (ticking) return;
+      read(); snapNext = false;
+      if (settling && !settleQueued) { settleQueued = true; requestAnimationFrame(settle); }
+    }
     addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(function () { read(); ticking = false; }); }
+      if (!ticking) { ticking = true; requestAnimationFrame(function () { read(); snapNext = false; ticking = false; if (settling && !settleQueued) { settleQueued = true; requestAnimationFrame(settle); } }); }
     }, { passive: true });
 
     // Keyboard focus on a pinned or panning act. The browser's own

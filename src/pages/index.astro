@@ -23,7 +23,7 @@ const rows = [
   { game: "Hullpack Hero", state: "Cargo full", action: "Return to station", outcome: "Run banked" },
 ];
 // When each game's rows land, in act progress.
-const at = [0.16, 0.24, 0.44, 0.52, 0.72, 0.8];
+const at = [0.14, 0.22, 0.46, 0.54, 0.78, 0.86];
 ---
 
 <!doctype html>
@@ -46,47 +46,47 @@ const at = [0.16, 0.24, 0.44, 0.52, 0.72, 0.8];
 <main id="split">
 
 <!-- 1 · Who we are. Each half finishes the other's sentence. -->
-<section class="sp" id="about" data-sc-act="pin" data-sc-span="2.2" aria-labelledby="about-h">
+<section class="sp" id="about" data-sc-act="pin" data-sc-span="3" aria-labelledby="about-h">
   <div class="sc-stage sp-stage" data-sc-stage>
     <h2 id="about-h" class="vh">Who we are</h2>
     <div class="sp-l">
-      <p class="sp-big" data-sc-cue="0 0.5 0 0.12">We make games.</p>
-      <p class="sp-mid" data-sc-cue="0.46 1 0.12 0">Strategy on PC and roguelikes on mobile, made in Kuala Lumpur.</p>
-      <dl class="sp-facts" data-sc-cue="0.5 1 0.12 0"><div><dt>Founded</dt><dd>2023</dd></div><div><dt>Based in</dt><dd>Kuala Lumpur</dd></div></dl>
+      <p class="sp-big" data-sc-cue="0 0.42 0 0.35">We make games.</p>
+      <p class="sp-mid" data-sc-cue="0.48 1 0.3 0">Strategy on PC and roguelikes on mobile, made in Kuala Lumpur.</p>
+      <dl class="sp-facts" data-sc-cue="0.6 1 0.3 0"><div><dt>Founded</dt><dd>2023</dd></div><div><dt>Based in</dt><dd>Kuala Lumpur</dd></div></dl>
     </div>
     <div class="sp-r">
-      <p class="sp-big" data-sc-cue="0 0.5 0 0.12" data-sc-kinetic="words">We build AI.</p>
-      <p class="sp-mid" data-sc-cue="0.54 1 0.12 0">On top of what games already know: where everything is, what the player did and what happened next.</p>
-      <dl class="sp-facts" data-sc-cue="0.58 1 0.12 0"><div><dt>Full time since</dt><dd>January 2025</dd></div><div><dt>Status</dt><dd>Malaysia Digital company</dd></div></dl>
+      <p class="sp-big" data-sc-cue="0 0.42 0 0.35" data-sc-kinetic="words">We build AI.</p>
+      <p class="sp-mid" data-sc-cue="0.54 1 0.3 0">On top of what games already know: where everything is, what the player did and what happened next.</p>
+      <dl class="sp-facts" data-sc-cue="0.66 1 0.3 0"><div><dt>Full time since</dt><dd>January 2025</dd></div><div><dt>Status</dt><dd>Malaysia Digital company</dd></div></dl>
     </div>
   </div>
 </section>
 
 <!-- 2 · What we stand for. One sentence starts on the games side and ends on the AI side. -->
-<section class="sp sp-stand" id="mission" data-sc-act="pin" data-sc-span="3" aria-labelledby="mission-h">
+<section class="sp sp-stand" id="mission" data-sc-act="pin" data-sc-span="4.2" aria-labelledby="mission-h">
   <div class="sc-stage sp-stage" data-sc-stage>
     <h2 id="mission-h" class="sp-tag">What we stand for</h2>
     <div class="sp-l">
-      <div class="sp-phase" data-sc-cue="0 0.34 0 0.06"><h3>Vision</h3><p class="sp-big2">Machines that learn</p></div>
-      <div class="sp-phase" data-sc-cue="0.34 0.67 0.06 0.06"><h3>Mission</h3><p class="sp-big2">Make games people want to play,</p></div>
-      <div class="sp-phase" data-sc-cue="0.67 1 0.06 0"><h3>Objectives</h3><p class="sp-big2">Release Melaka 1511 on PC.</p></div>
+      <div class="sp-phase" data-sc-cue="0 0.3 0 0.3"><h3>Vision</h3><p class="sp-big2">Machines that learn</p></div>
+      <div class="sp-phase" data-sc-cue="0.34 0.64 0.3 0.3"><h3>Mission</h3><p class="sp-big2">Make games people want to play,</p></div>
+      <div class="sp-phase" data-sc-cue="0.68 1 0.3 0"><h3>Objectives</h3><p class="sp-big2">Release Melaka 1511 on PC.</p></div>
     </div>
     <div class="sp-r">
-      <div class="sp-phase" data-sc-cue="0 0.34 0 0.06"><p class="sp-big2">from the way people play.</p></div>
-      <div class="sp-phase" data-sc-cue="0.38 0.67 0.06 0.06"><p class="sp-big2">and turn that play into data machines can learn from.</p></div>
-      <div class="sp-phase" data-sc-cue="0.74 1 0.06 0"><p class="sp-big2">Run the first Dunia pilots with robotics and AI teams.</p></div>
+      <div class="sp-phase" data-sc-cue="0 0.32 0 0.3"><p class="sp-big2">from the way people play.</p></div>
+      <div class="sp-phase" data-sc-cue="0.38 0.66 0.3 0.3"><p class="sp-big2">and turn that play into data machines can learn from.</p></div>
+      <div class="sp-phase" data-sc-cue="0.72 1 0.3 0"><p class="sp-big2">Run the first Dunia pilots with robotics and AI teams.</p></div>
     </div>
-    <p class="sp-both" data-sc-cue="0.84 1 0.06 0">And put Dunia inside more games, ours and other studios'.</p>
+    <p class="sp-both" data-sc-cue="0.84 1 0.4 0">And put Dunia inside more games, ours and other studios'.</p>
   </div>
 </section>
 
 <!-- 3 · What we do. Each game arrives on the left; its moments cross the divider and land as rows on the right. -->
-<section class="sp sp-do" id="games" data-sc-act="pin" data-sc-span="3.6" aria-labelledby="games-h">
+<section class="sp sp-do" id="games" data-sc-act="pin" data-sc-span="4.8" aria-labelledby="games-h">
   <div class="sc-stage sp-stage" data-sc-stage>
     <div class="sp-l">
       <h2 id="games-h" class="sp-tag">Our games</h2>
       {games.map((g, i) => (
-        <article class="sp-game" data-sc-cue={i === 0 ? "0 0.34 0 0.06" : i === 1 ? "0.34 0.64 0.06 0.06" : "0.64 1 0.06 0"}>
+        <article class="sp-game" data-sc-cue={i === 0 ? "0 0.32 0 0.25" : i === 1 ? "0.36 0.64 0.3 0.25" : "0.68 1 0.3 0"}>
           <figure class="sp-shot"><img src={shots[g.name]} alt={g.alt} width="720" height="405" /></figure>
           <h3>{g.name}</h3>
           <p class="sp-kind">{g.kind}, {g.status.toLowerCase()}</p>
@@ -102,19 +102,19 @@ const at = [0.16, 0.24, 0.44, 0.52, 0.72, 0.8];
       <div class="sheet-x" role="table" aria-label="Sample rows Dunia would record from our games">
         <div class="sx-row sx-head" role="row"><span role="columnheader">Game</span><span role="columnheader">State</span><span role="columnheader">Action</span><span role="columnheader">Outcome</span></div>
         {rows.map((r, i) => (
-          <div class="sx-row" role="row" data-sc-cue={`${at[i]} 1 0.04 0`}><span role="cell">{r.game}</span><span role="cell">{r.state}</span><span role="cell">{r.action}</span><span role="cell">{r.outcome}</span></div>
+          <div class="sx-row" role="row" data-sc-cue={`${at[i]} 1 ${(0.07 / (1 - at[i])).toFixed(3)} 0`}><span role="cell">{r.game}</span><span role="cell">{r.state}</span><span role="cell">{r.action}</span><span role="cell">{r.outcome}</span></div>
         ))}
       </div>
       <p class="sx-note">Sample rows, made up to show the shape of the data.</p>
     </div>
     <div class="sp-fly" aria-hidden="true">
-      {at.map((a, i) => [0, 1, 2].map((k) => <i style={`--a:${a - 0.07 + k * 0.012};--row:${i};--k:${k}`}></i>))}
+      {at.map((a, i) => [0, 1, 2].map((k) => <i style={`--a:${(a - 0.1 + k * 0.016).toFixed(3)};--row:${i};--k:${k}`}></i>))}
     </div>
   </div>
 </section>
 
 <!-- 4 · Dunia. The divider sweeps off the left edge and the film takes the screen. The peak. -->
-<section class="sp sp-dunia" id="ai" data-sc-act="pin" data-sc-span="2.8" aria-labelledby="ai-h">
+<section class="sp sp-dunia" id="ai" data-sc-act="pin" data-sc-span="3.2" aria-labelledby="ai-h">
   <div class="sc-stage sp-stage" data-sc-stage>
     <div class="sp-l">
       <p class="sp-big2 sp-fade">Every game we make is a place to collect data.</p>

@@ -5,13 +5,16 @@
   var div = document.querySelector(".sp-divider"); if (!acts.length || !div) return;
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce) return;
-  var count = div.querySelector(".sd-count b"), rowsAt = [0.16, 0.24, 0.44, 0.52, 0.72, 0.8];
+  var count = div.querySelector(".sd-count b"), rowsAt = [0.14, 0.22, 0.46, 0.54, 0.78, 0.86];
   var cur = acts.map(function () { return 50; });
   function p(el) { return parseFloat(el.style.getPropertyValue("--sc-p")) || 0; }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function ease(t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
+  // 0 before a, eases to 1 at b, back to 0 by c.
+  function bump(q, a, b, c) { return q < b ? ease((q - a) / (b - a)) : 1 - ease((q - b) / (c - b)); }
   // Where each act wants the divider, in percent, for its progress.
   var target = {
-    mission: function (q) { return q >= 0.84 ? 50 : q >= 0.74 ? 43 : q >= 0.64 ? 57 : 50; },
+    mission: function (q) { return 50 + 7 * bump(q, 0.62, 0.72, 0.8) - 7 * bump(q, 0.72, 0.8, 0.9); },
     ai: function (q) { var t = clamp((q - 0.08) / 0.42, 0, 1); t = t * t * (3 - 2 * t); return 50 * (1 - t); }
   };
   function frame() {
