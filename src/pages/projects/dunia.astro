@@ -1,6 +1,7 @@
 ---
 import Head from "../../components/Head.astro";
 import Hero from "../../components/Hero.astro";
+import Records from "../../components/Records.astro";
 import { duniaVideo } from "../../data.js";
 import "../../styles/home.css";
 import "../../styles/dunia.css";
@@ -61,6 +62,8 @@ import "../../styles/dunia.css";
       </div>
     </section>
 
+    <Records />
+
     <section class="band dstatus">
       <div class="inner two">
         <div>
@@ -114,6 +117,7 @@ import "../../styles/dunia.css";
     <script>
       import "../../scripts/hero.js";
       import "../../scripts/video.js";
+      import "../../scripts/records.js";
     </script>
   </body>
 </html>

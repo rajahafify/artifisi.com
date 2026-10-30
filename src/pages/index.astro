@@ -1,64 +1,9 @@
 ---
 import Head from "../components/Head.astro";
 import Hero from "../components/Hero.astro";
+import { games } from "../games.js";
 import "../styles/home.css";
 import "../styles/landing.css";
-
-// Sample episodes for the "What Dunia records" sheets. Made up for this page, and labelled so on it.
-const sheets = [
-  {
-    id: "drive", name: "A drive", title: "Episode 0142", kind: "Driving, lane change",
-    cols: ["Step", "State", "Action", "Outcome", "Reward"],
-    rows: [
-      ["1", "Lane 2, 28 m gap, 54 km/h", "Hold", "Clear", "+0.1"],
-      ["2", "Lane 2, 19 m gap, 55 km/h", "Hold", "Clear", "+0.1"],
-      ["3", "Lane 2, 11 m gap, 55 km/h", "Steer left", "Lane 1, clear", "+0.3"],
-      ["4", "Lane 1, 40 m gap, 57 km/h", "Hold", "Clear", "+0.1"],
-    ],
-  },
-  {
-    id: "grasp", name: "A grasp", title: "Episode 0087", kind: "Robot arm, cup on a cluttered table",
-    cols: ["Step", "State", "Action", "Outcome", "Reward"],
-    rows: [
-      ["1", "Shoulder 32°, elbow 71°, grip open", "Reach", "9 cm to cup", "0.0"],
-      ["2", "Shoulder 38°, elbow 64°, grip open", "Lower", "2 cm to cup", "+0.2"],
-      ["3", "Shoulder 41°, elbow 60°, grip open", "Close grip", "Contact, 4 N", "+0.3"],
-      ["4", "Shoulder 41°, elbow 60°, grip 4 N", "Lift", "Cup held, 6 cm up", "+1.0"],
-    ],
-  },
-  {
-    id: "flight", name: "A flight", title: "Episode 0311", kind: "Drone, gate run in light wind",
-    cols: ["Step", "State", "Action", "Outcome", "Reward"],
-    rows: [
-      ["1", "12.0 m up, wind 3 m/s west, gate in 14 m", "Pitch forward", "9 m to gate", "+0.1"],
-      ["2", "11.8 m up, drifting 0.6 m east", "Roll left 4°", "Drift 0.1 m", "+0.2"],
-      ["3", "11.9 m up, gate in 2 m", "Hold", "Through gate 1", "+1.0"],
-      ["4", "12.1 m up, gate 2 in 22 m", "Yaw right 15°", "Lined up", "+0.1"],
-    ],
-  },
-];
-const sum = (rows: string[][]) => rows.reduce((a, r) => a + parseFloat(r[4]), 0).toFixed(1);
-
-const games = [
-  { name: "Melaka 1511", kind: "Turn-based strategy, PC", status: "In development", img: "/img/melaka-1511.jpg", w: 720, h: 405,
-    alt: "Melaka 1511: a voxel harbour town in the Melaka Sultanate",
-    text: "Start weak after the fall of Temasek and unite the peninsula before the Portuguese arrive. Voxel art.",
-    links: [{ label: "About the game", href: "/projects/melaka-1511" }, { label: "Watch the video", href: "https://youtu.be/4TbsJau7QmA", embed: "https://www.youtube-nocookie.com/embed/4TbsJau7QmA?autoplay=1&rel=0" }] },
-  { name: "Orbwalker", kind: "Match-3 roguelike, mobile", status: "Playable", img: "/img/orbwalker.jpg", w: 720, h: 405,
-    alt: "Orbwalker: a board of coloured orbs mid-run",
-    text: "A fantasy match-3 roguelike with free orb movement. One person built it in three months.",
-    links: [{ label: "Play on itch.io", href: "https://rajahafify.itch.io/orbwalker" }, { label: "Watch the video", href: "https://www.youtube.com/shorts/yOek_scKUMY", embed: "https://www.youtube-nocookie.com/embed/yOek_scKUMY?autoplay=1&rel=0" }] },
-  { name: "Hullpack Hero", kind: "Space roguelite", status: "Early development", img: "/img/hullpack-hero.png", w: 315, h: 250,
-    alt: "Hullpack Hero: a ship firing lasers at an asteroid",
-    text: "Eve Online meets Backpack Hero, set in our own solar system.",
-    links: [{ label: "Watch the video", href: "https://youtu.be/_Ro_OxFiU68", embed: "https://www.youtube-nocookie.com/embed/_Ro_OxFiU68?autoplay=1&rel=0" }] },
-];
-const tracks = [
-  { id: "ai", who: "For AI and robotics teams", topic: "ai", cta: "Apply as an AI team",
-    steps: [["Tell us the task", "And the format you train on. One task is enough to start."], ["We build the scenario and record play", "Real people play it. Dunia labels every decision as it happens."], ["You test the data in your pipeline", "You get data shaped for your problem, and a say in what the SDK does next."]] },
-  { id: "studio", who: "For game studios", topic: "studio", cta: "Apply as a studio",
-    steps: [["Show us a game people play", "Any engine. One game is enough to start."], ["We put Dunia inside it", "Your players keep playing. Nothing changes for them."], ["We turn the data into revenue, together", "You get early access to the SDK, and a say in how it fits your engine."]] },
-];
 ---
 
 <!doctype html>
@@ -80,111 +25,82 @@ const tracks = [
 
 <main class="lp">
 
-<section class="sec sec-video" id="ai" aria-labelledby="video-h">
+<section class="sec sec-about" id="about" aria-labelledby="about-h">
   <div class="sec-head">
-    <h2 id="video-h" data-rise>See Dunia at work</h2>
-    <p data-rise>Dunia sits inside a game engine. While someone plays, it records what the world looked like, what they did and what happened next. Each step comes out labelled, as training data for robots and physical AI.</p>
+    <h2 id="about-h" data-rise>Who we are</h2>
+    <p data-rise>Artifisi Sdn Bhd is a technology company in Kuala Lumpur. We make games, and we build AI on top of what games already know.</p>
   </div>
-  <div class="film" data-rise>
-    <iframe src="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/preview" title="Dunia demo video" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  <div class="lp-about">
+    <dl class="lp-company" data-rise>
+      <div><dt>Founded</dt><dd>2023, Kuala Lumpur</dd></div>
+      <div><dt>Full time since</dt><dd>January 2025</dd></div>
+      <div><dt>Status</dt><dd>Malaysia Digital, September 2026</dd></div>
+      <div><dt>Divisions</dt><dd>Games and AI</dd></div>
+    </dl>
+    <div class="letter">
+      <h3 data-rise>From the founder</h3>
+      <p data-rise>I have spent about twelve years building software. At AirAsia I helped scale an app from about 1,000 users a month to about 1,000 users a second.</p>
+      <p data-rise>I started Artifisi in 2023, doing software and AI work for clients, and went full time in January 2025. I built Orbwalker alone, from an empty project to a playable game, in three months. Games are how we learned to ship.</p>
+      <p class="sign" data-rise><span class="sig">Raja Hafify</span> <a class="li" href="https://www.linkedin.com/in/rajahafify/" target="_blank" rel="noopener" aria-label="Raja Hafify on LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a><span class="role">Founder and CEO, Artifisi Sdn Bhd</span></p>
+    </div>
   </div>
-  <ul class="lp-facts">
-    <li data-rise><b>Labelled as it happens</b><span>State, action and outcome at each decision, with no hand labelling.</span></li>
-    <li data-rise><b>Decisions, not frames</b><span>The SDK snapshots each decision instead of every frame.</span></li>
-    <li data-rise><b>Your format</b><span>Episodes export in the format your team trains on, for example RLDS.</span></li>
-  </ul>
 </section>
 
-<section class="sec sec-records" id="records" aria-labelledby="records-h">
+<section class="sec sec-mission" id="mission" aria-labelledby="mission-h">
   <div class="sec-head">
-    <h2 id="records-h" data-rise>What Dunia records</h2>
-    <p data-rise>Pick an episode. On the drive, steer the car and Dunia writes each row. The MVP runs in our own demo game.</p>
+    <h2 id="mission-h" data-rise>What we stand for</h2>
+    <p data-rise>Why the company exists, and what we are working on now.</p>
   </div>
-  <div class="outputs" role="tablist" aria-label="Sample episodes">
-    {sheets.map((s, i) => (
-      <button type="button" role="tab" id={`tab-${s.id}`} aria-controls={`sheet-${s.id}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-sheet={s.id}>{s.name}</button>
-    ))}
-    <button type="button" role="tab" id="tab-export" aria-controls="sheet-export" aria-selected="false" tabindex="-1" data-sheet="export">The export</button>
-  </div>
-  <div class="stage">
-    {sheets.map((s, i) => (
-      <article class="sheet" id={`sheet-${s.id}`} role="tabpanel" aria-labelledby={`tab-${s.id}`} hidden={i !== 0} data-ui>
-        <div class="sheet-head">
-          <div><b>{s.title}</b><span>{s.kind}</span></div>
-          <span class="sample">Sample data</span>
-        </div>
-        {s.id === "drive" && (
-          <div class="play" aria-label="Drive the car to add steps">
-            <div class="road" aria-hidden="true">
-              <div class="lane-line"></div><div class="lane-line two"></div>
-              <div class="car ahead" id="car-ahead"></div>
-              <div class="car me" id="car-me"></div>
-            </div>
-            <div class="play-ctl">
-              <button type="button" data-act="left">Steer left</button>
-              <button type="button" data-act="hold">Hold</button>
-              <button type="button" data-act="right">Steer right</button>
-            </div>
-          </div>
-        )}
-        <table>
-          <thead><tr>{s.cols.map((c) => <th scope="col">{c}</th>)}</tr></thead>
-          <tbody id={s.id === "drive" ? "drive-rows" : undefined}>
-            {s.rows.map((r) => <tr>{r.map((c, j) => <td class={j === 4 ? "num" : j === 0 ? "num idx" : undefined}>{c}</td>)}</tr>)}
-          </tbody>
-        </table>
-        <div class="sheet-foot"><span id={s.id === "drive" ? "drive-total" : undefined}>{s.rows.length} steps, return {sum(s.rows)}</span><span>Labelled as it happened</span></div>
-      </article>
-    ))}
-    <article class="sheet code" id="sheet-export" role="tabpanel" aria-labelledby="tab-export" hidden data-ui>
-      <div class="sheet-head">
-        <div><b>episode_0142.json</b><span>One step, RLDS-style</span></div>
-        <span class="sample">Sample data</span>
-      </div>
-<pre><code>{`{
-  "episode_id": "0142",
-  "steps": [
-    {
-      "observation": {
-        "lane": 2,
-        "gap_m": 11,
-        "speed_kmh": 55,
-        "camera": "frame_0003.png"
-      },
-      "action": "steer_left",
-      "reward": 0.3,
-      "is_first": false,
-      "is_terminal": false
-    }
-  ]
-}`}</code></pre>
-      <div class="sheet-foot"><span>Teams pick the format they train on.</span></div>
+  <div class="lp-pillars">
+    <article data-rise><h3>Vision</h3><p>Machines that learn from the way people play.</p></article>
+    <article data-rise><h3>Mission</h3><p>Make games people want to play, and turn that play into data machines can learn from.</p></article>
+    <article data-rise><h3>Objectives</h3>
+      <ul>
+        <li>Finish and release Melaka 1511 on PC.</li>
+        <li>Make daily games for the apps people already use.</li>
+        <li>Run the first Dunia pilots with robotics and AI teams.</li>
+      </ul>
     </article>
   </div>
 </section>
 
-<section class="sec sec-pilot" id="pilot" aria-labelledby="pilot-h">
+<section class="sec sec-do" id="divisions" aria-labelledby="do-h">
   <div class="sec-head">
-    <h2 id="pilot-h" data-rise>Run a pilot with us</h2>
-    <p data-rise>Two ways in. What we ask: a real problem or a real game, and honest feedback.</p>
+    <h2 id="do-h" data-rise>What we do</h2>
+    <p data-rise>Two divisions that run on the same skill. A game engine knows where everything is, what the player did and what happened next.</p>
   </div>
-  <div class="lp-tracks">
-    {tracks.map((t) => (
-      <article class="lp-track" data-rise>
-        <h3>{t.who}</h3>
-        <ol>
-          {t.steps.map(([h, p]) => <li><b>{h}</b><span>{p}</span></li>)}
-        </ol>
-        <a class="btn-solid" href="#contact" data-topic={t.topic}>{t.cta}</a>
-      </article>
-    ))}
+  <div class="lp-divs">
+    <article data-rise>
+      <h3>Games division</h3>
+      <p>Our own games, from strategy on PC to roguelikes on mobile, and short daily games made for other companies' apps.</p>
+      <a class="ul" href="#games">Our games</a>
+    </article>
+    <article data-rise>
+      <h3>AI division</h3>
+      <p>Dunia, our SDK that turns gameplay into labelled training data, plus simulated worlds built for robotics and AI teams.</p>
+      <a class="ul" href="#ai">About Dunia</a>
+    </article>
+  </div>
+</section>
+
+<section class="sec sec-video" id="ai" aria-labelledby="dunia-h">
+  <div class="sec-head">
+    <h2 id="dunia-h" data-rise>Dunia</h2>
+    <p data-rise>Dunia is an SDK that sits inside a game engine. While someone plays, it records what the world looked like, what they did and what happened next. Each step comes out labelled, as training data for robots and physical AI.</p>
+  </div>
+  <div class="film" data-rise>
+    <iframe src="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/preview" title="Dunia demo video" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  </div>
+  <div class="lp-after">
+    <p data-rise>The MVP runs inside our own demo game, which is what the video shows. We are now looking for the first robotics and AI teams to pilot it with.</p>
+    <a class="btn-solid" href="/projects/dunia" data-rise>More about Dunia</a>
   </div>
 </section>
 
 <section class="sec sec-games" id="games" aria-labelledby="games-h">
   <div class="sec-head">
     <h2 id="games-h" data-rise>Our games</h2>
-    <p data-rise>Original games, made in Kuala Lumpur. Dunia runs in them before it goes into anyone else's.</p>
+    <p data-rise>Original games, made in Kuala Lumpur. They are games first, and the first place Dunia runs.</p>
   </div>
   <div class="lp-games">
     {games.map((g) => (
@@ -194,40 +110,20 @@ const tracks = [
           <p class="lp-game-meta"><span>{g.kind}</span><span>{g.status}</span></p>
           <h3>{g.name}</h3>
           <p>{g.text}</p>
-          <p class="lp-game-links">
-            {g.links.map((l) => <a class="ul" href={l.href} target={l.href.startsWith("/") ? undefined : "_blank"} rel={l.href.startsWith("/") ? undefined : "noopener"} data-embed={l.embed}>{l.label}</a>)}
-          </p>
         </div>
       </article>
     ))}
   </div>
-</section>
-
-<section class="sec sec-about" id="about" aria-labelledby="about-h">
-  <div class="sec-head">
-    <h2 id="about-h" data-rise>About Artifisi</h2>
-    <p data-rise>An AI company in Kuala Lumpur with two divisions. The AI division builds Dunia. The games division makes the games it runs in.</p>
-  </div>
-  <div class="lp-about">
-    <ol class="years" aria-label="Company timeline">
-      <li data-rise><span class="yr">2023</span><span>Started in Kuala Lumpur, doing software and AI work for clients.</span></li>
-      <li data-rise><span class="yr">2025</span><span>Full time on Dunia and our own games.</span></li>
-      <li data-rise><span class="yr">2026</span><span>Malaysia Digital status, from September.</span></li>
-    </ol>
-    <div class="letter">
-      <h3 data-rise>From the founder</h3>
-      <p data-rise>I have spent twelve years building software, at startups and at AirAsia, and the last two of them on AI.</p>
-      <p data-rise>I built Orbwalker alone, from an empty project to a playable game, in three months. Games are how we learned to ship. They are also a cheap, safe place for a machine to learn.</p>
-      <p data-rise>If you have a task a robot needs to learn, or a game people already play, I would like to hear about it.</p>
-      <p class="sign" data-rise><span class="sig">Raja Hafify</span> <a class="li" href="https://www.linkedin.com/in/rajahafify/" target="_blank" rel="noopener" aria-label="Raja Hafify on LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a><span class="role">Founder, Artifisi Sdn Bhd</span></p>
-    </div>
+  <div class="lp-after">
+    <p data-rise>Videos, builds and details for each game.</p>
+    <a class="btn-solid" href="/games" data-rise>See all our games</a>
   </div>
 </section>
 
 <section class="sec sec-contact" id="contact" aria-labelledby="contact-h">
   <div class="sec-head">
     <h2 id="contact-h" data-rise>Talk to us</h2>
-    <p data-rise>Pilots, games or investing. Start with your email.</p>
+    <p data-rise>Partnerships, pilots, games or investing. Start with your email.</p>
     <dl class="reach">
     <div><dt>Email</dt><dd><a class="ul" href="mailto:hello@artifisi.com">hello@artifisi.com</a></dd></div>
     <div><dt>X</dt><dd><a class="ul" href="https://x.com/artifisi_my" target="_blank" rel="noopener">@artifisi_my</a></dd></div>
@@ -237,7 +133,8 @@ const tracks = [
   <form class="cform" id="cform" action="https://formspree.io/f/xeaaobag" method="POST" novalidate>
     <fieldset class="topics">
       <legend class="vh">What it is about</legend>
-      <label><input type="radio" name="topic" value="Pilot: AI or robotics team" checked /><span>Pilot, AI team</span></label>
+      <label><input type="radio" name="topic" value="Partnership" checked /><span>Partnership</span></label>
+      <label><input type="radio" name="topic" value="Pilot: AI or robotics team" /><span>Pilot, AI team</span></label>
       <label><input type="radio" name="topic" value="Pilot: game studio" /><span>Pilot, game studio</span></label>
       <label><input type="radio" name="topic" value="Our games" /><span>Our games</span></label>
       <label><input type="radio" name="topic" value="Investing" /><span>Investing</span></label>
@@ -266,12 +163,12 @@ const tracks = [
 <footer class="tiles" aria-label="Site footer">
   <div class="t t-state"><p>Gameplay in, training data out.</p><p class="legal">Artifisi Sdn Bhd · <a href="/privacy">Privacy</a></p></div>
   <nav class="t t-nav" aria-label="Footer">
-    <a href="#ai">Dunia</a><a href="#pilot">Pilots</a><a href="#games">Games</a><a href="#about">Founder</a><a href="/projects/dunia">Dunia page</a>
+    <a href="#about">About</a><a href="#ai">Dunia</a><a href="#games">Games</a><a href="/projects/dunia">Dunia page</a><a href="/games">All games</a>
   </nav>
   <div class="t t-time"><p>Kuala Lumpur</p><p class="clock"><time id="kl-time">GMT+8</time></p></div>
   <div class="t t-mail"><a href="mailto:hello@artifisi.com">hello@artifisi.com</a></div>
   <div class="t t-mark" aria-hidden="true">Artifisi</div>
-  <a class="t t-go" href="#contact" data-topic="ai"><span>Become a pilot partner</span><svg viewBox="0 0 48 48" width="56" height="56" aria-hidden="true"><path d="M10 24h26M26 13l11 11-11 11" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"/></svg></a>
+  <a class="t t-go" href="#contact"><span>Talk to us</span><svg viewBox="0 0 48 48" width="56" height="56" aria-hidden="true"><path d="M10 24h26M26 13l11 11-11 11" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"/></svg></a>
 </footer>
 
 <dialog class="vmodal" id="vmodal" aria-label="Video"><button type="button" class="vclose" id="vclose">Close</button><div class="vframe"></div></dialog>

@@ -61,63 +61,29 @@ body { background: var(--bg); }
 .sec-head > p { color: var(--lp-ink); max-width: 52ch; font-size: var(--step-body); }
 .lp h3 { margin: 0; font-weight: 500; letter-spacing: -0.01em; }
 
-/* 1. Video: front and centre, right under the hero. */
+/* Who we are: company facts beside the founder's note. */
+.lp-company { margin: 0; display: grid; gap: 0; align-content: start; }
+.lp-company div { padding: 18px 0; display: grid; gap: 2px; }
+.lp-company div + div { box-shadow: inset 0 1px 0 #c9c1ae; } /* taste-skill-ignore: rows in a facts list */
+.lp-company dt { font-size: 15px; color: var(--muted); }
+.lp-company dd { margin: 0; font-size: var(--step-lead); letter-spacing: -0.01em; }
+
+/* What we stand for, and what we do: even blocks on one grid. */
+.lp-pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
+.lp-pillars article, .lp-divs article { background: var(--surface); padding: clamp(24px, 3vw, 36px); display: grid; gap: 14px; align-content: start; }
+.lp-pillars h3, .lp-divs h3 { font-size: var(--step-lead); }
+.lp-pillars p { font-size: var(--step-lead); line-height: 1.3; letter-spacing: -0.01em; }
+.lp-pillars ul { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; }
+.lp-divs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.lp-divs article { justify-items: start; }
+.lp-divs a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+.lp-after { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; margin-top: clamp(24px, 3vw, 36px); }
+.lp-after p { max-width: 60ch; }
+
+/* Dunia: what it is, the video, and a link to its page. */
 .sec-video { padding-top: clamp(72px, 8vw, 120px); }
 .film { position: relative; aspect-ratio: 16 / 9; background: var(--lp-ink); }
 .film iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.lp-facts { list-style: none; margin: clamp(28px, 3vw, 40px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
-.lp-facts li { display: grid; gap: 6px; background: var(--surface); padding: 22px 24px; }
-.lp-facts b { font-weight: 600; font-size: var(--step-lead); letter-spacing: -0.01em; line-height: 1.2; }
-
-/* 2. What Dunia records: tabs in a row, the sheet below on a stage. */
-.outputs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
-.outputs button { font: 500 16px var(--sans); color: var(--lp-ink); background: var(--surface); border: 0; padding: 0 18px; min-height: 44px; cursor: pointer; transition: background-color var(--duration-quick) ease, color var(--duration-quick) ease, transform var(--t-press) var(--ease-out); }
-.outputs button:active { transform: scale(0.97); }
-.outputs button[aria-selected="true"] { background: var(--lp-ink); color: var(--bg); }
-.stage { background: var(--surface); padding: clamp(16px, 4vw, 56px); display: grid; justify-items: center; overflow-x: auto; }
-.sheet { background: var(--paper); width: 100%; max-width: 760px; color: var(--lp-ink); font-size: 14px; line-height: 1.45; padding: 22px 24px 18px; transform-origin: 0 0; }
-.sheet[hidden] { display: none; }
-.sheet.is-entering { animation: sheet-in var(--duration-fast) var(--ease-smooth-out) both; }
-@keyframes sheet-in { from { opacity: 0; transform: translateY(10px); } }
-.sheet-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
-.sheet-head b { display: block; font-size: 17px; font-weight: 600; }
-.sheet-head span { color: var(--muted); }
-.sheet .sample { font-size: 13px; background: var(--bg); padding: 3px 8px; color: var(--lp-ink); white-space: nowrap; }
-.sheet table { width: 100%; border-collapse: collapse; }
-.sheet th { text-align: left; font-weight: 600; font-size: 13px; color: var(--muted); padding: 6px 10px 6px 0; border-bottom: 1px solid #cfc6b2; }
-.sheet td { padding: 9px 10px 9px 0; border-bottom: 1px solid #e0d8c7; vertical-align: top; }
-.sheet td.num { text-align: right; white-space: nowrap; }
-.sheet td.idx { text-align: left; color: var(--muted); }
-.sheet th:last-child { text-align: right; }
-.sheet tr.is-new td { animation: row-in var(--duration-very-slow) var(--ease-smooth-out) both; }
-.sheet tr.is-bad td { color: #8a2f1d; }
-@keyframes row-in { from { opacity: 0; transform: translateY(-6px); background: #e3ead6; } to { background: transparent; } }
-.sheet-foot { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; font-size: 13px; color: var(--muted); }
-.sheet.code pre { margin: 0; font: 13px/1.6 "IBM Plex Mono", Menlo, monospace; white-space: pre; color: var(--lp-ink); }
-
-.play { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; margin: 0 0 16px; }
-.road { position: relative; height: 92px; background: #c9c1ae; overflow: hidden; }
-.lane-line { position: absolute; left: 0; right: 0; top: 33.3%; height: 2px; background: repeating-linear-gradient(90deg, var(--paper) 0 16px, transparent 16px 30px); animation: lane-move 0.9s linear infinite; } /* taste-skill-ignore: road markings inside the data-ui sheet */
-.lane-line.two { top: 66.6%; }
-@keyframes lane-move { to { background-position: -30px 0; } }
-.car { position: absolute; width: 44px; height: 20px; top: calc(var(--lane, 1) * 33.33% + 6.5px); transition: top var(--duration-fast) var(--ease-smooth-out), left var(--duration-slow) var(--ease-smooth-out); }
-.car.me { left: 18px; background: var(--accent); }
-.car.ahead { left: 70%; background: var(--lp-ink); }
-.play-ctl { display: grid; gap: 6px; }
-.play-ctl button { font: 600 13px var(--sans); color: var(--lp-ink); background: var(--bg); border: 1px solid #c4bba6; padding: 8px 12px; min-height: 44px; cursor: pointer; transition: transform var(--t-press) var(--ease-out), background-color var(--t-hover) ease; } /* taste-skill-ignore: control border inside the data-ui sheet */
-.play-ctl button:active { transform: scale(0.96); }
-@media (hover: hover) and (pointer: fine) { .play-ctl button:hover { background: var(--paper); } }
-
-
-/* 3. Pilot: two tracks side by side, the same shape. */
-.lp-tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
-.lp-track { background: var(--surface); padding: clamp(24px, 3vw, 40px); display: grid; gap: 24px; align-content: start; justify-items: start; }
-.lp-track h3 { font-size: var(--step-lead); }
-.lp-track ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; counter-reset: s; }
-.lp-track li { display: grid; grid-template-columns: 40px 1fr; column-gap: 12px; counter-increment: s; }
-.lp-track li::before { content: counter(s); grid-row: span 2; font-size: var(--step-lead); line-height: 1.2; color: var(--accent); font-variant-numeric: tabular-nums; }
-.lp-track li b { font-weight: 600; }
-.lp-track li span { color: var(--lp-ink); }
 
 /* 4. Games: three cards on one grid. */
 .lp-games { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
@@ -131,10 +97,6 @@ body { background: var(--bg); }
 
 /* 5. About: the timeline and the founder's note side by side. */
 .lp-about { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--gap); align-items: start; }
-.years { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; }
-.years li { display: grid; grid-template-columns: auto 1fr; column-gap: 24px; align-items: baseline; }
-.years .yr { font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.years li span:last-child { max-width: 28ch; }
 .letter { background: var(--surface); padding: clamp(24px, 3vw, 40px); display: grid; gap: 1em; }
 .letter h3 { font-size: var(--step-lead); }
 .sign { display: flex; flex-wrap: wrap; align-items: center; gap: 0 4px; margin-top: 0.4em !important; }
@@ -205,19 +167,14 @@ body { background: var(--bg); }
 /* Tablet and phone: every grid drops to one column, in reading order. */
 @media (max-width: 960px) {
   .lp-games { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lp-facts { grid-template-columns: 1fr; }
+  .lp-pillars { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
   :root { --section: 88px; }
-  .sec-head, .lp-tracks, .lp-games, .lp-about, .sec-contact { grid-template-columns: minmax(0, 1fr); }
+  .sec-head, .lp-divs, .lp-games, .lp-about, .sec-contact { grid-template-columns: minmax(0, 1fr); }
   .sec-head { row-gap: 14px; }
   .sec-video { padding-top: 56px; }
   .film { margin: 0 calc(-1 * var(--m)); }
-  .stage { margin: 0 calc(-1 * var(--m)); padding: 12px; justify-items: start; }
-  .sheet { padding: 16px; font-size: 13px; }
-  .sheet th, .sheet td { padding-right: 8px; }
-  .play { grid-template-columns: 1fr; }
-  .play-ctl { grid-template-columns: repeat(3, auto); justify-content: start; }
   .tiles { grid-template-columns: 1fr 1fr; gap: 6px; }
   .tiles .t { min-height: 140px; padding: 20px; }
   .t-mark { grid-column: 1 / -1; order: -2; min-height: 160px !important; font-size: 22vw; }

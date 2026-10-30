@@ -1,0 +1,108 @@
+---
+// "What Dunia records": sample episode sheets, one of them a drive you can steer. Used on /projects/dunia.
+import "../styles/records.css";
+
+// Sample episodes for the "What Dunia records" sheets. Made up for this page, and labelled so on it.
+const sheets = [
+  {
+    id: "drive", name: "A drive", title: "Episode 0142", kind: "Driving, lane change",
+    cols: ["Step", "State", "Action", "Outcome", "Reward"],
+    rows: [
+      ["1", "Lane 2, 28 m gap, 54 km/h", "Hold", "Clear", "+0.1"],
+      ["2", "Lane 2, 19 m gap, 55 km/h", "Hold", "Clear", "+0.1"],
+      ["3", "Lane 2, 11 m gap, 55 km/h", "Steer left", "Lane 1, clear", "+0.3"],
+      ["4", "Lane 1, 40 m gap, 57 km/h", "Hold", "Clear", "+0.1"],
+    ],
+  },
+  {
+    id: "grasp", name: "A grasp", title: "Episode 0087", kind: "Robot arm, cup on a cluttered table",
+    cols: ["Step", "State", "Action", "Outcome", "Reward"],
+    rows: [
+      ["1", "Shoulder 32°, elbow 71°, grip open", "Reach", "9 cm to cup", "0.0"],
+      ["2", "Shoulder 38°, elbow 64°, grip open", "Lower", "2 cm to cup", "+0.2"],
+      ["3", "Shoulder 41°, elbow 60°, grip open", "Close grip", "Contact, 4 N", "+0.3"],
+      ["4", "Shoulder 41°, elbow 60°, grip 4 N", "Lift", "Cup held, 6 cm up", "+1.0"],
+    ],
+  },
+  {
+    id: "flight", name: "A flight", title: "Episode 0311", kind: "Drone, gate run in light wind",
+    cols: ["Step", "State", "Action", "Outcome", "Reward"],
+    rows: [
+      ["1", "12.0 m up, wind 3 m/s west, gate in 14 m", "Pitch forward", "9 m to gate", "+0.1"],
+      ["2", "11.8 m up, drifting 0.6 m east", "Roll left 4°", "Drift 0.1 m", "+0.2"],
+      ["3", "11.9 m up, gate in 2 m", "Hold", "Through gate 1", "+1.0"],
+      ["4", "12.1 m up, gate 2 in 22 m", "Yaw right 15°", "Lined up", "+0.1"],
+    ],
+  },
+];
+const sum = (rows: string[][]) => rows.reduce((a, r) => a + parseFloat(r[4]), 0).toFixed(1);
+---
+
+<section class="band records" id="records" aria-labelledby="records-h">
+  <div class="inner">
+    <div class="label">Sample data</div>
+    <h2 id="records-h">What Dunia records</h2>
+    <p class="records-lead">Pick an episode. On the drive, steer the car and Dunia writes each row. These rows are made up to show the shape of the data.</p>
+  <div class="outputs" role="tablist" aria-label="Sample episodes">
+      {sheets.map((s, i) => (
+        <button type="button" role="tab" id={`tab-${s.id}`} aria-controls={`sheet-${s.id}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-sheet={s.id}>{s.name}</button>
+      ))}
+      <button type="button" role="tab" id="tab-export" aria-controls="sheet-export" aria-selected="false" tabindex="-1" data-sheet="export">The export</button>
+    </div>
+    <div class="stage">
+      {sheets.map((s, i) => (
+        <article class="sheet" id={`sheet-${s.id}`} role="tabpanel" aria-labelledby={`tab-${s.id}`} hidden={i !== 0} data-ui>
+          <div class="sheet-head">
+            <div><b>{s.title}</b><span>{s.kind}</span></div>
+            <span class="sample">Sample data</span>
+          </div>
+          {s.id === "drive" && (
+            <div class="play" aria-label="Drive the car to add steps">
+              <div class="road" aria-hidden="true">
+                <div class="lane-line"></div><div class="lane-line two"></div>
+                <div class="car ahead" id="car-ahead"></div>
+                <div class="car me" id="car-me"></div>
+              </div>
+              <div class="play-ctl">
+                <button type="button" data-act="left">Steer left</button>
+                <button type="button" data-act="hold">Hold</button>
+                <button type="button" data-act="right">Steer right</button>
+              </div>
+            </div>
+          )}
+          <table>
+            <thead><tr>{s.cols.map((c) => <th scope="col">{c}</th>)}</tr></thead>
+            <tbody id={s.id === "drive" ? "drive-rows" : undefined}>
+              {s.rows.map((r) => <tr>{r.map((c, j) => <td class={j === 4 ? "num" : j === 0 ? "num idx" : undefined}>{c}</td>)}</tr>)}
+            </tbody>
+          </table>
+          <div class="sheet-foot"><span id={s.id === "drive" ? "drive-total" : undefined}>{s.rows.length} steps, return {sum(s.rows)}</span><span>Labelled as it happened</span></div>
+        </article>
+      ))}
+      <article class="sheet code" id="sheet-export" role="tabpanel" aria-labelledby="tab-export" hidden data-ui>
+        <div class="sheet-head">
+          <div><b>episode_0142.json</b><span>One step, RLDS-style</span></div>
+          <span class="sample">Sample data</span>
+        </div>
+  <pre><code>{`{
+    "episode_id": "0142",
+    "steps": [
+      {
+        "observation": {
+          "lane": 2,
+          "gap_m": 11,
+          "speed_kmh": 55,
+          "camera": "frame_0003.png"
+        },
+        "action": "steer_left",
+        "reward": 0.3,
+        "is_first": false,
+        "is_terminal": false
+      }
+    ]
+  }`}</code></pre>
+        <div class="sheet-foot"><span>Teams pick the format they train on.</span></div>
+      </article>
+    </div>
+  </div>
+</section>
