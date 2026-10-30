@@ -132,7 +132,7 @@
 
 /* Contact: the address as display type on black, the short form under the sentence */
 .contact { background: var(--black); color: #fff; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto auto; padding: 96px var(--m) 32px; gap: 0; }
-.contact h2 { font-size: var(--t-head); max-width: 16em; }
+.contact h2 { font-size: clamp(40px, 4.6vw, 76px); font-weight: 600; letter-spacing: -0.045em; line-height: .95; max-width: 16em; }
 .contact .sub { font-size: var(--t-lead); line-height: 1.35; color: var(--soft-dark); margin-top: 12px; }
 .mailx { display: block; font-size: clamp(36px, 12.6vw, 260px); font-weight: 400; line-height: 1; letter-spacing: -0.05em; text-decoration: none; white-space: nowrap; margin: 72px 0 6vh; transition: color .3s; }
 @media (hover: hover) and (pointer: fine) { .mailx:hover { color: var(--ai-light); } }
@@ -184,7 +184,7 @@
 @media (hover: hover) and (pointer: fine) { .links3 a:hover { color: var(--ai-light); } }
 .legal { display: flex; justify-content: space-between; gap: 16px; margin-top: 96px; font-size: 13px; color: #8fa0e0; }
 .legal a { color: inherit; }
-.mark { display: block; font-size: 35.6vw; font-weight: 600; line-height: .8; letter-spacing: -0.06em; margin: 24px 0 -0.13em -0.04em; white-space: nowrap; color: #fff; user-select: none; }
+.mark { display: block; font-size: 34.4vw; font-kerning: none; font-weight: 600; line-height: .8; letter-spacing: -0.06em; margin: 24px 0 -0.13em -0.04em; white-space: nowrap; color: #fff; user-select: none; }
 
 /* Inner page header: black band, the nav, then the page title */
 .top { background: var(--black); color: #fff; padding: 22px var(--m) clamp(72px, 9vw, 120px); font-family: var(--sans); }

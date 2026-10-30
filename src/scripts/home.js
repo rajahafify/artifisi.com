@@ -3,3 +3,4 @@ import * as THREE from "three";
 import "./hero.js";
 import "./site.js";
 window.THREE = THREE;
+import "./scenes.js";

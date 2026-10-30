@@ -1,11 +1,15 @@
 ---
 import Head from "../components/Head.astro";
 import Hero from "../components/Hero.astro";
-import Showcase from "../components/Showcase.astro";
-import Wall from "../components/Wall.astro";
 import Ending from "../components/Ending.astro";
+import { games } from "../games.js";
+import { duniaVideo } from "../data.js";
 import "../styles/home.css";
 import "../styles/system.css";
+import "../styles/scenes.css";
+
+const arrow = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>';
+const shots = { "Melaka 1511": "/img/melaka-1511.jpg", "Orbwalker": "/img/orbwalker.jpg", "Hullpack Hero": "/img/hullpack-hero.png" };
 ---
 
 <!doctype html>
@@ -17,100 +21,140 @@ import "../styles/system.css";
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" /><!-- taste-skill-ignore: mono is only for the hero readouts -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" /><!-- taste-skill-ignore: mono is only for the hero readouts -->
     <script is:inline>document.documentElement.classList.add("js")</script>
   </head>
   <body>
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<div id="smooth-wrapper"><div id="smooth-content">
+
 <Hero>
   <h1><span class="ln" style="--i:0"><span style="color:inherit">People play games.</span></span> <span class="ln" style="--i:1"><span>We turn what they do into training data for AI.</span></span></h1>
 </Hero>
 
 <main>
 
-<section class="sys sec" id="about" aria-labelledby="about-h">
-  <div class="rows">
-    <div class="row">
-      <dl class="facts" data-rise>
-        <div><dt>Founded</dt><dd>2023</dd></div>
-        <div><dt>Based in</dt><dd>Kuala Lumpur</dd></div>
-        <div><dt>Full time since</dt><dd>January 2025</dd></div>
-        <div><dt>Status</dt><dd>Malaysia Digital company</dd></div>
-      </dl>
-      <div>
-        <h2 id="about-h" data-rise>Who we are</h2>
-        <p class="lead" data-rise style="margin-top:28px">Artifisi Sdn Bhd is a technology company in Kuala Lumpur. We make our own games, and we build AI on top of what games already know: where everything is, what the player did and what happened next.</p>
-      </div>
+<!-- Who we are: one statement that inks in as you read it -->
+<section class="sys manifesto" id="about" aria-labelledby="about-h">
+  <h2 id="about-h" class="vh">Who we are</h2>
+  <p class="say" data-ink>Artifisi is a technology company in Kuala Lumpur. We make games people want to play, and we turn that play into data machines can learn from.</p>
+  <dl class="tally">
+    <div data-rise><dt>Founded</dt><dd><span data-count="2023">2023</span></dd></div>
+    <div data-rise><dt>Full time since</dt><dd><span data-count="2025">2025</span></dd></div>
+    <div data-rise><dt>Games in the works</dt><dd><span data-count="3">3</span></dd></div>
+    <div data-rise><dt>Status</dt><dd class="word-dd">Malaysia Digital</dd></div>
+  </dl>
+</section>
+
+<div class="sys mq" aria-hidden="true">
+  <div class="mq-track">
+    {[0, 1].map(() => (
+      <p class="mq-run"><span>Games</span><i></i><span>AI</span><i></i><span>Kuala Lumpur</span><i></i><span>Since 2023</span><i></i></p>
+    ))}
+  </div>
+</div>
+
+<!-- What we stand for: pinned, one idea at a time -->
+<section class="sys stand" id="mission" aria-labelledby="mission-h">
+  <div class="stand-in">
+    <h2 id="mission-h" class="stand-h">What we stand for</h2>
+    <ol class="stand-words" aria-hidden="true"><li>Vision</li><li>Mission</li><li>Objectives</li></ol>
+    <div class="stand-items">
+      <article class="stand-item">
+        <h3>Vision</h3>
+        <p>Machines that learn from the way people play.</p>
+      </article>
+      <article class="stand-item">
+        <h3>Mission</h3>
+        <p>Make games people want to play, and turn that play into data machines can learn from.</p>
+      </article>
+      <article class="stand-item">
+        <h3>Objectives</h3>
+        <ul><li>Release Melaka 1511 on PC.</li><li>Run the first Dunia pilots with robotics and AI teams.</li><li>Put Dunia inside more games, ours and other studios'.</li></ul>
+      </article>
     </div>
-    <div class="row" id="do">
-      <p class="word" data-rise>What we do</p>
-      <div class="record">
-        <div data-rise>
-          <h3>Games division</h3>
-          <p class="soft" style="font-size:15px;margin-bottom:14px">Our own games, from strategy on PC to roguelikes on mobile.</p>
-          <ul>
-            <li><span>Melaka 1511</span><span>In development</span></li>
-            <li><span>Orbwalker</span><span>Playable</span></li>
-            <li><span>Hullpack Hero</span><span>Early development</span></li>
-          </ul>
-        </div>
-        <div data-rise>
-          <h3>AI division</h3>
-          <p class="soft" style="font-size:15px;margin-bottom:14px">Dunia, our SDK that turns gameplay into labelled training data.</p>
-          <ul>
-            <li><span>Dunia SDK</span><span>MVP</span></li>
-            <li><span>Demo game</span><span>Running</span></li>
-            <li><span>Pilot partners</span><span>Looking now</span></li>
-          </ul>
-        </div>
-      </div>
+    <div class="stand-bar" aria-hidden="true"><span></span></div>
+  </div>
+</section>
+
+<!-- What we do: two divisions as giant rows, a picture follows the cursor -->
+<section class="sys divs" id="do" aria-labelledby="do-h">
+  <h2 id="do-h" class="divs-h" data-rise>What we do</h2>
+  <a class="div-row" href="#games" data-img="/img/melaka-1511.jpg" data-cursor="Games">
+    <span class="div-name">Games</span>
+    <span class="div-line">Our own games, from strategy on PC to roguelikes on mobile.</span>
+    <span class="div-go" set:html={arrow}></span>
+  </a>
+  <a class="div-row" href="#ai" data-img="/img/og.jpg" data-cursor="Dunia">
+    <span class="div-name">AI</span>
+    <span class="div-line">Dunia, our SDK that turns gameplay into labelled training data for robots.</span>
+    <span class="div-go" set:html={arrow}></span>
+  </a>
+  <div class="div-float" aria-hidden="true"><img alt="" src="/img/melaka-1511.jpg" /></div>
+</section>
+
+<!-- Dunia: the film grows from a frame to the full screen -->
+<section class="sys dz" id="ai" aria-labelledby="ai-h">
+  <div class="dz-stage">
+    <h2 id="ai-h" class="dz-title">Dunia</h2>
+    <div class="dz-frame">
+      <iframe src={duniaVideo.embed} title="Dunia demo video" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
     </div>
-    <div class="row">
-      <p class="word" data-rise>From the founder</p>
-      <div class="note">
-        <p class="lead" data-rise>I have spent about twelve years building software. At AirAsia I helped scale an app from about 1,000 users a month to about 1,000 users a second.</p>
-        <p class="lead" data-rise>I started Artifisi in 2023 and went full time in January 2025. I built Orbwalker alone, from an empty project to a playable game, in three months. Games are how we learned to ship.</p>
-        <p class="sign" data-rise><b>Raja Hafify</b><span class="soft">Founder and CEO</span><a href="https://www.linkedin.com/in/rajahafify/" target="_blank" rel="noopener" aria-label="Raja Hafify on LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a></p>
-      </div>
+  </div>
+  <div class="dz-after">
+    <p class="dz-lead" data-rise>While someone plays, Dunia records what the world looked like, what they did and what happened next. Each step comes out labelled, as training data for robots and physical AI.</p>
+    <div class="dz-side" data-rise>
+      <p><b>AI division</b><span>An SDK for game engines</span></p>
+      <p><b>Status</b><span>MVP running in our demo game</span></p>
+      <a class="act magnet" href="/projects/dunia" data-cursor="Open"><span>More about Dunia</span><Fragment set:html={arrow} /></a>
     </div>
   </div>
 </section>
 
-<section class="sys sec" id="mission" aria-labelledby="mission-h" style="padding-top:0">
-  <h2 id="mission-h" data-rise style="font-size:28px">What we stand for</h2>
-  <div class="cols">
-    <div data-rise>
-      <h3>Vision</h3>
-      <p data-hint="Robots and AI that learn from people at play, not only from expensive lab time.">Machines that learn from the way people play.</p>
+<!-- Games: a sideways gallery while the page is pinned -->
+<section class="sys hz" id="games" aria-labelledby="games-h">
+  <div class="hz-track">
+    <div class="hz-panel hz-intro">
+      <h2 id="games-h">Games</h2>
+      <p>Original games, made in Kuala Lumpur. They are games first, and the first place Dunia runs.</p>
     </div>
-    <div data-rise>
-      <h3>Mission</h3>
-      <p data-hint="The game has to be worth playing first. The data comes from that.">Make games people want to play, and turn that play into data machines can learn from.</p>
+    {games.map((g, i) => (
+      <article class="hz-panel hz-game">
+        <a class="hz-pic" href={g.links.find((l) => l.href.startsWith("/"))?.href ?? "/games"} data-cursor="View">
+          <img src={shots[g.name]} alt={g.alt} loading="lazy" />
+        </a>
+        <div class="hz-text">
+          <p class="hz-n">{String(i + 1)} of {games.length}</p>
+          <h3>{g.name}</h3>
+          <p class="hz-kind">{g.kind}, {g.status.toLowerCase()}</p>
+          <p>{g.text}</p>
+          <p class="hz-links">{g.links.map((l) => l.embed
+            ? <a class="ul" href={l.href} data-embed={l.embed} target="_blank" rel="noopener" data-cursor="Play">{l.label}</a>
+            : <a class="ul" href={l.href} target={l.href.startsWith("/") ? undefined : "_blank"} rel={l.href.startsWith("/") ? undefined : "noopener"}>{l.label}</a>)}</p>
+        </div>
+      </article>
+    ))}
+    <div class="hz-panel hz-end">
+      <a class="hz-all magnet" href="/games" data-cursor="Open"><span>All our games</span><Fragment set:html={arrow} /></a>
     </div>
-    <div data-rise>
-      <h3>Objectives</h3>
-      <ul>
-        <li data-hint="Turn-based strategy set in the Melaka Sultanate, PC first.">Release Melaka 1511 on PC.</li>
-        <li data-hint="Robotics and AI teams test Dunia data in their own pipelines.">Run the first Dunia pilots.</li>
-        <li data-hint="Our games first, then games from other studios.">Put Dunia inside more games.</li>
-      </ul>
-    </div>
-    <p class="hint" aria-hidden="true">Hover a line to read more.</p>
   </div>
 </section>
 
-<Showcase
-  variant="AI division, an SDK for game engines"
-  fact="MVP running in our demo game"
-  say="While someone plays, Dunia records what the world looked like, what they did and what happened next. Each step comes out labelled, as training data for robots and physical AI."
-  href="/projects/dunia"
-  action="More about Dunia"
-/>
-
-<Wall />
+<!-- From the founder -->
+<section class="sys founder" aria-labelledby="founder-h">
+  <h2 id="founder-h" class="vh">From the founder</h2>
+  <blockquote>
+    <p class="q" data-lines>I built Orbwalker alone, from an empty project to a playable game, in three months. Games are how we learned to ship.</p>
+    <p class="q-more" data-rise>About twelve years building software. At AirAsia I helped scale an app from about 1,000 users a month to about 1,000 users a second. I started Artifisi in 2023 and went full time in January 2025.</p>
+    <footer class="sign" data-rise><b>Raja Hafify</b><span class="soft">Founder and CEO</span><a href="https://www.linkedin.com/in/rajahafify/" target="_blank" rel="noopener" aria-label="Raja Hafify on LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a></footer>
+  </blockquote>
+</section>
 
 </main>
 
 <Ending base="" />
+
+</div></div>
 
 <script>
   import "../scripts/home.js";
