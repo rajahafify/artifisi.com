@@ -2,7 +2,8 @@
 import Base from "../layouts/Base.astro";
 ---
 
-<Base title="Not found" description="This page does not exist.">
-  <h1>Not here</h1>
-  <p>That page doesn't exist, or it moved when we rebuilt the site. <a href="/">Go to the homepage</a>.</p>
+<Base title="Not found" lines={["Not here"]} description="This page does not exist." dek="That page doesn't exist, or it moved when we rebuilt the site.">
+  <section class="sys read">
+    <div class="row"><p class="word">Try</p><div class="body"><p><a href="/">The homepage</a>, <a href="/projects/dunia">Dunia</a> or <a href="/games">our games</a>.</p></div></div>
+  </section>
 </Base>

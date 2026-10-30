@@ -3,9 +3,8 @@ import Base from "../layouts/Base.astro";
 import { email } from "../data.js";
 ---
 
-<Base title="Privacy" description="What artifisi.com collects about you, which is almost nothing.">
-  <h1>Privacy</h1>
-  <p class="small">Last updated 24 October 2026.</p>
+<Base title="Privacy" lines={["Privacy"]} dek="What artifisi.com collects about you, which is almost nothing." description="What artifisi.com collects about you, which is almost nothing.">
+  <section class="sys read"><div class="row"><p class="word">Last updated 30 October 2026</p><div class="body">
   <p>This site has no accounts and no analytics. We don't set cookies.</p>
   <p>
     The contact form sends your name, email and message through Formspree, which delivers it to our inbox. We
@@ -16,11 +15,12 @@ import { email } from "../data.js";
     the site running.
   </p>
   <p>
-    Videos play from Google Drive and YouTube (privacy-enhanced mode). They only load when you press play, and
-    Google may set its own cookies then.
+    The Dunia demo plays from Google Drive and loads when you scroll to it. Game trailers play from YouTube
+    (privacy-enhanced mode) and only load when you press play. Google may set its own cookies when either loads.
   </p>
   <p>
     If you email us or use the form, we keep the message so we can reply, and we don't share it. Ask at
     <a href={`mailto:${email}`}>{email}</a> and we'll delete it.
   </p>
+  </div></div></section>
 </Base>

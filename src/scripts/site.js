@@ -1,6 +1,7 @@
-// Landing page below the hero: entrances, the contact form and the Kuala Lumpur clock.
+// Every page below the hero: entrances, the Kuala Lumpur clock, the contact form and the video dialog.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "./video.js";
 
 gsap.registerPlugin(ScrollTrigger);
 var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -12,23 +13,41 @@ var $$ = function (s, r) { return Array.prototype.slice.call((r || document).que
   var items = $$("[data-rise]");
   if (reduce) { gsap.set(items, { opacity: 1, y: 0 }); return; }
   ScrollTrigger.batch(items, {
-    start: "top 88%",
+    start: "top 90%",
     once: true,
-    onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 0.8, ease: "expo.out", stagger: 0.08, overwrite: true }); }
+    onEnter: function (batch) { gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out", stagger: 0.07, overwrite: true }); }
   });
-  // The years count in as the intro arrives.
-  $$(".years .yr").forEach(function (el) {
-    var to = +el.textContent, o = { v: to - 12 };
-    el.textContent = o.v;
-    gsap.to(o, { v: to, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%", once: true }, onUpdate: function () { el.textContent = Math.round(o.v); } });
+  // The film widens into place as the showcase arrives.
+  $$(".show .film").forEach(function (el) {
+    gsap.fromTo(el, { clipPath: "inset(6% 8% 6% 8%)" }, { clipPath: "inset(0% 0% 0% 0%)", ease: "none", scrollTrigger: { trigger: el, start: "top 95%", end: "top 35%", scrub: true } });
+  });
+  // The footer name slides in from the right as the page ends.
+  $$(".foot .mark").forEach(function (el) {
+    gsap.fromTo(el, { xPercent: 8 }, { xPercent: 0, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom bottom", scrub: true } });
+  });
+  // Wall pictures drift a little against the scroll.
+  $$(".wall img").forEach(function (el) {
+    gsap.fromTo(el, { yPercent: -4 }, { yPercent: 4, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true } });
   });
 })();
 
-/* Kuala Lumpur time in the footer. */
+/* Name columns: hovering an item shows its line in the empty columns. */
+(function () {
+  $$(".cols").forEach(function (cols) {
+    var hint = $(".hint", cols); if (!hint) return;
+    var rest = hint.textContent;
+    $$("[data-hint]", cols).forEach(function (el) {
+      el.addEventListener("mouseenter", function () { hint.textContent = el.dataset.hint; });
+      el.addEventListener("mouseleave", function () { hint.textContent = rest; });
+    });
+  });
+})();
+
+/* Kuala Lumpur time. */
 (function () {
   var t = $("#kl-time"); if (!t) return;
   var f = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kuala_Lumpur", hour: "2-digit", minute: "2-digit" });
-  function tick() { t.textContent = f.format(new Date()); }
+  function tick() { t.textContent = f.format(new Date()) + " in KL"; }
   tick(); setInterval(tick, 15000);
 })();
 
@@ -42,7 +61,7 @@ var $$ = function (s, r) { return Array.prototype.slice.call((r || document).que
     pick(topics[a.dataset.topic] || a.dataset.topic);
     setTimeout(function () { $("#cemail").focus({ preventScroll: true }); }, 600);
   });
-  // Links from other pages: /#apply-ai and /#apply-studio open the form with the pilot topic set.
+  // Links like /#apply-ai and /#apply-studio open the form with the pilot topic set.
   var deep = { "#apply-ai": topics.ai, "#apply-studio": topics.studio }[location.hash];
   if (deep) { pick(deep); setTimeout(function () { $("#contact").scrollIntoView(); $("#cemail").focus({ preventScroll: true }); }, 300); }
   f.addEventListener("submit", function (e) {

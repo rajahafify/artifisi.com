@@ -1,41 +1,14 @@
 ---
 import Base from "../layouts/Base.astro";
-import { games } from "../games.js";
+import Wall from "../components/Wall.astro";
 ---
 
 <Base
   title="Our games"
+  lines={["Our games"]}
+  dek="Original games, made in Kuala Lumpur. They are games first, and the first place Dunia runs."
   description="Games by Artifisi, made in Kuala Lumpur: Melaka 1511, Orbwalker and Hullpack Hero."
   image="/img/melaka-1511.jpg"
 >
-  <h1>Our games</h1>
-  <p>Original games, made in Kuala Lumpur. They are games first, and the first place Dunia runs.</p>
-
-  <div class="game-list">
-    {games.map((g) => (
-      <article>
-        <img src={g.img} width={g.w} height={g.h} alt={g.alt} loading="lazy" />
-        <div>
-          <p class="meta">{g.kind} · {g.status}</p>
-          <h2>{g.name}</h2>
-          <p>{g.text}</p>
-          <p class="links">
-            {g.links.map((l) => <a href={l.href} target={l.href.startsWith("/") ? undefined : "_blank"} rel={l.href.startsWith("/") ? undefined : "noopener"}>{l.label}</a>)}
-          </p>
-        </div>
-      </article>
-    ))}
-  </div>
+  <Wall title="Three games" more={false} />
 </Base>
-
-<style>
-  .game-list { display: grid; gap: 40px; margin: 32px 0 16px; }
-  .game-list article { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 28px; align-items: start; }
-  .game-list img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
-  .game-list h2 { margin: 4px 0 8px; }
-  .game-list p { margin: 0 0 10px; }
-  .meta { font-size: 14px; opacity: 0.75; }
-  .links { display: flex; flex-wrap: wrap; gap: 4px 20px; }
-  .links a { display: inline-flex; align-items: center; min-height: 44px; }
-  @media (max-width: 640px) { .game-list article { grid-template-columns: 1fr; gap: 14px; } }
-</style>

@@ -1,0 +1,63 @@
+---
+// Contact and footer, the same on every page. base: "" on the home page, "/" elsewhere.
+import { email, formspree, x } from "../data.js";
+interface Props { base?: string }
+const { base = "/" } = Astro.props;
+const linkedin = "https://www.linkedin.com/in/rajahafify/";
+---
+<section class="sys contact" id="contact" aria-labelledby="contact-h">
+  <div>
+    <h2 id="contact-h" data-rise>Write to us</h2>
+    <p class="sub" data-rise>Partnerships, pilots, games or investing. Pick one and leave your email.</p>
+    <form class="cform" id="cform" action={formspree} method="POST" novalidate data-rise>
+      <fieldset class="topics">
+        <legend class="vh">What it is about</legend>
+        <label><input type="radio" name="topic" value="Partnership" checked /><span>Partnership</span></label>
+        <label><input type="radio" name="topic" value="Pilot: AI or robotics team" /><span>Pilot, AI team</span></label>
+        <label><input type="radio" name="topic" value="Pilot: game studio" /><span>Pilot, game studio</span></label>
+        <label><input type="radio" name="topic" value="Our games" /><span>Our games</span></label>
+        <label><input type="radio" name="topic" value="Investing" /><span>Investing</span></label>
+        <label><input type="radio" name="topic" value="Something else" /><span>Something else</span></label>
+      </fieldset>
+      <div class="field">
+        <label for="cemail" class="vh">Your email</label>
+        <input id="cemail" name="email" type="email" autocomplete="email" required placeholder="you@company.com" aria-describedby="cform-msg" />
+        <button type="submit" class="go" aria-label="Send"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></button>
+      </div>
+      <details class="more">
+        <summary>Add your name and a message</summary>
+        <div class="more-body">
+          <label for="cname">Your name</label>
+          <input id="cname" name="name" type="text" autocomplete="name" />
+          <label for="cmsg">Message</label>
+          <textarea id="cmsg" name="message" rows="4"></textarea>
+        </div>
+      </details>
+      <p class="cform-msg" id="cform-msg" role="status">We reply from {email}.</p>
+    </form>
+  </div>
+  <div aria-hidden="true"></div>
+  <a class="mailx" href={`mailto:${email}`} data-rise><span>hello@</span><span class="at">artifisi.com</span></a>
+  <div class="corners">
+    <p class="here"><span>Kuala Lumpur, Malaysia</span><time id="kl-time">GMT+8</time></p>
+    <p><a href={x.href} target="_blank" rel="noopener">X {x.label}</a><a href={linkedin} target="_blank" rel="noopener">LinkedIn</a></p>
+  </div>
+</section>
+
+<footer class="sys foot" aria-label="Site footer">
+  <div class="foot-row">
+    <div class="places">
+      <span>Kuala Lumpur</span>
+      <a href={`mailto:${email}`}>{email}</a>
+    </div>
+    <nav class="links3" aria-label="Footer">
+      <div><h3>Company</h3><a href={base + "#about"}>Who we are</a><a href={base + "#mission"}>What we stand for</a><a href={base + "#contact"}>Contact</a></div>
+      <div><h3>Work</h3><a href="/projects/dunia">Dunia</a><a href="/games">Our games</a><a href="/projects/melaka-1511">Melaka 1511</a><a href="/projects/orbwalker">Orbwalker</a></div>
+      <div><h3>Elsewhere</h3><a href={x.href} target="_blank" rel="noopener">X</a><a href={linkedin} target="_blank" rel="noopener">LinkedIn</a><a href="/privacy">Privacy</a></div>
+    </nav>
+  </div>
+  <div class="legal"><p>Artifisi Sdn Bhd, Kuala Lumpur</p><a href="#top">Back to top</a></div>
+  <p class="mark" aria-hidden="true">Artifisi</p>
+</footer>
+
+<dialog class="vmodal" id="vmodal" aria-label="Video"><button type="button" class="vclose" id="vclose">Close</button><div class="vframe"></div></dialog>

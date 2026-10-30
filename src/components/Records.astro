@@ -38,11 +38,15 @@ const sheets = [
 const sum = (rows: string[][]) => rows.reduce((a, r) => a + parseFloat(r[4]), 0).toFixed(1);
 ---
 
-<section class="band records" id="records" aria-labelledby="records-h">
-  <div class="inner">
-    <div class="label">Sample data</div>
-    <h2 id="records-h">What Dunia records</h2>
-    <p class="records-lead">Pick an episode. On the drive, steer the car and Dunia writes each row. These rows are made up to show the shape of the data.</p>
+<section class="sys sec records" id="records" aria-labelledby="records-h">
+  <div class="row" style="margin-bottom:48px">
+    <p class="word" data-rise>Sample data</p>
+    <div>
+      <h2 id="records-h" data-rise>What Dunia records</h2>
+      <p class="lead" data-rise style="margin-top:20px">Pick an episode. On the drive, steer the car and Dunia writes each row. These rows are made up to show the shape of the data.</p>
+    </div>
+  </div>
+  <div>
   <div class="outputs" role="tablist" aria-label="Sample episodes">
       {sheets.map((s, i) => (
         <button type="button" role="tab" id={`tab-${s.id}`} aria-controls={`sheet-${s.id}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-sheet={s.id}>{s.name}</button>

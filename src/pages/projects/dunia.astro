@@ -1,10 +1,11 @@
 ---
 import Head from "../../components/Head.astro";
 import Hero from "../../components/Hero.astro";
+import Showcase from "../../components/Showcase.astro";
 import Records from "../../components/Records.astro";
-import { duniaVideo } from "../../data.js";
+import Ending from "../../components/Ending.astro";
 import "../../styles/home.css";
-import "../../styles/dunia.css";
+import "../../styles/system.css";
 ---
 
 <!doctype html>
@@ -16,107 +17,111 @@ import "../../styles/dunia.css";
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" /><!-- taste-skill-ignore: mono is only for the hero readouts and the export sheet -->
+    <script is:inline>document.documentElement.classList.add("js")</script>
   </head>
   <body>
     <Hero base="/" start="ai" aiHref="#demo" aiNote="Dunia, watch the demo below">
-      <div class="label">AI division · Dunia SDK</div>
-      <h1>Gameplay in, <span>training data out.</span></h1>
+      <h1><span class="ln" style="--i:0"><span style="color:inherit">Gameplay in,</span></span> <span class="ln" style="--i:1"><span>training data out.</span></span></h1>
     </Hero>
 
-    <section class="band dvideo" id="demo">
-      <div class="inner">
-        <div class="label">Demo</div>
-        <div class="video">
-          <iframe src={duniaVideo.embed} title="Dunia demo video" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+    <main>
+      <Showcase
+        id="demo"
+        variant="An SDK for game engines"
+        fact="MVP running in our demo game"
+        say="The video shows the MVP inside our own demo game: someone plays, and Dunia writes down each step as labelled data."
+        href="#pilot"
+        action="Become a pilot partner"
+      />
+
+      <section class="sys sec" id="why" aria-labelledby="why-h">
+        <div class="rows">
+          <div class="row">
+            <dl class="facts" data-rise>
+              <div><dt>Product</dt><dd>SDK for game engines</dd></div>
+              <div><dt>Output</dt><dd>State, action, outcome, labelled</dd></div>
+              <div><dt>Status</dt><dd>MVP running in our demo game</dd></div>
+              <div><dt>For</dt><dd>Robotics and physical AI teams</dd></div>
+            </dl>
+            <div>
+              <h2 id="why-h" data-rise>Why games</h2>
+              <p class="lead" data-rise style="margin-top:28px">A robot learns from three things: what the world looked like, what it did, and what happened next. Collecting that with real robots is slow and expensive, and sometimes the robot breaks. A game engine already tracks all three, so nobody has to label anything by hand.</p>
+            </div>
+          </div>
         </div>
-        <p class="vcap">The MVP running inside our demo game. <a href={duniaVideo.link} target="_blank" rel="noopener">Open it on Google Drive</a>.</p>
-      </div>
-    </section>
-
-    <section class="band dwhy">
-      <div class="inner two">
-        <div>
-          <div class="label">Why games</div>
-          <h2>A game engine already knows what a robot needs to learn</h2>
-          <p>A robot or a world model learns from three things: what the world looked like, what the agent did, and what happened next. Collecting that with real robots is slow and expensive, and sometimes you break the robot. There is very little of it on the web with the actions labelled.</p>
-          <p>A game engine already tracks all three. Nobody has to label anything by hand.</p>
+        <div class="cols">
+          <div data-rise>
+            <h3>State</h3>
+            <ul><li>What the world looked like</li><li>Positions</li><li>Sensors</li><li>Camera</li></ul>
+          </div>
+          <div data-rise>
+            <h3>Action</h3>
+            <ul><li>What the player did</li><li>Steering</li><li>Inputs</li><li>Choices</li></ul>
+          </div>
+          <div data-rise>
+            <h3>Outcome</h3>
+            <ul><li>What happened next</li><li>Reward</li><li>Collision</li><li>Success</li></ul>
+          </div>
         </div>
-        <ol class="sao">
-          <li><b>State</b><span>What the world looked like</span><i>positions, sensors, camera</i></li>
-          <li><b>Action</b><span>What the player did</span><i>steering, inputs, choices</i></li>
-          <li><b>Outcome</b><span>What happened next</span><i>reward, collision, success</i></li>
-        </ol>
-      </div>
-    </section>
+      </section>
 
-    <section class="band dhow">
-      <div class="inner">
-        <div class="label">How it works</div>
-        <h2>Three steps, inside the engine</h2>
-        <div class="steps">
-          <div><span class="n">01</span><h3>Hook in</h3><p>The SDK hooks into the game engine and records state, inputs and outcomes as the player acts.</p></div>
-          <div><span class="n">02</span><h3>Snapshot each decision</h3><p>It saves a snapshot at each decision, not every frame, so the data is dense and small.</p></div>
-          <div><span class="n">03</span><h3>Export</h3><p>Episodes come out labelled, in whatever format the team using the data trains on, for example RLDS.</p></div>
+      <section class="sys sec" id="how" aria-labelledby="how-h" style="padding-top:0">
+        <div class="rows">
+          <div class="row">
+            <p class="word" data-rise>How it works</p>
+            <h2 id="how-h" data-rise>Three steps, inside the engine</h2>
+          </div>
+          <div class="row">
+            <p class="word" data-rise>Hook in</p>
+            <p class="lead" data-rise>The SDK hooks into the game engine and records state, inputs and outcomes as the player acts.</p>
+          </div>
+          <div class="row">
+            <p class="word" data-rise>Snapshot each decision</p>
+            <p class="lead" data-rise>It saves a snapshot at each decision, not every frame, so the data is dense and small.</p>
+          </div>
+          <div class="row">
+            <p class="word" data-rise>Export</p>
+            <p class="lead" data-rise>Episodes come out labelled, in the format the team using the data trains on, for example RLDS.</p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <Records />
+      <Records />
 
-    <section class="band dstatus">
-      <div class="inner two">
-        <div>
-          <div class="label">Where it is</div>
-          <h2>A working MVP, built next with the first teams</h2>
-          <p>The MVP works inside our own demo game. That is what the video shows. The next version gets built with the first teams who use it, so it fits a real problem instead of one we guessed at.</p>
+      <section class="sys sec field-ai" id="pilot" aria-labelledby="pilot-h">
+        <div class="row" style="margin-bottom:72px">
+          <p class="word" data-rise>Pilot partners</p>
+          <div>
+            <h2 id="pilot-h" data-rise>We're looking for pilot partners on both sides</h2>
+            <p class="lead" data-rise style="margin-top:20px">The MVP works. The next version gets built with the first teams who use it, so it fits a real problem instead of one we guessed at. We ask for a real problem or a real game, and honest feedback.</p>
+          </div>
         </div>
-        <div>
-          <dl class="facts">
-            <dt>Product</dt><dd>SDK for game engines</dd>
-            <dt>Output</dt><dd>State, action, outcome, labelled</dd>
-            <dt>Status</dt><dd>MVP running in our demo game</dd>
-            <dt>For</dt><dd>Robotics and physical AI teams</dd>
-          </dl>
-          <p class="small">The next version gets built with pilot partners. See how a pilot works below.</p>
+        <div class="row">
+          <span aria-hidden="true"></span>
+          <div class="tracks">
+            <div data-rise>
+              <h3>AI and robotics teams</h3>
+              <p>Tell us the task and the format you train on. We build a game scenario for it, record real play with Dunia, and you test the labelled data in your own pipeline.</p>
+              <p class="soft">You get data shaped for your problem, and a say in what the SDK does next.</p>
+              <a class="act" href="#contact" data-topic="ai"><span>Apply as an AI team</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></a>
+            </div>
+            <div data-rise>
+              <h3>Game studios</h3>
+              <p>We put Dunia inside a game people already play, record play as labelled data, and work with you on turning that data into a new source of revenue for the game.</p>
+              <p class="soft">You get early access to the SDK, and a say in how it fits your engine.</p>
+              <a class="act" href="#contact" data-topic="studio"><span>Apply as a game studio</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></a>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-<section class="band pilot" id="pilot">
-  <div class="inner">
-    <div class="pilot-head">
-      <div class="label">Pilot partners</div>
-      <h2>We're looking for pilot partners on both sides</h2>
-      <p class="pilot-lead">Dunia sits between the games people play and the teams that train on gameplay. We want to run the first pilots with both.</p>
-    </div>
-    <div class="pilot-tracks">
-      <div class="track">
-        <div class="label">For AI and robotics teams</div>
-        <h3>Need training data for a specific task?</h3>
-        <p>Tell us the task and the format you train on. We build a game scenario for it, record real play with Dunia, and you test the labelled data in your own pipeline.</p>
-        <p class="get"><b>You get</b>Data shaped for your problem, and a say in what the SDK does next.</p>
-        <a class="btn pilot-btn" href="/#apply-ai" data-topic="Pilot: AI or robotics team">Apply as an AI team</a>
-      </div>
-      <div class="track">
-        <div class="label">For game studios</div>
-        <h3>Have a game people already play?</h3>
-        <p>We put Dunia inside it, record play as labelled data, and work with you on turning that data into a new source of revenue for the game.</p>
-        <p class="get"><b>You get</b>Early access to the SDK, and a say in how it fits your engine.</p>
-        <a class="btn pilot-btn" href="/#apply-studio" data-topic="Pilot: game studio">Apply as a game studio</a>
-      </div>
-    </div>
-    <p class="pilot-ask"><b>What we ask</b>A real problem or a real game, and honest feedback.</p>
-  </div>
-</section>
-
-    <footer><div class="inner">Artifisi Sdn Bhd · Kuala Lumpur, Malaysia · <a href="/privacy">Privacy</a></div></footer>
-
-    <dialog class="vmodal" id="vmodal" aria-label="Video"><button type="button" class="vclose" id="vclose">Close ✕</button><div class="vframe"></div></dialog>
+    <Ending />
 
     <script>
       import "../../scripts/hero.js";
-      import "../../scripts/video.js";
+      import "../../scripts/site.js";
       import "../../scripts/records.js";
     </script>
   </body>

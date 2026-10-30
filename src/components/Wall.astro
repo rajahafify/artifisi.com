@@ -1,0 +1,42 @@
+---
+// Our games: a giant title, an uneven wall of pictures and a line on each game, on teal.
+import { games } from "../games.js";
+interface Props { title?: string; more?: boolean; tag?: "h1" | "h2" }
+const { title = "Games", more = true } = Astro.props;
+// Each tile: picture, ratio (width / height), row, the game it belongs to and what it shows.
+const tiles = [
+  { img: "/img/melaka-1511.jpg", r: 1.78, row: 1, game: 0, what: "In development", alt: "Melaka 1511: a voxel harbour town in the Melaka Sultanate" },
+  { img: "/img/orbwalker-combat.jpeg", r: 0.454, row: 1, game: 1, what: "Combat", alt: "Orbwalker on a phone: a fight against a monster on the orb board" },
+  { img: "/img/orbwalker-shop.jpeg", r: 0.454, row: 1, game: 1, what: "Shop", alt: "Orbwalker on a phone: the shop between fights" },
+  { img: "/img/hullpack-hero.png", r: 1.26, row: 2, game: 2, what: "Early development", alt: "Hullpack Hero: a ship firing lasers at an asteroid" },
+  { img: "/img/orbwalker.jpg", r: 1.78, row: 2, game: 1, what: "Playable", alt: "Orbwalker: a board of coloured orbs mid-run" },
+  { img: "/img/orbwalker-relic.jpeg", r: 0.454, row: 2, game: 1, what: "Relics", alt: "Orbwalker on a phone: choosing a relic" },
+];
+const page = (g) => g.links.find((l) => l.href.startsWith("/"))?.href ?? "/games";
+---
+<section class="sys work" id="games" aria-labelledby="games-h">
+  <div class="work-top">
+    <h2 id="games-h" data-rise>{title}</h2>
+    {more && <a class="ul" href="/games" data-rise>All our games</a>}
+  </div>
+  <div class="wall">
+    {tiles.map((t) => (
+      <a class={"r" + t.row} style={`--r:${t.r}`} href={page(games[t.game])} data-rise>
+        <div class="pic"><img src={t.img} alt={t.alt} loading="lazy" /></div>
+        <p class="cap"><span>{games[t.game].name}</span><span>{t.what}</span></p>
+      </a>
+    ))}
+  </div>
+  <div class="games-say">
+    {games.map((g) => (
+      <article data-rise>
+        <h3>{g.name}</h3>
+        <p class="kind">{g.kind}, {g.status.toLowerCase()}</p>
+        <p>{g.text}</p>
+        <p class="links">{g.links.map((l) => l.embed
+          ? <a class="ul" href={l.href} data-embed={l.embed} target="_blank" rel="noopener">{l.label}</a>
+          : <a class="ul" href={l.href} target={l.href.startsWith("/") ? undefined : "_blank"} rel={l.href.startsWith("/") ? undefined : "noopener"}>{l.label}</a>)}</p>
+      </article>
+    ))}
+  </div>
+</section>

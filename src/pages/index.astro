@@ -1,9 +1,11 @@
 ---
 import Head from "../components/Head.astro";
 import Hero from "../components/Hero.astro";
-import { games } from "../games.js";
+import Showcase from "../components/Showcase.astro";
+import Wall from "../components/Wall.astro";
+import Ending from "../components/Ending.astro";
 import "../styles/home.css";
-import "../styles/landing.css";
+import "../styles/system.css";
 ---
 
 <!doctype html>
@@ -11,11 +13,11 @@ import "../styles/landing.css";
   <head>
     <Head
       title="Artifisi"
-      description="Artifisi is an AI company in Kuala Lumpur. Dunia turns gameplay into labelled training data for robots and physical AI, and we make our own games to run it in."
+      description="Artifisi is a technology company in Kuala Lumpur with a games division and an AI division. Dunia turns gameplay into labelled training data for robots and physical AI."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" /><!-- taste-skill-ignore: mono is for the hero readouts and the code sheet -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" /><!-- taste-skill-ignore: mono is only for the hero readouts -->
     <script is:inline>document.documentElement.classList.add("js")</script>
   </head>
   <body>
@@ -23,155 +25,92 @@ import "../styles/landing.css";
   <h1><span class="ln" style="--i:0"><span style="color:inherit">People play games.</span></span> <span class="ln" style="--i:1"><span>We turn what they do into training data for AI.</span></span></h1>
 </Hero>
 
-<main class="lp">
+<main>
 
-<section class="sec sec-about" id="about" aria-labelledby="about-h">
-  <div class="sec-head">
-    <h2 id="about-h" data-rise>Who we are</h2>
-    <p data-rise>Artifisi Sdn Bhd is a technology company in Kuala Lumpur. We make games, and we build AI on top of what games already know.</p>
-  </div>
-  <div class="lp-about">
-    <dl class="lp-company" data-rise>
-      <div><dt>Founded</dt><dd>2023, Kuala Lumpur</dd></div>
-      <div><dt>Full time since</dt><dd>January 2025</dd></div>
-      <div><dt>Status</dt><dd>Malaysia Digital, September 2026</dd></div>
-      <div><dt>Divisions</dt><dd>Games and AI</dd></div>
-    </dl>
-    <div class="letter">
-      <h3 data-rise>From the founder</h3>
-      <p data-rise>I have spent about twelve years building software. At AirAsia I helped scale an app from about 1,000 users a month to about 1,000 users a second.</p>
-      <p data-rise>I started Artifisi in 2023, doing software and AI work for clients, and went full time in January 2025. I built Orbwalker alone, from an empty project to a playable game, in three months. Games are how we learned to ship.</p>
-      <p class="sign" data-rise><span class="sig">Raja Hafify</span> <a class="li" href="https://www.linkedin.com/in/rajahafify/" target="_blank" rel="noopener" aria-label="Raja Hafify on LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a><span class="role">Founder and CEO, Artifisi Sdn Bhd</span></p>
-    </div>
-  </div>
-</section>
-
-<section class="sec sec-mission" id="mission" aria-labelledby="mission-h">
-  <div class="sec-head">
-    <h2 id="mission-h" data-rise>What we stand for</h2>
-    <p data-rise>Why the company exists, and what we are working on now.</p>
-  </div>
-  <div class="lp-pillars">
-    <article data-rise><h3>Vision</h3><p>Machines that learn from the way people play.</p></article>
-    <article data-rise><h3>Mission</h3><p>Make games people want to play, and turn that play into data machines can learn from.</p></article>
-    <article data-rise><h3>Objectives</h3>
-      <ul>
-        <li>Finish and release Melaka 1511 on PC.</li>
-        <li>Make daily games for the apps people already use.</li>
-        <li>Run the first Dunia pilots with robotics and AI teams.</li>
-      </ul>
-    </article>
-  </div>
-</section>
-
-<section class="sec sec-do" id="divisions" aria-labelledby="do-h">
-  <div class="sec-head">
-    <h2 id="do-h" data-rise>What we do</h2>
-    <p data-rise>Two divisions that run on the same skill. A game engine knows where everything is, what the player did and what happened next.</p>
-  </div>
-  <div class="lp-divs">
-    <article data-rise>
-      <h3>Games division</h3>
-      <p>Our own games, from strategy on PC to roguelikes on mobile, and short daily games made for other companies' apps.</p>
-      <a class="ul" href="#games">Our games</a>
-    </article>
-    <article data-rise>
-      <h3>AI division</h3>
-      <p>Dunia, our SDK that turns gameplay into labelled training data, plus simulated worlds built for robotics and AI teams.</p>
-      <a class="ul" href="#ai">About Dunia</a>
-    </article>
-  </div>
-</section>
-
-<section class="sec sec-video" id="ai" aria-labelledby="dunia-h">
-  <div class="sec-head">
-    <h2 id="dunia-h" data-rise>Dunia</h2>
-    <p data-rise>Dunia is an SDK that sits inside a game engine. While someone plays, it records what the world looked like, what they did and what happened next. Each step comes out labelled, as training data for robots and physical AI.</p>
-  </div>
-  <div class="film" data-rise>
-    <iframe src="https://drive.google.com/file/d/1LXIHbQJDbuIhn9IO3W_bTsaKVkwKXOuR/preview" title="Dunia demo video" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
-  </div>
-  <div class="lp-after">
-    <p data-rise>The MVP runs inside our own demo game, which is what the video shows. We are now looking for the first robotics and AI teams to pilot it with.</p>
-    <a class="btn-solid" href="/projects/dunia" data-rise>More about Dunia</a>
-  </div>
-</section>
-
-<section class="sec sec-games" id="games" aria-labelledby="games-h">
-  <div class="sec-head">
-    <h2 id="games-h" data-rise>Our games</h2>
-    <p data-rise>Original games, made in Kuala Lumpur. They are games first, and the first place Dunia runs.</p>
-  </div>
-  <div class="lp-games">
-    {games.map((g) => (
-      <article class="lp-game" data-rise>
-        <img src={g.img} width={g.w} height={g.h} alt={g.alt} loading="lazy" />
-        <div class="lp-game-body">
-          <p class="lp-game-meta"><span>{g.kind}</span><span>{g.status}</span></p>
-          <h3>{g.name}</h3>
-          <p>{g.text}</p>
-        </div>
-      </article>
-    ))}
-  </div>
-  <div class="lp-after">
-    <p data-rise>Videos, builds and details for each game.</p>
-    <a class="btn-solid" href="/games" data-rise>See all our games</a>
-  </div>
-</section>
-
-<section class="sec sec-contact" id="contact" aria-labelledby="contact-h">
-  <div class="sec-head">
-    <h2 id="contact-h" data-rise>Talk to us</h2>
-    <p data-rise>Partnerships, pilots, games or investing. Start with your email.</p>
-    <dl class="reach">
-    <div><dt>Email</dt><dd><a class="ul" href="mailto:hello@artifisi.com">hello@artifisi.com</a></dd></div>
-    <div><dt>X</dt><dd><a class="ul" href="https://x.com/artifisi_my" target="_blank" rel="noopener">@artifisi_my</a></dd></div>
-    <div><dt>Based in</dt><dd>Kuala Lumpur, Malaysia</dd></div>
-  </dl>
-  </div>
-  <form class="cform" id="cform" action="https://formspree.io/f/xeaaobag" method="POST" novalidate>
-    <fieldset class="topics">
-      <legend class="vh">What it is about</legend>
-      <label><input type="radio" name="topic" value="Partnership" checked /><span>Partnership</span></label>
-      <label><input type="radio" name="topic" value="Pilot: AI or robotics team" /><span>Pilot, AI team</span></label>
-      <label><input type="radio" name="topic" value="Pilot: game studio" /><span>Pilot, game studio</span></label>
-      <label><input type="radio" name="topic" value="Our games" /><span>Our games</span></label>
-      <label><input type="radio" name="topic" value="Investing" /><span>Investing</span></label>
-      <label><input type="radio" name="topic" value="Something else" /><span>Something else</span></label>
-    </fieldset>
-    <div class="field">
-      <label for="cemail" class="vh">Your email</label>
-      <input id="cemail" name="email" type="email" autocomplete="email" required placeholder="you@company.com" aria-describedby="cform-msg" />
-      <button type="submit" class="go" aria-label="Send"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
-    <details class="more">
-      <summary>Add a message</summary>
-      <div class="more-body">
-        <label for="cname">Your name</label>
-        <input id="cname" name="name" type="text" autocomplete="name" />
-        <label for="cmsg">Message</label>
-        <textarea id="cmsg" name="message" rows="4"></textarea>
+<section class="sys sec" id="about" aria-labelledby="about-h">
+  <div class="rows">
+    <div class="row">
+      <dl class="facts" data-rise>
+        <div><dt>Founded</dt><dd>2023</dd></div>
+        <div><dt>Based in</dt><dd>Kuala Lumpur</dd></div>
+        <div><dt>Full time since</dt><dd>January 2025</dd></div>
+        <div><dt>Status</dt><dd>Malaysia Digital company</dd></div>
+      </dl>
+      <div>
+        <h2 id="about-h" data-rise>Who we are</h2>
+        <p class="lead" data-rise style="margin-top:28px">Artifisi Sdn Bhd is a technology company in Kuala Lumpur. We make our own games, and we build AI on top of what games already know: where everything is, what the player did and what happened next.</p>
       </div>
-    </details>
-    <p class="cform-msg" id="cform-msg" role="status">We reply from hello@artifisi.com.</p>
-  </form>
+    </div>
+    <div class="row" id="do">
+      <p class="word" data-rise>What we do</p>
+      <div class="record">
+        <div data-rise>
+          <h3>Games division</h3>
+          <p class="soft" style="font-size:15px;margin-bottom:14px">Our own games, from strategy on PC to roguelikes on mobile.</p>
+          <ul>
+            <li><span>Melaka 1511</span><span>In development</span></li>
+            <li><span>Orbwalker</span><span>Playable</span></li>
+            <li><span>Hullpack Hero</span><span>Early development</span></li>
+          </ul>
+        </div>
+        <div data-rise>
+          <h3>AI division</h3>
+          <p class="soft" style="font-size:15px;margin-bottom:14px">Dunia, our SDK that turns gameplay into labelled training data.</p>
+          <ul>
+            <li><span>Dunia SDK</span><span>MVP</span></li>
+            <li><span>Demo game</span><span>Running</span></li>
+            <li><span>Pilot partners</span><span>Looking now</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <p class="word" data-rise>From the founder</p>
+      <div class="note">
+        <p class="lead" data-rise>I have spent about twelve years building software. At AirAsia I helped scale an app from about 1,000 users a month to about 1,000 users a second.</p>
+        <p class="lead" data-rise>I started Artifisi in 2023 and went full time in January 2025. I built Orbwalker alone, from an empty project to a playable game, in three months. Games are how we learned to ship.</p>
+        <p class="sign" data-rise><b>Raja Hafify</b><span class="soft">Founder and CEO</span><a href="https://www.linkedin.com/in/rajahafify/" target="_blank" rel="noopener" aria-label="Raja Hafify on LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a></p>
+      </div>
+    </div>
+  </div>
 </section>
+
+<section class="sys sec" id="mission" aria-labelledby="mission-h" style="padding-top:0">
+  <h2 id="mission-h" data-rise style="font-size:28px">What we stand for</h2>
+  <div class="cols">
+    <div data-rise>
+      <h3>Vision</h3>
+      <p data-hint="Robots and AI that learn from people at play, not only from expensive lab time.">Machines that learn from the way people play.</p>
+    </div>
+    <div data-rise>
+      <h3>Mission</h3>
+      <p data-hint="The game has to be worth playing first. The data comes from that.">Make games people want to play, and turn that play into data machines can learn from.</p>
+    </div>
+    <div data-rise>
+      <h3>Objectives</h3>
+      <ul>
+        <li data-hint="Turn-based strategy set in the Melaka Sultanate, PC first.">Release Melaka 1511 on PC.</li>
+        <li data-hint="Robotics and AI teams test Dunia data in their own pipelines.">Run the first Dunia pilots.</li>
+        <li data-hint="Our games first, then games from other studios.">Put Dunia inside more games.</li>
+      </ul>
+    </div>
+    <p class="hint" aria-hidden="true">Hover a line to read more.</p>
+  </div>
+</section>
+
+<Showcase
+  variant="AI division, an SDK for game engines"
+  fact="MVP running in our demo game"
+  say="While someone plays, Dunia records what the world looked like, what they did and what happened next. Each step comes out labelled, as training data for robots and physical AI."
+  href="/projects/dunia"
+  action="More about Dunia"
+/>
+
+<Wall />
 
 </main>
 
-<footer class="tiles" aria-label="Site footer">
-  <div class="t t-state"><p>Gameplay in, training data out.</p><p class="legal">Artifisi Sdn Bhd · <a href="/privacy">Privacy</a></p></div>
-  <nav class="t t-nav" aria-label="Footer">
-    <a href="#about">About</a><a href="#ai">Dunia</a><a href="#games">Games</a><a href="/projects/dunia">Dunia page</a><a href="/games">All games</a>
-  </nav>
-  <div class="t t-time"><p>Kuala Lumpur</p><p class="clock"><time id="kl-time">GMT+8</time></p></div>
-  <div class="t t-mail"><a href="mailto:hello@artifisi.com">hello@artifisi.com</a></div>
-  <div class="t t-mark" aria-hidden="true">Artifisi</div>
-  <a class="t t-go" href="#contact"><span>Talk to us</span><svg viewBox="0 0 48 48" width="56" height="56" aria-hidden="true"><path d="M10 24h26M26 13l11 11-11 11" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"/></svg></a>
-</footer>
-
-<dialog class="vmodal" id="vmodal" aria-label="Video"><button type="button" class="vclose" id="vclose">Close</button><div class="vframe"></div></dialog>
+<Ending base="" />
 
 <script>
   import "../scripts/home.js";

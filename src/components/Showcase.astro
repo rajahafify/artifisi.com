@@ -1,0 +1,18 @@
+---
+// The Dunia film on black, with a blue card in the first column. Used on the home page and the Dunia page.
+import { duniaVideo } from "../data.js";
+interface Props { id?: string; variant: string; fact: string; say: string; href: string; action: string }
+const { id = "ai", variant, fact, say, href, action } = Astro.props;
+---
+<section class="sys show" id={id} aria-labelledby={id + "-h"}>
+  <div class="card" data-rise>
+    <h2 id={id + "-h"}>Dunia</h2>
+    <p class="var">{variant}</p>
+    <p class="fact">{fact}</p>
+    <p class="say">{say}</p>
+    <a class="act" href={href}><span>{action}</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></a>
+  </div>
+  <div class="film">
+    <iframe src={duniaVideo.embed} title="Dunia demo video" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  </div>
+</section>

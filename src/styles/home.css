@@ -1,4 +1,4 @@
-/* Layout: full-width bands. Black hero that is the navigation, then white and gray bands, black footer. */
+/* The hero, shared by the home page and /projects/dunia. Everything below it lives in system.css. */
   :root {
     --black: #0a0a0a;
     --ink: #111111;
@@ -26,9 +26,6 @@
   a:focus-visible, button:focus-visible { outline: 2px solid var(--gray-3); outline-offset: 3px; }
   img { max-width: 100%; display: block; }
 
-  .band { padding-block: 96px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-  .inner { max-width: 1200px; margin: 0 auto; }
-  .label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-3); }
   h2 { font-size: clamp(28px, 3.4vw, 40px); font-weight: 500; line-height: 1.15; margin: 10px 0 20px; letter-spacing: -0.01em; text-wrap: balance; }
   h3 { font-size: 20px; font-weight: 600; margin: 0; }
   p { margin: 0 0 14px; }
@@ -150,164 +147,15 @@
     .sim-note { font-size: 10px; }
   }
 
-  /* Company band: a short company profile over a faint moving field of points. */
-  .company { background: var(--white); position: relative; overflow: hidden; }
-  .co-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: block;
-    -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,.12) 0%, #000 60%); mask-image: linear-gradient(90deg, rgba(0,0,0,.12) 0%, #000 60%); }
-  .company .inner { position: relative; }
-  .company h2, .company p, .company .label, .co-facts > div { text-shadow: 0 0 8px #fff, 0 0 3px #fff, 0 0 1px #fff; }
-  .company .lead { font-size: clamp(19px, 1.8vw, 22px); line-height: 1.5; color: var(--ink); max-width: 720px; margin-bottom: 48px; }
-  .vm { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--ink); }
-  .vm > div { padding: 22px 32px 26px 0; min-width: 0; }
-  .vm > div + div { padding-left: 32px; border-left: 1px solid #e2e2e2; }
-  .vm p { font-size: clamp(20px, 2vw, 26px); line-height: 1.35; margin: 10px 0 0; max-width: 520px; text-wrap: balance; }
-  .co-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 8px; padding-top: 20px; border-top: 1px solid #e2e2e2; font-size: 15px; }
-  .co-facts > div { min-width: 0; }
-  .co-facts b { display: block; font: 400 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 4px; }
-
-  /* AI band */
-  .ai { background: var(--ai-soft); }
-  .ai .label, .ai .facts dt { color: var(--ai); }
-  .ai .btn.dark { background: var(--ai); border-color: var(--ai); }
-  .ai .btn.dark:hover { background: var(--ai-deep); border-color: var(--ai-deep); }
-  .ai .poster .play { border-color: var(--ai); background: var(--ai); }
-  .ai .inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
-  .ai .inner > * { min-width: 0; }
-  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 6px 20px; margin: 24px 0 28px; font-family: var(--mono); font-size: 13px; }
-  .facts dt { color: var(--gray-3); }
-  .facts dd { margin: 0; }
-  .btn { display: inline-block; padding: 12px 18px; border: 1px solid var(--ink); text-decoration: none; font-size: 15px; font-weight: 500; }
-  .btn.dark { background: var(--ink); color: var(--white); }
-  .btn + .btn { margin-left: 8px; }
-  .poster { display: grid; place-items: center; aspect-ratio: 16 / 9; max-width: 100%; background: var(--black); color: var(--white); text-decoration: none; position: relative; }
-  .poster .play { width: 64px; height: 64px; border: 1px solid var(--gray-4); border-radius: 50%; display: grid; place-items: center; }
-  .poster .play::after { content: ""; border-left: 16px solid var(--white); border-top: 10px solid transparent; border-bottom: 10px solid transparent; margin-left: 4px; }
-  .poster .cap { position: absolute; left: 16px; bottom: 14px; font-family: var(--mono); font-size: 12px; color: var(--gray-3); }
-
-  /* Games band */
-  .games { background: var(--games-soft); }
-  .games .label { color: var(--games); }
-  .game-links a { color: var(--games); }
-  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px; }
-  .game { background: var(--white); border-radius: 4px; overflow: hidden; box-shadow: 0 1px 2px rgba(10,40,50,.08); min-width: 0; display: flex; flex-direction: column; }
-  .game img, .game .noimg { aspect-ratio: 16 / 9; width: 100%; height: auto; object-fit: cover; }
-  .game .noimg { background: linear-gradient(135deg, #bfe0e3, #5fb1ba); }
-  .game-body { padding: 18px 20px 22px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-  .game-body p { color: var(--gray-4); font-size: 15px; margin: 0; }
-  .game-links { margin-top: auto; padding-top: 8px; font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; }
-
-  /* About band */
-  .about { background: var(--paper); }
-  .about .label { color: var(--gray-4); }
-  .about .inner { display: grid; grid-template-columns: 5fr 7fr; gap: 56px; align-items: start; }
-  .about .inner > * { min-width: 0; }
-  .map { display: block; width: 100%; max-width: 480px; height: 260px; margin: 12px 0 0; }
-  .person { border-top: 1px solid var(--ink); padding-top: 18px; }
-  .person h3 { font-size: 26px; font-weight: 500; }
-  .person p { color: var(--gray-4); font-size: 16px; }
-  .cv { list-style: none; padding: 0; margin: 20px 0 22px; border-top: 1px solid #e4ddd2; }
-  .cv li { display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid #e4ddd2; font-size: 15px; }
-  .cv li > * { min-width: 0; }
-  .cv li b { font: 400 11px/1.9 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--gray-3); }
-  .pname { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
-  .pname .li { color: #0a66c2; display: inline-flex; opacity: .9; }
-  .pname .li:hover { opacity: 1; }
-
-  /* Contact band */
-  .contact { background: var(--ai-deep); color: var(--white); }
-  .contact .label { color: #9fb0f2; }
-  .contact .inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
-  .contact .inner > * { min-width: 0; }
-  .contact-note { color: #c9d2f7; max-width: 440px; }
-  .cform { display: grid; gap: 16px; }
-  .cform label { display: grid; gap: 6px; font: 400 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #9fb0f2; }
-  .cform input, .cform select, .cform textarea { font: 16px var(--sans); letter-spacing: 0; text-transform: none; color: var(--white); background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.2); border-radius: 3px; padding: 11px 12px; width: 100%; }
-  .cform select option { color: var(--ink); }
-  .cform input:focus, .cform select:focus, .cform textarea:focus { outline: none; border-color: #9fb0f2; background: rgba(255,255,255,.1); }
-  .cform textarea { resize: vertical; min-height: 120px; }
-  .cform .hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
-  .cform-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .cform .btn { background: var(--white); color: var(--ai-deep); border-color: var(--white); cursor: pointer; font-family: var(--sans); }
-  .cform .btn:hover { background: #dfe5ff; }
-  .cform .btn[disabled] { opacity: .6; cursor: wait; }
-  .cform-msg { font-size: 14px; color: #c9d2f7; }
-  .contact .rows { margin-top: 24px; border-top: 1px solid rgba(255,255,255,.14); }
-  .contact .row { display: grid; grid-template-columns: 160px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.14); }
-  .contact .row > * { min-width: 0; overflow-wrap: anywhere; }
-  .contact .row a { font-size: clamp(18px, 2.4vw, 26px); text-decoration: none; }
-  .contact .row a:hover { text-decoration: underline; }
-  footer { background: var(--ai-deep); color: #9fb0f2; font-size: 13px; padding-block: 0 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-
   @media (max-width: 860px) {
-    .ai .inner, .about .inner, .divs { grid-template-columns: 1fr; gap: 32px; }
-    .grid3 { grid-template-columns: 1fr; }
-    .band { padding-block: 64px; }
     .nav nav { gap: 16px; }
-    .contact .row { grid-template-columns: 1fr; gap: 2px; }
-    .contact .inner { grid-template-columns: 1fr; gap: 40px; }
   }
   @media (max-width: 520px) {
     .pick strong { font-size: 16px; }
     .pick span { display: none; }
     .nav nav a:nth-child(3) { display: none; }
   }
-
-  /* Live three.js pieces below the hero: Dunia poster, company field, Malaysia map. */
-  .poster { overflow: hidden; }
-  .poster-gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .poster .play { position: relative; z-index: 1; background: var(--ai); border-color: var(--ai); }
-  .poster .cap { z-index: 1; }
-  @media (max-width: 860px) {
-    .vm, .co-facts { grid-template-columns: 1fr; }
-    .vm > div + div { padding-left: 0; border-left: 0; border-top: 1px solid #e2e2e2; }
-    .co-facts { gap: 12px; }
-    .cv li { grid-template-columns: 1fr; gap: 0; }
-    .map { height: 200px; margin-left: 0; }
-    .co-bg { -webkit-mask-image: linear-gradient(180deg, transparent 30%, #000 100%); mask-image: linear-gradient(180deg, transparent 30%, #000 100%); }
-  }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-
-  /* Video player that opens over the page. */
-  .vmodal { border: 0; padding: 0; background: transparent; width: min(1100px, calc(100vw - 32px)); max-width: none; overflow: visible; }
-  .vmodal::backdrop { background: rgba(5,8,25,.86); }
-  .vmodal .vframe { position: relative; aspect-ratio: 16 / 9; background: #000; }
-  .vmodal.tall .vframe { aspect-ratio: 9 / 16; width: min(420px, 100%); max-height: 86vh; margin: 0 auto; }
-  .vmodal iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-  .vmodal .vclose { position: absolute; right: 0; top: -40px; background: none; border: 0; color: #fff; font: 14px var(--mono); cursor: pointer; padding: 8px 0; }
-  .game h3 a { text-decoration: none; }
-  .game h3 a:hover { text-decoration: underline; }
-  .legal { font-size: 13px; }
-  footer a { color: inherit; }
-
-  /* Pilot band: the one ask on the page, for both sides of Dunia. */
-  .pilot { background: var(--ai); color: var(--white); }
-  .pilot .label { color: #c9d2f7; }
-  .pilot h2 { color: var(--white); }
-  .pilot-lead { font-size: clamp(18px, 1.7vw, 21px); line-height: 1.5; color: #e3e8ff; max-width: 680px; margin: 0; }
-  .pilot-tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 40px; border-top: 1px solid rgba(255,255,255,.35); }
-  .track { padding: 24px 40px 28px 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
-  .track + .track { padding-left: 40px; padding-right: 0; border-left: 1px solid rgba(255,255,255,.2); }
-  .track h3 { font-size: 22px; font-weight: 500; margin: 8px 0 10px; }
-  .track p { color: #dfe5ff; font-size: 15px; margin: 0 0 14px; }
-  .track .get { margin-bottom: 22px; }
-  .pilot b { display: block; font: 400 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #c9d2f7; margin-bottom: 4px; }
-  .track .btn { margin-top: auto; }
-  .pilot-ask { margin: 8px 0 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.2); font-size: 15px; color: #e3e8ff; }
-  .btn.pilot-btn { background: var(--white); color: var(--ai-deep); border-color: var(--white); }
-  .btn.pilot-btn:hover { background: #dfe5ff; border-color: #dfe5ff; }
-  @media (max-width: 860px) {
-    .pilot-tracks { grid-template-columns: 1fr; }
-    .track { padding-right: 0; }
-    .track + .track { padding-left: 0; border-left: 0; border-top: 1px solid rgba(255,255,255,.2); }
-  }
-
-  /* Phones: games become a swipe row so the page stays short. */
-  @media (max-width: 700px) {
-    .grid3 { display: flex; grid-template-columns: none; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 28px -16px 0; padding: 0 16px 12px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-    .grid3::-webkit-scrollbar { display: none; }
-    .grid3 > .game { flex: 0 0 84%; scroll-snap-align: start; scroll-margin-left: 16px; }
-    .game-body p { font-size: 14px; }
-  }
 
   /* Small phones (iPhone SE and similar): keep the tagline short and the pick bar on one line. */
   @media (max-width: 380px) {
