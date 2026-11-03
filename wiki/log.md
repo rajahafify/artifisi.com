@@ -1059,3 +1059,17 @@ Verification:
 - code checked: yes. The film is 59.87 seconds at 1080x1920 and 30 fps, 1796 frames, H.264 with AAC mono at 24 kHz. `check-cues.py` resolves 38 cues across the four film scenes, the two cards and the caption bands, and every one lands on a word the voice says. The page is unchanged by this work: every cue still carries the fraction the scene has always used, so with no voice the page falls back to it.
 - audio checked: yes. The finished film was put through the video understanding tool. It restated the claim in its own words, scored 8.5 out of 10 for clarity, and said that none of the spoken narration was difficult to follow word for word. Every figure came back with its unit, including all three currency amounts. The voice alone, with no picture, was cold-listened three times and came back with every figure and the point each time.
 - human reviewed: no
+
+## [2026-11-03] content | Add the 1337 Ventures website pitch as its own proposal folder
+
+Source: `1337-proposal/`, the 1337 Ventures website proposal in the project files (`1337-website-proposal/`)
+Changes:
+- added `1337-proposal/`: a 14-slide deck in the same format as `airasia-proposal/`, a PDF of it, and the 1337 Ventures and Leet Capital landing pages live on slides 6 and 9
+- removed the sample fee line from the Leet Capital landing page before copying it in
+Notes:
+- This pitch is a website rebuild, not a games channel. The deck keeps the partner-pitch mechanics (scaled slides, live phone frame, print screenshot, no prices, no Dunia) and swaps the daily game for the two working pages.
+- 1337 was not hacked. The why-now slide is about the public PHP2Shell flaws of October 2026.
+- Needs its own Cloudflare Pages project, `1337-proposal`, with the steps in the folder's README.
+Verification:
+- code checked: yes. Rendered in Chromium at 1320x900 and 390x844 (scrollWidth 390), no page errors, no element outside its slide, 14-page PDF.
+- human reviewed: no

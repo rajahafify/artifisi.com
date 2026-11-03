@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A new 1337.ventures</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="A proposal from Artifisi to 1337 Ventures: a rebuilt website for 1337 Ventures and Leet Capital.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<style>
+/* Layout: a stack of fixed 1920x1080 slides, each scaled to the page width on screen and printed one per PDF page. */
+:root {
+  /* green is the 1337 red, gold is the 1337 yellow, red is the Leet Capital blue; ink is the 1337 charcoal */
+  --ink: #191919; --ink-2: #4a4a4a; --ink-3: #8a8a8a;
+  --parch: #f4f3ef; --parch-2: #e9e7e0; --card: #ffffff; --line: #dcd9d0;
+  --green: #d71e1e; --green-2: #fbe3e3; --gold: #ffe927; --gold-ink: #b51818; --gold-hi: #ffe927;
+  --red: #1e4bd7; --teal: #0c7866; --page: #0e0e0e;
+  --display: "Nunito", "Trebuchet MS", sans-serif;
+  --body: "Nunito", "Trebuchet MS", sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--page); }
+body { margin: 0; font-family: var(--body); color: var(--ink); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 48px; }
+.deck { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+.frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.45); }
+.slide { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; transform: scale(var(--s, 0.5)); box-sizing: border-box; padding: 112px 128px 150px; display: flex; flex-direction: column; gap: 48px; background: var(--parch); color: var(--ink); overflow: hidden; }
+.slide.dark { background: var(--ink); color: var(--parch); }
+.slide.green { background: var(--green); color: var(--parch); }
+.slide.tint { background: var(--parch-2); }
+.eyebrow { font-size: 26px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold-ink); margin: 0; font-weight: 700; }
+.dark .eyebrow, .green .eyebrow { color: var(--gold-hi); }
+h1, h2, h3, p { margin: 0; }
+h1 { font-family: var(--display); font-weight: 800; font-size: 132px; line-height: 1.04; letter-spacing: -3px; }
+h2 { font-family: var(--display); font-weight: 800; font-size: 72px; line-height: 1.12; letter-spacing: -1.5px; text-wrap: balance; max-width: 1560px; }
+h2.big { font-size: 96px; letter-spacing: -2.5px; }
+h3 { font-size: 42px; font-weight: 800; line-height: 1.15; }
+.lead { font-size: 42px; line-height: 1.34; max-width: 1450px; }
+.body { font-size: 30px; line-height: 1.5; color: var(--ink-2); max-width: 1450px; }
+.dark .body, .dark .lead { color: #e4e4e4; }
+.green .lead { color: #ffe9ec; }
+.foot { position: absolute; left: 128px; right: 128px; bottom: 56px; display: flex; justify-content: space-between; font-size: 24px; color: var(--ink-3); }
+.dark .foot { color: #9a9a9a; } .green .foot { color: #ffc2cb; }
+.row { display: flex; gap: 32px; }
+.row > * { flex: 1; min-width: 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 44px; display: flex; flex-direction: column; gap: 14px; }
+.card p { font-size: 30px; line-height: 1.4; color: var(--ink-2); }
+.card .tag { font-size: 24px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
+.top-green { border-top: 10px solid var(--green); } .top-gold { border-top: 10px solid var(--gold); } .top-red { border-top: 10px solid var(--red); }
+.card p.num, .num { font-family: var(--display); font-size: 120px; font-weight: 800; letter-spacing: -3px; line-height: 1; }
+table { border-collapse: collapse; width: 100%; font-size: 30px; }
+th { text-align: left; font-size: 26px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-ink); padding: 0 24px 18px 0; border-bottom: 2px solid var(--line); }
+td { padding: 22px 24px 22px 0; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.35; }
+td:first-child { font-weight: 700; white-space: nowrap; }
+.pill { display: inline-block; font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 6px 16px; border-radius: 99px; background: var(--green); color: var(--parch); vertical-align: middle; margin-left: 12px; }
+/* phone frame for the live game */
+.phone { width: 404px; height: 778px; border-radius: 56px; background: #0e0b08; padding: 14px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 2px #333; flex: none; position: relative; }
+.phone iframe, .phone img { width: 376px; height: 750px; border: 0; border-radius: 44px; display: block; background: #191919; object-fit: cover; object-position: top; }
+.phone .shot { display: none; }
+.split { display: flex; gap: 96px; align-items: center; flex: 1; }
+.split > .text { flex: 1; display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+.bullets { margin: 0; padding-left: 36px; font-size: 30px; line-height: 1.5; color: var(--ink-2); display: flex; flex-direction: column; gap: 10px; }
+.dark .bullets { color: #e4e4e4; }
+.open-link { font-size: 28px; color: var(--gold-hi); font-weight: 700; text-decoration: none; border-bottom: 2px solid currentColor; align-self: flex-start; }
+.flow { display: flex; align-items: center; gap: 24px; }
+.flow .card { flex: 1; }
+.arrow { width: 64px; height: 36px; flex: none; }
+.screens { display: flex; gap: 40px; align-items: center; }
+.shot-wide { width: 1000px; height: 635px; object-fit: contain; border-radius: 16px; flex: none; }
+.cols { display: flex; gap: 96px; flex: 1; }
+.cols > div { flex: 1; display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.steps { margin: 0; padding-left: 44px; font-size: 34px; line-height: 1.6; }
+.foot span:first-child { max-width: 1500px; }
+.board { width: 100%; font-size: 28px; }
+.board td { padding: 12px 20px 12px 0; }
+.board th { font-size: 22px; padding-bottom: 12px; }
+.board .r { text-align: right; padding-right: 0; font-variant-numeric: tabular-nums; }
+.board tr.you td { background: var(--green-2); }
+.board tr.you td:first-child { box-shadow: inset 8px 0 0 var(--green); padding-left: 20px; }
+.card p.date, .date { font-family: var(--display); font-size: 64px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; color: var(--green); }
+.lim { font-size: 30px; line-height: 1.45; }
+.route { background: var(--gold); color: var(--ink); border-radius: 24px; padding: 48px; display: flex; flex-direction: column; gap: 10px; width: 640px; flex: none; }
+.route .k { font-size: 24px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+.route .v { font-family: var(--display); font-size: 56px; font-weight: 900; letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 18px; }
+.route .s { font-size: 28px; line-height: 1.4; margin-bottom: 18px; }
+.route .b { align-self: flex-start; background: var(--ink); color: var(--parch); font-weight: 800; font-size: 26px; padding: 14px 30px; border-radius: 99px; }
+.phases { display: flex; gap: 24px; }
+.phases .card { flex: 1; }
+.phases .n { font-family: var(--display); font-size: 96px; font-weight: 900; line-height: 1; color: var(--green); }
+.risk { background: var(--gold); color: var(--ink); font-weight: 800; font-size: 30px; padding: 22px 32px; border-radius: 18px; }
+.mark { display: grid; grid-template-columns: repeat(2, 150px); gap: 16px; }
+.mark span { height: 150px; border-radius: 22px; display: grid; place-items: center; font-family: var(--display); font-size: 96px; font-weight: 900; color: var(--ink); }
+a:focus-visible { outline: 3px solid var(--gold-hi); outline-offset: 4px; }
+
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { background: none; padding: 0; }
+  .deck { max-width: none; gap: 0; }
+  .frame { width: 1920px; height: 1080px; aspect-ratio: auto; border-radius: 0; box-shadow: none; break-after: page; }
+  .slide { transform: none; }
+  .phone iframe { display: none; }
+  .phone .shot { display: block; }
+  .open-link .live-only { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+<!-- 1 Cover -->
+<div class="frame"><section class="slide green" style="justify-content:space-between">
+  <p class="eyebrow">Proposal for 1337 Ventures</p>
+  <div style="display:flex;flex-direction:column;gap:40px">
+    <h1>A new 1337.ventures</h1>
+    <p class="lead">One rebuilt website for 1337 Ventures and Leet Capital. Clear for every founder, and built to stand up to a Securities Commission audit.</p>
+  </div>
+  <p class="body" style="color:#ffdede">Raja Hafify Bin Zaed · Artifisi Sdn Bhd · November 2026</p>
+</section></div>
+
+<!-- 2 Why now -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">Why now</p>
+  <h2>In October, two PHP flaws let anyone take over a PHP web server.</h2>
+  <div class="row">
+    <div class="card top-green"><p class="date">17 Oct</p><p>Amazon sees attacks, four days before any fix exists</p></div>
+    <div class="card top-green"><p class="date">21 Oct</p><p>PHP ships emergency patches. Banks and hospitals take servers offline.</p></div>
+    <div class="card top-green"><p class="date">24 Oct</p><p>First confirmed takeovers of exposed servers</p></div>
+    <div class="card top-green"><p class="date">26 Oct</p><p>US CISA lists both flaws as actively exploited</p></div>
+  </div>
+  <p class="body">Every PHP setup that serves pages was exposed, WordPress included, and today's 1337.ventures runs on WordPress. For an SC-licensed firm a breach is a reportable event. The simplest control is to have no PHP server to attack.</p>
+  <div class="foot"><span>PHP2Shell, CVE-2026-109618 and CVE-2026-109619, all dates 2026. Sources: Tenable PHP2Shell FAQ; TechCrunch, 24 Oct 2026</span><span>2</span></div>
+</section></div>
+
+<!-- 3 The gap -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">The gap</p>
+  <h2>1337 has more proof than its peers. The homepage hides it.</h2>
+  <div class="row">
+    <div class="card"><p class="num" style="color:var(--green)">3,500+</p><p>startups supported</p></div>
+    <div class="card"><p class="num" style="color:var(--ink)">68</p><p>Alpha Startups cohorts</p></div>
+    <div class="card"><p class="num" style="color:var(--ink)">2012</p><p>founded in Kuala Lumpur</p></div>
+  </div>
+  <ul class="bullets">
+    <li>About 20 programmes and brands spread across seven menus.</li>
+    <li>No portfolio, team faces or numbers on the homepage.</li>
+    <li>An "Apply" link that loops back to the same page, and menu items that go nowhere.</li>
+  </ul>
+  <div class="foot"><span>Checked on 1337.ventures, 3 Nov 2026. 3,500+ startups: TechNode Global, July 2025</span><span>3</span></div>
+</section></div>
+
+<!-- 4 Peers -->
+<div class="frame"><section class="slide tint" style="gap:36px">
+  <p class="eyebrow">How peers compare</p>
+  <h2>The best accelerator sites do four things 1337's does not</h2>
+  <table>
+    <tr><th style="width:34%">What the site does</th><th>1337</th><th>Antler</th><th>Iterative</th><th>Gobi</th><th>Cradle</th><th>NEXEA</th></tr>
+    <tr><td>One clear "pitch us" button</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr>
+    <tr><td>Numbers on the homepage</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Broken</td><td>Yes</td></tr>
+    <tr><td>Portfolio on the homepage</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Founder stories</td><td>No</td><td>Yes</td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr>
+    <tr><td>Platform</td><td>WordPress</td><td>Webflow</td><td>Webflow</td><td>Webflow</td><td>WordPress</td><td>WordPress</td></tr>
+  </table>
+  <div class="foot"><span>Sites reviewed 3 Nov 2026. Kejora Ventures blocks automated reading and is not included.</span><span>4</span></div>
+</section></div>
+
+<!-- 5 The idea -->
+<div class="frame"><section class="slide dark" style="justify-content:center">
+  <p class="eyebrow">The idea</p>
+  <h2 class="big">Five doors, one for each person who visits.</h2>
+  <p class="lead">Founders, SMEs, corporates, investors and the press each get one door. Every programme 1337 runs sits behind the door of the person it serves, and "pitch us" is on every page.</p>
+  <div class="foot"><span>A new 1337.ventures</span><span>5</span></div>
+</section></div>
+
+<!-- 6 Landing page, live -->
+<div class="frame"><section class="slide dark" style="padding-top:96px;padding-bottom:120px">
+  <div class="split">
+    <div class="text">
+      <p class="eyebrow">The landing page · try it here</p>
+      <h2>1337.ventures, rebuilt</h2>
+      <p class="lead" style="font-size:38px">Built and working in Vite, React and TypeScript. Scroll it on the phone.</p>
+      <ul class="bullets">
+        <li>Opens as a stack of coloured folders, founders in front.</li>
+        <li>3,500+ startups owns the second screen, alone.</li>
+        <li>Programmes slide past as you scroll. Alumni show a preview on tap.</li>
+        <li>Ends on the pitch form, already open.</li>
+      </ul>
+      <a class="open-link" href="demo/1337-landing.html" target="_blank" rel="noopener"><span class="live-only">Open full screen: </span>the desktop version</a>
+    </div>
+    <div class="phone">
+      <iframe src="demo/1337-landing.html" title="1337 Ventures landing page, working concept" loading="lazy"></iframe>
+      <img class="shot" src="assets/1337-landing.png" alt="1337 Ventures landing page on a phone, opening on coloured folders">
+    </div>
+  </div>
+  <div class="foot"><span>Concept design in the style of 1337 Ventures. Sample content and alumni lines to confirm with 1337.</span><span>6</span></div>
+</section></div>
+
+<!-- 7 Find your route -->
+<div class="frame"><section class="slide">
+  <div class="split">
+    <div class="text">
+      <p class="eyebrow">One question in place of seven menus</p>
+      <h2>Find your route</h2>
+      <p class="lead" style="font-size:38px">A founder types what they are building and picks a stage. The page says which programme to start with, and when the next Pitch Tuesday is.</p>
+      <p class="body">The same rules route the real pitch form: an idea goes to Alpha Startups, pre-seed and seed go to Pitch Tuesday, an SME goes to the ECF Accelerator.</p>
+    </div>
+    <div class="route">
+      <p class="k">Your route</p>
+      <p class="v">Kopi Labs</p>
+      <p class="s">A booking app for neighbourhood coffee roasters. Pre-seed.</p>
+      <p class="k">Start with</p>
+      <p class="v">Pitch Tuesday</p>
+      <span class="b">Book this route</span>
+    </div>
+  </div>
+  <div class="foot"><span>Kopi Labs is a sample. Stage rules to confirm with 1337.</span><span>7</span></div>
+</section></div>
+
+<!-- 8 Inner pages -->
+<div class="frame"><section class="slide tint">
+  <p class="eyebrow">Behind the doors</p>
+  <h2>Four inner pages, already mocked up</h2>
+  <div class="row">
+    <div class="card top-green"><h3>Pitch us</h3><p>Stage, sectors and region in one row. The form and the Tuesday calendar on one screen.</p></div>
+    <div class="card top-gold"><h3>Portfolio</h3><p>Every company, filterable by sector, year and status, with exits marked.</p></div>
+    <div class="card top-red"><h3>Programmes</h3><p>One page shape: who, when, what you get, apply. Alpha Startups first.</p></div>
+    <div class="card"><h3>About</h3><p>Faces, a timeline since 2012, and a plain note on how founder data is kept safe.</p></div>
+  </div>
+  <div class="foot"><span>Mockups in the project files. Facts marked "to confirm" are the ones we need from the 1337 team.</span><span>8</span></div>
+</section></div>
+
+<!-- 9 Leet Capital, live -->
+<div class="frame"><section class="slide dark" style="padding-top:96px;padding-bottom:120px">
+  <div class="split">
+    <div class="text">
+      <p class="eyebrow">Leet Capital · try it here</p>
+      <h2>leet.capital, rebuilt the same way</h2>
+      <p class="lead" style="font-size:38px">Today leet.capital draws everything in the browser, so Google and link previews see a title and nothing else.</p>
+      <ul class="bullets">
+        <li>The same system and the same pre-built pages as 1337.ventures.</li>
+        <li>The risk line sits above the first screen, not in the footer.</li>
+        <li>Live campaigns first, each with its progress and days left.</li>
+        <li>The investing platform behind the sign-in stays where it is.</li>
+      </ul>
+      <a class="open-link" href="demo/leet-landing.html" target="_blank" rel="noopener"><span class="live-only">Open full screen: </span>the desktop version</a>
+    </div>
+    <div class="phone">
+      <iframe src="demo/leet-landing.html" title="Leet Capital landing page, working concept" loading="lazy"></iframe>
+      <img class="shot" src="assets/leet-landing.png" alt="Leet Capital landing page on a phone, with the risk line on top">
+    </div>
+  </div>
+  <div class="foot"><span>Concept design in the style of Leet Capital. Campaigns are samples. Checked on leet.capital, 3 Nov 2026.</span><span>9</span></div>
+</section></div>
+
+<!-- 10 Leet trust -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">Leet Capital · trust first</p>
+  <h2>Answer the investor's first question before sign-up</h2>
+  <div class="row">
+    <div class="card top-red"><h3>Check your limit</h3><p>Pick your investor type, type an amount, and see at once whether the SC limits allow it.</p></div>
+    <div class="card top-gold"><h3>Four plain risks</h3><p>You can lose everything. Shares are hard to sell. Your stake can shrink. Dividends are rare.</p></div>
+    <div class="card top-green"><h3>Registered, in words</h3><p>The SC registration said plainly on every page, with a link to check it.</p></div>
+  </div>
+  <p class="risk">Investing in startups is risky. You may lose all your money.</p>
+  <div class="foot"><span>Limits as published by pitchIN for SC rules, November 2026. Wording for Leet Capital compliance to sign off.</span><span>10</span></div>
+</section></div>
+
+<!-- 11 Architecture -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">How it is built</p>
+  <h2>Nothing on the public site to hack</h2>
+  <div class="flow">
+    <div class="card"><h3>Editors</h3><p>Write in a hosted CMS with single sign-on, MFA, roles and an audit log.</p></div>
+    <svg class="arrow" viewBox="0 0 64 36" aria-hidden="true"><path d="M0 12h40V0l24 18-24 18V24H0z" fill="#d71e1e"/></svg>
+    <div class="card"><h3>Pipeline</h3><p>Builds plain pages from reviewed, scanned code in a private repo.</p></div>
+    <svg class="arrow" viewBox="0 0 64 36" aria-hidden="true"><path d="M0 12h40V0l24 18-24 18V24H0z" fill="#d71e1e"/></svg>
+    <div class="card"><h3>Visitors</h3><p>Get those pages from a CDN with a web firewall. No server code runs.</p></div>
+  </div>
+  <ul class="bullets">
+    <li>Pitch decks go to a separate encrypted store with a retention rule.</li>
+    <li>Hosted in a Malaysia or Singapore region, for data residency and PDPA questions.</li>
+    <li>Pages are pre-rendered, so Google and link previews read them in full.</li>
+  </ul>
+  <div class="foot"><span>A new 1337.ventures</span><span>11</span></div>
+</section></div>
+
+<!-- 12 GTRM -->
+<div class="frame"><section class="slide tint" style="gap:36px">
+  <p class="eyebrow">Ready for the SC</p>
+  <h2>An audit file for every area of the SC's rules</h2>
+  <table>
+    <tr><th style="width:30%">GTRM area</th><th>What the rebuild hands the auditor</th></tr>
+    <tr><td>Governance</td><td>A named owner, a board summary, security training for editors</td></tr>
+    <tr><td>Technology risk</td><td>A website risk register, reviewed at each phase</td></tr>
+    <tr><td>Operations</td><td>MFA, access reviews, encryption, change log, a tested restore</td></tr>
+    <tr><td>Service providers</td><td>Due diligence files for the CDN, CMS and form vendors</td></tr>
+    <tr><td>Cyber security</td><td>An independent penetration test before launch, an incident runbook</td></tr>
+    <tr><td>Notifying the SC</td><td>A process for incidents and near misses</td></tr>
+  </table>
+  <div class="foot"><span>SC Guidelines on Technology Risk Management, revised Aug 2024. 1337 holds an SC equity crowdfunding licence through Leet Capital.</span><span>12</span></div>
+</section></div>
+
+<!-- 13 Plan -->
+<div class="frame"><section class="slide">
+  <p class="eyebrow">The plan</p>
+  <h2>Four phases, safest step first</h2>
+  <div class="phases">
+    <div class="card"><p class="n">1</p><h3>Harden today's site</h3><p>Patched PHP, every plugin updated, MFA, a firewall, a backup.</p></div>
+    <div class="card"><p class="n">2</p><h3>Design</h3><p>Final pages and the risk register, checked with the 1337 team.</p></div>
+    <div class="card"><p class="n">3</p><h3>Build</h3><p>Site, CMS, forms, pipeline and monitoring.</p></div>
+    <div class="card"><p class="n">4</p><h3>Test and launch</h3><p>Pen test, editor training, launch. The old PHP server is switched off.</p></div>
+  </div>
+  <p class="body">Old links redirect to the new pages, so search rankings carry over.</p>
+  <div class="foot"><span>Dates for each phase are targets to agree together</span><span>13</span></div>
+</section></div>
+
+<!-- 14 Who and next -->
+<div class="frame"><section class="slide dark">
+  <div class="cols">
+    <div>
+      <p class="eyebrow">Who builds it</p>
+      <h2 style="font-size:58px">Raja Hafify Bin Zaed</h2>
+      <p class="body">Founder of Artifisi Sdn Bhd. About 12 years in software. At AirAsia, scaled an app from about 1,000 users a month to about 1,000 users a second.</p>
+      <p class="body">Artifisi makes games, including Orbwalker, and holds Malaysia Digital status.</p>
+    </div>
+    <div>
+      <p class="eyebrow">Next steps</p>
+      <ol class="steps">
+        <li>Agree how we work together.</li>
+        <li>Tell us who hosts the site and its PHP version, so phase 1 can start.</li>
+        <li>An introduction to the compliance officer.</li>
+        <li>The new site goes live on a date we agree.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="foot"><span>hello@artifisi.com · artifisi.com</span><span>14</span></div>
+</section></div>
+
+</main>
+
+<script>
+// Scale each 1920x1080 slide to its frame on screen. Print uses the slides at full size.
+(() => {
+  const frames = document.querySelectorAll('.frame');
+  const fit = () => frames.forEach(f => f.style.setProperty('--s', f.clientWidth / 1920));
+  fit();
+  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(document.querySelector('.deck'));
+  else addEventListener('resize', fit);
+})();
+</script>
+</body>
+</html>
