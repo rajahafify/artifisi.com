@@ -231,18 +231,20 @@
       paint();
     }
 
+    const ON = 0.33;
     function paint() {
       if (!built) return;
       lines.forEach((ln, i) => {
-        // Each line draws left to right, a beat after the one above it.
-        const own = Math.min(1, Math.max(0, (t - i * 0.025) / 0.6));
+        // Each line draws left to right, a beat after the one above it. All twelve are
+        // down by a third of the way, so the film can name the chosen bank early.
+        const own = Math.min(1, Math.max(0, (t - i * 0.01) / 0.2));
         const e = 1 - Math.pow(1 - own, 3);
         ln.path.style.strokeDashoffset = (ln.len * (1 - e)).toFixed(1);
-        ln.grp.classList.toggle("on", i === sel && t >= 0.85);
-        ln.names.forEach((n) => n.classList.toggle("on", i === sel && t >= 0.85));
+        ln.grp.classList.toggle("on", i === sel && t >= ON);
+        ln.names.forEach((n) => n.classList.toggle("on", i === sel && t >= ON));
       });
       const ln = lines[sel];
-      const show = t >= 0.85;
+      const show = t >= ON;
       lines.dots.forEach((d, i) => {
         d.style.opacity = show ? "1" : "0";
         d.setAttribute("transform", "translate(" + ln.pts[i][0] + "," + ln.pts[i][1] + ")");
@@ -285,7 +287,7 @@
     const io = new IntersectionObserver((es) => {
       if (!es.some((e) => e.isIntersecting)) return;
       io.disconnect();
-      const t0 = performance.now(), dur = 2200;
+      const t0 = performance.now(), dur = 5000;
       const step = (now) => { seek((now - t0) / dur); if (t < 1) requestAnimationFrame(step); };
       requestAnimationFrame(step);
     }, { threshold: 0.4 });

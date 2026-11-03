@@ -1,0 +1,42 @@
+[
+ {
+  "id": "premise",
+  "length": 10.352,
+  "voice": 10.052
+ },
+ {
+  "id": "skyline",
+  "length": 9.659,
+  "voice": 9.359
+ },
+ {
+  "id": "swap",
+  "length": 9.787,
+  "voice": 9.487
+ },
+ {
+  "id": "ranks",
+  "length": 10.046000000000001,
+  "voice": 9.746
+ },
+ {
+  "id": "lanes",
+  "length": 10.726,
+  "voice": 10.426
+ },
+ {
+  "id": "tanks",
+  "length": 6.478,
+  "voice": 6.178
+ },
+ {
+  "id": "leads",
+  "length": 5.266,
+  "voice": 4.966
+ },
+ {
+  "id": "end",
+  "length": 3.812,
+  "voice": 2.312
+ }
+]
