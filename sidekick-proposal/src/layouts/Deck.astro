@@ -262,6 +262,38 @@ const { title, description } = Astro.props;
         vertical-align: middle;
         margin-left: 14px;
       }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 32px;
+        line-height: 1.35;
+      }
+      th {
+        text-align: left;
+        font-size: 24px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--signal-ink);
+        padding: 0 24px 18px 0;
+        border-bottom: 2px solid var(--line);
+      }
+      td {
+        padding: 22px 24px 22px 0;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+        color: var(--ink);
+      }
+      td:first-child {
+        font-weight: 600;
+        width: 40%;
+      }
+      /* Placeholders the author still has to fill in. Visible on purpose: remove the class when done. */
+      .todo {
+        background: #fff1a8;
+        color: #3d2b00;
+        padding: 0 8px;
+        border-radius: 6px;
+      }
       .steps {
         counter-reset: step;
       }

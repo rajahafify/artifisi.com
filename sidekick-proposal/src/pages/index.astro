@@ -4,54 +4,58 @@ import Deck from "../layouts/Deck.astro";
 
 <Deck
   title="Sidekick: pitch deck"
-  description="A pitch deck for Sidekick, the app that works the room at events while you stay in the talk."
+  description="Sidekick pitch deck, in Antler's order: problem, solution, market, traction, business model, competition, go-to-market, team, financials, ask."
 >
   <!-- 1 Cover -->
   <div class="frame"><section class="slide dark" style="justify-content:space-between">
-    <p class="eyebrow">Sidekick · Pitch</p>
+    <p class="eyebrow">Sidekick</p>
     <div style="display:flex;flex-direction:column;gap:40px">
       <h1>Stay in the talk.</h1>
-      <p class="lead">Your sidekick works the room. It scouts who is worth meeting at every event, and you decide who to connect with.</p>
+      <p class="lead">Sidekick checks the room at an event and tells you who is worth meeting. You decide who to connect with.</p>
     </div>
-    <p class="body">Artifisi Sdn Bhd</p>
+    <p class="body">Artifisi Sdn Bhd · <span class="todo">[date]</span></p>
   </section></div>
 
-  <!-- 2 The problem -->
+  <!-- 2 Problem -->
   <div class="frame"><section class="slide">
-    <p class="eyebrow">The problem</p>
-    <h2>At every event you choose between the main event and the people in the room.</h2>
-    <div class="row">
-      <div class="card top-pine"><span class="tag">Listen</span><h3>Stay for the talk</h3><p>Miss the people you came to meet, or leave early to find them.</p></div>
-      <div class="card top-signal"><span class="tag">Network</span><h3>Work the room</h3><p>Miss the talk, and work through strangers with no idea who is worth your time.</p></div>
-    </div>
-    <p class="body">Most of the value of an event happens in the gaps, and nobody is there to help you find it.</p>
-    <div class="foot"><span>Sidekick · Pitch</span><span>2</span></div>
+    <p class="eyebrow">Problem</p>
+    <h2>At an event you have to pick between the talk and the people you came to meet.</h2>
+    <ul class="bullets">
+      <li>Leave the talk to find one person, and miss the rest of the session.</li>
+      <li>Stay in the talk, and leave with no introductions.</li>
+      <li>Work the room with no way to tell who fits what you need.</li>
+    </ul>
+    <p class="body"><span class="todo">[One real example: who, which event, what it cost them. Take it from a conversation, not from this deck.]</span></p>
+    <div class="foot"><span>Sidekick</span><span>2</span></div>
   </section></div>
 
-  <!-- 3 The idea -->
+  <!-- 3 Solution -->
   <div class="frame"><section class="slide pine" style="justify-content:center">
-    <p class="eyebrow">The idea</p>
-    <h2 style="font-size:104px">Send your sidekick in for you.</h2>
-    <p class="lead">Check in to an event, or to a place like a coworking space. Your sidekick scouts everyone there, ranks who is worth meeting based on what each person is looking for and can offer, and shows you the best fits.</p>
-    <div class="foot"><span>Sidekick · Pitch</span><span>3</span></div>
+    <p class="eyebrow">Solution</p>
+    <h2 style="font-size:104px">Sidekick works the room so you don't have to.</h2>
+    <p class="lead">Check in to an event. Sidekick ranks the people there by what they are looking for and what they can offer. You connect or pass. If you both connect, you swap contacts.</p>
+    <div class="foot"><span>Sidekick</span><span>3</span></div>
   </section></div>
 
-  <!-- 4 How it works -->
+  <!-- 4 Market -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Market</p>
+    <h2>Built from counts, not from a headline number.</h2>
+    <table>
+      <thead><tr><th>Step</th><th>Figure</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Events per year we can reach</td><td><span class="todo">[number]</span></td><td><span class="todo">[source]</span></td></tr>
+        <tr><td>Average attendees per event</td><td><span class="todo">[number]</span></td><td><span class="todo">[source]</span></td></tr>
+        <tr><td>Price per event or per organiser</td><td><span class="todo">[RM]</span></td><td><span class="todo">[basis]</span></td></tr>
+        <tr><td>Serviceable market per year</td><td><span class="todo">[RM]</span></td><td>Product of the rows above</td></tr>
+      </tbody>
+    </table>
+    <div class="foot"><span>Sidekick</span><span>4</span></div>
+  </section></div>
+
+  <!-- 5 Solution in use -->
   <div class="frame"><section class="slide">
     <p class="eyebrow">How it works</p>
-    <h2>Four steps from check-in to a match</h2>
-    <div class="row steps">
-      <div class="card step"><span class="n">1</span><h3>Check in</h3><p>To an event or a place. Everyone there is in the same room.</p></div>
-      <div class="card step"><span class="n">2</span><h3>Scout</h3><p>Your sidekick ranks the people in the room by fit, with a short reason for each.</p></div>
-      <div class="card step"><span class="n">3</span><h3>Swipe</h3><p>Connect or Pass. Nobody sees a pass.</p></div>
-      <div class="card step"><span class="n">4</span><h3>Match</h3><p>When you both connect, you swap contact details and get an opener for the break.</p></div>
-    </div>
-    <div class="foot"><span>Sidekick · Pitch</span><span>4</span></div>
-  </section></div>
-
-  <!-- 5 Read before you swipe -->
-  <div class="frame"><section class="slide">
-    <p class="eyebrow">Decide with the facts<span class="pill">New</span></p>
     <h2 style="font-size:76px">Read the sidekicks' conversation before you swipe.</h2>
     <div class="chat" style="padding:32px 40px;gap:14px">
       <p style="font-size:22px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700">Example from the demo event</p>
@@ -59,94 +63,100 @@ import Deck from "../layouts/Deck.astro";
       <div class="turn" style="font-size:28px"><small>Daniel's sidekick</small>I'm with Daniel, CTO, logistics startup. Can offer engineering help, mentorship.</div>
       <div class="turn mine" style="font-size:28px"><small>Your sidekick</small>Raja would value the conversation.</div>
     </div>
-    <p class="body">Tap "How would the sidekicks talk?" on any card. It's built from the two profiles only, so it says nothing about who has swiped.</p>
-    <div class="foot"><span>Sidekick · Pitch</span><span>5</span></div>
+    <p class="body">Each card has a button for this. It is built from the two profiles only, so it says nothing about who has swiped.</p>
+    <div class="foot"><span>Sidekick</span><span>5</span></div>
   </section></div>
 
-  <!-- 6 Privacy -->
+  <!-- 6 Traction -->
   <div class="frame"><section class="slide">
-    <p class="eyebrow">Privacy by design</p>
-    <h2>Nobody sees who passed, or who connected with them first.</h2>
-    <ul class="bullets">
-      <li>Swipes are only ever shown to the person who made them.</li>
-      <li>Contact details are only shared once both people have connected.</li>
-      <li>You only see people checked in to the same event.</li>
-      <li>A block hides both people from each other.</li>
-      <li>Messages only work between people who have matched.</li>
-    </ul>
-    <div class="foot"><span>Sidekick · Pitch</span><span>6</span></div>
+    <p class="eyebrow">Traction</p>
+    <h2>What exists today, and what people have told us.</h2>
+    <div class="row">
+      <div class="card"><span class="tag">Built</span><p>A working app for Android and the web: check-in, ranking, swipe, match, and the conversation preview.</p></div>
+      <div class="card"><span class="tag">Tested</span><p>Run on a demo event with seeded people. Not yet run at a live event.</p></div>
+      <div class="card"><span class="tag">Customers</span><p><span class="todo">[Number of conversations with organisers or attendees, dates, and what they said.]</span></p></div>
+    </div>
+    <p class="body">No revenue and no paying users yet. This deck does not claim either.</p>
+    <div class="foot"><span>Sidekick</span><span>6</span></div>
   </section></div>
 
-  <!-- 7 Guests -->
+  <!-- 7 Business model -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Business model</p>
+    <h2>Who pays, how much, and how often.</h2>
+    <table>
+      <tbody>
+        <tr><td>Who pays</td><td><span class="todo">[Event organiser, venue, or attendee]</span></td></tr>
+        <tr><td>How much</td><td><span class="todo">[Price, and the unit it is charged on]</span></td></tr>
+        <tr><td>How often</td><td><span class="todo">[Per event, per month, or per seat]</span></td></tr>
+        <tr><td>Why this price</td><td><span class="todo">[What it is worth to the payer, in their terms]</span></td></tr>
+      </tbody>
+    </table>
+    <div class="foot"><span>Sidekick</span><span>7</span></div>
+  </section></div>
+
+  <!-- 8 Competition -->
   <div class="frame"><section class="slide oat">
-    <p class="eyebrow">Low friction</p>
-    <h2>Try it before you sign in.</h2>
+    <p class="eyebrow">Competition</p>
+    <h2>Most people network with a list, a group chat, or a stack of cards.</h2>
     <div class="row">
-      <div class="card"><span class="tag">As a guest</span><h3>Fill in a profile, check in, see your picks</h3><p>No sign-in needed to look around, on Android or on the web.</p></div>
-      <div class="card"><span class="tag">To connect</span><h3>Sign in with Google</h3><p>Your profile and check-ins carry over, so nothing you did as a guest is lost.</p></div>
+      <div class="card"><span class="tag">Today</span><p>Attendee lists, LinkedIn searches, business cards, and their own notes.</p></div>
+      <div class="card"><span class="tag">Where we differ</span><p>Ranking by fit, for the people in the room that day. Passes are private, so a no is never seen.</p></div>
     </div>
-    <div class="foot"><span>Sidekick · Pitch</span><span>7</span></div>
+    <p class="body"><span class="todo">[Name the event apps and networking tools in this market, and why people use them.]</span></p>
+    <div class="foot"><span>Sidekick</span><span>8</span></div>
   </section></div>
 
-  <!-- 8 The sidekick -->
+  <!-- 9 Go-to-market -->
   <div class="frame"><section class="slide">
-    <p class="eyebrow">The sidekick</p>
-    <h2>Models for the ranking and the conversation, with a safe fallback.</h2>
+    <p class="eyebrow">Go-to-market</p>
+    <h2>The first 100 users, and the next 90 days.</h2>
+    <table>
+      <thead><tr><th>Channel</th><th>Action in the next 90 days</th><th>Assumed conversion</th></tr></thead>
+      <tbody>
+        <tr><td><span class="todo">[Channel]</span></td><td><span class="todo">[Specific action]</span></td><td><span class="todo">[Rate]</span></td></tr>
+        <tr><td><span class="todo">[Channel]</span></td><td><span class="todo">[Specific action]</span></td><td><span class="todo">[Rate]</span></td></tr>
+        <tr><td><span class="todo">[Channel]</span></td><td><span class="todo">[Specific action]</span></td><td><span class="todo">[Rate]</span></td></tr>
+      </tbody>
+    </table>
+    <div class="foot"><span>Sidekick</span><span>9</span></div>
+  </section></div>
+
+  <!-- 10 Team -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Team</p>
+    <h2>Why us, and why now.</h2>
     <div class="row">
-      <div class="card top-pine"><span class="tag">Now</span><h3>Free models via OpenRouter</h3><p>For the pilot. The key stays on the server, never in the app.</p></div>
-      <div class="card top-pine"><span class="tag">Next</span><h3>Claude Haiku 5.5 on Amazon Bedrock</h3><p>Once Bedrock is enabled on the account. It uses the server's own IAM role, with no API key.</p></div>
-      <div class="card top-signal"><span class="tag">Always</span><h3>A template fallback</h3><p>If the model is down or a quota runs out, the app still works. Answers are cached and rate limited per person.</p></div>
+      <div class="card"><span class="tag">Founder</span><p><span class="todo">[Name, role, and the experience that matters for this problem.]</span></p></div>
+      <div class="card"><span class="tag">Why now</span><p><span class="todo">[What has changed that makes this the time.]</span></p></div>
     </div>
-    <div class="foot"><span>Sidekick · Pitch</span><span>8</span></div>
+    <p class="body"><span class="todo">[Unfair advantage: a relationship, a dataset, or a capability others would need time to build.]</span></p>
+    <div class="foot"><span>Sidekick</span><span>10</span></div>
   </section></div>
 
-  <!-- 9 Architecture -->
+  <!-- 11 Financials -->
   <div class="frame"><section class="slide">
-    <p class="eyebrow">Built on AWS</p>
-    <h2 style="font-size:76px">One stack, one CDK deploy.</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
-      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">App</span><p>Flutter: one codebase for Android and the website.</p></div>
-      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">Identity</span><p>Cognito identity pool. Guests get an identity; Google sign-in links to it.</p></div>
-      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">API</span><p>API Gateway with IAM auth, into one Node 22 Lambda.</p></div>
-      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">Data</span><p>DynamoDB, one table, on demand.</p></div>
-      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">Photos</span><p>Private S3 bucket behind CloudFront.</p></div>
-      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">Places</span><p>Amazon Location Service for check-ins and nearby places.</p></div>
-    </div>
-    <p class="body">A cost guard covers the rest: a budget alert, a Lambda concurrency cap where the account allows it, and API throttling.</p>
-    <div class="foot"><span>Sidekick · Pitch</span><span>9</span></div>
+    <p class="eyebrow">Financials</p>
+    <h2>18 to 24 months, with the assumptions written down.</h2>
+    <table>
+      <thead><tr><th>Line</th><th>Month 6</th><th>Month 12</th><th>Month 18</th><th>Month 24</th></tr></thead>
+      <tbody>
+        <tr><td>Events run</td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td></tr>
+        <tr><td>Revenue</td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td></tr>
+        <tr><td>Cost (cloud, models, people)</td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td></tr>
+      </tbody>
+    </table>
+    <p class="body">Cloud spend has a budget alert and API throttling. Model cost depends on the provider chosen.</p>
+    <div class="foot"><span>Sidekick</span><span>11</span></div>
   </section></div>
 
-  <!-- 10 Where we are -->
-  <div class="frame"><section class="slide dark">
-    <p class="eyebrow">Where we are</p>
-    <h2>A working prototype, with one open decision before the first real event.</h2>
-    <ul class="bullets">
-      <li>Built and tested: profiles, events, check-ins, scouting, swipes, matches, messages, connections, and the conversation preview.</li>
-      <li>Set up to deploy from GitHub: the AWS backend, the Cloudflare Pages website, and the Android app.</li>
-      <li>Open: today anyone can check in or join from anywhere. A real presence check, such as a rotating venue code or stricter location, is still to decide.</li>
-    </ul>
-    <div class="foot"><span>Sidekick · Pitch</span><span>10</span></div>
-  </section></div>
-
-  <!-- 11 Before the first event -->
-  <div class="frame"><section class="slide">
-    <p class="eyebrow">Before the first real event</p>
-    <h2>Three things to finish.</h2>
-    <div class="row">
-      <div class="card top-signal"><span class="tag">Decide</span><h3>Presence check</h3><p>How do we know someone is really at the venue? Choose the venue code or location check.</p></div>
-      <div class="card top-pine"><span class="tag">Switch</span><h3>Model on Bedrock</h3><p>Enable Bedrock on the account, and move the sidekick from the free pilot model.</p></div>
-      <div class="card top-pine"><span class="tag">Ship</span><h3>Android sign-in</h3><p>Register the Android signing key with Google, so sign-in works in the signed app.</p></div>
-    </div>
-    <div class="foot"><span>Sidekick · Pitch</span><span>11</span></div>
-  </section></div>
-
-  <!-- 12 Close -->
+  <!-- 12 Ask -->
   <div class="frame"><section class="slide pine" style="justify-content:space-between">
-    <p class="eyebrow">Stay in the talk</p>
+    <p class="eyebrow">The ask</p>
     <div style="display:flex;flex-direction:column;gap:40px">
-      <h1>Your sidekick works the room.</h1>
-      <p class="lead">Artifisi Sdn Bhd. Terms and pricing are discussed in person, not in this deck.</p>
+      <h1><span class="todo">[Amount]</span></h1>
+      <p class="lead">To reach <span class="todo">[milestone, for example: N paying events at RM X per event]</span> within <span class="todo">[months]</span>.</p>
     </div>
-    <p class="body">Sidekick · Pitch</p>
+    <p class="body">Use of funds: <span class="todo">[split]</span>. Terms are discussed in person.</p>
   </section></div>
 </Deck>
