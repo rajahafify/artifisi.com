@@ -13,7 +13,7 @@ import Deck from "../layouts/Deck.astro";
       <h1>Stay in the talk.</h1>
       <p class="lead">Sidekick checks the room at an event and tells you who is worth meeting. You decide who to connect with.</p>
     </div>
-    <p class="body">Artifisi Sdn Bhd · <span class="todo">[date]</span></p>
+    <p class="body">Artifisi Sdn Bhd · 25 November 2026</p>
   </section></div>
 
   <!-- 2 Problem -->
@@ -47,7 +47,7 @@ import Deck from "../layouts/Deck.astro";
         <tr><td>Business events in Malaysia per year</td><td>393 (2025)</td><td>MyCEB, via Meetings &amp; Conventions Asia</td></tr>
         <tr><td>Average attendees per event</td><td>About 130 (Penang, 2025)</td><td>451,198 delegates over 3,391 events, Business Events Penang</td></tr>
         <tr><td>Price anchor: a competitor's list price</td><td>From USD 610 for 200 attendees</td><td>Swapcard, via G2. Not our price.</td></tr>
-        <tr><td>Our price per event</td><td><span class="todo">[RM, a decision still to make]</span></td><td>Set this, then multiply by the events row</td></tr>
+        <tr><td>Our price per event</td><td>RM 1,000 (assumed)</td><td>Ceiling if every business event paid: RM 393,000 a year. Plan: 40 events, RM 40,000.</td></tr>
       </tbody>
     </table>
     <div class="foot"><span>Sidekick</span><span>4</span></div>
@@ -86,10 +86,10 @@ import Deck from "../layouts/Deck.astro";
     <h2>Who pays, how much, and how often.</h2>
     <table>
       <tbody>
-        <tr><td>Who pays</td><td><span class="todo">[Event organiser, venue, or attendee]</span></td></tr>
-        <tr><td>How much</td><td><span class="todo">[Price, and the unit it is charged on]</span></td></tr>
-        <tr><td>How often</td><td><span class="todo">[Per event, per month, or per seat]</span></td></tr>
-        <tr><td>Why this price</td><td><span class="todo">[What it is worth to the payer, in their terms]</span></td></tr>
+        <tr><td>Who pays</td><td>The event organiser, per event</td></tr>
+        <tr><td>How much</td><td>RM 1,000 per event (assumed)</td></tr>
+        <tr><td>How often</td><td>Each event run on Sidekick</td></tr>
+        <tr><td>Why this price</td><td>Swapcard charges about RM 2,700 for 200 attendees (about RM 13 each, at an assumed RM 4.4 per USD). At about 130 attendees, RM 1,000 is about RM 8 each, below that anchor for a narrower product.</td></tr>
       </tbody>
     </table>
     <div class="foot"><span>Sidekick</span><span>7</span></div>
@@ -114,9 +114,9 @@ import Deck from "../layouts/Deck.astro";
     <table>
       <thead><tr><th>Channel</th><th>Action in the next 90 days</th><th>Assumed conversion</th></tr></thead>
       <tbody>
-        <tr><td><span class="todo">[Channel]</span></td><td><span class="todo">[Specific action]</span></td><td><span class="todo">[Rate]</span></td></tr>
-        <tr><td><span class="todo">[Channel]</span></td><td><span class="todo">[Specific action]</span></td><td><span class="todo">[Rate]</span></td></tr>
-        <tr><td><span class="todo">[Channel]</span></td><td><span class="todo">[Specific action]</span></td><td><span class="todo">[Rate]</span></td></tr>
+        <tr><td>Event organisers</td><td>Email 100 organisers from association and conference listings. Offer a free pilot.</td><td>10% reply, 30% of replies book a pilot: about 3 pilots</td></tr>
+        <tr><td>Community meetups</td><td>Run 3 free events with founder and tech meetups.</td><td>Each event brings 40 attendees; 1 in 4 organisers asks for a paid event</td></tr>
+        <tr><td>Venues and coworking spaces</td><td>Offer a place check-in to 20 spaces.</td><td>1 in 5 agrees to host a monthly event</td></tr>
       </tbody>
     </table>
     <div class="foot"><span>Sidekick</span><span>9</span></div>
@@ -141,12 +141,12 @@ import Deck from "../layouts/Deck.astro";
     <table>
       <thead><tr><th>Line</th><th>Month 6</th><th>Month 12</th><th>Month 18</th><th>Month 24</th></tr></thead>
       <tbody>
-        <tr><td>Events run</td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td></tr>
-        <tr><td>Revenue</td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td></tr>
-        <tr><td>Cost (cloud, models, people)</td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td><td><span class="todo">[ ]</span></td></tr>
+        <tr><td>Events run (cumulative)</td><td>6</td><td>20</td><td>40</td><td>60</td></tr>
+        <tr><td>Revenue (cumulative)</td><td>RM 6,000</td><td>RM 20,000</td><td>RM 40,000</td><td>RM 60,000</td></tr>
+        <tr><td>Cost (cumulative)</td><td>RM 61,980</td><td>RM 124,200</td><td>RM 222,600</td><td>RM 321,000</td></tr>
       </tbody>
     </table>
-    <p class="body">Cloud spend has a budget alert and API throttling. Model cost depends on the provider chosen.</p>
+    <p class="body">Assumes RM 10,300 a month to month 12 and RM 16,300 after (a second engineer from month 13), plus RM 30 per event. Revenue is RM 1,000 per event. Full assumptions are in model.md.</p>
     <div class="foot"><span>Sidekick</span><span>11</span></div>
   </section></div>
 
@@ -154,9 +154,9 @@ import Deck from "../layouts/Deck.astro";
   <div class="frame"><section class="slide pine" style="justify-content:space-between">
     <p class="eyebrow">The ask</p>
     <div style="display:flex;flex-direction:column;gap:40px">
-      <h1><span class="todo">[Amount]</span></h1>
-      <p class="lead">To reach <span class="todo">[milestone, for example: N paying events at RM X per event]</span> within <span class="todo">[months]</span>.</p>
+      <h1>RM 220,000</h1>
+      <p class="lead">To reach 40 paid events in 18 months, at RM 1,000 each, with at least one in three organisers booking again.</p>
     </div>
-    <p class="body">Use of funds: <span class="todo">[split]</span>. Terms are discussed in person.</p>
+    <p class="body">Use of funds over 18 months: team 65%, marketing and operations 24%, cloud, tools and other 11%. The raise covers the RM 182,600 net burn plus a 20% buffer. Terms are discussed in person.</p>
   </section></div>
 </Deck>
