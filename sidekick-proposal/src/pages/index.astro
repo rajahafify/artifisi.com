@@ -1,0 +1,152 @@
+---
+import Deck from "../layouts/Deck.astro";
+---
+
+<Deck
+  title="Sidekick: pitch deck"
+  description="A pitch deck for Sidekick, the app that works the room at events while you stay in the talk."
+>
+  <!-- 1 Cover -->
+  <div class="frame"><section class="slide dark" style="justify-content:space-between">
+    <p class="eyebrow">Sidekick · Pitch</p>
+    <div style="display:flex;flex-direction:column;gap:40px">
+      <h1>Stay in the talk.</h1>
+      <p class="lead">Your sidekick works the room. It scouts who is worth meeting at every event, and you decide who to connect with.</p>
+    </div>
+    <p class="body">Artifisi Sdn Bhd</p>
+  </section></div>
+
+  <!-- 2 The problem -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">The problem</p>
+    <h2>At every event you choose between the main event and the people in the room.</h2>
+    <div class="row">
+      <div class="card top-pine"><span class="tag">Listen</span><h3>Stay for the talk</h3><p>Miss the people you came to meet, or leave early to find them.</p></div>
+      <div class="card top-signal"><span class="tag">Network</span><h3>Work the room</h3><p>Miss the talk, and work through strangers with no idea who is worth your time.</p></div>
+    </div>
+    <p class="body">Most of the value of an event happens in the gaps, and nobody is there to help you find it.</p>
+    <div class="foot"><span>Sidekick · Pitch</span><span>2</span></div>
+  </section></div>
+
+  <!-- 3 The idea -->
+  <div class="frame"><section class="slide pine" style="justify-content:center">
+    <p class="eyebrow">The idea</p>
+    <h2 style="font-size:104px">Send your sidekick in for you.</h2>
+    <p class="lead">Check in to an event, or to a place like a coworking space. Your sidekick scouts everyone there, ranks who is worth meeting based on what each person is looking for and can offer, and shows you the best fits.</p>
+    <div class="foot"><span>Sidekick · Pitch</span><span>3</span></div>
+  </section></div>
+
+  <!-- 4 How it works -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">How it works</p>
+    <h2>Four steps from check-in to a match</h2>
+    <div class="row steps">
+      <div class="card step"><span class="n">1</span><h3>Check in</h3><p>To an event or a place. Everyone there is in the same room.</p></div>
+      <div class="card step"><span class="n">2</span><h3>Scout</h3><p>Your sidekick ranks the people in the room by fit, with a short reason for each.</p></div>
+      <div class="card step"><span class="n">3</span><h3>Swipe</h3><p>Connect or Pass. Nobody sees a pass.</p></div>
+      <div class="card step"><span class="n">4</span><h3>Match</h3><p>When you both connect, you swap contact details and get an opener for the break.</p></div>
+    </div>
+    <div class="foot"><span>Sidekick · Pitch</span><span>4</span></div>
+  </section></div>
+
+  <!-- 5 Read before you swipe -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Decide with the facts<span class="pill">New</span></p>
+    <h2 style="font-size:76px">Read the sidekicks' conversation before you swipe.</h2>
+    <div class="chat" style="padding:32px 40px;gap:14px">
+      <p style="font-size:22px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700">Example from the demo event</p>
+      <div class="turn mine" style="font-size:28px"><small>Your sidekick</small>I'm with Raja, Builder. Looking for funding.</div>
+      <div class="turn" style="font-size:28px"><small>Daniel's sidekick</small>I'm with Daniel, CTO, logistics startup. Can offer engineering help, mentorship.</div>
+      <div class="turn mine" style="font-size:28px"><small>Your sidekick</small>Raja would value the conversation.</div>
+    </div>
+    <p class="body">Tap "How would the sidekicks talk?" on any card. It's built from the two profiles only, so it says nothing about who has swiped.</p>
+    <div class="foot"><span>Sidekick · Pitch</span><span>5</span></div>
+  </section></div>
+
+  <!-- 6 Privacy -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Privacy by design</p>
+    <h2>Nobody sees who passed, or who connected with them first.</h2>
+    <ul class="bullets">
+      <li>Swipes are only ever shown to the person who made them.</li>
+      <li>Contact details are only shared once both people have connected.</li>
+      <li>You only see people checked in to the same event.</li>
+      <li>A block hides both people from each other.</li>
+      <li>Messages only work between people who have matched.</li>
+    </ul>
+    <div class="foot"><span>Sidekick · Pitch</span><span>6</span></div>
+  </section></div>
+
+  <!-- 7 Guests -->
+  <div class="frame"><section class="slide oat">
+    <p class="eyebrow">Low friction</p>
+    <h2>Try it before you sign in.</h2>
+    <div class="row">
+      <div class="card"><span class="tag">As a guest</span><h3>Fill in a profile, check in, see your picks</h3><p>No sign-in needed to look around, on Android or on the web.</p></div>
+      <div class="card"><span class="tag">To connect</span><h3>Sign in with Google</h3><p>Your profile and check-ins carry over, so nothing you did as a guest is lost.</p></div>
+    </div>
+    <div class="foot"><span>Sidekick · Pitch</span><span>7</span></div>
+  </section></div>
+
+  <!-- 8 The sidekick -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">The sidekick</p>
+    <h2>Models for the ranking and the conversation, with a safe fallback.</h2>
+    <div class="row">
+      <div class="card top-pine"><span class="tag">Now</span><h3>Free models via OpenRouter</h3><p>For the pilot. The key stays on the server, never in the app.</p></div>
+      <div class="card top-pine"><span class="tag">Next</span><h3>Claude Haiku 5.5 on Amazon Bedrock</h3><p>Once Bedrock is enabled on the account. It uses the server's own IAM role, with no API key.</p></div>
+      <div class="card top-signal"><span class="tag">Always</span><h3>A template fallback</h3><p>If the model is down or a quota runs out, the app still works. Answers are cached and rate limited per person.</p></div>
+    </div>
+    <div class="foot"><span>Sidekick · Pitch</span><span>8</span></div>
+  </section></div>
+
+  <!-- 9 Architecture -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Built on AWS</p>
+    <h2 style="font-size:76px">One stack, one CDK deploy.</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">App</span><p>Flutter: one codebase for Android and the website.</p></div>
+      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">Identity</span><p>Cognito identity pool. Guests get an identity; Google sign-in links to it.</p></div>
+      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">API</span><p>API Gateway with IAM auth, into one Node 22 Lambda.</p></div>
+      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">Data</span><p>DynamoDB, one table, on demand.</p></div>
+      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">Photos</span><p>Private S3 bucket behind CloudFront.</p></div>
+      <div class="card" style="padding:30px 34px;gap:10px"><span class="tag">Places</span><p>Amazon Location Service for check-ins and nearby places.</p></div>
+    </div>
+    <p class="body">A cost guard covers the rest: a budget alert, a Lambda concurrency cap where the account allows it, and API throttling.</p>
+    <div class="foot"><span>Sidekick · Pitch</span><span>9</span></div>
+  </section></div>
+
+  <!-- 10 Where we are -->
+  <div class="frame"><section class="slide dark">
+    <p class="eyebrow">Where we are</p>
+    <h2>A working prototype, with one open decision before the first real event.</h2>
+    <ul class="bullets">
+      <li>Built and tested: profiles, events, check-ins, scouting, swipes, matches, messages, connections, and the conversation preview.</li>
+      <li>Set up to deploy from GitHub: the AWS backend, the Cloudflare Pages website, and the Android app.</li>
+      <li>Open: today anyone can check in or join from anywhere. A real presence check, such as a rotating venue code or stricter location, is still to decide.</li>
+    </ul>
+    <div class="foot"><span>Sidekick · Pitch</span><span>10</span></div>
+  </section></div>
+
+  <!-- 11 Before the first event -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Before the first real event</p>
+    <h2>Three things to finish.</h2>
+    <div class="row">
+      <div class="card top-signal"><span class="tag">Decide</span><h3>Presence check</h3><p>How do we know someone is really at the venue? Choose the venue code or location check.</p></div>
+      <div class="card top-pine"><span class="tag">Switch</span><h3>Model on Bedrock</h3><p>Enable Bedrock on the account, and move the sidekick from the free pilot model.</p></div>
+      <div class="card top-pine"><span class="tag">Ship</span><h3>Android sign-in</h3><p>Register the Android signing key with Google, so sign-in works in the signed app.</p></div>
+    </div>
+    <div class="foot"><span>Sidekick · Pitch</span><span>11</span></div>
+  </section></div>
+
+  <!-- 12 Close -->
+  <div class="frame"><section class="slide pine" style="justify-content:space-between">
+    <p class="eyebrow">Stay in the talk</p>
+    <div style="display:flex;flex-direction:column;gap:40px">
+      <h1>Your sidekick works the room.</h1>
+      <p class="lead">Artifisi Sdn Bhd. Terms and pricing are discussed in person, not in this deck.</p>
+    </div>
+    <p class="body">Sidekick · Pitch</p>
+  </section></div>
+</Deck>
