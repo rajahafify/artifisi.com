@@ -146,7 +146,8 @@ if (room && motion) {
   ScrollTrigger.batch("[data-reveal]", {
     start: "top 88%",
     once: true,
-    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 1.2, ease: "expo.out", stagger: 0.08 }),
+    // Headings wipe up from their baseline; the clip opens past the box so descenders aren't cut.
+    onEnter: (els) => gsap.to(els, { clipPath: "inset(-20% -5% -25% -5%)", y: 0, duration: 1.3, ease: "expo.out", stagger: 0.1 }),
   });
 } else if (room) {
   // Reduced motion: one still frame of the room behind the hero.

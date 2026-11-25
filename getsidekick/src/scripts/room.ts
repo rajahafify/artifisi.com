@@ -177,7 +177,7 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
       ctx.fillStyle = "#12402e";
       ctx.fillRect(0, 0, w, h);
       ctx.fillStyle = "#ede4d3";
-      ctx.font = `${Math.round(h * 0.11)}px "Geist Mono", monospace`;
+      ctx.font = `${Math.round(h * 0.11)}px "Inter", sans-serif`;
       ctx.fillText("KEYNOTE", w * 0.07, h * 0.24);
       ctx.font = `${Math.round(h * 0.3)}px "Instrument Serif", Georgia, serif`;
       ctx.fillText("What comes next", w * 0.07, h * 0.62);
@@ -200,7 +200,7 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
       (ctx, w, h) => {
         ctx.clearRect(0, 0, w, h);
         ctx.fillStyle = "rgba(18, 64, 46, 0.55)";
-        ctx.font = `500 ${Math.round(h * 0.56)}px "Geist Mono", monospace`;
+        ctx.font = `500 ${Math.round(h * 0.56)}px "Inter", sans-serif`;
         ctx.textBaseline = "middle";
         const spaced = text.split("").join(String.fromCharCode(8202));
         ctx.fillText(spaced, 4, h / 2);

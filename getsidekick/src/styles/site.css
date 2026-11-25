@@ -1,7 +1,7 @@
 /*
   Sidekick landing page.
   Palette from the app, light: Oat paper background, Pine text and surfaces, Signal orange in small doses.
-  Type: Instrument Serif for display, Geist for text, Geist Mono for small labels.
+  Type: the app's own pair, Instrument Serif for display and Inter for text and labels.
 
   The base styles are the static page (no JavaScript, or reduced motion).
   `html.motion` turns the story into a pinned, scroll-driven scene.
@@ -25,8 +25,7 @@
   --signal-deep: #c63a17;
 
   --display: "Instrument Serif", "Times New Roman", serif;
-  --text: "Geist", "Inter", system-ui, sans-serif;
-  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
+  --text: "Inter", system-ui, sans-serif;
 
   --gutter: clamp(20px, 4.5vw, 72px);
   --wrap: 1360px;
@@ -41,6 +40,9 @@
 html {
   -webkit-text-size-adjust: 100%;
   background: var(--paper);
+  scrollbar-color: rgba(18, 64, 46, 0.45) var(--paper-2);
+  accent-color: var(--pine);
+  caret-color: var(--signal-deep);
 }
 body {
   margin: 0;
@@ -51,17 +53,6 @@ body {
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-/* Film grain over everything, very faint. */
-body::after {
-  content: "";
-  position: fixed;
-  inset: -50%;
-  z-index: 100;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
-  mix-blend-mode: multiply;
 }
 h1,
 h2,
@@ -80,6 +71,8 @@ ul {
 }
 a {
   color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
 }
 button {
   font: inherit;
@@ -123,7 +116,7 @@ em {
 /* ---------- Type ---------- */
 .eyebrow,
 .kicker {
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -142,7 +135,6 @@ em {
   line-height: 0.98;
   letter-spacing: -0.02em;
   text-wrap: balance;
-  margin-top: 20px;
 }
 .display em {
   color: var(--pine-2);
@@ -196,11 +188,14 @@ em {
     border-color 300ms var(--ease),
     color 300ms var(--ease);
 }
-.btn span[aria-hidden] {
+.arrow {
+  flex: none;
   transition: transform 300ms var(--ease);
 }
-.btn:hover span[aria-hidden] {
-  transform: translateX(4px);
+.btn:hover .arrow,
+.nav-cta:hover .arrow,
+.chapter-cta:hover .arrow {
+  transform: translateX(3px);
 }
 .btn:active {
   transform: scale(0.98);
@@ -224,8 +219,7 @@ em {
 .btn-line {
   border: 1px solid rgba(18, 64, 46, 0.25);
   color: var(--pine);
-  background: rgba(245, 239, 227, 0.6);
-  backdrop-filter: blur(8px);
+  background: var(--paper);
 }
 .btn-line:hover {
   border-color: var(--pine);
@@ -300,6 +294,9 @@ em {
   opacity: 1;
 }
 .nav .nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   opacity: 1;
   padding: 10px 16px;
   border-radius: 10px;
@@ -343,6 +340,7 @@ em {
   inset: 0;
   pointer-events: none;
   background:
+    linear-gradient(90deg, rgba(245, 239, 227, 0.94) 0%, rgba(245, 239, 227, 0.78) 30%, rgba(245, 239, 227, 0) 54%),
     radial-gradient(70% 60% at 0% 100%, rgba(245, 239, 227, 0.92) 0%, rgba(245, 239, 227, 0.6) 45%, rgba(245, 239, 227, 0) 75%),
     linear-gradient(180deg, rgba(245, 239, 227, 0.7) 0%, rgba(245, 239, 227, 0) 16%);
 }
@@ -441,7 +439,7 @@ h1 em {
   border-top: 1px solid var(--line-light);
 }
 .chapter-n {
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 12px;
   letter-spacing: 0.1em;
   color: var(--signal-deep);
@@ -470,7 +468,7 @@ h1 em {
 
 /* ---------- Story (pinned, scroll-driven) ---------- */
 html.motion .story {
-  height: 560vh;
+  height: 460vh;
 }
 html.motion .stage {
   position: sticky;
@@ -492,7 +490,7 @@ html.motion .scroll-cue {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -540,6 +538,18 @@ html.motion .chapter {
   visibility: hidden;
   will-change: opacity, transform;
 }
+.chapter-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  font-weight: 600;
+  color: var(--pine);
+  text-decoration: underline;
+}
+html.motion .chapter-cta {
+  pointer-events: auto;
+}
 html.motion .chapter h2 {
   font-size: clamp(36px, 4.2vw, 64px);
 }
@@ -568,16 +578,14 @@ html.motion .tags {
   margin: -42px 0 0 14px;
   padding: 6px 10px;
   border-radius: 8px;
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--pine);
-  background: rgba(255, 253, 248, 0.88);
-  border: 1px solid var(--line-light);
-  box-shadow: 0 6px 18px -8px rgba(18, 64, 46, 0.25);
-  backdrop-filter: blur(8px);
+  background: #fffdf8;
+  box-shadow: 0 6px 16px -6px rgba(18, 64, 46, 0.3);
 }
 .tag i {
   width: 6px;
@@ -599,10 +607,8 @@ html.motion .tags {
   padding: 12px 14px 13px;
   border-radius: 12px;
   color: var(--pine);
-  background: rgba(255, 253, 248, 0.94);
-  border: 1px solid var(--line-light);
-  box-shadow: 0 14px 30px -14px rgba(18, 64, 46, 0.35);
-  backdrop-filter: blur(10px);
+  background: #fffdf8;
+  box-shadow: 0 14px 30px -12px rgba(18, 64, 46, 0.38);
   transition:
     border-color 400ms var(--ease),
     background-color 400ms var(--ease);
@@ -616,7 +622,7 @@ html.motion .tags {
 }
 .pick-card b em {
   font-style: normal;
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 11px;
   color: var(--signal-deep);
 }
@@ -633,15 +639,14 @@ html.motion .tags {
 .pick-match {
   display: none;
   margin-top: 8px;
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--signal-deep);
 }
 .pick.is-match .pick-card {
-  border-color: var(--signal);
-  box-shadow: 0 0 0 3px rgba(255, 90, 54, 0.15), 0 14px 30px -14px rgba(18, 64, 46, 0.35);
+  box-shadow: 0 0 0 2px var(--signal), 0 14px 30px -12px rgba(18, 64, 46, 0.38);
 }
 .pick.is-match .pick-match {
   display: block;
@@ -669,7 +674,7 @@ html.motion .rail.is-on {
   border: 0;
   cursor: pointer;
   color: var(--ink-2);
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 11px;
   letter-spacing: 0.08em;
 }
@@ -701,7 +706,7 @@ html.motion .legend {
   bottom: clamp(48px, 9vh, 96px);
   display: flex;
   gap: 18px;
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -811,21 +816,12 @@ section.faq {
   display: flex;
   justify-content: center;
 }
-.device::before {
-  content: "";
-  position: absolute;
-  inset: 8% -4% -6% 6%;
-  border-radius: 40px;
-  background: var(--paper-2);
-  transform: rotate(3deg);
-}
 .card {
   position: relative;
   width: min(440px, 100%);
   padding: 28px;
-  border-radius: 28px;
+  border-radius: 16px;
   background: #fffdf8;
-  border: 1px solid var(--line-light);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.8) inset,
     0 40px 80px -30px rgba(15, 36, 27, 0.35),
@@ -865,7 +861,7 @@ section.faq {
   border-radius: 6px;
   background: rgba(198, 58, 23, 0.1);
   color: var(--signal-deep);
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -880,7 +876,7 @@ section.faq {
   border-bottom: 1px solid var(--line-light);
 }
 .card-fit dt {
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 10.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -925,7 +921,7 @@ section.faq {
 .msg small {
   display: block;
   margin-bottom: 3px;
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1009,12 +1005,12 @@ section.privacy {
   border-left: 1px solid var(--line-dark);
 }
 .rule-n {
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 12px;
   color: var(--signal);
 }
 .rules h3 {
-  margin-top: 48px;
+  margin-top: 0;
   font-family: var(--display);
   font-weight: 400;
   font-size: clamp(26px, 2.3vw, 34px);
@@ -1152,8 +1148,8 @@ section.final::before {
 
 /* ---------- Reveals (only when motion is on) ---------- */
 html.motion [data-reveal] {
-  opacity: 0;
-  transform: translateY(28px);
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(24px);
 }
 
 /* ---------- Small screens ---------- */

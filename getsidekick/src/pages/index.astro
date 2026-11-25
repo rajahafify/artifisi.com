@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import Arrow from "../components/Arrow.astro";
 
 const app = "https://sidekick.artifisi.com";
 
@@ -113,7 +114,7 @@ const faqs = [
       <a href="#story-1">How it works</a>
       <a href="#demo">Try a card</a>
       <a href="#privacy">Privacy</a>
-      <a class="nav-cta" href={app}>Open the app <span aria-hidden="true">→</span></a>
+      <a class="nav-cta" href={app}>Open the app <Arrow /></a>
     </nav>
   </header>
 
@@ -145,7 +146,6 @@ const faqs = [
         </div>
 
         <div class="hero" data-hero>
-          <p class="kicker"><span class="pulse" aria-hidden="true"></span>For people who go to events to meet people</p>
           <h1>
             <span class="line"><span>Stay in the <em>talk.</em></span></span>
             <span class="line"><span>Your sidekick</span></span>
@@ -156,7 +156,7 @@ const faqs = [
               Check in, and Sidekick finds the people worth meeting while you listen. You decide who to connect with.
             </p>
             <div class="actions">
-              <a class="btn btn-signal" href={app}>Open Sidekick <span aria-hidden="true">→</span></a>
+              <a class="btn btn-signal" href={app}>Open Sidekick <Arrow /></a>
               <a class="btn btn-line" href="#story-1">See how it works</a>
             </div>
           </div>
@@ -173,6 +173,11 @@ const faqs = [
                 </span>
                 <h2>{c.title}</h2>
                 <p>{c.body}</p>
+                {i === chapters.length - 1 && (
+                  <a class="chapter-cta" href={app}>
+                    Try it at your next event <Arrow />
+                  </a>
+                )}
               </li>
             ))
           }
@@ -201,15 +206,14 @@ const faqs = [
     <section class="demo light" id="demo" aria-labelledby="demo-title">
       <div class="wrap demo-grid">
         <div class="demo-copy">
-          <p class="eyebrow" data-reveal>Before you swipe</p>
           <h2 id="demo-title" class="display" data-reveal>
             Hear what the two sidekicks <em>would say.</em>
           </h2>
-          <p class="body" data-reveal>
+          <p class="body">
             Every card can play the conversation your sidekick would have with theirs. It is made from the two profiles only,
             so it never gives away who has swiped on whom. Try it.
           </p>
-          <div class="who" role="tablist" aria-label="Choose a person" data-reveal>
+          <div class="who" role="tablist" aria-label="Choose a person">
             {
               talks.map((t, i) => (
                 <button
@@ -230,7 +234,7 @@ const faqs = [
               ))
             }
           </div>
-          <p class="fine" data-reveal>Example conversations, written from the demo event's profiles.</p>
+          <p class="fine">Example conversations, written from the demo event's profiles.</p>
         </div>
 
         <div class="device" data-reveal>
@@ -288,13 +292,11 @@ const faqs = [
     <!-- Privacy -->
     <section class="privacy dark" id="privacy" aria-labelledby="privacy-title">
       <div class="wrap">
-        <p class="eyebrow" data-reveal>Privacy, by design</p>
         <h2 id="privacy-title" class="display xl" data-reveal>A pass is <em>never</em> seen.</h2>
         <ol class="rules">
           {
-            rules.map(([t, b], i) => (
-              <li data-reveal>
-                <span class="rule-n">0{i + 1}</span>
+            rules.map(([t, b]) => (
+              <li>
                 <h3>{t}</h3>
                 <p>{b}</p>
               </li>
@@ -308,10 +310,9 @@ const faqs = [
     <section class="faq light" id="questions" aria-labelledby="faq-title">
       <div class="wrap faq-grid">
         <div>
-          <p class="eyebrow" data-reveal>Questions</p>
           <h2 id="faq-title" class="display" data-reveal>Before you <em>check in.</em></h2>
         </div>
-        <div class="faq-list" data-reveal>
+        <div class="faq-list">
           {
             faqs.map(([q, a], i) => (
               <details open={i === 0}>
@@ -333,8 +334,8 @@ const faqs = [
         <h2 id="final-title" class="display mega" data-reveal>
           Go to the <em>talk.</em><br />We'll work the room.
         </h2>
-        <div class="final-foot" data-reveal>
-          <a class="btn btn-signal btn-lg" href={app}>Open Sidekick <span aria-hidden="true">→</span></a>
+        <div class="final-foot">
+          <a class="btn btn-signal btn-lg" href={app}>Open Sidekick <Arrow /></a>
           <p>Runs in your browser. Look around as a guest, and sign in only when you want to connect.</p>
         </div>
       </div>
