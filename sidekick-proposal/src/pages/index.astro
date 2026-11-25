@@ -1,0 +1,161 @@
+---
+import Deck from "../layouts/Deck.astro";
+---
+
+<Deck
+  title="Sidekick: pitch deck"
+  description="Sidekick pitch deck, in Antler's order: problem, solution, market, traction, business model, competition, go-to-market, team, financials, ask."
+>
+  <!-- 1 Cover -->
+  <div class="frame"><section class="slide dark" style="justify-content:space-between">
+    <p class="eyebrow">Sidekick</p>
+    <div style="display:flex;flex-direction:column;gap:40px">
+      <h1>Stay in the talk.</h1>
+      <p class="lead">Sidekick checks the room at an event and tells you who is worth meeting. You decide who to connect with.</p>
+    </div>
+    <p class="body">Artifisi Sdn Bhd · 25 November 2026</p>
+  </section></div>
+
+  <!-- 2 Problem -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Problem</p>
+    <h2>At an event you have to pick between the talk and the people you came to meet.</h2>
+    <ul class="bullets">
+      <li>Leave the talk to find one person, and miss the rest of the session.</li>
+      <li>Stay in the talk, and leave with no introductions.</li>
+      <li>Work the room with no way to tell who fits what you need.</li>
+    </ul>
+    <p class="body"><span class="todo">[One real example: who, which event, what it cost them. Take it from a conversation, not from this deck.]</span></p>
+    <div class="foot"><span>Sidekick</span><span>2</span></div>
+  </section></div>
+
+  <!-- 3 Solution -->
+  <div class="frame"><section class="slide pine" style="justify-content:center">
+    <p class="eyebrow">Solution</p>
+    <h2 style="font-size:104px">Sidekick works the room so you don't have to.</h2>
+    <p class="lead">Check in to an event. Sidekick ranks the people there by what they are looking for and what they can offer. You connect or pass. If you both connect, you swap contacts.</p>
+    <div class="foot"><span>Sidekick</span><span>3</span></div>
+  </section></div>
+
+  <!-- 4 Market -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Market</p>
+    <h2>Counted from events, not from a headline number.</h2>
+    <table>
+      <thead><tr><th>Level</th><th>Events a year</th><th>Value a year</th><th>How it is counted</th></tr></thead>
+      <tbody>
+        <tr><td>TAM: all business events in Malaysia</td><td>393</td><td>RM 393,000</td><td>393 events × RM 1,000 (MyCEB 2025; price assumed)</td></tr>
+        <tr><td>SAM: networking-led events</td><td>197</td><td>RM 197,000</td><td>Half of TAM (assumed share, not measured)</td></tr>
+        <tr><td>SOM: our year-2 plan</td><td>40</td><td>RM 40,000</td><td>10% of TAM, about 20% of SAM</td></tr>
+      </tbody>
+    </table>
+    <div class="foot"><span>Sidekick</span><span>4</span></div>
+  </section></div>
+
+  <!-- 5 Solution in use -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">How it works</p>
+    <h2 style="font-size:76px">Read the sidekicks' conversation before you swipe.</h2>
+    <div class="chat" style="padding:32px 40px;gap:14px">
+      <p style="font-size:22px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700">Example from the demo event</p>
+      <div class="turn mine" style="font-size:28px"><small>Your sidekick</small>I'm with Raja, Builder. Looking for funding.</div>
+      <div class="turn" style="font-size:28px"><small>Daniel's sidekick</small>I'm with Daniel, CTO, logistics startup. Can offer engineering help, mentorship.</div>
+      <div class="turn mine" style="font-size:28px"><small>Your sidekick</small>Raja would value the conversation.</div>
+    </div>
+    <p class="body">Each card has a button for this. It is built from the two profiles only, so it says nothing about who has swiped.</p>
+    <div class="foot"><span>Sidekick</span><span>5</span></div>
+  </section></div>
+
+  <!-- 6 Traction -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Traction</p>
+    <h2>What exists today, and what people have told us.</h2>
+    <div class="row">
+      <div class="card"><span class="tag">Built</span><p>A working app for Android and the web: check-in, ranking, swipe, match, and the conversation preview.</p></div>
+      <div class="card"><span class="tag">Tested</span><p>Run on a demo event with seeded people. Not yet run at a live event.</p></div>
+      <div class="card"><span class="tag">Customers</span><p><span class="todo">[Number of conversations with organisers or attendees, dates, and what they said.]</span></p></div>
+    </div>
+    <p class="body">No revenue and no paying users yet. This deck does not claim either.</p>
+    <div class="foot"><span>Sidekick</span><span>6</span></div>
+  </section></div>
+
+  <!-- 7 Business model -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Business model</p>
+    <h2>Who pays, how much, and how often.</h2>
+    <table>
+      <tbody>
+        <tr><td>Who pays</td><td>The event organiser, per event</td></tr>
+        <tr><td>How much</td><td>RM 1,000 per event (assumed)</td></tr>
+        <tr><td>How often</td><td>Each event run on Sidekick</td></tr>
+        <tr><td>Why this price</td><td>Swapcard charges about RM 2,700 for 200 attendees (about RM 13 each, at an assumed RM 4.4 per USD). At about 130 attendees, RM 1,000 is about RM 8 each, below that anchor for a narrower product.</td></tr>
+      </tbody>
+    </table>
+    <div class="foot"><span>Sidekick</span><span>7</span></div>
+  </section></div>
+
+  <!-- 8 Competition -->
+  <div class="frame"><section class="slide oat">
+    <p class="eyebrow">Competition</p>
+    <h2>Most people network with a list, a group chat, or a stack of cards.</h2>
+    <div class="row">
+      <div class="card"><span class="tag">Today</span><p>Attendee lists, LinkedIn searches, business cards, and their own notes.</p></div>
+      <div class="card"><span class="tag">Where we differ</span><p>Ranking by fit, for the people in the room that day. Passes are private, so a no is never seen.</p></div>
+    </div>
+    <p class="body">Event networking tools: Grip and Brella (networking first), Swapcard and Bizzabo (wider event platforms with matchmaking as one feature). Their own claims, not independently checked.</p>
+    <div class="foot"><span>Sidekick</span><span>8</span></div>
+  </section></div>
+
+  <!-- 9 Go-to-market -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Go-to-market</p>
+    <h2>The first 100 users, and the next 90 days.</h2>
+    <table>
+      <thead><tr><th>Channel</th><th>Action in the next 90 days</th><th>Assumed conversion</th></tr></thead>
+      <tbody>
+        <tr><td>Event organisers</td><td>Email 100 organisers from association and conference listings. Offer a free pilot.</td><td>10% reply, 30% of replies book a pilot: about 3 pilots</td></tr>
+        <tr><td>Community meetups</td><td>Run 3 free events with founder and tech meetups.</td><td>Each event brings 40 attendees; 1 in 4 organisers asks for a paid event</td></tr>
+        <tr><td>Venues and coworking spaces</td><td>Offer a place check-in to 20 spaces.</td><td>1 in 5 agrees to host a monthly event</td></tr>
+      </tbody>
+    </table>
+    <div class="foot"><span>Sidekick</span><span>9</span></div>
+  </section></div>
+
+  <!-- 10 Team -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Team</p>
+    <h2>Why us, and why now.</h2>
+    <div class="row">
+      <div class="card"><span class="tag">Founder</span><p><span class="todo">[Name, role, and the experience that matters for this problem.]</span></p></div>
+      <div class="card"><span class="tag">Why now</span><p><span class="todo">[What has changed that makes this the time.]</span></p></div>
+    </div>
+    <p class="body"><span class="todo">[Unfair advantage: a relationship, a dataset, or a capability others would need time to build.]</span></p>
+    <div class="foot"><span>Sidekick</span><span>10</span></div>
+  </section></div>
+
+  <!-- 11 Financials -->
+  <div class="frame"><section class="slide">
+    <p class="eyebrow">Financials</p>
+    <h2>18 to 24 months, with the assumptions written down.</h2>
+    <table>
+      <thead><tr><th>Line</th><th>Month 6</th><th>Month 12</th><th>Month 18</th><th>Month 24</th></tr></thead>
+      <tbody>
+        <tr><td>Events run (cumulative)</td><td>6</td><td>20</td><td>40</td><td>60</td></tr>
+        <tr><td>Revenue (cumulative)</td><td>RM 6,000</td><td>RM 20,000</td><td>RM 40,000</td><td>RM 60,000</td></tr>
+        <tr><td>Cost (cumulative)</td><td>RM 61,980</td><td>RM 124,200</td><td>RM 222,600</td><td>RM 321,000</td></tr>
+      </tbody>
+    </table>
+    <p class="body">Assumes RM 10,300 a month to month 12 and RM 16,300 after (a second engineer from month 13), plus RM 30 per event. Revenue is RM 1,000 per event. Full assumptions are in model.md.</p>
+    <div class="foot"><span>Sidekick</span><span>11</span></div>
+  </section></div>
+
+  <!-- 12 Ask -->
+  <div class="frame"><section class="slide pine" style="justify-content:space-between">
+    <p class="eyebrow">The ask</p>
+    <div style="display:flex;flex-direction:column;gap:40px">
+      <h1>RM 220,000</h1>
+      <p class="lead">To reach 40 paid events in 18 months, at RM 1,000 each, with at least one in three organisers booking again.</p>
+    </div>
+    <p class="body">Use of funds over 18 months: team 65%, marketing and operations 24%, cloud, tools and other 11%. The raise covers the RM 182,600 net burn plus a 20% buffer. Terms are discussed in person.</p>
+  </section></div>
+</Deck>

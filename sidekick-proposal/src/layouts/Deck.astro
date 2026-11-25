@@ -1,0 +1,353 @@
+---
+// The deck shell: a stack of fixed 1920x1080 slides, each scaled to the page width on screen and
+// printed one per PDF page. Colours and type follow the Sidekick app (Pine, Oat, Signal).
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <style is:global>
+      :root {
+        --pine: #12402e;
+        --pine-ink: #0e2e21;
+        --oat: #ede4d3;
+        --paper: #fbf9f4;
+        --ink: #10261c;
+        --muted: #5c6a61;
+        --line: #dfd8c8;
+        --card: #f4efe5;
+        --signal: #ff5a36;
+        --signal-ink: #b8300c;
+        --page: #0b1812;
+        --display: "Instrument Serif", Georgia, serif;
+        --body: "Inter", "Helvetica Neue", Arial, sans-serif;
+        color-scheme: dark;
+      }
+      html,
+      body {
+        background: var(--page);
+      }
+      body {
+        margin: 0;
+        font-family: var(--body);
+        color: var(--ink);
+        padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px));
+      }
+      .deck {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .frame {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+      }
+      .slide {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        transform-origin: 0 0;
+        transform: scale(var(--s, 0.5));
+        box-sizing: border-box;
+        padding: 112px 128px 150px;
+        display: flex;
+        flex-direction: column;
+        gap: 48px;
+        background: var(--paper);
+        color: var(--ink);
+        overflow: hidden;
+      }
+      .slide.dark {
+        background: var(--pine-ink);
+        color: var(--oat);
+      }
+      .slide.pine {
+        background: var(--pine);
+        color: var(--oat);
+      }
+      .slide.oat {
+        background: var(--oat);
+      }
+      .eyebrow {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--signal-ink);
+      }
+      .dark .eyebrow,
+      .pine .eyebrow {
+        color: var(--signal);
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      h1 {
+        font-family: var(--display);
+        font-weight: 400;
+        font-size: 150px;
+        line-height: 1.02;
+        letter-spacing: -1px;
+      }
+      h2 {
+        font-family: var(--display);
+        font-weight: 400;
+        font-size: 88px;
+        line-height: 1.08;
+        max-width: 1560px;
+        text-wrap: balance;
+      }
+      h3 {
+        font-size: 40px;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+      .lead {
+        font-size: 44px;
+        line-height: 1.35;
+        max-width: 1450px;
+        color: var(--muted);
+      }
+      .dark .lead,
+      .pine .lead {
+        color: #cfd9c9;
+      }
+      .body {
+        font-size: 32px;
+        line-height: 1.45;
+        color: var(--muted);
+        max-width: 1450px;
+      }
+      .dark .body,
+      .pine .body {
+        color: #cfd9c9;
+      }
+      .foot {
+        position: absolute;
+        left: 128px;
+        right: 128px;
+        bottom: 56px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        color: #8a9a8f;
+      }
+      .dark .foot,
+      .pine .foot {
+        color: #9fb0a3;
+      }
+      .row {
+        display: flex;
+        gap: 32px;
+      }
+      .row > * {
+        flex: 1;
+        min-width: 0;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 44px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .card p {
+        font-size: 32px;
+        line-height: 1.4;
+        color: var(--muted);
+      }
+      .card .tag {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--pine);
+      }
+      .card .num {
+        font-family: var(--display);
+        font-size: 120px;
+        line-height: 1;
+        color: var(--pine);
+      }
+      .top-pine {
+        border-top: 10px solid var(--pine);
+      }
+      .top-signal {
+        border-top: 10px solid var(--signal);
+      }
+      .bullets {
+        margin: 0;
+        padding-left: 40px;
+        font-size: 34px;
+        line-height: 1.5;
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .dark .bullets,
+      .pine .bullets {
+        color: var(--oat);
+      }
+      .chat {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 44px;
+      }
+      .turn {
+        max-width: 1100px;
+        background: var(--paper);
+        border-radius: 18px;
+        padding: 18px 26px;
+        font-size: 30px;
+        line-height: 1.4;
+      }
+      .turn.mine {
+        align-self: flex-end;
+        background: var(--oat);
+      }
+      .turn small {
+        display: block;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .pill {
+        display: inline-block;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 6px 16px;
+        border-radius: 99px;
+        background: var(--signal);
+        color: var(--pine-ink);
+        vertical-align: middle;
+        margin-left: 14px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 32px;
+        line-height: 1.35;
+      }
+      th {
+        text-align: left;
+        font-size: 24px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--signal-ink);
+        padding: 0 24px 18px 0;
+        border-bottom: 2px solid var(--line);
+      }
+      td {
+        padding: 22px 24px 22px 0;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+        color: var(--ink);
+      }
+      td:first-child {
+        font-weight: 600;
+        width: 40%;
+      }
+      /* Placeholders the author still has to fill in. Visible on purpose: remove the class when done. */
+      .todo {
+        background: #fff1a8;
+        color: #3d2b00;
+        padding: 0 8px;
+        border-radius: 6px;
+      }
+      .steps {
+        counter-reset: step;
+      }
+      .step {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .step .n {
+        font-family: var(--display);
+        font-size: 120px;
+        line-height: 1;
+        color: var(--signal);
+      }
+      @media print {
+        @page {
+          size: 1920px 1080px;
+          margin: 0;
+        }
+        html,
+        body {
+          background: none;
+          padding: 0;
+        }
+        .deck {
+          max-width: none;
+          gap: 0;
+        }
+        .frame {
+          width: 1920px;
+          height: 1080px;
+          aspect-ratio: auto;
+          border-radius: 0;
+          box-shadow: none;
+          break-after: page;
+        }
+        .slide {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck">
+      <slot />
+    </main>
+    <script>
+      // Scale each 1920x1080 slide to its frame on screen. Print uses the slides at full size.
+      const frames = document.querySelectorAll<HTMLElement>(".frame");
+      const fit = () => frames.forEach((f) => f.style.setProperty("--s", String(f.clientWidth / 1920)));
+      fit();
+      if ("ResizeObserver" in window) new ResizeObserver(fit).observe(document.querySelector(".deck")!);
+      else addEventListener("resize", fit);
+    </script>
+  </body>
+</html>
