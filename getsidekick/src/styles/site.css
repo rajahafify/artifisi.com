@@ -1,6 +1,6 @@
 /*
   Sidekick landing page.
-  Palette from the app: Pine (night), Oat (light), Signal (accent, used sparingly).
+  Palette from the app, light: Oat paper background, Pine text and surfaces, Signal orange in small doses.
   Type: Instrument Serif for display, Geist for text, Geist Mono for small labels.
 
   The base styles are the static page (no JavaScript, or reduced motion).
@@ -17,7 +17,9 @@
   --ink-2: #4d5d54;
   --mist: #a9b7ad;
   --mist-2: #6f8277;
-  --line-dark: rgba(237, 228, 211, 0.14);
+  --line-dark: rgba(237, 228, 211, 0.18);
+  --pine-2: #2d6a50;
+  --pine-ink: #0d2f22;
   --line-light: rgba(15, 36, 27, 0.14);
   --signal: #ff5a36;
   --signal-deep: #c63a17;
@@ -38,15 +40,15 @@
 }
 html {
   -webkit-text-size-adjust: 100%;
-  background: var(--night);
+  background: var(--paper);
 }
 body {
   margin: 0;
   font-family: var(--text);
   font-size: 17px;
   line-height: 1.6;
-  color: var(--oat);
-  background: var(--night);
+  color: var(--pine);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -57,9 +59,9 @@ body::after {
   inset: -50%;
   z-index: 100;
   pointer-events: none;
-  opacity: 0.07;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
+  mix-blend-mode: multiply;
 }
 h1,
 h2,
@@ -87,8 +89,8 @@ em {
   font-style: italic;
 }
 ::selection {
-  background: var(--signal);
-  color: var(--night);
+  background: var(--pine);
+  color: var(--paper);
 }
 :focus-visible {
   outline: 2px solid var(--signal);
@@ -125,7 +127,7 @@ em {
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mist);
+  color: var(--ink-2);
 }
 .light .eyebrow {
   color: var(--signal-deep);
@@ -143,10 +145,10 @@ em {
   margin-top: 20px;
 }
 .display em {
-  color: var(--signal);
+  color: var(--pine-2);
 }
-.light .display em {
-  color: var(--signal-deep);
+.dark .display em {
+  color: var(--signal);
 }
 .display.xl {
   font-size: clamp(56px, 10vw, 168px);
@@ -204,15 +206,15 @@ em {
   transform: scale(0.98);
 }
 .btn-signal {
-  background: var(--signal);
-  color: #1a0b05;
+  background: var(--pine);
+  color: var(--paper);
 }
 .btn-signal::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--oat);
+  background: var(--pine-ink);
   transform: translateY(101%);
   transition: transform 400ms var(--ease);
 }
@@ -220,13 +222,13 @@ em {
   transform: translateY(0);
 }
 .btn-line {
-  border: 1px solid var(--line-dark);
-  color: var(--oat);
-  background: rgba(10, 28, 21, 0.3);
+  border: 1px solid rgba(18, 64, 46, 0.25);
+  color: var(--pine);
+  background: rgba(245, 239, 227, 0.6);
   backdrop-filter: blur(8px);
 }
 .btn-line:hover {
-  border-color: var(--oat);
+  border-color: var(--pine);
 }
 .btn-lg {
   height: 64px;
@@ -244,7 +246,7 @@ em {
   justify-content: space-between;
   height: 76px;
   padding: 0 var(--gutter);
-  color: var(--oat);
+  color: var(--pine);
   transition:
     background-color 400ms var(--ease),
     color 400ms var(--ease),
@@ -253,16 +255,16 @@ em {
   border-bottom: 1px solid transparent;
 }
 .nav.is-solid {
-  background: rgba(10, 28, 21, 0.72);
+  background: rgba(245, 239, 227, 0.82);
   backdrop-filter: blur(14px) saturate(1.2);
-  border-color: var(--line-dark);
-}
-.nav.on-light {
-  color: var(--ink);
-}
-.nav.on-light.is-solid {
-  background: rgba(245, 239, 227, 0.8);
   border-color: var(--line-light);
+}
+.nav.on-dark {
+  color: var(--oat);
+}
+.nav.on-dark.is-solid {
+  background: rgba(18, 64, 46, 0.85);
+  border-color: var(--line-dark);
 }
 .nav.is-hidden {
   transform: translateY(-100%);
@@ -310,9 +312,14 @@ em {
     border-color 200ms;
 }
 .nav .nav-cta:hover {
-  background: var(--signal);
-  border-color: var(--signal);
-  color: #1a0b05;
+  background: var(--pine);
+  border-color: var(--pine);
+  color: var(--paper);
+}
+.nav.on-dark .nav-cta:hover {
+  background: var(--oat);
+  border-color: var(--oat);
+  color: var(--pine);
 }
 
 /* ---------- Story (static by default) ---------- */
@@ -322,7 +329,7 @@ em {
 .stage {
   position: relative;
   overflow: hidden;
-  background: var(--night);
+  background: var(--paper);
 }
 .room {
   position: absolute;
@@ -336,8 +343,8 @@ em {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(120% 70% at 50% 110%, rgba(10, 28, 21, 0) 40%, rgba(10, 28, 21, 0.55) 100%),
-    linear-gradient(180deg, rgba(10, 28, 21, 0.55) 0%, rgba(10, 28, 21, 0) 22%, rgba(10, 28, 21, 0) 55%, rgba(10, 28, 21, 0.85) 100%);
+    radial-gradient(70% 60% at 0% 100%, rgba(245, 239, 227, 0.92) 0%, rgba(245, 239, 227, 0.6) 45%, rgba(245, 239, 227, 0) 75%),
+    linear-gradient(180deg, rgba(245, 239, 227, 0.7) 0%, rgba(245, 239, 227, 0) 16%);
 }
 .hero {
   position: relative;
@@ -353,7 +360,7 @@ em {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--mist);
+  color: var(--ink-2);
 }
 .pulse {
   position: relative;
@@ -397,7 +404,7 @@ h1 .line > span {
   display: inline-block;
 }
 h1 em {
-  color: var(--signal);
+  color: var(--pine-2);
 }
 .hero-foot {
   margin-top: 36px;
@@ -411,7 +418,7 @@ h1 em {
   max-width: 40ch;
   font-size: clamp(17px, 1.35vw, 20px);
   line-height: 1.55;
-  color: #cdd6cc;
+  color: var(--ink-2);
 }
 .actions {
   display: flex;
@@ -431,16 +438,16 @@ h1 em {
   max-width: var(--wrap);
   margin: 0 auto;
   padding: 40px var(--gutter) 120px;
-  border-top: 1px solid var(--line-dark);
+  border-top: 1px solid var(--line-light);
 }
 .chapter-n {
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.1em;
-  color: var(--signal);
+  color: var(--signal-deep);
 }
 .chapter-n span {
-  color: var(--mist-2);
+  color: var(--ink-2);
 }
 .chapter h2 {
   margin-top: 14px;
@@ -452,7 +459,7 @@ h1 em {
 }
 .chapter p {
   margin-top: 14px;
-  color: #c3cdc4;
+  color: var(--ink-2);
   max-width: 38ch;
 }
 .tags,
@@ -489,20 +496,20 @@ html.motion .scroll-cue {
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mist-2);
+  color: var(--ink-2);
 }
 html.motion .scroll-cue span {
   position: relative;
   width: 1px;
   height: 28px;
-  background: var(--line-dark);
+  background: var(--line-light);
   overflow: hidden;
 }
 html.motion .scroll-cue span::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--oat);
+  background: var(--pine);
   animation: drip 2s var(--ease) infinite;
 }
 @keyframes drip {
@@ -566,16 +573,17 @@ html.motion .tags {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: var(--oat);
-  background: rgba(10, 28, 21, 0.6);
-  border: 1px solid var(--line-dark);
+  color: var(--pine);
+  background: rgba(255, 253, 248, 0.88);
+  border: 1px solid var(--line-light);
+  box-shadow: 0 6px 18px -8px rgba(18, 64, 46, 0.25);
   backdrop-filter: blur(8px);
 }
 .tag i {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--oat);
+  background: var(--pine);
 }
 .tag-sk i {
   background: var(--signal);
@@ -590,8 +598,10 @@ html.motion .tags {
   max-width: 250px;
   padding: 12px 14px 13px;
   border-radius: 12px;
-  background: rgba(10, 28, 21, 0.72);
-  border: 1px solid var(--line-dark);
+  color: var(--pine);
+  background: rgba(255, 253, 248, 0.94);
+  border: 1px solid var(--line-light);
+  box-shadow: 0 14px 30px -14px rgba(18, 64, 46, 0.35);
   backdrop-filter: blur(10px);
   transition:
     border-color 400ms var(--ease),
@@ -608,17 +618,17 @@ html.motion .tags {
   font-style: normal;
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--signal);
+  color: var(--signal-deep);
 }
 .pick-card small {
   font-size: 12px;
-  color: var(--mist);
+  color: var(--ink-2);
 }
 .pick-reason {
   margin-top: 6px;
   font-size: 12.5px;
   line-height: 1.45;
-  color: #d9e0d7;
+  color: var(--ink);
 }
 .pick-match {
   display: none;
@@ -627,11 +637,11 @@ html.motion .tags {
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--signal);
+  color: var(--signal-deep);
 }
 .pick.is-match .pick-card {
-  border-color: rgba(255, 90, 54, 0.7);
-  background: rgba(30, 18, 12, 0.78);
+  border-color: var(--signal);
+  box-shadow: 0 0 0 3px rgba(255, 90, 54, 0.15), 0 14px 30px -14px rgba(18, 64, 46, 0.35);
 }
 .pick.is-match .pick-match {
   display: block;
@@ -658,7 +668,7 @@ html.motion .rail.is-on {
   background: none;
   border: 0;
   cursor: pointer;
-  color: var(--mist-2);
+  color: var(--ink-2);
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.08em;
@@ -668,7 +678,7 @@ html.motion .rail.is-on {
   display: block;
   width: 2px;
   height: 34px;
-  background: var(--line-dark);
+  background: var(--line-light);
   overflow: hidden;
   border-radius: 2px;
 }
@@ -680,10 +690,10 @@ html.motion .rail.is-on {
   transform: scaleY(var(--fill, 0));
 }
 .rail button.is-active {
-  color: var(--oat);
+  color: var(--pine);
 }
 .rail button:hover {
-  color: var(--oat);
+  color: var(--pine);
 }
 html.motion .legend {
   position: absolute;
@@ -695,7 +705,7 @@ html.motion .legend {
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--mist-2);
+  color: var(--ink-2);
   opacity: 0;
   transition: opacity 500ms var(--ease);
 }
@@ -711,11 +721,11 @@ html.motion .legend.is-on {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--mist-2);
+  background: #a9b4ac;
 }
 .legend .lg-you {
-  background: var(--oat);
-  box-shadow: 0 0 0 3px rgba(237, 228, 211, 0.2);
+  background: var(--pine);
+  box-shadow: 0 0 0 3px rgba(18, 64, 46, 0.18);
 }
 .legend .lg-sk {
   background: var(--signal);
@@ -725,7 +735,7 @@ html.motion .legend.is-on {
 /* ---------- Light sections ---------- */
 .light {
   background: var(--paper);
-  color: var(--ink);
+  color: var(--pine);
 }
 section.demo,
 section.faq {
@@ -978,7 +988,7 @@ section.faq {
 
 /* ---------- Privacy ---------- */
 .dark {
-  background: var(--night);
+  background: var(--pine);
   color: var(--oat);
 }
 section.privacy {
@@ -1014,7 +1024,7 @@ section.privacy {
 .rules p {
   margin-top: 12px;
   font-size: 15.5px;
-  color: var(--mist);
+  color: #bfcdc3;
   max-width: 30ch;
 }
 
@@ -1104,7 +1114,7 @@ section.final::before {
   width: 60vw;
   height: 60vw;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 90, 54, 0.16), rgba(255, 90, 54, 0) 62%);
+  background: radial-gradient(circle, rgba(18, 64, 46, 0.08), rgba(18, 64, 46, 0) 62%);
   pointer-events: none;
 }
 .final-foot {
@@ -1116,14 +1126,14 @@ section.final::before {
 }
 .final-foot p {
   max-width: 36ch;
-  color: var(--mist);
+  color: var(--ink-2);
   font-size: 16px;
 }
 .foot {
-  border-top: 1px solid var(--line-dark);
+  border-top: 1px solid var(--line-light);
   padding: 28px 0;
   font-size: 14px;
-  color: var(--mist-2);
+  color: var(--ink-2);
 }
 .foot .wrap {
   display: flex;
@@ -1133,11 +1143,11 @@ section.final::before {
   gap: 12px 24px;
 }
 .foot .brand {
-  color: var(--oat);
+  color: var(--pine);
   font-size: 16px;
 }
 .foot a {
-  color: var(--mist);
+  color: var(--ink-2);
 }
 
 /* ---------- Reveals (only when motion is on) ---------- */
@@ -1173,6 +1183,10 @@ html.motion [data-reveal] {
   }
   .hero {
     padding-bottom: 56px;
+  }
+  /* On phones the copy sits over the lower half of the scene; give it a paper backing. */
+  .scrim {
+    background: linear-gradient(0deg, rgba(245, 239, 227, 0.96) 0%, rgba(245, 239, 227, 0.88) 38%, rgba(245, 239, 227, 0) 62%);
   }
   .hero-foot {
     flex-direction: column;

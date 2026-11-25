@@ -38,12 +38,12 @@ function onScroll(y: number) {
   if (y < lastY - 2) nav.classList.remove("is-hidden");
   lastY = y;
 }
-for (const s of qa(".light")) {
+for (const s of qa(".dark")) {
   ScrollTrigger.create({
     trigger: s,
     start: "top 40px",
     end: "bottom 40px",
-    onToggle: (self) => nav.classList.toggle("on-light", self.isActive),
+    onToggle: (self) => nav.classList.toggle("on-dark", self.isActive),
   });
 }
 

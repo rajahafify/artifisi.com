@@ -2,7 +2,7 @@
 
 Sidekick's landing page, built with Astro. One page:
 
-- **The room** (`src/scripts/room.ts`): a Three.js scene of an event. The back half is the talk, the front half is the networking floor. As you scroll, your sidekick (the orange light) leaves your seat, scouts the floor, ranks three people and draws the match line back to you. Everything is driven by one scroll progress value, so scrolling back plays it backwards.
+- **The room** (`src/scripts/room.ts`): a small 3D model of an event, on the light Sidekick palette. At the back, the talk: a stage with a slide, a speaker and rows of chairs, with a pin over your seat. In front, the floor: people around cocktail tables. As you scroll, your sidekick (the orange orb) leaves your seat, visits each group (leaving a dotted trail and a ring under everyone it has seen), ranks three people and draws the match line back to you. Everything is driven by one scroll progress value, so scrolling back plays it backwards.
 - **Try a card**: a working demo of the swipe card and the sidekicks' conversation, using the demo-event people from the app's dev seed.
 - Privacy, questions, and a final call to action.
 

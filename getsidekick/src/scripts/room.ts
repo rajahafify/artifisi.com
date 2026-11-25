@@ -1,36 +1,50 @@
-// The room: a WebGL picture of an event that tells Sidekick's story as you scroll.
+// The room: a small 3D model of an event that tells Sidekick's story as you scroll.
 //
-// The back half of the room is the talk: a stage and rows of seats. You sit in one of them.
-// The front half is the networking floor, with people standing in small groups.
-// Your sidekick (the orange light) leaves your seat, scouts the floor, ranks three people,
-// and when you both connect, a line joins your seat to theirs.
+// Back half: the talk. A stage with a slide, a speaker, and rows of chairs. You sit in one.
+// Front half: the floor. People stand around cocktail tables, talking.
+// Your sidekick (the orange orb) leaves your seat, visits each group on the floor, ranks three
+// people, and when you both connect, a line joins your chair to theirs.
 //
-// Everything on screen is a function of one number, `progress` (0 to 1), plus a clock for
-// small idle motion. Scrolling backwards plays the story backwards.
+// Everything on screen is a function of one number, `progress` (0 to 1), plus a clock for idle
+// motion. Scrolling backwards plays the story backwards.
 import {
-  AdditiveBlending,
+  BoxGeometry,
   BufferAttribute,
   BufferGeometry,
+  CanvasTexture,
+  CapsuleGeometry,
+  CatmullRomCurve3,
+  CircleGeometry,
   Color,
+  ConeGeometry,
+  CylinderGeometry,
+  DirectionalLight,
+  Fog,
+  HemisphereLight,
+  InstancedMesh,
   Line,
-  LineBasicMaterial,
+  LineDashedMaterial,
+  Matrix4,
   Mesh,
   MeshBasicMaterial,
+  MeshStandardMaterial,
+  Object3D,
+  PCFSoftShadowMap,
   PerspectiveCamera,
-  Points,
+  PlaneGeometry,
+  PointLight,
+  QuadraticBezierCurve3,
   RingGeometry,
+  SRGBColorSpace,
   Scene,
-  ShaderMaterial,
+  SphereGeometry,
+  TubeGeometry,
   Vector3,
   WebGLRenderer,
-  CatmullRomCurve3,
-  QuadraticBezierCurve3,
 } from "three";
 
 export interface Room {
-  /** Where the story should be, 0 to 1. The scene eases toward it. */
   setProgress(p: number): void;
-  /** Jump straight to a point in the story and draw once (used for reduced motion). */
   renderAt(p: number): void;
   setPointer(x: number, y: number): void;
   setActive(active: boolean): void;
@@ -43,11 +57,7 @@ export interface RoomLabels {
   picks: HTMLElement[];
 }
 
-const OAT = new Color("#ede4d3");
-const SIGNAL = new Color("#ff5a36");
-const BG = new Color("#0a1c15");
-
-// Story phases, in progress units. Kept in one place so the copy can line up with them.
+// Story phases, in progress units. The page copy lines up with these.
 export const PHASES = {
   hero: [0, 0.12],
   checkin: [0.12, 0.32],
@@ -56,6 +66,16 @@ export const PHASES = {
   match: [0.78, 1],
 } as const;
 
+const PAPER = new Color("#f5efe3");
+const FLOOR = new Color("#efe7d7");
+const ZONE = new Color("#e6dcc8");
+const PINE = new Color("#12402e");
+const SIGNAL = new Color("#ff5a36");
+const CHAIR = new Color("#d3c6ad");
+const TABLE = new Color("#fbf8f1");
+const CLOTHES = ["#8c9a90", "#6e7f75", "#b5a58a", "#9aa6a0", "#7f705f", "#a9b4ac", "#c2b39b", "#5f6f66"].map((c) => new Color(c));
+const SKIN = ["#e8cfb0", "#d1a47e", "#a97b55", "#f1dcc4", "#7d5538", "#c58e64"].map((c) => new Color(c));
+
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const smooth = (a: number, b: number, v: number) => {
   const t = clamp((v - a) / (b - a));
@@ -63,7 +83,6 @@ const smooth = (a: number, b: number, v: number) => {
 };
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-// A small seeded random, so the room is the same on every visit.
 function rng(seed: number) {
   return () => {
     seed |= 0;
@@ -74,235 +93,370 @@ function rng(seed: number) {
   };
 }
 
-const vertex = /* glsl */ `
-  attribute float aSize;
-  attribute float aAlpha;
-  attribute vec3 aColor;
-  uniform float uScale;
-  varying vec3 vColor;
-  varying float vAlpha;
-  void main() {
-    vec4 mv = modelViewMatrix * vec4(position, 1.0);
-    gl_Position = projectionMatrix * mv;
-    gl_PointSize = aSize * uScale / -mv.z;
-    vColor = aColor;
-    vAlpha = aAlpha * smoothstep(40.0, 12.0, -mv.z);
-  }
-`;
-const fragment = /* glsl */ `
-  varying vec3 vColor;
-  varying float vAlpha;
-  void main() {
-    float d = length(gl_PointCoord - 0.5);
-    float core = smoothstep(0.2, 0.14, d);
-    float glow = pow(smoothstep(0.5, 0.0, d), 2.2) * 0.55;
-    float a = (core + glow) * vAlpha;
-    if (a < 0.004) discard;
-    gl_FragColor = vec4(vColor, a);
-  }
-`;
-
-type Node = {
-  base: Vector3; // resting place
-  pos: Vector3; // where it is drawn this frame
-  phase: number; // for idle motion
-  kind: "seat" | "floor" | "speaker";
-  scanAt: number; // scout progress (0 to 1) when the sidekick first passes; 2 = never
+type Person = {
+  x: number;
+  z: number;
+  face: number; // which way they face (radians)
+  seated: boolean;
+  clothes: Color;
+  skin: Color;
+  phase: number;
+  scanAt: number; // scout progress when the sidekick reaches their group; 2 = never
 };
+
+// Text drawn onto a flat plane, for the floor zone labels and the slide on stage.
+function textPlane(draw: (ctx: CanvasRenderingContext2D, w: number, h: number) => void, w: number, h: number, px = 256) {
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(w * px);
+  canvas.height = Math.round(h * px);
+  const ctx = canvas.getContext("2d")!;
+  draw(ctx, canvas.width, canvas.height);
+  const tex = new CanvasTexture(canvas);
+  tex.colorSpace = SRGBColorSpace;
+  tex.anisotropy = 4;
+  const mesh = new Mesh(new PlaneGeometry(w, h), new MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+  return { mesh, redraw: () => (draw(ctx, canvas.width, canvas.height), (tex.needsUpdate = true)) };
+}
 
 export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: { small: boolean }): Room | null {
   let renderer: WebGLRenderer;
   try {
-    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
+    renderer = new WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
   } catch {
     return null;
   }
   const dpr = Math.min(window.devicePixelRatio || 1, opts.small ? 1.5 : 2);
   renderer.setPixelRatio(dpr);
-  renderer.setClearColor(BG, 1);
+  renderer.setClearColor(PAPER, 1);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = PCFSoftShadowMap;
 
   const scene = new Scene();
-  const camera = new PerspectiveCamera(34, 1, 0.1, 100);
-  const rand = rng(7);
+  scene.fog = new Fog(PAPER, 34, 60);
+  const camera = new PerspectiveCamera(28, 1, 0.5, 120);
+  const rand = rng(11);
 
-  // ---- People -------------------------------------------------------------------------
-  const nodes: Node[] = [];
-  // The talk: rows of seats facing a stage at the back.
-  const seatRows = opts.small ? 4 : 5;
-  const seatCols = opts.small ? 11 : 13;
-  let youIndex = -1;
-  for (let r = 0; r < seatRows; r++) {
-    for (let c = 0; c < seatCols; c++) {
-      const x = (c - (seatCols - 1) / 2) * 0.72;
-      const z = -2.0 - r * 0.72;
-      const isYou = r === 1 && c === Math.floor(seatCols / 2) - 2;
-      if (!isYou && rand() > 0.72) continue; // some empty seats
-      if (isYou) youIndex = nodes.length;
-      nodes.push({ base: new Vector3(x, 0, z), pos: new Vector3(x, 0, z), phase: rand() * 6.28, kind: "seat", scanAt: 2 });
-    }
-  }
-  nodes.push({ base: new Vector3(0, 0.2, -6.6), pos: new Vector3(0, 0.2, -6.6), phase: 0, kind: "speaker", scanAt: 2 });
+  // ---- Light --------------------------------------------------------------------------
+  scene.add(new HemisphereLight(0xffffff, 0xe6d9c2, 1.6));
+  const sun = new DirectionalLight(0xfff4e6, 2.1);
+  sun.position.set(7, 16, 9);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(opts.small ? 1024 : 2048, opts.small ? 1024 : 2048);
+  sun.shadow.camera.left = -14;
+  sun.shadow.camera.right = 14;
+  sun.shadow.camera.top = 14;
+  sun.shadow.camera.bottom = -14;
+  sun.shadow.camera.near = 1;
+  sun.shadow.camera.far = 50;
+  sun.shadow.radius = 4;
+  sun.shadow.bias = -0.0008;
+  scene.add(sun);
 
-  // The floor: groups of people talking.
-  const groups = opts.small ? 13 : 19;
-  for (let g = 0; g < groups; g++) {
-    const gx = lerp(-8.6, 8.6, rand());
-    const gz = lerp(1.0, 7.2, rand());
-    const size = 2 + Math.floor(rand() * 5);
-    const radius = 0.35 + size * 0.08;
-    for (let k = 0; k < size; k++) {
-      const a = (k / size) * Math.PI * 2 + rand() * 0.6;
-      const p = new Vector3(gx + Math.cos(a) * radius, 0, gz + Math.sin(a) * radius);
-      nodes.push({ base: p, pos: p.clone(), phase: rand() * 6.28, kind: "floor", scanAt: 2 });
-    }
-  }
+  // ---- The room -----------------------------------------------------------------------
+  const floor = new Mesh(new PlaneGeometry(90, 90), new MeshStandardMaterial({ color: FLOOR, roughness: 1 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
 
-  // The three people the sidekick ranks, placed on its route. #1 is the match.
-  const pickSpots = [new Vector3(4.4, 0, 5.1), new Vector3(-5.2, 0, 3.0), new Vector3(1.2, 0, 6.6)];
-  const picks = pickSpots.map((spot) => {
-    nodes.push({ base: spot.clone(), pos: spot.clone(), phase: rand() * 6.28, kind: "floor", scanAt: 2 });
-    return nodes.length - 1;
+  // The talk area is a slightly darker rug.
+  const rug = new Mesh(new PlaneGeometry(13.2, 7.6), new MeshStandardMaterial({ color: ZONE, roughness: 1 }));
+  rug.rotation.x = -Math.PI / 2;
+  rug.position.set(0, 0.005, -4.6);
+  rug.receiveShadow = true;
+  scene.add(rug);
+
+  const stageMat = new MeshStandardMaterial({ color: "#dccfb6", roughness: 0.9 });
+  const stage = new Mesh(new BoxGeometry(8, 0.45, 2), stageMat);
+  stage.position.set(0, 0.225, -7.6);
+  stage.castShadow = stage.receiveShadow = true;
+  scene.add(stage);
+
+  // The slide on the screen behind the speaker.
+  const slide = textPlane(
+    (ctx, w, h) => {
+      ctx.fillStyle = "#12402e";
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "#ede4d3";
+      ctx.font = `${Math.round(h * 0.11)}px "Geist Mono", monospace`;
+      ctx.fillText("KEYNOTE", w * 0.07, h * 0.24);
+      ctx.font = `${Math.round(h * 0.3)}px "Instrument Serif", Georgia, serif`;
+      ctx.fillText("What comes next", w * 0.07, h * 0.62);
+      ctx.fillStyle = "#ff5a36";
+      ctx.fillRect(w * 0.07, h * 0.76, w * 0.12, h * 0.025);
+    },
+    5.6,
+    2.5,
+  );
+  slide.mesh.position.set(0, 2.15, -8.45);
+  scene.add(slide.mesh);
+  const screenFrame = new Mesh(new BoxGeometry(5.8, 2.7, 0.1), new MeshStandardMaterial({ color: "#0d2e21" }));
+  screenFrame.position.set(0, 2.15, -8.52);
+  screenFrame.castShadow = true;
+  scene.add(screenFrame);
+
+  // Floor labels.
+  const floorLabel = (text: string, x: number, z: number) => {
+    const t = textPlane(
+      (ctx, w, h) => {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "rgba(18, 64, 46, 0.55)";
+        ctx.font = `500 ${Math.round(h * 0.56)}px "Geist Mono", monospace`;
+        ctx.textBaseline = "middle";
+        const spaced = text.split("").join(String.fromCharCode(8202));
+        ctx.fillText(spaced, 4, h / 2);
+      },
+      3.4,
+      0.5,
+    );
+    t.mesh.rotation.x = -Math.PI / 2;
+    t.mesh.position.set(x + 1.7, 0.02, z);
+    scene.add(t.mesh);
+    return t;
+  };
+  const zoneLabels = [floorLabel("THE TALK", -6.4, -0.4), floorLabel("THE FLOOR", -9.6, 0.9)];
+  // Canvas text needs the web fonts; redraw once they are in.
+  document.fonts?.ready.then(() => {
+    slide.redraw();
+    zoneLabels.forEach((l) => l.redraw());
   });
 
-  const you = nodes[youIndex];
-
-  // The sidekick's route over the floor.
-  const route = new CatmullRomCurve3([
-    new Vector3(-0.6, 0, 0.4),
-    new Vector3(-4.0, 0, 1.6),
-    new Vector3(-6.4, 0, 3.4),
-    new Vector3(-4.2, 0, 6.0),
-    new Vector3(-0.4, 0, 6.8),
-    new Vector3(3.2, 0, 6.2),
-    new Vector3(6.4, 0, 4.0),
-    new Vector3(4.6, 0, 1.8),
-    new Vector3(1.6, 0, 3.2),
-  ]);
-  const routeEnd = route.getPoint(1);
-  const SCAN_RADIUS = 2.6;
-  // When does the sidekick first come within reach of each floor node?
-  for (let s = 0; s <= 240; s++) {
-    const t = s / 240;
-    const p = route.getPoint(t);
-    for (const n of nodes) {
-      if (n.kind !== "floor" || n.scanAt <= 1) continue;
-      if (Math.hypot(n.base.x - p.x, n.base.z - p.z) < SCAN_RADIUS) n.scanAt = t;
+  // ---- People -------------------------------------------------------------------------
+  const people: Person[] = [];
+  const chairs: Vector3[] = [];
+  const rows = 5;
+  const cols = 12;
+  let youIndex = -1;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      // An aisle down the middle.
+      const x = (c - (cols - 1) / 2) * 0.82 + (c >= cols / 2 ? 0.5 : -0.5);
+      const z = -2.2 - r * 0.86;
+      chairs.push(new Vector3(x, 0, z));
+      const isYou = r === 1 && c === 3;
+      if (!isYou && rand() > 0.74) continue;
+      if (isYou) youIndex = people.length;
+      people.push({
+        x,
+        z,
+        face: Math.PI,
+        seated: true,
+        clothes: CLOTHES[Math.floor(rand() * CLOTHES.length)],
+        skin: SKIN[Math.floor(rand() * SKIN.length)],
+        phase: rand() * 6.28,
+        scanAt: 2,
+      });
     }
   }
+  const speakerIndex = people.length;
+  people.push({ x: 0.6, z: -7.4, face: 0, seated: false, clothes: new Color("#2b3a33"), skin: SKIN[1], phase: 0, scanAt: 2 });
 
-  const count = nodes.length;
-  const positions = new Float32Array(count * 3);
-  const colors = new Float32Array(count * 3);
-  const sizes = new Float32Array(count);
-  const alphas = new Float32Array(count);
-  const peopleGeo = new BufferGeometry();
-  peopleGeo.setAttribute("position", new BufferAttribute(positions, 3));
-  peopleGeo.setAttribute("aColor", new BufferAttribute(colors, 3));
-  peopleGeo.setAttribute("aSize", new BufferAttribute(sizes, 1));
-  peopleGeo.setAttribute("aAlpha", new BufferAttribute(alphas, 1));
+  // Groups on the floor, each around a cocktail table, placed along the sidekick's route.
+  const groupSpots: [number, number, number][] = [
+    [-6.4, 1.8, 4],
+    [-2.9, 2.4, 3],
+    [-7.0, 5.4, 5],
+    [-3.4, 6.6, 4],
+    [0.4, 4.6, 4],
+    [0.2, 8.0, 3],
+    [3.8, 6.9, 4],
+    [7.0, 5.6, 4],
+    [7.2, 2.2, 3],
+    [3.8, 2.0, 4],
+  ];
+  const tables: Vector3[] = [];
+  const groupOf: number[] = [];
+  groupSpots.forEach(([gx, gz, size], g) => {
+    tables.push(new Vector3(gx, 0, gz));
+    for (let k = 0; k < size; k++) {
+      const a = (k / size) * Math.PI * 2 + g;
+      const r = 0.72;
+      const x = gx + Math.cos(a) * r;
+      const z = gz + Math.sin(a) * r;
+      groupOf[people.length] = g;
+      people.push({
+        x,
+        z,
+        face: Math.atan2(gx - x, gz - z),
+        seated: false,
+        clothes: CLOTHES[Math.floor(rand() * CLOTHES.length)],
+        skin: SKIN[Math.floor(rand() * SKIN.length)],
+        phase: rand() * 6.28,
+        scanAt: 2,
+      });
+    }
+  });
+  // The three picks: one person in each of three groups. #1 (Daniel) is the match.
+  const firstOf = (g: number) => groupOf.findIndex((v) => v === g);
+  const picks = [firstOf(6) + 1, firstOf(0) + 2, firstOf(4)];
+  picks.forEach((i, k) => (people[i].clothes = [new Color("#3f6f5a"), new Color("#7a5f86"), new Color("#a86a4a")][k]));
 
-  const uniforms = { uScale: { value: 400 } };
-  const pointMaterial = () =>
-    new ShaderMaterial({
-      uniforms,
-      vertexShader: vertex,
-      fragmentShader: fragment,
-      transparent: true,
-      depthWrite: false,
-      blending: AdditiveBlending,
+  const you = people[youIndex];
+  you.clothes = PINE.clone();
+
+  // The sidekick's route: from your seat over to the floor, past every group.
+  const route = new CatmullRomCurve3(
+    [
+      [0, 0.6],
+      [-4.6, 0.9],
+      [-8.4, 3.6],
+      [-5.4, 8.2],
+      [-1.4, 6.0],
+      [1.8, 9.2],
+      [5.6, 8.6],
+      [8.8, 4.0],
+      [5.6, 0.6],
+      [2.2, 3.8],
+    ].map(([x, z]) => new Vector3(x, 1.7, z)),
+  );
+  const routeEnd = route.getPoint(1);
+  // When the sidekick first comes near each table, its whole group counts as scouted.
+  groupSpots.forEach(([gx, gz], g) => {
+    let at = 2;
+    for (let s = 0; s <= 300; s++) {
+      const p = route.getPoint(s / 300);
+      if (Math.hypot(p.x - gx, p.z - gz) < 2.0) {
+        at = s / 300;
+        break;
+      }
+    }
+    people.forEach((p, i) => {
+      if (groupOf[i] === g) p.scanAt = at;
     });
-  const people = new Points(peopleGeo, pointMaterial());
-  scene.add(people);
+  });
 
-  // ---- The floor: a faint dot grid gives the room depth -------------------------------
-  const gridPts: number[] = [];
-  const step = opts.small ? 0.7 : 0.55;
-  for (let x = -11; x <= 11.01; x += step) for (let z = -8; z <= 8.5; z += step) gridPts.push(x, -0.02, z);
-  const gridGeo = new BufferGeometry();
-  const gridCount = gridPts.length / 3;
-  gridGeo.setAttribute("position", new BufferAttribute(new Float32Array(gridPts), 3));
-  gridGeo.setAttribute("aColor", new BufferAttribute(new Float32Array(gridCount * 3).fill(0.6), 3));
-  gridGeo.setAttribute("aSize", new BufferAttribute(new Float32Array(gridCount).fill(0.07), 1));
-  gridGeo.setAttribute("aAlpha", new BufferAttribute(new Float32Array(gridCount).fill(0.16), 1));
-  const grid = new Points(gridGeo, pointMaterial());
-  scene.add(grid);
+  // ---- Meshes (instanced, so the whole crowd is a handful of draw calls) ---------------
+  const n = people.length;
+  const bodyGeo = new CapsuleGeometry(0.2, 0.5, 6, 14);
+  bodyGeo.translate(0, 0.45, 0);
+  const headGeo = new SphereGeometry(0.17, 20, 14);
+  const bodies = new InstancedMesh(bodyGeo, new MeshStandardMaterial({ roughness: 0.85 }), n);
+  const heads = new InstancedMesh(headGeo, new MeshStandardMaterial({ roughness: 0.7 }), n);
+  bodies.castShadow = heads.castShadow = true;
+  bodies.receiveShadow = true;
+  scene.add(bodies, heads);
 
-  // The stage at the back: a lit edge.
-  const stageGeo = new BufferGeometry().setFromPoints([new Vector3(-3.4, 0, -7.0), new Vector3(3.4, 0, -7.0)]);
-  const stageMat = new LineBasicMaterial({ color: OAT, transparent: true, opacity: 0.55 });
-  scene.add(new Line(stageGeo, stageMat));
-  const stageGlow: number[] = [];
-  for (let i = 0; i <= 40; i++) stageGlow.push(lerp(-3.4, 3.4, i / 40), 0, -7.0);
-  const stageGlowGeo = new BufferGeometry();
-  stageGlowGeo.setAttribute("position", new BufferAttribute(new Float32Array(stageGlow), 3));
-  stageGlowGeo.setAttribute("aColor", new BufferAttribute(new Float32Array(41 * 3).fill(0.9), 3));
-  stageGlowGeo.setAttribute("aSize", new BufferAttribute(new Float32Array(41).fill(0.22), 1));
-  stageGlowGeo.setAttribute("aAlpha", new BufferAttribute(new Float32Array(41).fill(0.18), 1));
-  scene.add(new Points(stageGlowGeo, pointMaterial()));
+  const chairGeo = new BoxGeometry(0.46, 0.42, 0.46);
+  chairGeo.translate(0, 0.21, 0);
+  const chairMesh = new InstancedMesh(chairGeo, new MeshStandardMaterial({ color: CHAIR, roughness: 0.95 }), chairs.length);
+  chairMesh.castShadow = chairMesh.receiveShadow = true;
+  const backGeo = new BoxGeometry(0.46, 0.5, 0.08);
+  backGeo.translate(0, 0.67, 0.19);
+  const chairBacks = new InstancedMesh(backGeo, chairMesh.material, chairs.length);
+  chairBacks.castShadow = true;
+  const dummy = new Object3D();
+  chairs.forEach((c, i) => {
+    dummy.position.copy(c);
+    dummy.rotation.set(0, 0, 0);
+    dummy.updateMatrix();
+    chairMesh.setMatrixAt(i, dummy.matrix);
+    chairBacks.setMatrixAt(i, dummy.matrix);
+  });
+  scene.add(chairMesh, chairBacks);
 
-  // ---- Rings --------------------------------------------------------------------------
-  const ring = (inner: number, outer: number, color: Color) => {
-    const m = new Mesh(
-      new RingGeometry(inner, outer, 96),
-      new MeshBasicMaterial({ color, transparent: true, opacity: 0, depthWrite: false, blending: AdditiveBlending }),
-    );
-    m.rotation.x = -Math.PI / 2;
+  const tableGeo = new CylinderGeometry(0.34, 0.34, 0.05, 28);
+  tableGeo.translate(0, 1.05, 0);
+  const legGeo = new CylinderGeometry(0.04, 0.06, 1.05, 10);
+  legGeo.translate(0, 0.52, 0);
+  const tableTops = new InstancedMesh(tableGeo, new MeshStandardMaterial({ color: TABLE, roughness: 0.6 }), tables.length);
+  const tableLegs = new InstancedMesh(legGeo, new MeshStandardMaterial({ color: "#cbbd9f" }), tables.length);
+  tableTops.castShadow = tableLegs.castShadow = true;
+  tables.forEach((t, i) => {
+    dummy.position.copy(t);
+    dummy.updateMatrix();
+    tableTops.setMatrixAt(i, dummy.matrix);
+    tableLegs.setMatrixAt(i, dummy.matrix);
+  });
+  scene.add(tableTops, tableLegs);
+
+  // "Seen" marks: a thin ring at the feet of everyone the sidekick has scouted.
+  const seenGeo = new RingGeometry(0.3, 0.36, 40);
+  seenGeo.rotateX(-Math.PI / 2);
+  const seen = new InstancedMesh(seenGeo, new MeshBasicMaterial({ color: PINE, transparent: true, opacity: 0.35, depthWrite: false }), n);
+  scene.add(seen);
+
+  // Rings under you, the picks and the sidekick's scan.
+  const flatRing = (inner: number, outer: number, color: Color, opacity = 0) => {
+    const g = new RingGeometry(inner, outer, 64);
+    g.rotateX(-Math.PI / 2);
+    const m = new Mesh(g, new MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false }));
     scene.add(m);
     return m;
   };
-  const youRing = ring(0.3, 0.33, OAT);
-  const checkinRing = ring(0.96, 1.0, SIGNAL);
-  const halo = ring(0.3, 0.335, SIGNAL);
-  const scanRing = ring(0.985, 1.0, SIGNAL);
-  const scanFill = ring(0.0, 1.0, SIGNAL);
-  const pickRings = picks.map(() => ring(0.36, 0.39, OAT));
+  const youRing = flatRing(0.42, 0.5, PINE, 0.9);
+  const youPulse = flatRing(0.95, 1.0, SIGNAL);
+  const scanRing = flatRing(0.97, 1.0, SIGNAL);
+  const scanDisc = new Mesh(new CircleGeometry(1, 48).rotateX(-Math.PI / 2), new MeshBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0, depthWrite: false }));
+  scene.add(scanDisc);
+  const pickRings = picks.map(() => flatRing(0.42, 0.52, PINE));
 
-  // ---- Lines --------------------------------------------------------------------------
+  // A map pin over your head, so you can always find yourself.
+  const pinMat = new MeshStandardMaterial({ color: PINE, roughness: 0.5 });
+  const pin = new Mesh(new SphereGeometry(0.17, 24, 16), pinMat);
+  const pinTip = new Mesh(new ConeGeometry(0.15, 0.32, 24), pinMat);
+  pinTip.rotation.x = Math.PI;
+  pinTip.position.y = -0.2;
+  pin.add(pinTip);
+  pin.castShadow = pinTip.castShadow = true;
+  scene.add(pin);
+
+  // The sidekick: a small glowing orb with a soft light of its own.
+  const orb = new Mesh(new SphereGeometry(0.2, 32, 20), new MeshStandardMaterial({ color: SIGNAL, emissive: SIGNAL, emissiveIntensity: 0.9, roughness: 0.3 }));
+  orb.castShadow = true;
+  const orbHalo = new Mesh(new SphereGeometry(0.36, 24, 16), new MeshBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0.18, depthWrite: false }));
+  const orbLight = new PointLight(SIGNAL, 6, 4.5, 2);
+  scene.add(orb, orbHalo, orbLight);
+  const orbShadow = new Mesh(new CircleGeometry(0.3, 32).rotateX(-Math.PI / 2), new MeshBasicMaterial({ color: "#000", transparent: true, opacity: 0.08, depthWrite: false }));
+  scene.add(orbShadow);
+  // A dotted trail that shows where the sidekick has been.
+  const trailPts = route.getPoints(240).map((p) => new Vector3(p.x, 0.03, p.z));
+  const trail = new Line(new BufferGeometry().setFromPoints(trailPts), new LineDashedMaterial({ color: SIGNAL, dashSize: 0.18, gapSize: 0.16, transparent: true, opacity: 0.7 }));
+  trail.computeLineDistances();
+  trail.geometry.setDrawRange(0, 0);
+  scene.add(trail);
+
+  // Lines from the sidekick to the three it ranked.
   const pickLines = picks.map(() => {
-    const geo = new BufferGeometry().setFromPoints([new Vector3(), new Vector3()]);
-    const line = new Line(geo, new LineBasicMaterial({ color: OAT, transparent: true, opacity: 0 }));
+    const line = new Line(
+      new BufferGeometry().setFromPoints([new Vector3(), new Vector3()]),
+      new LineDashedMaterial({ color: PINE, dashSize: 0.14, gapSize: 0.1, transparent: true, opacity: 0 }),
+    );
     scene.add(line);
     return line;
   });
-  const ARC_SEGMENTS = 80;
-  const matchNode = nodes[picks[0]];
+
+  // The match: a line from your chair to theirs, drawn as a tube so it reads on a light floor.
+  const match = people[picks[0]];
   const arcCurve = new QuadraticBezierCurve3(
-    you.base.clone(),
-    new Vector3((you.base.x + matchNode.base.x) / 2, 3.6, (you.base.z + matchNode.base.z) / 2),
-    matchNode.base.clone().setY(0.85), // where #1 floats once ranked
+    new Vector3(you.x, 1.25, you.z),
+    new Vector3((you.x + match.x) / 2, 4.6, (you.z + match.z) / 2),
+    new Vector3(match.x, 1.6, match.z),
   );
-  const arcGeo = new BufferGeometry().setFromPoints(arcCurve.getPoints(ARC_SEGMENTS));
-  const arc = new Line(arcGeo, new LineBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0.95 }));
-  arc.geometry.setDrawRange(0, 0);
+  const ARC = 120;
+  const arcGeo = new TubeGeometry(arcCurve, ARC, 0.035, 8, false);
+  const arc = new Mesh(arcGeo, new MeshBasicMaterial({ color: SIGNAL }));
+  const arcIndexCount = arcGeo.index!.count;
+  arcGeo.setDrawRange(0, 0);
   scene.add(arc);
+  const spark = new Mesh(new SphereGeometry(0.09, 16, 12), new MeshBasicMaterial({ color: SIGNAL }));
+  scene.add(spark);
 
-  // The sidekick and the spark that travels the match line.
-  const lights = new Float32Array(2 * 3);
-  const lightGeo = new BufferGeometry();
-  lightGeo.setAttribute("position", new BufferAttribute(lights, 3));
-  lightGeo.setAttribute("aColor", new BufferAttribute(new Float32Array([1, 0.5, 0.34, 1, 0.8, 0.7]), 3));
-  lightGeo.setAttribute("aSize", new BufferAttribute(new Float32Array([0.62, 0.55]), 1));
-  lightGeo.setAttribute("aAlpha", new BufferAttribute(new Float32Array([1, 0]), 1));
-  const sidekick = new Points(lightGeo, pointMaterial());
-  scene.add(sidekick);
-
-  // ---- Camera path --------------------------------------------------------------------
+  // ---- Camera -------------------------------------------------------------------------
   // [progress, camera position, look-at]
   const shots: [number, Vector3, Vector3][] = [
-    [0.0, new Vector3(-4.6, 7.6, 15.5), new Vector3(-4.2, 0, -0.6)],
-    [0.2, new Vector3(-2.6, 4.2, 4.2), new Vector3(-0.6, 0, -3.0)],
-    [0.42, new Vector3(0.5, 13.5, 10.5), new Vector3(0, 0, 3.4)],
-    [0.66, new Vector3(4.2, 7.4, 12.6), new Vector3(0.2, 0, 3.6)],
-    [0.92, new Vector3(1.2, 9.6, 13.8), new Vector3(0.6, 0, 0.6)],
+    [0.0, new Vector3(-13, 18, 28), new Vector3(-7.4, 0, 0.6)],
+    [0.2, new Vector3(-10, 11, 9.5), new Vector3(-4.2, 0.6, -3.2)],
+    [0.42, new Vector3(-2, 23, 18), new Vector3(-1.2, 0, 4.2)],
+    [0.66, new Vector3(-4, 13.5, 19), new Vector3(-0.4, 0.6, 4.8)],
+    [0.92, new Vector3(-9, 15, 19), new Vector3(-0.6, 0.6, 0.8)],
   ];
-  // On narrow screens the hero copy fills the lower half, so the room sits higher and centred.
-  const heroWide: [Vector3, Vector3] = [shots[0][1].clone(), shots[0][2].clone()];
-  const heroNarrow: [Vector3, Vector3] = [new Vector3(0, 9.5, 18), new Vector3(0, 0, 6.5)];
-  // Narrow screens can't fit all three picks, so the last two shots favour #1.
-  const lateWide = shots.slice(3).map(([, a, l]) => [a.clone(), l.clone()] as [Vector3, Vector3]);
-  const lateNarrow: [Vector3, Vector3][] = [
-    [new Vector3(3.4, 9.5, 14.5), new Vector3(2.2, 0, 4.6)],
-    [new Vector3(1.6, 10.5, 14.5), new Vector3(1.6, 0, 1.6)],
+  const wide = shots.map(([, a, l]) => [a.clone(), l.clone()] as [Vector3, Vector3]);
+  // Portrait screens: centre the room and frame the top pick.
+  const narrow: [Vector3, Vector3][] = [
+    [new Vector3(0, 30, 23), new Vector3(0, 0, 5.5)],
+    [new Vector3(-5, 8.5, 6), new Vector3(-2.6, 0.6, -3.6)],
+    [new Vector3(0, 24, 15), new Vector3(0, 0, 4.4)],
+    [new Vector3(3, 14, 16), new Vector3(2.6, 0.6, 5.6)],
+    [new Vector3(2, 24, 17), new Vector3(1, 0.6, 2.8)],
   ];
   const camPos = new Vector3();
   const camLook = new Vector3();
@@ -316,28 +470,21 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     camLook.lerpVectors(l0, l1, t);
   }
 
-  // ---- Sizing -------------------------------------------------------------------------
   let width = 1;
   let height = 1;
-  let distance = 1;
   function resize() {
     const rect = canvas.getBoundingClientRect();
     width = Math.max(1, rect.width);
     height = Math.max(1, rect.height);
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
-    // Narrow screens see less of the room sideways, so step back.
-    distance = camera.aspect < 0.8 ? 1.75 : camera.aspect < 1.3 ? 1.3 : 1;
-    const hero = camera.aspect < 0.8 ? heroNarrow : heroWide;
-    shots[0][1].copy(hero[0]);
-    shots[0][2].copy(hero[1]);
-    const late = camera.aspect < 0.8 ? lateNarrow : lateWide;
-    late.forEach(([a, l], k) => {
-      shots[3 + k][1].copy(a);
-      shots[3 + k][2].copy(l);
-    });
+    camera.fov = camera.aspect < 0.8 ? 38 : camera.aspect < 1.3 ? 32 : 28;
     camera.updateProjectionMatrix();
-    uniforms.uScale.value = (height / (2 * Math.tan((camera.fov * Math.PI) / 360))) * dpr;
+    const set = camera.aspect < 0.8 ? narrow : wide;
+    set.forEach(([a, l], k) => {
+      shots[k][1].copy(a);
+      shots[k][2].copy(l);
+    });
   }
   const ro = new ResizeObserver(resize);
   ro.observe(canvas);
@@ -350,6 +497,8 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   const sk = new Vector3();
   const tmp = new Vector3();
   const project = new Vector3();
+  const col = new Color();
+  const hidden = new Matrix4().makeScale(0, 0, 0);
 
   function place(el: HTMLElement | null | undefined, at: Vector3, opacity: number) {
     if (!el) return;
@@ -364,9 +513,8 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     if (!visible) return;
     const pick = el.classList.contains("pick");
     const box = pick ? (el.firstElementChild as HTMLElement) : el;
-    const w = box.offsetWidth;
     const room = width < 720 ? 16 : 150; // keep clear of the step rail on the right
-    el.classList.toggle("flip", x + 18 + w > width - room);
+    el.classList.toggle("flip", x + 18 + box.offsetWidth > width - room);
     if (pick) el.classList.toggle("below", y - 18 - box.offsetHeight < 90);
   }
 
@@ -375,176 +523,169 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     const scoutT = smooth(PHASES.scout[0], PHASES.scout[1] - 0.02, p);
     const scouting = smooth(PHASES.scout[0] - 0.01, PHASES.scout[0] + 0.03, p) * (1 - smooth(PHASES.rank[0], PHASES.rank[0] + 0.05, p));
     const rank = smooth(PHASES.rank[0], PHASES.rank[0] + 0.1, p);
-    const match = smooth(PHASES.match[0], PHASES.match[0] + 0.12, p);
+    const matched = smooth(PHASES.match[0], PHASES.match[0] + 0.12, p);
 
-    // Where the sidekick is.
+    // Where the sidekick is: beside your head, then over to the floor, then along its route.
+    const bob = Math.sin(time * 2.4) * 0.08;
     if (p < PHASES.scout[0]) {
-      // Beside you, then out from your seat to the edge of the floor in a low arc.
-      const orbit = tmp.set(Math.cos(time * 1.4) * 0.42, 0.35, Math.sin(time * 1.4) * 0.42).multiplyScalar(1 - checkin);
-      const start = you.base;
+      const orbit = tmp.set(Math.cos(time * 1.3) * 0.55, 0, Math.sin(time * 1.3) * 0.55).multiplyScalar(1 - checkin);
+      const start = tmp.clone().add(new Vector3(you.x, 1.55, you.z));
       const end = route.getPoint(0);
-      sk.set(lerp(start.x, end.x, checkin), lerp(0, 0, checkin) + Math.sin(checkin * Math.PI) * 1.6, lerp(start.z, end.z, checkin)).add(orbit);
+      sk.lerpVectors(start, end, checkin);
+      sk.y += Math.sin(checkin * Math.PI) * 1.8;
+      void orbit;
     } else if (p < PHASES.rank[0]) {
       route.getPoint(scoutT, sk);
-      sk.y = 0.25;
     } else {
       sk.copy(routeEnd);
-      sk.y = 0.25 + Math.sin(time * 2) * 0.05;
     }
+    sk.y += bob;
 
     // People.
-    const dimOthers = rank * 0.62;
-    for (let i = 0; i < count; i++) {
-      const n = nodes[i];
-      const pos = n.pos.copy(n.base);
-      let size = 0.34;
-      let alpha = 0.55;
-      let r = OAT.r * 0.82;
-      let g = OAT.g * 0.82;
-      let b = OAT.b * 0.82;
-
-      if (n.kind === "seat") {
-        alpha = 0.42 * (1 - scouting * 0.4) * (1 - dimOthers * 0.5);
-        size = 0.3;
-        if (i === youIndex) {
-          alpha = 1;
-          size = 0.46;
-          r = lerp(OAT.r, SIGNAL.r, match);
-          g = lerp(OAT.g, SIGNAL.g, match);
-          b = lerp(OAT.b, SIGNAL.b, match);
-        }
-      } else if (n.kind === "speaker") {
-        pos.x += Math.sin(time * 0.5) * 0.8;
-        size = 0.5;
-        alpha = 0.9;
-        r = OAT.r;
-        g = OAT.g;
-        b = OAT.b;
+    const dim = rank * 0.7;
+    for (let i = 0; i < n; i++) {
+      const pp = people[i];
+      const pick = picks.indexOf(i);
+      const isYou = i === youIndex;
+      let x = pp.x;
+      let z = pp.z;
+      let face = pp.face;
+      let y = 0;
+      let scaleY = 1;
+      if (pp.seated) {
+        y = 0.32;
+        scaleY = 0.82;
+        face = Math.PI + Math.sin(time * 0.3 + pp.phase) * 0.05;
+      } else if (i === speakerIndex) {
+        x += Math.sin(time * 0.45) * 1.2;
+        y = 0.45;
+        face = Math.sin(time * 0.45 + 1.2) * 0.6;
       } else {
-        // People on the floor shift their weight a little.
-        pos.x += Math.sin(time * 0.6 + n.phase) * 0.05;
-        pos.z += Math.cos(time * 0.5 + n.phase * 1.3) * 0.05;
-        const scanned = n.scanAt <= 1 ? smooth(n.scanAt, n.scanAt + 0.05, scoutT) : 0;
-        // A flash as the scan ring passes over.
-        const dist = Math.hypot(pos.x - sk.x, pos.z - sk.z);
-        const ringR = ((time * 1.6) % 1) * SCAN_RADIUS;
-        const flash = scouting * Math.exp(-Math.pow(dist - ringR, 2) * 10) * (dist < SCAN_RADIUS ? 1 : 0);
-        alpha = 0.5 + scanned * 0.3 + flash * 0.6;
-        size = 0.34 + flash * 0.16;
-        const warm = flash * 0.7;
-        r = lerp(r, SIGNAL.r, warm);
-        g = lerp(g, SIGNAL.g, warm);
-        b = lerp(b, SIGNAL.b, warm);
-        const pick = picks.indexOf(i);
-        if (pick >= 0) {
-          const lift = rank * (pick === 0 ? 0.85 : 0.6);
-          pos.y += lift;
-          size = lerp(size, pick === 0 ? 0.78 : 0.62, rank);
-          alpha = lerp(alpha, 1, rank);
-          r = lerp(r, OAT.r, rank);
-          g = lerp(g, OAT.g, rank);
-          b = lerp(b, OAT.b, rank);
-          if (pick === 0) {
-            r = lerp(r, SIGNAL.r, match);
-            g = lerp(g, SIGNAL.g, match);
-            b = lerp(b, SIGNAL.b, match);
-          } else {
-            alpha *= 1 - match * 0.45;
-          }
-        } else {
-          alpha *= 1 - dimOthers;
-        }
+        // Standing people shift their weight and turn a little as they talk.
+        face += Math.sin(time * 0.7 + pp.phase) * 0.25;
+        y = Math.max(0, Math.sin(time * 1.6 + pp.phase)) * 0.025;
       }
-      positions[i * 3] = pos.x;
-      positions[i * 3 + 1] = pos.y;
-      positions[i * 3 + 2] = pos.z;
-      colors[i * 3] = r;
-      colors[i * 3 + 1] = g;
-      colors[i * 3 + 2] = b;
-      sizes[i] = size;
-      alphas[i] = alpha;
-    }
-    peopleGeo.attributes.position.needsUpdate = true;
-    peopleGeo.attributes.aColor.needsUpdate = true;
-    peopleGeo.attributes.aSize.needsUpdate = true;
-    peopleGeo.attributes.aAlpha.needsUpdate = true;
+      dummy.position.set(x, y, z);
+      dummy.rotation.set(0, face, 0);
+      dummy.scale.set(1, scaleY, 1);
+      dummy.updateMatrix();
+      bodies.setMatrixAt(i, dummy.matrix);
+      const headY = y + (pp.seated ? 0.98 : 1.12);
+      dummy.position.set(x, headY, z);
+      dummy.scale.set(1, 1, 1);
+      dummy.updateMatrix();
+      heads.setMatrixAt(i, dummy.matrix);
 
-    // Sidekick light and the spark on the match line.
-    lights[0] = sk.x;
-    lights[1] = sk.y;
-    lights[2] = sk.z;
-    const sparkT = (time * 0.45) % 1;
-    arcCurve.getPoint(sparkT, tmp);
-    lights[3] = tmp.x;
-    lights[4] = tmp.y;
-    lights[5] = tmp.z;
-    lightGeo.attributes.position.needsUpdate = true;
-    (lightGeo.attributes.aAlpha as BufferAttribute).setX(1, smooth(0.9, 1, match) * Math.sin(sparkT * Math.PI));
-    lightGeo.attributes.aAlpha.needsUpdate = true;
+      // Colour: fade everyone but you and the picks once the list is ready.
+      let fade = 0;
+      if (!isYou && pick < 0 && i !== speakerIndex) fade = dim;
+      if (pick > 0) fade = matched * 0.35;
+      col.copy(pp.clothes);
+      col.lerp(PAPER, fade);
+      bodies.setColorAt(i, col);
+      col.copy(pp.skin).lerp(PAPER, fade);
+      heads.setColorAt(i, col);
+
+      // Seen rings.
+      const s = pp.scanAt <= 1 ? smooth(pp.scanAt, pp.scanAt + 0.04, scoutT) * (1 - rank) : 0;
+      if (s > 0.01) {
+        dummy.position.set(x, 0.015, z);
+        dummy.rotation.set(0, 0, 0);
+        dummy.scale.setScalar(0.6 + s * 0.4);
+        dummy.updateMatrix();
+        seen.setMatrixAt(i, dummy.matrix);
+      } else seen.setMatrixAt(i, hidden);
+    }
+    bodies.instanceMatrix.needsUpdate = true;
+    heads.instanceMatrix.needsUpdate = true;
+    bodies.instanceColor!.needsUpdate = true;
+    heads.instanceColor!.needsUpdate = true;
+    seen.instanceMatrix.needsUpdate = true;
+
+    // The sidekick.
+    orb.position.copy(sk);
+    orbHalo.position.copy(sk);
+    orbHalo.scale.setScalar(1 + Math.sin(time * 3) * 0.12);
+    orbLight.position.copy(sk);
+    orbShadow.position.set(sk.x, 0.012, sk.z);
+    const trailCount = p < PHASES.scout[0] ? 0 : Math.floor((p < PHASES.rank[0] ? scoutT : 1) * 241);
+    trail.geometry.setDrawRange(0, trailCount);
+    (trail.material as LineDashedMaterial).opacity = 0.75 * (1 - matched * 0.7);
+
+    pin.position.set(you.x, 1.85 + Math.sin(time * 2) * 0.06, you.z);
+    pin.rotation.y = time * 0.8;
+    pinMat.color.copy(PINE).lerp(SIGNAL, matched);
 
     // Rings.
-    youRing.position.set(you.base.x, 0.01, you.base.z);
-    youRing.scale.setScalar(1 + Math.sin(time * 2.2) * 0.06);
-    (youRing.material as MeshBasicMaterial).opacity = 0.7;
-    const ci = (time * 0.7) % 1;
-    checkinRing.position.copy(youRing.position);
-    checkinRing.scale.setScalar(0.3 + ci * 2.4);
-    (checkinRing.material as MeshBasicMaterial).opacity = (1 - ci) * 0.6 * smooth(0.04, 0.14, p) * (1 - smooth(0.28, 0.34, p));
-    halo.position.set(sk.x, 0.01, sk.z);
-    halo.scale.setScalar(1 + Math.sin(time * 3) * 0.08);
-    (halo.material as MeshBasicMaterial).opacity = 0.9;
-    const ringR = ((time * 1.6) % 1) * SCAN_RADIUS;
-    scanRing.position.set(sk.x, 0.005, sk.z);
-    scanRing.scale.setScalar(Math.max(0.01, ringR));
-    (scanRing.material as MeshBasicMaterial).opacity = scouting * (1 - ringR / SCAN_RADIUS) * 0.8;
-    scanFill.position.set(sk.x, 0.0, sk.z);
-    scanFill.scale.setScalar(SCAN_RADIUS);
-    (scanFill.material as MeshBasicMaterial).opacity = scouting * 0.05;
+    youRing.position.set(you.x, 0.02, you.z);
+    const pulse = (time * 0.8) % 1;
+    youPulse.position.set(you.x, 0.021, you.z);
+    youPulse.scale.setScalar(0.5 + pulse * 1.8);
+    (youPulse.material as MeshBasicMaterial).opacity = (1 - pulse) * 0.7 * (smooth(0.08, 0.16, p) * (1 - smooth(0.28, 0.34, p)) + matched);
+    (youRing.material as MeshBasicMaterial).color.copy(PINE).lerp(SIGNAL, matched);
+    const sweep = (time * 1.4) % 1;
+    scanRing.position.set(sk.x, 0.022, sk.z);
+    scanRing.scale.setScalar(0.3 + sweep * 2.2);
+    (scanRing.material as MeshBasicMaterial).opacity = scouting * (1 - sweep) * 0.9;
+    scanDisc.position.set(sk.x, 0.018, sk.z);
+    scanDisc.scale.setScalar(2.5);
+    (scanDisc.material as MeshBasicMaterial).opacity = scouting * 0.08;
     picks.forEach((idx, k) => {
-      const m = pickRings[k];
-      m.position.set(nodes[idx].pos.x, 0.01, nodes[idx].pos.z);
-      m.scale.setScalar(1 + Math.sin(time * 2 + k) * 0.05);
-      const mat = m.material as MeshBasicMaterial;
-      mat.color.copy(k === 0 ? OAT.clone().lerp(SIGNAL, match) : OAT);
-      mat.opacity = rank * (k === 0 ? 0.9 : 0.6 * (1 - match * 0.6));
+      const ring = pickRings[k];
+      ring.position.set(people[idx].x, 0.02, people[idx].z);
+      const mat = ring.material as MeshBasicMaterial;
+      mat.color.copy(PINE);
+      if (k === 0) mat.color.lerp(SIGNAL, matched);
+      mat.opacity = rank * (k === 0 ? 1 : 0.8 * (1 - matched * 0.6));
     });
 
-    // Lines from the sidekick to the three it ranked.
     picks.forEach((idx, k) => {
       const line = pickLines[k];
       const attr = line.geometry.attributes.position as BufferAttribute;
       attr.setXYZ(0, sk.x, sk.y, sk.z);
-      const n = nodes[idx].pos;
-      attr.setXYZ(1, n.x, n.y, n.z);
+      attr.setXYZ(1, people[idx].x, 1.3, people[idx].z);
       attr.needsUpdate = true;
+      line.computeLineDistances();
       const appear = smooth(PHASES.rank[0] + k * 0.03, PHASES.rank[0] + 0.08 + k * 0.03, p);
-      (line.material as LineBasicMaterial).opacity = appear * 0.55 * (1 - match * 0.85);
+      (line.material as LineDashedMaterial).opacity = appear * 0.75 * (1 - matched);
     });
 
-    // The match: a line drawn from your seat to theirs.
-    arc.geometry.setDrawRange(0, Math.floor(smooth(PHASES.match[0], PHASES.match[0] + 0.14, p) * (ARC_SEGMENTS + 1)));
+    // The match line, drawn from your chair to theirs, with a spark travelling along it.
+    const draw = smooth(PHASES.match[0], PHASES.match[0] + 0.14, p);
+    arcGeo.setDrawRange(0, Math.floor((draw * arcIndexCount) / 6) * 6);
+    const sparkT = (time * 0.4) % 1;
+    arcCurve.getPoint(sparkT, spark.position);
+    spark.visible = draw > 0.98;
 
     // Camera, with a little drift toward the pointer.
     cameraAt(p);
+    if (camera.aspect < 0.8) {
+      // Portrait screens can't see the whole floor, so follow the sidekick while it scouts.
+      const dx = (clamp(sk.x, -5, 5) * 0.8 - camLook.x) * scouting;
+      const dz = (sk.z + 2.5 - camLook.z) * scouting * 0.6;
+      camLook.x += dx;
+      camPos.x += dx;
+      camLook.z += dz;
+      camPos.z += dz;
+    }
     pointer.sx += (pointer.x - pointer.sx) * 0.05;
     pointer.sy += (pointer.y - pointer.sy) * 0.05;
-    tmp.subVectors(camPos, camLook).multiplyScalar(distance);
-    camera.position.copy(camLook).add(tmp);
-    camera.position.x += pointer.sx * 0.9;
-    camera.position.y += pointer.sy * 0.5;
+    camera.position.copy(camPos);
+    camera.position.x += pointer.sx * 0.8;
+    camera.position.y -= pointer.sy * 0.5;
     camera.lookAt(camLook);
 
     renderer.render(scene, camera);
 
-    // HTML labels that follow points in the scene.
-    place(labels.you, tmp.set(you.base.x, 0, you.base.z), smooth(0.07, 0.13, p) * (1 - scouting * 0.6));
-    place(labels.sidekick, sk, smooth(0.02, 0.1, p) * (1 - rank));
+    // HTML labels.
+    place(labels.you, tmp.set(you.x, 2.1, you.z), smooth(0.07, 0.13, p) * (1 - scouting * 0.5));
+    place(labels.sidekick, sk, smooth(0.07, 0.13, p) * (1 - rank));
     labels.picks.forEach((el, k) => {
-      const n = nodes[picks[k]].pos;
+      const pp = people[picks[k]];
       const show = smooth(PHASES.rank[0] + 0.04 + k * 0.03, PHASES.rank[0] + 0.1 + k * 0.03, p);
-      const keep = k === 0 ? 1 : 1 - match * 0.7;
-      place(el, n, show * keep);
-      el.classList.toggle("is-match", k === 0 && match > 0.5);
+      const keep = k === 0 ? 1 : 1 - matched * 0.65;
+      place(el, tmp.set(pp.x, 1.55, pp.z), show * keep);
+      el.classList.toggle("is-match", k === 0 && matched > 0.5);
     });
   }
 
@@ -578,6 +719,8 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
       cancelAnimationFrame(raf);
       target = current = clamp(p);
       draw(current, 1.2);
+      // Fonts may arrive after the still frame; draw it again once they do.
+      document.fonts?.ready.then(() => draw(current, 1.2));
     },
     setPointer(x, y) {
       pointer.x = x;
@@ -596,7 +739,8 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
       scene.traverse((o) => {
         const m = o as Mesh;
         m.geometry?.dispose?.();
-        const mat = m.material as { dispose?: () => void } | undefined;
+        const mat = m.material as { dispose?: () => void; map?: { dispose(): void } } | undefined;
+        mat?.map?.dispose();
         mat?.dispose?.();
       });
       renderer.dispose();
