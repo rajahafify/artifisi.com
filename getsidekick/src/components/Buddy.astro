@@ -1,0 +1,38 @@
+---
+// Buddy, the Sidekick mascot, drawn the same way as the app's BuddyPainter (mark.dart):
+// a soft round face, shiny eyes, orange cheeks. It winks when it has spotted someone, grins on a match.
+interface Props {
+  size?: number; // height in px
+  mood?: "normal" | "wink" | "happy";
+  color?: string;
+  features?: string;
+  cheeks?: string;
+}
+const { size = 14, mood = "normal", color = "var(--app-ink)", features = "var(--app-paper)", cheeks = "#B8300C" } = Astro.props;
+const width = (size * 140) / 120;
+---
+
+<svg class="buddy" width={width} height={size} viewBox="30 52 140 120" aria-hidden="true">
+  <rect x="30" y="52" width="140" height="120" rx="58" fill={color}></rect>
+  <ellipse cx="62" cy="126" rx="10" ry="6" fill={cheeks} opacity="0.9"></ellipse>
+  <ellipse cx="138" cy="126" rx="10" ry="6" fill={cheeks} opacity="0.9"></ellipse>
+  <ellipse cx="78" cy="104" rx="11" ry="14" fill={features}></ellipse>
+  <circle cx="82" cy="98" r="4" fill={color}></circle>
+  {
+    mood === "wink" ? (
+      <path d="M110 106 Q122 94 134 106" fill="none" stroke={features} stroke-width="6" stroke-linecap="round" />
+    ) : (
+      <>
+        <ellipse cx="122" cy="104" rx="11" ry="14" fill={features} />
+        <circle cx="126" cy="98" r="4" fill={color} />
+      </>
+    )
+  }
+  {
+    mood === "happy" ? (
+      <path d="M86 128 Q100 150 114 128 Z" fill={features} />
+    ) : (
+      <path d="M88 130 Q100 142 112 130" fill="none" stroke={features} stroke-width="6" stroke-linecap="round" />
+    )
+  }
+</svg>

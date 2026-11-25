@@ -3,10 +3,11 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { Draggable } from "gsap/Draggable";
 import Lenis from "lenis";
 import { createRoom, PHASES, type Tier } from "./room";
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger, SplitText, Draggable);
 
 const root = document.documentElement;
 const q = <T extends Element = HTMLElement>(s: string, el: ParentNode = document) => el.querySelector<T>(s);
@@ -195,70 +196,243 @@ for (const a of qa<HTMLAnchorElement>('a[href^="#"]')) {
   });
 }
 
-// ---- Demo card ------------------------------------------------------------------------
-const card = q("[data-card]");
-if (card) {
-  const tabs = qa<HTMLButtonElement>("[data-talk]");
-  const panels = qa("[data-talk-panel]");
-  const result = q("[data-result]")!;
-  let timers: number[] = [];
-  let currentId = tabs[0].dataset.talk!;
+// ---- Try a card: the app's event screen, working ---------------------------------------
+// Mirrors the deck in the app (screens/event.dart): the top card follows your finger and tilts,
+// the next one rises behind it, CONNECT or PASS shows past a small drag, and past a quarter of
+// the width it goes. Daniel connects back in this demo, so connecting to him shows the match moment.
+const stack = q("[data-deck]");
+if (stack) {
+  const cards = qa("[data-pcard]", stack);
+  const status = q("[data-deck-status]")!;
+  const segYou = q("[data-seg-you]")!;
+  const segMatches = q("[data-seg-matches]")!;
+  const brief = q("[data-brief]")!;
+  const empty = q("[data-empty]", stack)!;
+  const emptyText = q("[data-empty-text]", stack)!;
+  const actions = qa<HTMLButtonElement>("[data-act]");
+  const talkOpen = q<HTMLButtonElement>("[data-talk-open]")!;
+  const scrim = q("[data-sheet-scrim]")!;
+  const sheet = q("[data-sheet]")!;
+  const moment = q("[data-moment]")!;
+  const fast = !motion;
+  const strongIds = new Set(cards.filter((c) => q(".poster-chip.is-strong", c)).map((c) => c.dataset.pcard));
+  let index = 0;
+  let matches = 0;
+  let waiting = 0;
+  let busy = false;
 
-  const play = (id: string) => {
-    timers.forEach(clearTimeout);
-    timers = [];
-    const panel = panels.find((p) => p.dataset.talkPanel === id)!;
-    const msgs = qa(".msg", panel);
-    msgs.forEach((m) => m.classList.remove("is-in"));
-    const reduce = !motion;
-    msgs.forEach((m, i) => {
-      if (reduce) m.classList.add("is-in");
-      else timers.push(window.setTimeout(() => m.classList.add("is-in"), 250 + i * 900));
-    });
+  const width = () => stack.clientWidth || 340;
+  const stampsAt = (card: HTMLElement, t: number) => {
+    const o = clamp((Math.abs(t) - 0.12) / 0.5);
+    q(".poster-stamp-connect", card)!.style.opacity = t > 0 ? String(o) : "0";
+    q(".poster-stamp-pass", card)!.style.opacity = t < 0 ? String(o) : "0";
+  };
+  // The card behind rises as the top one moves away (event.dart: 12px down, 94%, 55% opacity).
+  const behind = (t: number) => {
+    const next = cards[index + 1];
+    if (!next) return;
+    const a = Math.abs(t);
+    gsap.set(next, { y: 12 - 12 * a, scale: 0.94 + 0.06 * a, opacity: 0.55 + 0.45 * a });
   };
 
-  const select = (id: string, focus = false) => {
-    currentId = id;
-    tabs.forEach((t) => {
-      const on = t.dataset.talk === id;
-      t.setAttribute("aria-selected", String(on));
-      t.tabIndex = on ? 0 : -1;
-      if (on && focus) t.focus();
-    });
-    panels.forEach((p) => (p.hidden = p.dataset.talkPanel !== id));
-    card.setAttribute("aria-labelledby", `tab-${id}`);
-    card.classList.remove("is-pass", "is-connect");
-    result.textContent = "";
-    play(id);
+  // Words in the app, recomputed as the deck changes (roomBriefing in logic/sidekick.dart).
+  const refresh = () => {
+    const left = cards.slice(index);
+    const strong = left.filter((c) => strongIds.has(c.dataset.pcard)).length;
+    segYou.textContent = left.length ? `For you · ${left.length}` : "For you";
+    segMatches.textContent = matches ? `Matches · ${matches}` : "Matches";
+    const people = left.length === 1 ? "1 person" : `${left.length} people`;
+    const tail = strong === 0 ? "Best fit first." : strong === 1 ? "1 strong fit, shown first." : `${strong} strong fits, shown first.`;
+    brief.textContent = left.length ? `Read ${people} for you. ${tail}` : "Nobody new to scout yet.";
+    actions.forEach((b) => (b.disabled = !left.length));
+    talkOpen.disabled = !left.length;
+    empty.hidden = left.length > 0;
+    if (!left.length) {
+      emptyText.textContent = waiting
+        ? `You asked to connect with ${waiting} ${waiting === 1 ? "person" : "people"}. If they connect back, it’s a match. New people show up here as they check in.`
+        : "New people show up here as they check in.";
+    }
   };
 
-  tabs.forEach((t, i) => {
-    t.addEventListener("click", () => select(t.dataset.talk!));
-    t.addEventListener("keydown", (e) => {
-      const d = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
-      if (!d) return;
-      e.preventDefault();
-      select(tabs[(i + d + tabs.length) % tabs.length].dataset.talk!, true);
+  const layout = () => {
+    cards.forEach((card, i) => {
+      const depth = i - index;
+      card.inert = depth !== 0;
+      if (depth < 0) return;
+      gsap.set(card, {
+        x: 0,
+        rotation: 0,
+        y: depth === 0 ? 0 : 12,
+        scale: depth === 0 ? 1 : 0.94,
+        opacity: depth === 0 ? 1 : depth === 1 ? 0.55 : 0,
+        visibility: depth > 1 ? "hidden" : "visible",
+        zIndex: 10 - depth,
+      });
+      stampsAt(card, 0);
+    });
+    refresh();
+  };
+
+  const showMoment = () => {
+    moment.hidden = false;
+    if (!fast) {
+      gsap.fromTo(moment, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.26 });
+      gsap.fromTo(q(".moment-glow", moment), { opacity: 0 }, { opacity: 1, duration: 0.66 });
+      gsap.fromTo(q(".moment-me", moment), { x: -55 }, { x: 0, duration: 0.66, delay: 0.11, ease: "back.out(1.7)" });
+      gsap.fromTo(q(".moment-them", moment), { x: 55 }, { x: 0, duration: 0.66, delay: 0.11, ease: "back.out(1.7)" });
+      gsap.fromTo(qa(".moment-kicker, .moment-title, .moment-sub, .moment-actions", moment), { opacity: 0 }, { opacity: 1, duration: 0.6, delay: 0.5 });
+    }
+    q<HTMLButtonElement>("[data-moment-go]", moment)!.focus({ preventScroll: true });
+  };
+  const hideMoment = (text?: string) => {
+    moment.hidden = true;
+    if (text) status.innerHTML = text;
+    stack.focus({ preventScroll: true });
+  };
+  q("[data-moment-go]", moment)!.addEventListener("click", () =>
+    hideMoment("In the app, <b>this opens your chat with Daniel</b>, with his contact details and the opener."),
+  );
+  q("[data-moment-later]", moment)!.addEventListener("click", () => hideMoment());
+
+  const decide = (like: boolean) => {
+    const card = cards[index];
+    if (!card || busy || !sheet.hidden || !moment.hidden) return;
+    busy = true;
+    const name = card.dataset.first!;
+    const match = like && card.dataset.match === "true";
+    stampsAt(card, like ? 1 : -1);
+    behind(1);
+    gsap.to(card, {
+      x: (like ? 1.3 : -1.3) * width() * 1.2,
+      y: width() * 0.08,
+      rotation: like ? 7 : -7,
+      duration: fast ? 0 : 0.26,
+      ease: "power2.in",
+      onComplete: () => {
+        index++;
+        if (match) matches++;
+        else if (like) waiting++;
+        layout();
+        const top = cards[index];
+        if (top && !fast) gsap.from(top, { opacity: 0.6, duration: 0.26 });
+        busy = false;
+        if (match) showMoment();
+        else stack.focus({ preventScroll: true });
+      },
+    });
+    status.innerHTML = !like
+      ? `Passed. <b>${name} will never know.</b>`
+      : match
+        ? `In this demo ${name} connects too, so <b>it’s a match.</b>`
+        : `Connected. It becomes a match only if ${name} connects too, and <b>${name} isn’t told unless she does.</b>`;
+  };
+
+  cards.forEach((card) => {
+    Draggable.create(card, {
+      type: "x",
+      allowNativeTouchScrolling: true,
+      zIndexBoost: false,
+      onDrag() {
+        const t = clamp(this.x / (width() * 0.32), -1, 1);
+        gsap.set(card, { rotation: t * 6, y: Math.abs(this.x) * 0.06 });
+        stampsAt(card, t);
+        behind(t);
+      },
+      onRelease() {
+        if (this.x > width() * 0.26) decide(true);
+        else if (this.x < -width() * 0.26) decide(false);
+        else {
+          gsap.to(card, { x: 0, y: 0, rotation: 0, duration: fast ? 0 : 0.22, ease: "back.out(2)" });
+          stampsAt(card, 0);
+          behind(0);
+        }
+      },
     });
   });
 
-  for (const b of qa<HTMLButtonElement>("[data-act]", card)) {
-    b.addEventListener("click", () => {
-      const name = tabs.find((t) => t.dataset.talk === currentId)!.querySelector("b")!.textContent!.split(" ")[0];
-      const connect = b.dataset.act === "connect";
-      card.classList.remove("is-pass", "is-connect");
-      void card.offsetWidth;
-      card.classList.add(connect ? "is-connect" : "is-pass");
-      window.setTimeout(() => card.classList.remove("is-pass", "is-connect"), 650);
-      result.innerHTML = connect
-        ? `In this demo ${name} connects too: <b>it's a match.</b> You'd swap contacts and get an opener.`
-        : `Passed. ${name} will never know.`;
-    });
-  }
+  actions.forEach((b) => b.addEventListener("click", () => decide(b.dataset.act === "connect")));
+  stack.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") decide(true);
+    else if (e.key === "ArrowLeft") decide(false);
+    else return;
+    e.preventDefault();
+  });
 
-  // Play the first conversation when the card comes into view.
-  ScrollTrigger.create({ trigger: card, start: "top 75%", once: true, onEnter: () => play(currentId) });
-  if (!motion) play(currentId);
+  // "How would the sidekicks talk?" opens the bottom sheet for the person on top, as in the app.
+  const openSheet = () => {
+    const card = cards[index];
+    if (!card) return;
+    qa("[data-sheet-for]", sheet).forEach((b) => (b.hidden = b.dataset.sheetFor !== card.dataset.pcard));
+    scrim.hidden = sheet.hidden = false;
+    sheet.scrollTop = 0;
+    if (!fast) {
+      gsap.fromTo(scrim, { opacity: 0 }, { opacity: 1, duration: 0.25 });
+      gsap.fromTo(sheet, { yPercent: 100 }, { yPercent: 0, duration: 0.42, ease: "expo.out" });
+      gsap.from(qa(`[data-sheet-for="${card.dataset.pcard}"] .app-bubble`, sheet), { y: 10, opacity: 0, duration: 0.4, stagger: 0.35, delay: 0.3 });
+    }
+    q<HTMLButtonElement>("[data-sheet-close]", sheet)!.focus({ preventScroll: true });
+  };
+  const closeSheet = () => {
+    if (sheet.hidden) return;
+    const done = () => {
+      scrim.hidden = sheet.hidden = true;
+      talkOpen.focus({ preventScroll: true });
+    };
+    if (fast) return done();
+    gsap.to(scrim, { opacity: 0, duration: 0.2 });
+    gsap.to(sheet, { yPercent: 100, duration: 0.25, ease: "power2.in", onComplete: done });
+  };
+  talkOpen.addEventListener("click", openSheet);
+  scrim.addEventListener("click", closeSheet);
+  q("[data-sheet-close]", sheet)!.addEventListener("click", closeSheet);
+  sheet.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeSheet();
+  });
+
+  q("[data-reset]")!.addEventListener("click", () => {
+    index = matches = waiting = 0;
+    busy = false;
+    moment.hidden = scrim.hidden = sheet.hidden = true;
+    status.textContent = "";
+    layout();
+    stack.focus({ preventScroll: true });
+  });
+
+  layout();
+}
+
+// ---- Privacy: what each side sees ------------------------------------------------------
+const views = q("[data-views]");
+if (views) {
+  const tabs = qa<HTMLButtonElement>("[data-scenario]");
+  const note = q("[data-scenario-note]")!;
+  const show = (id: string, focus = false) => {
+    views.dataset.state = id;
+    views.setAttribute("aria-labelledby", `sc-${id}`);
+    tabs.forEach((t) => {
+      const on = t.dataset.scenario === id;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on) {
+        note.textContent = t.dataset.note ?? "";
+        if (focus) t.focus();
+      }
+    });
+    // An element can belong to several states ("pass connect"); only fade in what newly appears.
+    const all = qa("[data-when]", views);
+    const appearing = all.filter((el) => el.hidden && el.dataset.when!.split(" ").includes(id));
+    all.forEach((el) => (el.hidden = !el.dataset.when!.split(" ").includes(id)));
+    if (motion) gsap.fromTo(appearing, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.06, ease: "expo.out" });
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => show(t.dataset.scenario!));
+    t.addEventListener("keydown", (e) => {
+      const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      show(tabs[(i + d + tabs.length) % tabs.length].dataset.scenario!, true);
+    });
+  });
 }
 
 // Web fonts change line breaks and heights; measure again once they and the page are in.

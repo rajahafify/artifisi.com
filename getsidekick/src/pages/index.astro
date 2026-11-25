@@ -1,6 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 import Arrow from "../components/Arrow.astro";
+import Icon from "../components/Icon.astro";
+import Buddy from "../components/Buddy.astro";
+import Poster from "../components/Poster.astro";
+import Match from "../components/Match.astro";
 
 const app = "https://sidekick.artifisi.com";
 
@@ -35,52 +39,102 @@ const picks = [
   { name: "Mei Lin", role: "Product designer", reason: "Mei offers product feedback, which you're looking for." },
 ];
 
-// Example conversations for the demo card. Written from the demo profiles, not from a live event.
-const talks = [
+// The demo deck, built the way the app builds it. Hana (the demo "you") is looking for funding,
+// engineering help, mentorship and product feedback, and offers design help and customers. Run
+// through the app's own ranking (templatePick in logic/sidekick.dart), that gives Daniel 90 (Strong
+// fit), Aisha 60 and Mei 40 (Good fit), with these reasons, in this order. The people come from the
+// app's demo seed. Conversations and openers are written from the two profiles, as examples.
+const deck = [
   {
     id: "daniel",
+    first: "Daniel",
     name: "Daniel Tan",
     role: "CTO, logistics startup",
-    offers: ["Engineering help", "Mentorship"],
-    wants: ["Design help", "Hiring"],
+    fit: "Strong fit",
+    tone: "lagoon",
+    light: "right",
+    reason: "Two-way fit: Daniel offers engineering help and is looking for design help.",
+    match: true,
+    why: "Daniel can help Hana with engineering help, and Hana can help Daniel with design help.",
     lines: [
-      ["mine", "I'm with Hana, a founder. She's looking for funding and engineering help."],
-      ["theirs", "I'm with Daniel, CTO at a logistics startup. He can offer engineering help and mentorship, and he's hiring."],
-      ["mine", "Hana needs a second pair of eyes on her first release. Worth ten minutes at the break."],
+      ["mine", "I’m with Hana, a founder. She needs engineering help and a mentor for her first release."],
+      ["theirs", "I’m with Daniel, CTO at a logistics startup. He offers both, and he’s short on design help."],
+      ["mine", "Hana designs. That’s a fair trade for ten minutes at the break."],
     ],
+    opener: "What would you check first before a first release?",
   },
   {
     id: "aisha",
+    first: "Aisha",
     name: "Aisha Rahman",
     role: "Partner at a seed fund",
-    offers: ["Funding", "Advice", "Intros"],
-    wants: ["Customers", "Cofounder"],
+    fit: "Good fit",
+    tone: "plum",
+    light: "left",
+    reason: "Two-way fit: Aisha offers funding and is looking for customers.",
+    match: false,
+    why: "Aisha can help Hana with funding, and Hana can help Aisha with customers.",
     lines: [
-      ["mine", "I'm with Hana, a founder raising her first round."],
-      ["theirs", "I'm with Aisha, partner at a seed fund. She's meeting founders who already have customers."],
-      ["mine", "Hana has a pilot running with two customers. They should talk."],
+      ["mine", "I’m with Hana, a founder raising her first round."],
+      ["theirs", "I’m with Aisha, partner at a seed fund. She’s meeting founders who already have customers."],
+      ["mine", "Hana has two customers on a pilot. Worth a coffee."],
     ],
+    opener: "Can I tell you about the two customers on our pilot?",
   },
   {
     id: "mei",
+    first: "Mei",
     name: "Mei Lin",
     role: "Product designer",
-    offers: ["Design help", "Product feedback"],
-    wants: ["A new role", "Collaborators"],
+    fit: "Good fit",
+    tone: "clay",
+    light: "left",
+    reason: "Mei offers product feedback, which you’re looking for.",
+    match: false,
+    why: "Mei can help Hana with product feedback.",
     lines: [
-      ["mine", "I'm with Hana. She wants product feedback before launch."],
-      ["theirs", "I'm with Mei, a product designer. She's looking for collaborators."],
-      ["mine", "A short review could turn into a project. A good fit for both."],
+      ["mine", "I’m with Hana. She wants product feedback before launch."],
+      ["theirs", "I’m with Mei, a product designer looking for collaborators."],
+      ["mine", "A short review now could become a project later."],
     ],
+    opener: "Would you look at our onboarding for five minutes?",
   },
-];
+] as const;
+
+// What each side sees, for the privacy explainer. Facts from the backend's privacy rules.
+const scenarios = [
+  {
+    id: "pass",
+    label: "You pass",
+    wire: "Nothing is sent",
+    you: "Daniel leaves your deck. Only you know.",
+    them: "Nothing changes. Daniel can’t tell you passed.",
+    note: "A pass is stored for you alone. Daniel’s screen doesn’t change, and nobody can ever look it up.",
+  },
+  {
+    id: "connect",
+    label: "You connect",
+    wire: "Nothing is sent yet",
+    you: "Saved. If Daniel connects too, it’s a match.",
+    them: "Still nothing. Daniel isn’t told you connected.",
+    note: "Your connect waits quietly. Daniel isn’t told, so a one-sided connect never becomes awkward.",
+  },
+  {
+    id: "both",
+    label: "You both connect",
+    wire: "Contacts swapped",
+    you: "It’s a match. Daniel’s contact details are yours.",
+    them: "The same moment, on Daniel’s side.",
+    note: "Only now does anything cross over: your contact details, the same sidekick conversation, and an opener for the break.",
+  },
+] as const;
 
 const rules = [
-  ["A pass is private.", "No one can see who you passed on, or who passed on them."],
-  ["Contacts after a match.", "Your contact details are shared only when both of you connect."],
-  ["Your profile is yours.", "Other people see your card at that event, never your account."],
-  ["Blocks go both ways.", "Block someone and neither of you sees the other again."],
-];
+  { icon: "eye-off", title: "Passes stay private", body: "No one can see who you passed on, or who passed on them." },
+  { icon: "swap", title: "Contacts after a match", body: "Your contact details are shared only when both of you connect." },
+  { icon: "user", title: "Your profile is yours", body: "Other people see your card at that event, never your account." },
+  { icon: "block", title: "Blocks go both ways", body: "Block someone and neither of you sees the other again." },
+] as const;
 
 const faqs = [
   [
@@ -202,107 +256,175 @@ const faqs = [
       </div>
     </section>
 
-    <!-- Try a card: a working demo of the swipe, with the sidekicks' conversation. -->
+    <!-- Try a card: the app's event screen, working. -->
     <section class="demo light" id="demo" aria-labelledby="demo-title">
       <div class="wrap demo-grid">
         <div class="demo-copy">
-          <h2 id="demo-title" class="display" data-reveal>
-            Hear what the two sidekicks <em>would say.</em>
-          </h2>
+          <h2 id="demo-title" class="display" data-reveal>This is the app. <em>Try it.</em></h2>
           <p class="body">
-            Every card can play the conversation your sidekick would have with theirs. It is made from the two profiles only,
-            so it never gives away who has swiped on whom. Try it.
+            Hana is at the talk. Her sidekick read the room and ranked three people for her. Swipe a card right to connect
+            or left to pass, the same way you would in the app.
           </p>
-          <div class="who" role="tablist" aria-label="Choose a person">
-            {
-              talks.map((t, i) => (
-                <button
-                  type="button"
-                  role="tab"
-                  id={`tab-${t.id}`}
-                  aria-controls="demo-card"
-                  aria-selected={i === 0 ? "true" : "false"}
-                  tabindex={i === 0 ? 0 : -1}
-                  data-talk={t.id}
-                >
-                  <span class="who-av">{t.name[0]}</span>
-                  <span class="who-t">
-                    <b>{t.name}</b>
-                    <small>{t.role}</small>
-                  </span>
-                </button>
-              ))
-            }
-          </div>
-          <p class="fine">Example conversations, written from the demo event's profiles.</p>
+          <ul class="how">
+            <li><span class="how-key"><Icon name="handshake" size={16} /></span><span><b>Connect</b> if you’d like to meet. It only becomes a match if they connect too.</span></li>
+            <li><span class="how-key"><Icon name="x" size={16} /></span><span><b>Pass</b> and they’ll never know.</span></li>
+            <li><span class="how-key"><Icon name="forum" size={16} /></span><span><b>How would the sidekicks talk?</b> Hear it before you decide. It’s built from the two profiles only.</span></li>
+          </ul>
+          <p class="keys" aria-hidden="true"><kbd>←</kbd> Pass <kbd>→</kbd> Connect</p>
+          <p class="fine">A working copy of the app’s event screen, with the people from its demo event. Conversations are examples.</p>
         </div>
 
-        <div class="device" data-reveal>
-          <div class="card" id="demo-card" role="tabpanel" data-card>
-            {
-              talks.map((t, i) => (
-                <div class="card-body" data-talk-panel={t.id} hidden={i !== 0}>
-                  <div class="card-head">
-                    <span class="card-av">{t.name[0]}</span>
-                    <div>
-                      <h3>{t.name}</h3>
-                      <p>{t.role}</p>
-                    </div>
-                    <span class="card-chip">Ranked #{i + 1}</span>
-                  </div>
-                  <dl class="card-fit">
-                    <div>
-                      <dt>Can offer</dt>
-                      <dd>
-                        {t.offers.map((o) => (
-                          <span>{o}</span>
-                        ))}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>Looking for</dt>
-                      <dd>
-                        {t.wants.map((o) => (
-                          <span>{o}</span>
-                        ))}
-                      </dd>
-                    </div>
-                  </dl>
-                  <div class="convo" data-convo>
-                    {t.lines.map(([who, text]) => (
-                      <p class={`msg ${who}`}>
-                        <small>{who === "mine" ? "Your sidekick" : `${t.name.split(" ")[0]}'s sidekick`}</small>
-                        {text}
-                      </p>
-                    ))}
+        <div class="device-col">
+          <div class="device" data-reveal>
+            <div class="app" data-app>
+              <div class="app-status" aria-hidden="true"><span>9:41</span><span class="app-status-icons"><i></i><i></i><i></i></span></div>
+              <div class="app-bar" aria-hidden="true">
+                <span class="app-round"><Icon name="back" size={18} /></span>
+                <span class="app-round"><Icon name="share" size={17} /></span>
+              </div>
+              <div class="app-scroll">
+                <p class="app-live"><span class="app-live-dot"></span>HAPPENING NOW</p>
+                <p class="app-title">Founders &amp; Funders KL</p>
+                <p class="app-place">Common Ground, Bukit Bintang <Icon name="north-east" size={13} /></p>
+                <div class="app-segments" aria-hidden="true">
+                  <span class="is-on" data-seg-you>For you · 3</span>
+                  <span data-seg-matches>Matches</span>
+                </div>
+                <p class="app-brief"><Buddy size={13} mood="wink" /><span data-brief>Read 3 people for you. 1 strong fit, shown first.</span></p>
+                <div class="app-stack" data-deck tabindex="0" role="group" aria-label="Demo deck. Left arrow passes, right arrow connects.">
+                  {
+                    deck.map((d) => (
+                      <Poster
+                        name={d.name}
+                        role={d.role}
+                        reason={d.reason}
+                        fit={d.fit}
+                        tone={d.tone}
+                        light={d.light}
+                        class="deck-card"
+                        data-pcard={d.id}
+                        data-first={d.first}
+                        data-match={String(d.match)}
+                        aria-label={`${d.name}. ${d.role}. ${d.reason}`}
+                      />
+                    ))
+                  }
+                  <div class="app-empty" data-empty hidden>
+                    <Buddy size={44} mood="wink" />
+                    <p class="app-empty-title">You’ve seen everyone</p>
+                    <p class="app-empty-text" data-empty-text>New people show up here as they check in.</p>
                   </div>
                 </div>
-              ))
-            }
-            <div class="card-actions">
-              <button type="button" class="act act-pass" data-act="pass">Pass</button>
-              <button type="button" class="act act-connect" data-act="connect">Connect</button>
+                <div class="app-actions">
+                  <button type="button" class="app-circle" data-act="pass" aria-label="Pass"><Icon name="x" size={24} /></button>
+                  <button type="button" class="app-signal" data-act="connect"><Icon name="handshake" size={19} />Connect</button>
+                </div>
+                <p class="app-note">Nobody sees a pass. Contacts swap only if you both connect.</p>
+                <button type="button" class="app-text-btn" data-talk-open><Icon name="forum" size={18} />How would the sidekicks talk?</button>
+              </div>
+
+              <div class="app-scrim" data-sheet-scrim hidden></div>
+              <div class="app-sheet" data-sheet role="dialog" aria-modal="true" aria-label="How your sidekicks would talk" hidden>
+                <span class="app-sheet-handle" aria-hidden="true"></span>
+                {
+                  deck.map((d) => (
+                    <div class="app-sheet-body" data-sheet-for={d.id} hidden>
+                      <p class="app-sheet-title">How your sidekicks would talk</p>
+                      <p class="app-sheet-sub">With {d.first}. Nobody sees if you connect or pass.</p>
+                      <p class="app-caps">Before you connect</p>
+                      <p class="app-sheet-why">{d.why}</p>
+                      {d.lines.map(([who, text]) => (
+                        <p class={`app-bubble ${who}`}>
+                          <small>{who === "mine" ? "Your sidekick" : `${d.first}’s sidekick`}</small>
+                          {text}
+                        </p>
+                      ))}
+                      <p class="app-caps app-caps-gap">If you connect, try</p>
+                      <p class="app-opener">“{d.opener}”</p>
+                    </div>
+                  ))
+                }
+                <button type="button" class="app-sheet-close" data-sheet-close>Done</button>
+              </div>
+
+              <Match interactive me={{ initials: "H", tone: "pine" }} them={{ initials: "DT", tone: "lagoon" }} firstName="Daniel" class="app-moment" data-moment hidden />
             </div>
-            <p class="card-result" data-result role="status" aria-live="polite"></p>
+          </div>
+          <div class="device-foot">
+            <p class="deck-status" data-deck-status role="status" aria-live="polite"></p>
+            <button type="button" class="demo-reset" data-reset><Icon name="undo" size={16} />Reset the demo</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Privacy -->
+    <!-- Privacy: the same screens, on both phones. -->
     <section class="privacy dark" id="privacy" aria-labelledby="privacy-title">
       <div class="wrap">
-        <h2 id="privacy-title" class="display xl" data-reveal>A pass is <em>never</em> seen.</h2>
-        <ol class="rules">
+        <div class="privacy-head">
+          <h2 id="privacy-title" class="display xl" data-reveal>A pass is <em>never</em> seen.</h2>
+          <p class="body">Here is exactly what each phone shows. Choose what Hana does with Daniel’s card.</p>
+        </div>
+
+        <div class="scenarios" role="tablist" aria-label="What Hana does">
           {
-            rules.map(([t, b]) => (
+            scenarios.map((sc, i) => (
+              <button type="button" role="tab" id={`sc-${sc.id}`} aria-controls="views" aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-scenario={sc.id} data-note={sc.note}>
+                {sc.label}
+              </button>
+            ))
+          }
+        </div>
+
+        <div class="views" id="views" role="tabpanel" aria-labelledby="sc-pass" data-views data-state="pass">
+          <figure class="view">
+            <figcaption>Hana’s phone</figcaption>
+            <div class="mini-app" aria-hidden="true">
+              <div class="mini-head">
+                <span class="mini-seg"><span class="is-on" data-mini-count>For you · 2</span><span>Matches</span></span>
+              </div>
+              <div class="mini-stack" data-when="pass connect">
+                <Poster name="Aisha Rahman" role="Partner at a seed fund" reason="Two-way fit: Aisha offers funding and is looking for customers." fit="Good fit" tone="plum" class="mini-next" />
+                <Poster name="Daniel Tan" role="CTO, logistics startup" reason="Two-way fit: Daniel offers engineering help and is looking for design help." fit="Strong fit" tone="lagoon" light="right" class="mini-top" data-mini-daniel />
+              </div>
+              <Match me={{ initials: "H", tone: "pine" }} them={{ initials: "DT", tone: "lagoon" }} firstName="Daniel" class="mini-moment" data-when="both" hidden />
+            </div>
+            {scenarios.map((sc) => <p class="view-line" data-when={sc.id} hidden={sc.id !== "pass"}>{sc.you}</p>)}
+          </figure>
+
+          <div class="wire" aria-hidden="true">
+            <span class="wire-line"><span class="wire-dot"></span></span>
+            {scenarios.map((sc) => <span class="wire-label" data-when={sc.id} hidden={sc.id !== "pass"}>{sc.wire}</span>)}
+          </div>
+
+          <figure class="view">
+            <figcaption>Daniel’s phone</figcaption>
+            <div class="mini-app" aria-hidden="true">
+              <div class="mini-head">
+                <span class="mini-seg"><span class="is-on">For you · 5</span><span>Matches</span></span>
+              </div>
+              <div class="mini-stack" data-when="pass connect">
+                <Poster name="Mei Lin" role="Product designer" reason="Mei offers design help, which you’re looking for." fit="Good fit" tone="clay" class="mini-next" />
+                <Poster name="Hana" role="Founder, first release next month" reason="Two-way fit: Hana offers design help and is looking for engineering help." fit="Strong fit" tone="pine" class="mini-top mini-still" />
+              </div>
+              <Match me={{ initials: "DT", tone: "lagoon" }} them={{ initials: "H", tone: "pine" }} firstName="Hana" class="mini-moment" data-when="both" hidden />
+            </div>
+            {scenarios.map((sc) => <p class="view-line" data-when={sc.id} hidden={sc.id !== "pass"}>{sc.them}</p>)}
+          </figure>
+        </div>
+        <p class="scenario-note" data-scenario-note aria-live="polite">{scenarios[0].note}</p>
+
+        <ul class="rules">
+          {
+            rules.map((r) => (
               <li>
-                <h3>{t}</h3>
-                <p>{b}</p>
+                <span class="rule-icon"><Icon name={r.icon} size={22} /></span>
+                <h3>{r.title}</h3>
+                <p>{r.body}</p>
               </li>
             ))
           }
-        </ol>
+        </ul>
       </div>
     </section>
 
