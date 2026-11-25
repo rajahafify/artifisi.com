@@ -340,7 +340,6 @@ em {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(245, 239, 227, 0.94) 0%, rgba(245, 239, 227, 0.78) 30%, rgba(245, 239, 227, 0) 54%),
     radial-gradient(70% 60% at 0% 100%, rgba(245, 239, 227, 0.92) 0%, rgba(245, 239, 227, 0.6) 45%, rgba(245, 239, 227, 0) 75%),
     linear-gradient(180deg, rgba(245, 239, 227, 0.7) 0%, rgba(245, 239, 227, 0) 16%);
 }
@@ -481,6 +480,18 @@ html.motion .hero {
   inset: 0;
   min-height: 0;
   will-change: opacity, transform;
+}
+/* A paper wash behind the headline only; it leaves with the hero so the story scenes stay clear. */
+html.motion .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(245, 239, 227, 0.94) 0%, rgba(245, 239, 227, 0.78) 30%, rgba(245, 239, 227, 0) 54%);
+}
+html.motion .hero {
+  isolation: isolate;
 }
 html.motion .scroll-cue {
   position: absolute;
@@ -1147,9 +1158,10 @@ section.final::before {
 }
 
 /* ---------- Reveals (only when motion is on) ---------- */
-html.motion [data-reveal] {
-  clip-path: inset(0 0 100% 0);
-  transform: translateY(24px);
+/* SplitText line masks: keep descenders and italics from being clipped. */
+html.motion h2[data-reveal] > div {
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
 }
 
 /* ---------- Small screens ---------- */

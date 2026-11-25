@@ -45,6 +45,8 @@ import {
 
 export interface Room {
   setProgress(p: number): void;
+  /** Draw one frame. Called from the page's shared animation loop (GSAP's ticker), in seconds. */
+  tick(seconds: number): void;
   renderAt(p: number): void;
   setPointer(x: number, y: number): void;
   setActive(active: boolean): void;
@@ -118,7 +120,32 @@ function textPlane(draw: (ctx: CanvasRenderingContext2D, w: number, h: number) =
   return { mesh, redraw: () => (draw(ctx, canvas.width, canvas.height), (tex.needsUpdate = true)) };
 }
 
-export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: { small: boolean }): Room | null {
+export type Tier = "high" | "low";
+
+// The room builds itself on first load: chairs and people pop up from the stage forward.
+const backOut = (t: number) => 1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2);
+
+// Soft contact shadow used when real-time shadows are off.
+function blobTexture() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 64;
+  const g = c.getContext("2d")!;
+  const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, "rgba(70, 52, 30, 0.34)");
+  grad.addColorStop(0.55, "rgba(70, 52, 30, 0.14)");
+  grad.addColorStop(1, "rgba(70, 52, 30, 0)");
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 64, 64);
+  const t = new CanvasTexture(c);
+  t.colorSpace = SRGBColorSpace;
+  return t;
+}
+
+/**
+ * `tier` "high" draws real-time soft shadows; "low" (phones, small GPUs) uses baked-looking
+ * contact shadows and a lower pixel ratio. A "high" room that can't hold ~40fps drops to "low".
+ */
+export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: { small: boolean; tier: Tier }): Room | null {
   let renderer: WebGLRenderer;
   try {
     renderer = new WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
@@ -128,7 +155,8 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   const dpr = Math.min(window.devicePixelRatio || 1, opts.small ? 1.5 : 2);
   renderer.setPixelRatio(dpr);
   renderer.setClearColor(PAPER, 1);
-  renderer.shadowMap.enabled = true;
+  let tier: Tier = opts.tier;
+  renderer.shadowMap.enabled = tier === "high";
   renderer.shadowMap.type = PCFSoftShadowMap;
 
   const scene = new Scene();
@@ -140,7 +168,7 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   scene.add(new HemisphereLight(0xffffff, 0xe6d9c2, 1.6));
   const sun = new DirectionalLight(0xfff4e6, 2.1);
   sun.position.set(7, 16, 9);
-  sun.castShadow = true;
+  sun.castShadow = tier === "high";
   sun.shadow.mapSize.set(opts.small ? 1024 : 2048, opts.small ? 1024 : 2048);
   sun.shadow.camera.left = -14;
   sun.shadow.camera.right = 14;
@@ -368,6 +396,15 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   });
   scene.add(tableTops, tableLegs);
 
+  // Contact shadows for the low tier: one soft blob under each person and table.
+  const blobs = new InstancedMesh(
+    new PlaneGeometry(1, 1).rotateX(-Math.PI / 2),
+    new MeshBasicMaterial({ map: blobTexture(), transparent: true, depthWrite: false }),
+    n + tables.length,
+  );
+  blobs.visible = tier === "low";
+  scene.add(blobs);
+
   // "Seen" marks: a thin ring at the feet of everyone the sidekick has scouted.
   const seenGeo = new RingGeometry(0.3, 0.36, 40);
   seenGeo.rotateX(-Math.PI / 2);
@@ -518,7 +555,44 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     if (pick) el.classList.toggle("below", y - 18 - box.offsetHeight < 90);
   }
 
+  let introOn = true; // off for the still frame used with reduced motion
+  let introSettled = false;
+  function grow(x: number, z: number, intro: number) {
+    if (intro >= 1) return 1;
+    const delay = clamp((z + 9) / 18) * 0.55 + Math.abs(x) * 0.012;
+    const t = clamp((intro - delay) / 0.42);
+    return t <= 0 ? 0.0001 : backOut(t);
+  }
+
   function draw(p: number, time: number) {
+    const intro = introOn ? clamp((time - 0.15) / 2.1) : 1;
+    if (!introSettled) {
+      // Chairs and tables grow in with the people, then stay put.
+      chairs.forEach((c, i) => {
+        const g = grow(c.x, c.z, intro);
+        dummy.position.copy(c);
+        dummy.rotation.set(0, 0, 0);
+        dummy.scale.set(g, g, g);
+        dummy.updateMatrix();
+        chairMesh.setMatrixAt(i, dummy.matrix);
+        chairBacks.setMatrixAt(i, dummy.matrix);
+      });
+      tables.forEach((t, i) => {
+        const g = grow(t.x, t.z, intro);
+        dummy.position.copy(t);
+        dummy.scale.set(g, g, g);
+        dummy.updateMatrix();
+        tableTops.setMatrixAt(i, dummy.matrix);
+        tableLegs.setMatrixAt(i, dummy.matrix);
+        dummy.position.set(t.x, 0.012, t.z);
+        dummy.scale.set(0.9 * g, 1, 0.9 * g);
+        dummy.updateMatrix();
+        blobs.setMatrixAt(n + i, dummy.matrix);
+      });
+      chairMesh.instanceMatrix.needsUpdate = chairBacks.instanceMatrix.needsUpdate = true;
+      tableTops.instanceMatrix.needsUpdate = tableLegs.instanceMatrix.needsUpdate = true;
+      if (intro >= 1) introSettled = true;
+    }
     const checkin = smooth(PHASES.checkin[0], PHASES.checkin[1], p);
     const scoutT = smooth(PHASES.scout[0], PHASES.scout[1] - 0.02, p);
     const scouting = smooth(PHASES.scout[0] - 0.01, PHASES.scout[0] + 0.03, p) * (1 - smooth(PHASES.rank[0], PHASES.rank[0] + 0.05, p));
@@ -567,14 +641,20 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
       }
       dummy.position.set(x, y, z);
       dummy.rotation.set(0, face, 0);
-      dummy.scale.set(1, scaleY, 1);
+      const g = grow(pp.x, pp.z, intro);
+      dummy.scale.set(g, scaleY * g, g);
       dummy.updateMatrix();
       bodies.setMatrixAt(i, dummy.matrix);
       const headY = y + (pp.seated ? 0.98 : 1.12);
-      dummy.position.set(x, headY, z);
-      dummy.scale.set(1, 1, 1);
+      dummy.position.set(x, lerp(0, headY, Math.min(1, g)), z);
+      dummy.scale.set(g, g, g);
       dummy.updateMatrix();
       heads.setMatrixAt(i, dummy.matrix);
+      dummy.position.set(x, 0.011, z);
+      dummy.rotation.set(0, 0, 0);
+      dummy.scale.set(0.95 * g, 1, 0.95 * g);
+      dummy.updateMatrix();
+      blobs.setMatrixAt(i, dummy.matrix);
 
       // Colour: fade everyone but you and the picks once the list is ready.
       let fade = 0;
@@ -601,8 +681,13 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     bodies.instanceColor!.needsUpdate = true;
     heads.instanceColor!.needsUpdate = true;
     seen.instanceMatrix.needsUpdate = true;
+    blobs.instanceMatrix.needsUpdate = true;
 
-    // The sidekick.
+    // The sidekick, and the pin over you, arrive last.
+    const arrive = smooth(0.75, 1, intro);
+    orb.scale.setScalar(Math.max(0.0001, arrive));
+    orbHalo.visible = orbShadow.visible = arrive > 0.5;
+    pin.scale.setScalar(Math.max(0.0001, arrive));
     orb.position.copy(sk);
     orbHalo.position.copy(sk);
     orbHalo.scale.setScalar(1 + Math.sin(time * 3) * 0.12);
@@ -689,34 +774,57 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     });
   }
 
-  // ---- Loop ---------------------------------------------------------------------------
-  let active = true;
-  let raf = 0;
-  const start = performance.now();
-  function frame() {
-    raf = 0;
-    if (!active) return;
-    current += (target - current) * 0.09;
-    if (Math.abs(target - current) < 0.0005) current = target;
-    draw(current, (performance.now() - start) / 1000);
-    raf = requestAnimationFrame(frame);
+  // ---- Quality ------------------------------------------------------------------------
+  function setTier(next: Tier) {
+    if (next === tier) return;
+    tier = next;
+    const high = tier === "high";
+    renderer.shadowMap.enabled = high;
+    sun.castShadow = high;
+    blobs.visible = !high;
+    renderer.setPixelRatio(high ? dpr : Math.min(dpr, 1.25));
+    // Shadow settings are compiled into the shaders, so materials must rebuild.
+    scene.traverse((o) => {
+      const mat = (o as Mesh).material as { needsUpdate?: boolean } | undefined;
+      if (mat) mat.needsUpdate = true;
+    });
+    resize();
   }
-  const onVisibility = () => {
-    if (document.hidden) {
-      cancelAnimationFrame(raf);
-      raf = 0;
-    } else if (active && !raf) raf = requestAnimationFrame(frame);
-  };
-  document.addEventListener("visibilitychange", onVisibility);
-  raf = requestAnimationFrame(frame);
+
+  // ---- Loop (driven by the page's GSAP ticker) -----------------------------------------
+  let active = true;
+  let started = -1;
+  let last = -1;
+  let samples = 0;
+  let spent = 0;
+  function tick(now: number) {
+    if (!active || document.hidden) {
+      last = -1;
+      return;
+    }
+    if (started < 0) started = now;
+    const dt = last < 0 ? 1 / 60 : Math.min(0.1, now - last);
+    last = now;
+    // Ease toward the scroll position at the same speed whatever the frame rate.
+    current += (target - current) * (1 - Math.pow(1 - 0.09, dt * 60));
+    if (Math.abs(target - current) < 0.0005) current = target;
+    const t = now - started;
+    draw(current, t);
+    // Measure 90 frames once the intro is over; drop to the low tier if they're slow.
+    if (tier === "high" && t > 2.6 && samples < 90) {
+      spent += dt;
+      if (++samples === 90 && spent / 90 > 1 / 40) setTier("low");
+    }
+  }
 
   return {
     setProgress(p) {
       target = clamp(p);
     },
+    tick,
     renderAt(p) {
       active = false;
-      cancelAnimationFrame(raf);
+      introOn = false;
       target = current = clamp(p);
       draw(current, 1.2);
       // Fonts may arrive after the still frame; draw it again once they do.
@@ -727,15 +835,11 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
       pointer.y = y;
     },
     setActive(on) {
-      if (on === active) return;
       active = on;
-      if (on && !raf) raf = requestAnimationFrame(frame);
     },
     dispose() {
       active = false;
-      cancelAnimationFrame(raf);
       ro.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
       scene.traverse((o) => {
         const m = o as Mesh;
         m.geometry?.dispose?.();

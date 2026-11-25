@@ -6,7 +6,14 @@ Sidekick's landing page, built with Astro. One page:
 - **Try a card**: a working demo of the swipe card and the sidekicks' conversation, using the demo-event people from the app's dev seed.
 - Privacy, questions, and a final call to action.
 
-`src/scripts/main.ts` wires up smooth scroll (Lenis), the pinned story (GSAP ScrollTrigger), reveals and the demo card.
+`src/scripts/main.ts` wires up smooth scroll (Lenis), the story, reveals and the demo card. Everything runs on GSAP's ticker, one loop for Lenis, ScrollTrigger and the 3D room. The story copy is a GSAP timeline with a label per step, scrubbed by ScrollTrigger; section headings reveal line by line with SplitText masks; motion is set up inside `gsap.matchMedia()` so it reverts if reduced motion is switched on.
+
+## Render quality
+
+- The room builds itself on first load: chairs, tables and people grow in from the stage forward, then the sidekick and your pin arrive. There is no blocking preloader; the headline is readable from the first frame.
+- **High tier** (desktops): real-time soft shadows, pixel ratio up to 2.
+- **Low tier** (phones, 4 or fewer CPU cores, or 4 GB or less memory): soft contact shadows under each person and table, pixel ratio up to 1.25 (1.5 on phones).
+- A high-tier room measures 90 frames after its intro and drops itself to the low tier if they average under 40fps.
 
 ## Accessibility and fallbacks
 

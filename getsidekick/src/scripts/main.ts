@@ -2,27 +2,28 @@
 // `html.js` is set before paint; `html.motion` too, unless reduced motion is requested or WebGL is missing.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 import Lenis from "lenis";
-import { createRoom, PHASES } from "./room";
+import { createRoom, PHASES, type Tier } from "./room";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const root = document.documentElement;
 const q = <T extends Element = HTMLElement>(s: string, el: ParentNode = document) => el.querySelector<T>(s);
 const qa = <T extends Element = HTMLElement>(s: string, el: ParentNode = document) => [...el.querySelectorAll<T>(s)];
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const smooth = (a: number, b: number, v: number) => {
-  const t = clamp((v - a) / (b - a));
-  return t * t * (3 - 2 * t);
-};
 
 const small = matchMedia("(max-width: 720px)").matches;
+// Phones and small machines start on the light render tier (no real-time shadows, lower pixel
+// ratio). The room also drops to it by itself if it can't hold its frame rate.
+const device = navigator as Navigator & { deviceMemory?: number };
+const tier: Tier = small || (navigator.hardwareConcurrency ?? 8) <= 4 || (device.deviceMemory ?? 8) <= 4 ? "low" : "high";
 const story = q("[data-story]")!;
 const canvas = q<HTMLCanvasElement>("[data-room]")!;
 const room = createRoom(
   canvas,
   { you: q("[data-label-you]"), sidekick: q("[data-label-sidekick]"), picks: qa("[data-label-pick]") },
-  { small },
+  { small, tier },
 );
 if (!room) root.classList.remove("motion");
 const motion = root.classList.contains("motion");
@@ -80,26 +81,24 @@ if (room && motion) {
   const railButtons = qa<HTMLButtonElement>("button", rail);
   const legend = q(".legend")!;
 
-  const setStory = (p: number) => {
-    room.setProgress(p);
-    const out = smooth(0.015, 0.1, p);
-    hero.style.opacity = String(1 - out);
-    hero.style.transform = `translate3d(0, ${(-60 * out).toFixed(1)}px, 0)`;
-    hero.style.visibility = out > 0.99 ? "hidden" : "visible";
+  // The copy is one timeline, one unit long, with a label per step. ScrollTrigger scrubs it,
+  // so the hero and chapters ease in and out with the scroll instead of being set by hand.
+  const copy = gsap.timeline({ defaults: { ease: "power2.out", duration: 0.05 } });
+  copy.to(hero, { autoAlpha: 0, y: -60, duration: 0.085 }, 0.015);
+  chapters.forEach((el, i) => {
+    const [a, b] = steps[i];
+    copy.addLabel(`step${i + 1}`, a);
+    copy.fromTo(el, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0 }, a);
+    if (i < chapters.length - 1) copy.to(el, { autoAlpha: 0, y: -30, ease: "power2.in" }, b - 0.05);
+  });
+  copy.set({}, {}, 1); // pad to exactly one unit so progress maps onto PHASES
 
+  const setUi = (p: number) => {
+    room.setProgress(p);
     let current = -1;
-    chapters.forEach((el, i) => {
-      const [a, b] = steps[i];
-      const inn = smooth(a, a + 0.05, p);
-      const last = i === chapters.length - 1;
-      const outT = last ? 0 : smooth(b - 0.05, b, p);
-      const o = inn * (1 - outT);
-      el.style.opacity = o.toFixed(3);
-      el.style.visibility = o > 0.01 ? "visible" : "hidden";
-      el.style.transform = `translate3d(0, ${((1 - inn) * 30 - outT * 30).toFixed(1)}px, 0)`;
+    steps.forEach(([a, b], i) => {
       if (p >= a) current = i;
-      const fill = clamp((p - a) / (b - a));
-      railButtons[i].style.setProperty("--fill", fill.toFixed(3));
+      railButtons[i].style.setProperty("--fill", clamp((p - a) / (b - a)).toFixed(3));
     });
     railButtons.forEach((b, i) => b.classList.toggle("is-active", i === current));
     const showUi = p > 0.09;
@@ -111,8 +110,10 @@ if (room && motion) {
     trigger: story,
     start: "top top",
     end: "bottom bottom",
-    onUpdate: (self) => setStory(self.progress),
-    onRefresh: (self) => setStory(self.progress),
+    animation: copy,
+    scrub: 0.6,
+    onUpdate: (self) => setUi(self.progress),
+    onRefresh: (self) => setUi(self.progress),
   });
   // Only draw the scene while any of it is on screen.
   ScrollTrigger.create({
@@ -121,7 +122,9 @@ if (room && motion) {
     end: "bottom top",
     onToggle: (self) => room.setActive(self.isActive),
   });
-  setStory(0);
+  setUi(0);
+  // One loop for the whole page: Lenis, ScrollTrigger and the room all run on GSAP's ticker.
+  gsap.ticker.add((time) => room.tick(time));
 
   railButtons.forEach((b, i) => b.addEventListener("click", () => scrollToY(stepY(i))));
 
@@ -134,20 +137,40 @@ if (room && motion) {
     { passive: true },
   );
 
-  // The hero comes in line by line.
-  const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-  tl.from("h1 .line > span", { yPercent: 110, duration: 1.4, stagger: 0.1 }, 0.15)
-    .from(".kicker", { opacity: 0, y: 12, duration: 1 }, 0.1)
-    .from(".hero-foot > *", { opacity: 0, y: 20, duration: 1.2, stagger: 0.1 }, 0.55)
-    .from(".scroll-cue", { opacity: 0, duration: 1 }, 1.1)
-    .from(canvas, { opacity: 0, duration: 2.2, ease: "power2.out" }, 0);
+  const mm = gsap.matchMedia();
+  mm.add("(prefers-reduced-motion: no-preference)", () => {
+    // The hero comes in line by line, then the room builds itself behind it.
+    const intro = gsap.timeline({ defaults: { ease: "expo.out" } });
+    intro
+      .from("h1 .line > span", { yPercent: 110, duration: 1.4, stagger: 0.1 }, 0.15)
+      .from(".hero-foot > *", { autoAlpha: 0, y: 20, duration: 1.2, stagger: 0.1 }, 0.55)
+      .from(".scroll-cue", { autoAlpha: 0, duration: 1 }, 1.1)
+      .from(canvas, { autoAlpha: 0, duration: 1.2, ease: "power2.out" }, 0);
 
-  // Section reveals.
-  ScrollTrigger.batch("[data-reveal]", {
-    start: "top 88%",
-    once: true,
-    // Headings wipe up from their baseline; the clip opens past the box so descenders aren't cut.
-    onEnter: (els) => gsap.to(els, { clipPath: "inset(-20% -5% -25% -5%)", y: 0, duration: 1.3, ease: "expo.out", stagger: 0.1 }),
+    // Section headings reveal line by line from behind a mask. SplitText re-splits on resize,
+    // and keeps the heading readable to screen readers.
+    for (const el of qa("h2[data-reveal]")) {
+      SplitText.create(el, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        onSplit: (self) =>
+          gsap.from(self.lines, {
+            yPercent: 105,
+            duration: 1.2,
+            ease: "expo.out",
+            stagger: 0.09,
+            scrollTrigger: { trigger: el, start: "top 86%", once: true },
+          }),
+      });
+    }
+    gsap.from("[data-reveal]:not(h2)", {
+      autoAlpha: 0,
+      y: 40,
+      duration: 1.2,
+      ease: "expo.out",
+      scrollTrigger: { trigger: "[data-reveal]:not(h2)", start: "top 85%", once: true },
+    });
   });
 } else if (room) {
   // Reduced motion: one still frame of the room behind the hero.
@@ -238,4 +261,6 @@ if (card) {
   if (!motion) play(currentId);
 }
 
+// Web fonts change line breaks and heights; measure again once they and the page are in.
+document.fonts?.ready.then(() => ScrollTrigger.refresh());
 addEventListener("load", () => ScrollTrigger.refresh());
