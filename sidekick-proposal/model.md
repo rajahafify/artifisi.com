@@ -13,6 +13,20 @@ Every number in the deck's market, business model, go-to-market, financials and 
 
 The national event count covers business events in general, not networking events, so 393 is an upper bound. The Penang count uses a different definition of "event" and is one state only.
 
+### TAM, SAM, SOM
+
+Built bottom-up from counted events and our price, as Antler's guidance asks: counted customers times average spend, not a share of a headline market.
+
+| Level | Events a year | Value a year | Basis |
+|---|---|---|---|
+| TAM: all business events in Malaysia | 393 | RM 393,000 | 393 × RM 1,000 |
+| SAM: networking-led events | 197 | RM 197,000 | 50% of TAM. **Assumed.** No source gives the networking share. |
+| SOM: year-2 plan | 40 | RM 40,000 | The plan in the Financials section |
+
+- **TAM excludes** meetups, community events and internal company events. Those are probably a larger group, but we have no count for them, so they are left out rather than guessed.
+- **The SAM share is the weakest number here.** At 50%, the year-2 plan is about 20% of SAM. At 25%, it would be 40%, which an investor would question. If the networking share turns out lower, the plan needs to move with it.
+- **SOM uses the year-2 event count** from the volume table, so the market and financial slides agree.
+
 ## Price
 
 - RM 1,000 per event, paid by the organiser. **Assumed.**
