@@ -60,13 +60,8 @@ export interface RoomLabels {
 }
 
 // Story phases, in progress units. The page copy lines up with these.
-export const PHASES = {
-  hero: [0, 0.12],
-  checkin: [0.12, 0.32],
-  scout: [0.32, 0.56],
-  rank: [0.56, 0.78],
-  match: [0.78, 1],
-} as const;
+import { PHASES } from "./phases";
+export { PHASES };
 
 const PAPER = new Color("#f5efe3");
 const FLOOR = new Color("#efe7d7");
@@ -768,7 +763,9 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     labels.picks.forEach((el, k) => {
       const pp = people[picks[k]];
       const show = smooth(PHASES.rank[0] + 0.04 + k * 0.03, PHASES.rank[0] + 0.1 + k * 0.03, p);
-      const keep = k === 0 ? 1 : 1 - matched * 0.65;
+      // At the match the other two cards step back entirely, rather than sitting half-faded
+      // at a contrast nobody can read.
+      const keep = k === 0 ? 1 : 1 - matched;
       place(el, tmp.set(pp.x, 1.55, pp.z), show * keep);
       el.classList.toggle("is-match", k === 0 && matched > 0.5);
     });

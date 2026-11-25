@@ -1,0 +1,68 @@
+---
+// The page shell: head, fonts, share tags and the stylesheet. Base.astro adds the landing page's
+// script on top; simple pages like the 404 use this on its own.
+import "../styles/site.css";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Keep this page out of search results. */
+  noindex?: boolean;
+  /** schema.org data for search engines, as one JSON-LD object. */
+  structured?: Record<string, unknown>;
+}
+const { title, description, noindex = false, structured } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const image = new URL("/og.jpg", Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <meta property="og:site_name" content="Sidekick" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Stay in the talk. Your sidekick works the room. A small 3D event: a talk at the back, people at tables in front." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="theme-color" content="#f5efe3" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+    />
+    {structured && <script type="application/ld+json" set:html={JSON.stringify(structured)} />}
+    <script is:inline>
+      // Decide the layout before first paint: the pinned 3D story needs motion and WebGL.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var gl = false;
+        try {
+          var c = document.createElement("canvas");
+          gl = !!(c.getContext("webgl2") || c.getContext("webgl"));
+        } catch (e) {}
+        if (!reduce && gl) d.classList.add("motion");
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

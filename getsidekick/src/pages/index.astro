@@ -6,7 +6,18 @@ import Buddy from "../components/Buddy.astro";
 import Poster from "../components/Poster.astro";
 import Match from "../components/Match.astro";
 
+import QRCode from "qrcode";
+
 const app = "https://sidekick.artifisi.com";
+
+// A QR code for desktop visitors, drawn at build time. High error correction leaves room for
+// Buddy in the middle.
+const qr = await QRCode.toString(app, {
+  type: "svg",
+  errorCorrectionLevel: "H",
+  margin: 0,
+  color: { dark: "#12402eff", light: "#00000000" },
+});
 
 // The story told by the room scene, one chapter per phase (see PHASES in room.ts).
 const chapters = [
@@ -129,6 +140,19 @@ const scenarios = [
   },
 ] as const;
 
+// What search engines read about the product. Only facts the page states elsewhere.
+const structured = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Sidekick",
+  url: "https://getsidekick.artifisi.com",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web, Android",
+  description:
+    "Check in to an event and your sidekick scouts the room, ranks who is worth meeting, and lines up the match. You stay in the talk.",
+  publisher: { "@type": "Organization", name: "Artifisi Sdn Bhd" },
+};
+
 const rules = [
   { icon: "eye-off", title: "Passes stay private", body: "No one can see who you passed on, or who passed on them." },
   { icon: "swap", title: "Contacts after a match", body: "Your contact details are shared only when both of you connect." },
@@ -155,6 +179,7 @@ const faqs = [
 ---
 
 <Base
+  structured={structured}
   title="Sidekick: stay in the talk, meet the right people"
   description="Check in to an event and your sidekick scouts the room, ranks who is worth meeting, and lines up the match. You stay in the talk."
 >
@@ -162,7 +187,7 @@ const faqs = [
 
   <header class="nav" data-nav>
     <a class="brand" href="/" aria-label="Sidekick home">
-      <span class="brand-dot" aria-hidden="true"></span>Sidekick
+      <Buddy size={18} mood="wink" color="currentColor" features="var(--brand-features)" cheeks="#FF5A36" />Sidekick
     </a>
     <nav aria-label="Main">
       <a href="#story-1">How it works</a>
@@ -456,9 +481,18 @@ const faqs = [
         <h2 id="final-title" class="display mega" data-reveal>
           Go to the <em>talk.</em><br />We'll work the room.
         </h2>
-        <div class="final-foot">
-          <a class="btn btn-signal btn-lg" href={app}>Open Sidekick <Arrow /></a>
-          <p>Runs in your browser. Look around as a guest, and sign in only when you want to connect.</p>
+        <div class="final-row">
+          <div class="final-foot">
+            <a class="btn btn-signal btn-lg" href={app}>Open Sidekick <Arrow /></a>
+            <p>Runs in your browser. Look around as a guest, and sign in only when you want to connect.</p>
+          </div>
+          <figure class="qr" aria-label="QR code for sidekick.artifisi.com">
+            <div class="qr-code">
+              <Fragment set:html={qr} />
+              <span class="qr-badge" aria-hidden="true"><Buddy size={22} mood="wink" color="#12402E" features="#FBF9F4" cheeks="#FF5A36" /></span>
+            </div>
+            <figcaption><b>On a laptop?</b> Scan to open Sidekick on your phone, where you'll use it at the event.</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -466,7 +500,7 @@ const faqs = [
 
   <footer class="foot light">
     <div class="wrap">
-      <span class="brand"><span class="brand-dot" aria-hidden="true"></span>Sidekick</span>
+      <span class="brand"><Buddy size={18} mood="wink" color="currentColor" features="var(--brand-features)" cheeks="#FF5A36" />Sidekick</span>
       <span>Made by Artifisi Sdn Bhd. In pilot.</span>
       <a href={app}>sidekick.artifisi.com</a>
     </div>

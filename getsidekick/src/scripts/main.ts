@@ -5,7 +5,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { Draggable } from "gsap/Draggable";
 import Lenis from "lenis";
-import { createRoom, PHASES, type Tier } from "./room";
+import { PHASES } from "./phases";
+import type { Room, Tier } from "./room";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, Draggable);
 
@@ -21,13 +22,34 @@ const device = navigator as Navigator & { deviceMemory?: number };
 const tier: Tier = small || (navigator.hardwareConcurrency ?? 8) <= 4 || (device.deviceMemory ?? 8) <= 4 ? "low" : "high";
 const story = q("[data-story]")!;
 const canvas = q<HTMLCanvasElement>("[data-room]")!;
-const room = createRoom(
-  canvas,
-  { you: q("[data-label-you]"), sidekick: q("[data-label-sidekick]"), picks: qa("[data-label-pick]") },
-  { small, tier },
-);
-if (!room) root.classList.remove("motion");
 const motion = root.classList.contains("motion");
+
+// The 3D room (and Three.js with it) loads in its own chunk once the headline has painted, so
+// the first view never waits for it. Until it arrives the story still scrolls; the room picks up
+// at whatever point the reader has reached.
+let room: Room | null = null;
+let storyProgress = 0;
+let storyVisible = true;
+async function loadRoom() {
+  const { createRoom } = await import("./room");
+  room = createRoom(
+    canvas,
+    { you: q("[data-label-you]"), sidekick: q("[data-label-sidekick]"), picks: qa("[data-label-pick]") },
+    { small, tier },
+  );
+  if (!room) return; // WebGL failed after all: the story still reads, over the paper background
+  if (!motion) {
+    room.renderAt(0); // reduced motion: one still frame behind the hero
+    return;
+  }
+  room.setProgress(storyProgress);
+  room.setActive(storyVisible);
+  gsap.ticker.add((time) => room!.tick(time));
+  gsap.fromTo(canvas, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.2, ease: "power2.out" });
+}
+const idle = (fn: () => void) =>
+  "requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 600 }) : setTimeout(fn, 200);
+requestAnimationFrame(() => idle(() => void loadRoom()));
 
 // ---- Header ---------------------------------------------------------------------------
 const nav = q("[data-nav]")!;
@@ -75,7 +97,7 @@ const storyRange = () => story.offsetHeight - innerHeight;
 // Where to land for a step: a little past its start, so its copy is fully in.
 const stepY = (i: number) => story.offsetTop + storyRange() * (steps[i][0] + (steps[i][1] - steps[i][0]) * 0.45);
 
-if (room && motion) {
+if (motion) {
   const hero = q("[data-hero]")!;
   const chapters = qa("[data-chapter]");
   const rail = q("[data-rail]")!;
@@ -85,23 +107,28 @@ if (room && motion) {
   // The copy is one timeline, one unit long, with a label per step. ScrollTrigger scrubs it,
   // so the hero and chapters ease in and out with the scroll instead of being set by hand.
   const copy = gsap.timeline({ defaults: { ease: "power2.out", duration: 0.05 } });
-  copy.to(hero, { autoAlpha: 0, y: -60, duration: 0.085 }, 0.015);
+  // Opacity only, not visibility: faded copy stays in the accessibility tree (the H1 included),
+  // and anything that takes keyboard focus scrolls its step into view (below).
+  copy.to(hero, { opacity: 0, y: -60, duration: 0.085 }, 0.015);
   chapters.forEach((el, i) => {
     const [a, b] = steps[i];
     copy.addLabel(`step${i + 1}`, a);
-    copy.fromTo(el, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0 }, a);
-    if (i < chapters.length - 1) copy.to(el, { autoAlpha: 0, y: -30, ease: "power2.in" }, b - 0.05);
+    copy.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, a);
+    if (i < chapters.length - 1) copy.to(el, { opacity: 0, y: -30, ease: "power2.in" }, b - 0.05);
   });
   copy.set({}, {}, 1); // pad to exactly one unit so progress maps onto PHASES
 
   const setUi = (p: number) => {
-    room.setProgress(p);
+    storyProgress = p;
+    room?.setProgress(p);
     let current = -1;
     steps.forEach(([a, b], i) => {
       if (p >= a) current = i;
       railButtons[i].style.setProperty("--fill", clamp((p - a) / (b - a)).toFixed(3));
     });
     railButtons.forEach((b, i) => b.classList.toggle("is-active", i === current));
+    // The faded hero must not catch clicks meant for the story.
+    hero.style.pointerEvents = p > 0.05 ? "none" : "";
     const showUi = p > 0.09;
     rail.classList.toggle("is-on", showUi);
     legend.classList.toggle("is-on", showUi && p < 0.97);
@@ -121,19 +148,33 @@ if (room && motion) {
     trigger: story,
     start: "top bottom",
     end: "bottom top",
-    onToggle: (self) => room.setActive(self.isActive),
+    onToggle: (self) => {
+      storyVisible = self.isActive;
+      room?.setActive(self.isActive);
+    },
   });
   setUi(0);
-  // One loop for the whole page: Lenis, ScrollTrigger and the room all run on GSAP's ticker.
-  gsap.ticker.add((time) => room.tick(time));
+  // One loop for the whole page: Lenis, ScrollTrigger and (once loaded) the room all run on
+  // GSAP's ticker.
 
   railButtons.forEach((b, i) => b.addEventListener("click", () => scrollToY(stepY(i))));
+
+  // Keyboard users can reach the hero links and the last step's link while they're faded out;
+  // bring the right part of the story back into view when they do.
+  hero.addEventListener("focusin", () => {
+    if (scrollY > story.offsetTop + 40) scrollToY(story.offsetTop);
+  });
+  chapters.forEach((el, i) =>
+    el.addEventListener("focusin", () => {
+      if (Math.abs(scrollY - stepY(i)) > innerHeight * 0.2) scrollToY(stepY(i));
+    }),
+  );
 
   addEventListener(
     "pointermove",
     (e) => {
       if (e.pointerType !== "mouse") return;
-      room.setPointer((e.clientX / innerWidth) * 2 - 1, (e.clientY / innerHeight) * 2 - 1);
+      room?.setPointer((e.clientX / innerWidth) * 2 - 1, (e.clientY / innerHeight) * 2 - 1);
     },
     { passive: true },
   );
@@ -145,8 +186,7 @@ if (room && motion) {
     intro
       .from("h1 .line > span", { yPercent: 110, duration: 1.4, stagger: 0.1 }, 0.15)
       .from(".hero-foot > *", { autoAlpha: 0, y: 20, duration: 1.2, stagger: 0.1 }, 0.55)
-      .from(".scroll-cue", { autoAlpha: 0, duration: 1 }, 1.1)
-      .from(canvas, { autoAlpha: 0, duration: 1.2, ease: "power2.out" }, 0);
+      .from(".scroll-cue", { autoAlpha: 0, duration: 1 }, 1.1);
 
     // Section headings reveal line by line from behind a mask. SplitText re-splits on resize,
     // and keeps the heading readable to screen readers.
@@ -173,9 +213,6 @@ if (room && motion) {
       scrollTrigger: { trigger: "[data-reveal]:not(h2)", start: "top 85%", once: true },
     });
   });
-} else if (room) {
-  // Reduced motion: one still frame of the room behind the hero.
-  room.renderAt(0);
 }
 
 // In-page links: story steps land on their step; everything else scrolls smoothly.

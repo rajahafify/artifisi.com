@@ -1,54 +1,18 @@
 ---
-// The page shell: head, fonts, the stylesheet, and the script that runs the page.
-import "../styles/site.css";
+// The landing page's layout: the shell plus the script that runs the story and the demo.
+import Shell from "./Shell.astro";
 
-interface Props {
+type Props = {
   title: string;
   description: string;
-}
-const { title, description } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+  structured?: Record<string, unknown>;
+};
+const props = Astro.props;
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
-    <meta name="theme-color" content="#f5efe3" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
-    />
-    <script is:inline>
-      // Decide the layout before first paint: the pinned 3D story needs motion and WebGL.
-      (function () {
-        var d = document.documentElement;
-        d.classList.add("js");
-        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        var gl = false;
-        try {
-          var c = document.createElement("canvas");
-          gl = !!(c.getContext("webgl2") || c.getContext("webgl"));
-        } catch (e) {}
-        if (!reduce && gl) d.classList.add("motion");
-      })();
-    </script>
-  </head>
-  <body>
-    <slot />
-    <script>
-      import "../scripts/main.ts";
-    </script>
-  </body>
-</html>
+<Shell {...props}>
+  <slot />
+</Shell>
+<script>
+  import "../scripts/main.ts";
+</script>

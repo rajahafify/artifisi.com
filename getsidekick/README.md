@@ -15,6 +15,21 @@ Sidekick's landing page, built with Astro. One page:
 - **Low tier** (phones, 4 or fewer CPU cores, or 4 GB or less memory): soft contact shadows under each person and table, pixel ratio up to 1.25 (1.5 on phones).
 - A high-tier room measures 90 frames after its intro and drops itself to the low tier if they average under 40fps.
 
+## Loading
+
+The first script is about 71 KB gzipped (GSAP, Lenis, the page logic). The 3D room and Three.js (about 142 KB) load as a separate chunk once the headline has painted; the story scrolls fine before it arrives and the room picks up wherever the reader is.
+
+## Sharing and search
+
+- `public/og.jpg` is the share image (1200x630), a capture of the real hero. Re-capture it if the hero changes.
+- The home page carries Open Graph and Twitter tags and a schema.org `SoftwareApplication` block, limited to facts stated on the page.
+- `src/pages/404.astro` is the not-found page (Cloudflare Pages serves `404.html` automatically). It uses `layouts/Shell.astro`, which has no page script; the landing page uses `layouts/Base.astro`, which adds it.
+- The closing section shows a QR code to `sidekick.artifisi.com` on desktops (drawn at build time with `qrcode`), hidden on phones and touch screens.
+
+## Checks
+
+The last pass ran axe-core (WCAG 2.2 AA plus best practices) at desktop, phone and reduced-motion with no violations, and every visible control is at least 24px.
+
 ## Accessibility and fallbacks
 
 - With reduced motion, or without WebGL, the story is a normal hero plus a numbered list, with one still frame of the room. No pinning, no smooth scroll.
