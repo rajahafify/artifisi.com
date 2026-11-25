@@ -1,11 +1,12 @@
 ---
-// The page shell: head, fonts, the shared stylesheet and the one script that adds motion.
+// The page shell: head, fonts, the stylesheet, and the script that runs the page.
+import "../styles/site.css";
+
 interface Props {
   title: string;
   description: string;
 }
 const { title, description } = Astro.props;
-import "../styles/site.css";
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
@@ -13,7 +14,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -21,19 +22,33 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta name="theme-color" content="#12402e" />
+    <meta name="theme-color" content="#0a1c15" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
     />
+    <script is:inline>
+      // Decide the layout before first paint: the pinned 3D story needs motion and WebGL.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var gl = false;
+        try {
+          var c = document.createElement("canvas");
+          gl = !!(c.getContext("webgl2") || c.getContext("webgl"));
+        } catch (e) {}
+        if (!reduce && gl) d.classList.add("motion");
+      })();
+    </script>
   </head>
   <body>
     <slot />
     <script>
-      import "../scripts/motion.ts";
+      import "../scripts/main.ts";
     </script>
   </body>
 </html>

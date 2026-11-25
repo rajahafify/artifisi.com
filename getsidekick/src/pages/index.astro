@@ -1,189 +1,351 @@
 ---
 import Base from "../layouts/Base.astro";
+
+const app = "https://sidekick.artifisi.com";
+
+// The story told by the room scene, one chapter per phase (see PHASES in room.ts).
+const chapters = [
+  {
+    n: "01",
+    title: "Check in from your seat.",
+    body: "Check in to the event, or to a place like a coworking space. You stay in the talk.",
+  },
+  {
+    n: "02",
+    title: "Your sidekick scouts the floor.",
+    body: "It reads what each person checked in is looking for and what they can offer.",
+  },
+  {
+    n: "03",
+    title: "It ranks who is worth meeting.",
+    body: "You get a short list, each with a one-line reason. Read how the two sidekicks would talk, then connect or pass.",
+  },
+  {
+    n: "04",
+    title: "Both connect. It's a match.",
+    body: "You swap contact details and get an opener for the break. Nobody ever sees a pass.",
+  },
+];
+
+// Demo people from the Sidekick dev seed. The reasons follow the app's own wording.
+const picks = [
+  { name: "Daniel Tan", role: "CTO, logistics startup", reason: "Daniel offers engineering help, which you're looking for." },
+  { name: "Aisha Rahman", role: "Partner at a seed fund", reason: "Aisha offers funding, which you're looking for." },
+  { name: "Mei Lin", role: "Product designer", reason: "Mei offers product feedback, which you're looking for." },
+];
+
+// Example conversations for the demo card. Written from the demo profiles, not from a live event.
+const talks = [
+  {
+    id: "daniel",
+    name: "Daniel Tan",
+    role: "CTO, logistics startup",
+    offers: ["Engineering help", "Mentorship"],
+    wants: ["Design help", "Hiring"],
+    lines: [
+      ["mine", "I'm with Hana, a founder. She's looking for funding and engineering help."],
+      ["theirs", "I'm with Daniel, CTO at a logistics startup. He can offer engineering help and mentorship, and he's hiring."],
+      ["mine", "Hana needs a second pair of eyes on her first release. Worth ten minutes at the break."],
+    ],
+  },
+  {
+    id: "aisha",
+    name: "Aisha Rahman",
+    role: "Partner at a seed fund",
+    offers: ["Funding", "Advice", "Intros"],
+    wants: ["Customers", "Cofounder"],
+    lines: [
+      ["mine", "I'm with Hana, a founder raising her first round."],
+      ["theirs", "I'm with Aisha, partner at a seed fund. She's meeting founders who already have customers."],
+      ["mine", "Hana has a pilot running with two customers. They should talk."],
+    ],
+  },
+  {
+    id: "mei",
+    name: "Mei Lin",
+    role: "Product designer",
+    offers: ["Design help", "Product feedback"],
+    wants: ["A new role", "Collaborators"],
+    lines: [
+      ["mine", "I'm with Hana. She wants product feedback before launch."],
+      ["theirs", "I'm with Mei, a product designer. She's looking for collaborators."],
+      ["mine", "A short review could turn into a project. A good fit for both."],
+    ],
+  },
+];
+
+const rules = [
+  ["A pass is private.", "No one can see who you passed on, or who passed on them."],
+  ["Contacts after a match.", "Your contact details are shared only when both of you connect."],
+  ["Your profile is yours.", "Other people see your card at that event, never your account."],
+  ["Blocks go both ways.", "Block someone and neither of you sees the other again."],
+];
+
+const faqs = [
+  [
+    "Do I need an account?",
+    "No. As a guest you can fill in a profile, check in and see who your sidekick picks. To connect with people you sign in with Google, and everything you did as a guest carries over.",
+  ],
+  ["Does it work on my phone?", "Yes. It runs in the browser on any phone or computer, and there is also an Android app that uses the same account."],
+  ["Can someone see that I passed?", "No. A pass is never shown to anyone. Only two connects make a match."],
+  [
+    "How does it decide who to show me?",
+    "It compares what you're looking for and can offer with everyone else checked in to the same event, and ranks people by how well you fit both ways.",
+  ],
+  [
+    "Has it been used at a real event?",
+    "Not yet. Sidekick is in pilot and has been tested on a demo event. During the pilot, check-in doesn't confirm where you are.",
+  ],
+];
 ---
 
 <Base
-  title="Sidekick: stay in the talk and meet the right people"
-  description="Sidekick checks the room at an event and ranks who is worth meeting. You decide who to connect with, and nobody sees who you passed on."
+  title="Sidekick: stay in the talk, meet the right people"
+  description="Check in to an event and your sidekick scouts the room, ranks who is worth meeting, and lines up the match. You stay in the talk."
 >
-  <header class="top">
-    <div class="wrap">
-      <a class="brand" href="/"><i aria-hidden="true"></i>Sidekick</a>
-      <nav aria-label="Main">
-        <a href="#how">How it works</a>
-        <a href="#privacy">Privacy</a>
-        <a href="#questions">Questions</a>
-        <a class="btn btn-primary" href="https://sidekick.artifisi.com">Open the app</a>
-      </nav>
-    </div>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav" data-nav>
+    <a class="brand" href="/" aria-label="Sidekick home">
+      <span class="brand-dot" aria-hidden="true"></span>Sidekick
+    </a>
+    <nav aria-label="Main">
+      <a href="#story-1">How it works</a>
+      <a href="#demo">Try a card</a>
+      <a href="#privacy">Privacy</a>
+      <a class="nav-cta" href={app}>Open the app <span aria-hidden="true">→</span></a>
+    </nav>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="wrap">
-        <div>
-          <p class="eyebrow">For people who go to events to meet people</p>
-          <h1>Stay in the talk. Your sidekick works the room.</h1>
-          <p class="lead">
-            Check in to an event and Sidekick ranks the people there by what they are looking for and what they can offer.
-            You swipe to connect or pass. When you both connect, you get each other's contact details and an opener for the break.
-          </p>
-          <div class="actions">
-            <a class="btn btn-primary" href="https://sidekick.artifisi.com">Open Sidekick</a>
-            <a class="btn btn-ghost" href="#how">See how it works</a>
-          </div>
-          <p class="status">Runs in the browser, no install needed. Still in pilot.</p>
+  <main id="main">
+    <!-- The story: a pinned stage with the room scene. Without JavaScript it is a hero plus a list. -->
+    <section class="story" id="story" data-story aria-label="How Sidekick works">
+      <div class="stage" data-stage>
+        <canvas class="room" data-room aria-hidden="true"></canvas>
+        <div class="scrim" aria-hidden="true"></div>
+
+        <div class="tags" aria-hidden="true">
+          <span class="tag tag-you" data-label-you><i></i>You, in the talk</span>
+          <span class="tag tag-sk" data-label-sidekick><i></i>Your sidekick</span>
+          {
+            picks.map((p, i) => (
+              <span class="pick" data-label-pick>
+                <span class="pick-card">
+                  <b>
+                    <em>{i + 1}</em>
+                    {p.name}
+                  </b>
+                  <small>{p.role}</small>
+                  <span class="pick-reason">{p.reason}</span>
+                  <span class="pick-match">Match. Contacts swapped.</span>
+                </span>
+              </span>
+            ))
+          }
         </div>
 
-        <div class="phone" aria-hidden="true">
-          <div class="screen">
-            <div class="screen-head"><span>Your sidekick</span><b>Demo event</b></div>
-            <div class="deck-stack">
-              <article class="person back">
-                <div class="avatar">A</div>
-                <h3>Amir</h3>
-                <p class="role">Product lead, payments</p>
-                <p class="fit">Wants to hire a designer. Can share notes on running a pilot.</p>
-              </article>
-              <article class="person top">
-                <span class="stamp">CONNECT</span>
-                <div class="avatar">D</div>
-                <h3>Daniel</h3>
-                <p class="role">CTO, logistics startup</p>
-                <p class="fit">Can offer engineering help and mentorship. Looking for early customers.</p>
-                <div class="tags"><span>Engineering</span><span>Mentorship</span><span>Logistics</span></div>
-                <div class="swipe-row">
-                  <span>Pass</span>
-                  <span class="connect">Connect</span>
-                </div>
-              </article>
+        <div class="hero" data-hero>
+          <p class="kicker"><span class="pulse" aria-hidden="true"></span>For people who go to events to meet people</p>
+          <h1>
+            <span class="line"><span>Stay in the <em>talk.</em></span></span>
+            <span class="line"><span>Your sidekick</span></span>
+            <span class="line"><span><em>works the room.</em></span></span>
+          </h1>
+          <div class="hero-foot">
+            <p class="hero-lead">
+              Check in, and Sidekick finds the people worth meeting while you listen. You decide who to connect with.
+            </p>
+            <div class="actions">
+              <a class="btn btn-signal" href={app}>Open Sidekick <span aria-hidden="true">→</span></a>
+              <a class="btn btn-line" href="#story-1">See how it works</a>
             </div>
+          </div>
+          <p class="scroll-cue" aria-hidden="true"><span></span>Scroll to watch your sidekick work</p>
+        </div>
+
+        <ol class="chapters" data-chapters>
+          {
+            chapters.map((c, i) => (
+              <li class="chapter" id={`story-${i + 1}`} data-chapter>
+                <span class="chapter-n">
+                  {c.n}
+                  <span> / 04</span>
+                </span>
+                <h2>{c.title}</h2>
+                <p>{c.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="rail" data-rail aria-label="Story steps" role="group">
+          {
+            chapters.map((c, i) => (
+              <button type="button" data-step={i} aria-label={`Step ${c.n}: ${c.title}`}>
+                <span class="rail-bar"><span /></span>
+                <span class="rail-n">{c.n}</span>
+              </button>
+            ))
+          }
+        </div>
+
+        <p class="legend" aria-hidden="true">
+          <span><i class="lg-you"></i>You</span>
+          <span><i class="lg-sk"></i>Your sidekick</span>
+          <span><i class="lg-ppl"></i>People at the event</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Try a card: a working demo of the swipe, with the sidekicks' conversation. -->
+    <section class="demo light" id="demo" aria-labelledby="demo-title">
+      <div class="wrap demo-grid">
+        <div class="demo-copy">
+          <p class="eyebrow" data-reveal>Before you swipe</p>
+          <h2 id="demo-title" class="display" data-reveal>
+            Hear what the two sidekicks <em>would say.</em>
+          </h2>
+          <p class="body" data-reveal>
+            Every card can play the conversation your sidekick would have with theirs. It is made from the two profiles only,
+            so it never gives away who has swiped on whom. Try it.
+          </p>
+          <div class="who" role="tablist" aria-label="Choose a person" data-reveal>
+            {
+              talks.map((t, i) => (
+                <button
+                  type="button"
+                  role="tab"
+                  id={`tab-${t.id}`}
+                  aria-controls="demo-card"
+                  aria-selected={i === 0 ? "true" : "false"}
+                  tabindex={i === 0 ? 0 : -1}
+                  data-talk={t.id}
+                >
+                  <span class="who-av">{t.name[0]}</span>
+                  <span class="who-t">
+                    <b>{t.name}</b>
+                    <small>{t.role}</small>
+                  </span>
+                </button>
+              ))
+            }
+          </div>
+          <p class="fine" data-reveal>Example conversations, written from the demo event's profiles.</p>
+        </div>
+
+        <div class="device" data-reveal>
+          <div class="card" id="demo-card" role="tabpanel" data-card>
+            {
+              talks.map((t, i) => (
+                <div class="card-body" data-talk-panel={t.id} hidden={i !== 0}>
+                  <div class="card-head">
+                    <span class="card-av">{t.name[0]}</span>
+                    <div>
+                      <h3>{t.name}</h3>
+                      <p>{t.role}</p>
+                    </div>
+                    <span class="card-chip">Ranked #{i + 1}</span>
+                  </div>
+                  <dl class="card-fit">
+                    <div>
+                      <dt>Can offer</dt>
+                      <dd>
+                        {t.offers.map((o) => (
+                          <span>{o}</span>
+                        ))}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Looking for</dt>
+                      <dd>
+                        {t.wants.map((o) => (
+                          <span>{o}</span>
+                        ))}
+                      </dd>
+                    </div>
+                  </dl>
+                  <div class="convo" data-convo>
+                    {t.lines.map(([who, text]) => (
+                      <p class={`msg ${who}`}>
+                        <small>{who === "mine" ? "Your sidekick" : `${t.name.split(" ")[0]}'s sidekick`}</small>
+                        {text}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              ))
+            }
+            <div class="card-actions">
+              <button type="button" class="act act-pass" data-act="pass">Pass</button>
+              <button type="button" class="act act-connect" data-act="connect">Connect</button>
+            </div>
+            <p class="card-result" data-result role="status" aria-live="polite"></p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="problem band-oat" aria-labelledby="problem-title">
+    <!-- Privacy -->
+    <section class="privacy dark" id="privacy" aria-labelledby="privacy-title">
       <div class="wrap">
-        <div class="reveal">
-          <p class="eyebrow">The problem</p>
-          <h2 id="problem-title">At an event you have to pick between the talk and the people you came to meet.</h2>
-        </div>
-        <ol class="reveal">
-          <li><span class="n">1</span><p>Leave the talk to find one person, and miss the rest of the session.</p></li>
-          <li><span class="n">2</span><p>Stay in the talk, and leave with no introductions.</p></li>
-          <li><span class="n">3</span><p>Work the room with no way to tell who fits what you need.</p></li>
+        <p class="eyebrow" data-reveal>Privacy, by design</p>
+        <h2 id="privacy-title" class="display xl" data-reveal>A pass is <em>never</em> seen.</h2>
+        <ol class="rules">
+          {
+            rules.map(([t, b], i) => (
+              <li data-reveal>
+                <span class="rule-n">0{i + 1}</span>
+                <h3>{t}</h3>
+                <p>{b}</p>
+              </li>
+            ))
+          }
         </ol>
       </div>
     </section>
 
-    <section id="how" aria-labelledby="how-title">
-      <div class="wrap">
-        <div class="steps-head reveal">
-          <p class="eyebrow">How it works</p>
-          <h2 id="how-title">Three steps, and the room does the searching.</h2>
+    <!-- Questions -->
+    <section class="faq light" id="questions" aria-labelledby="faq-title">
+      <div class="wrap faq-grid">
+        <div>
+          <p class="eyebrow" data-reveal>Questions</p>
+          <h2 id="faq-title" class="display" data-reveal>Before you <em>check in.</em></h2>
         </div>
-        <div class="steps">
-          <article class="step reveal">
-            <span class="num">1</span>
-            <h3>Check in</h3>
-            <p>Check in to the event, or to a place like a coworking space. Sidekick sends your sidekick to scout the room.</p>
-          </article>
-          <article class="step reveal">
-            <span class="num">2</span>
-            <h3>Swipe on the people</h3>
-            <p>Each card shows what someone is looking for and what they can offer. Read the sidekicks' conversation first, then connect or pass.</p>
-          </article>
-          <article class="step reveal">
-            <span class="num">3</span>
-            <h3>Match and talk</h3>
-            <p>When you both connect, you get each other's contact details and an opener for the break. Nobody sees a pass.</p>
-          </article>
+        <div class="faq-list" data-reveal>
+          {
+            faqs.map(([q, a], i) => (
+              <details open={i === 0}>
+                <summary>
+                  {q}
+                  <span class="plus" aria-hidden="true" />
+                </summary>
+                <p>{a}</p>
+              </details>
+            ))
+          }
         </div>
       </div>
     </section>
 
-    <section class="talk band-pine" aria-labelledby="talk-title">
+    <!-- Final call -->
+    <section class="final dark" aria-labelledby="final-title">
       <div class="wrap">
-        <div class="reveal">
-          <p class="eyebrow">Before you swipe</p>
-          <h2 id="talk-title">Read what the two sidekicks would say to each other.</h2>
-          <p class="talk-note">
-            The conversation is built from the two profiles only. It says nothing about who has swiped on whom,
-            so it helps you decide without showing anyone's choices.
-          </p>
-        </div>
-        <div class="chat reveal" role="group" aria-label="Example conversation from the demo event">
-          <p class="chat-label">Example from the demo event</p>
-          <div class="turn mine"><small>Your sidekick</small>I'm with Raja, a builder. Looking for funding.</div>
-          <div class="turn"><small>Daniel's sidekick</small>I'm with Daniel, CTO at a logistics startup. Can offer engineering help and mentorship.</div>
-          <div class="turn mine"><small>Your sidekick</small>Raja would value the conversation.</div>
-        </div>
-      </div>
-    </section>
-
-    <section id="privacy" aria-labelledby="privacy-title">
-      <div class="wrap">
-        <div class="reveal">
-          <p class="eyebrow">Privacy</p>
-          <h2 id="privacy-title">Your choices stay with you.</h2>
-        </div>
-        <ul class="privacy-list reveal">
-          <li><span><strong>Passes are never shown.</strong> No one can see who you passed on, or who passed on them.</span></li>
-          <li><span><strong>Contact details come only after a match.</strong> A match needs both people to connect.</span></li>
-          <li><span><strong>Profiles are only shown to their owner.</strong> Other people see the card for the event, not your account.</span></li>
-          <li><span><strong>Blocks work both ways.</strong> Once you block someone, neither of you sees the other.</span></li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="questions" class="faq band-oat" aria-labelledby="faq-title">
-      <div class="wrap">
-        <div class="reveal">
-          <p class="eyebrow">Questions</p>
-          <h2 id="faq-title">What people ask first.</h2>
-        </div>
-        <div class="reveal">
-          <details open>
-            <summary>Do I need to sign in?</summary>
-            <p>No. You can fill in a profile, check in and see your sidekick's picks as a guest. To connect with people you sign in with Google, and your guest details move across to your account.</p>
-          </details>
-          <details>
-            <summary>Does it work on Android and on the web?</summary>
-            <p>Yes. The same app runs in the browser at sidekick.artifisi.com, and there is also an Android app that uses the same account.</p>
-          </details>
-          <details>
-            <summary>Can the other person see that I passed?</summary>
-            <p>No. A pass is private. Only a connection that both people make leads to a match.</p>
-          </details>
-          <details>
-            <summary>Who can see my photo?</summary>
-            <p>Photos are optional. They are checked to be a JPEG, PNG or WebP image of up to 2 MB. Other people in the same event see the photo on your card.</p>
-          </details>
-          <details>
-            <summary>Has it been used at a real event?</summary>
-            <p>Not yet. Sidekick is in pilot and has been tested on a demo event with sample people. Check-in does not verify where someone is yet, so anyone can check in from anywhere during the pilot.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <section class="final band-pine" aria-labelledby="final-title">
-      <div class="wrap">
-        <p class="eyebrow reveal">Try it at your next event</p>
-        <h2 id="final-title" class="reveal">Go to the talk. Let your sidekick find the people.</h2>
-        <div class="actions reveal">
-          <a class="btn btn-primary" href="https://sidekick.artifisi.com">Open Sidekick</a>
-          <a class="btn btn-ghost" href="#how">How it works</a>
+        <h2 id="final-title" class="display mega" data-reveal>
+          Go to the <em>talk.</em><br />We'll work the room.
+        </h2>
+        <div class="final-foot" data-reveal>
+          <a class="btn btn-signal btn-lg" href={app}>Open Sidekick <span aria-hidden="true">→</span></a>
+          <p>Runs in your browser. Look around as a guest, and sign in only when you want to connect.</p>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
+  <footer class="foot dark">
     <div class="wrap">
-      <span>Sidekick, made by Artifisi Sdn Bhd.</span>
-      <a href="https://sidekick.artifisi.com">sidekick.artifisi.com</a>
+      <span class="brand"><span class="brand-dot" aria-hidden="true"></span>Sidekick</span>
+      <span>Made by Artifisi Sdn Bhd. In pilot.</span>
+      <a href={app}>sidekick.artifisi.com</a>
     </div>
   </footer>
 </Base>
