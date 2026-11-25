@@ -12,6 +12,14 @@ const app = "https://sidekick.artifisi.com";
 
 // A QR code for desktop visitors, drawn at build time. High error correction leaves room for
 // Buddy in the middle.
+// The organiser section's phone shows the app's "Bring the room in" sheet, which draws its code
+// black on white (room_share.dart). It points at the app, since the event in the picture is a demo.
+const roomQr = await QRCode.toString(app, {
+  type: "svg",
+  errorCorrectionLevel: "M",
+  margin: 0,
+  color: { dark: "#000000ff", light: "#ffffffff" },
+});
 const qr = await QRCode.toString(app, {
   type: "svg",
   errorCorrectionLevel: "H",
@@ -44,10 +52,12 @@ const chapters = [
 ];
 
 // Demo people from the Sidekick dev seed. The reasons follow the app's own wording.
+// The same three people, order, fit and reasons as the Try a card deck below, so the story and
+// the demo tell one story.
 const picks = [
-  { name: "Daniel Tan", role: "CTO, logistics startup", reason: "Daniel offers engineering help, which you're looking for." },
-  { name: "Aisha Rahman", role: "Partner at a seed fund", reason: "Aisha offers funding, which you're looking for." },
-  { name: "Mei Lin", role: "Product designer", reason: "Mei offers product feedback, which you're looking for." },
+  { name: "Daniel Tan", role: "CTO, logistics startup", fit: "Strong fit", reason: "Two-way fit: Daniel offers engineering help and is looking for design help." },
+  { name: "Aisha Rahman", role: "Partner at a seed fund", fit: "Good fit", reason: "Two-way fit: Aisha offers funding and is looking for customers." },
+  { name: "Mei Lin", role: "Product designer", fit: "Good fit", reason: "Mei offers product feedback, which you’re looking for." },
 ];
 
 // The demo deck, built the way the app builds it. Hana (the demo "you") is looking for funding,
@@ -193,6 +203,7 @@ const faqs = [
       <a href="#story-1">How it works</a>
       <a href="#demo">Try a card</a>
       <a href="#privacy">Privacy</a>
+      <a href="#organisers">Organisers</a>
       <a class="nav-cta" href={app}>Open the app <Arrow /></a>
     </nav>
   </header>
@@ -215,7 +226,7 @@ const faqs = [
                     <em>{i + 1}</em>
                     {p.name}
                   </b>
-                  <small>{p.role}</small>
+                  <small>{p.role} · <span class:list={["pick-fit", p.fit === "Strong fit" && "is-strong"]}>{p.fit}</span></small>
                   <span class="pick-reason">{p.reason}</span>
                   <span class="pick-match">Match. Contacts swapped.</span>
                 </span>
@@ -450,6 +461,69 @@ const faqs = [
             ))
           }
         </ul>
+      </div>
+    </section>
+
+    <!-- For organisers: how a room fills up, using the app's own sharing sheet. -->
+    <section class="org light" id="organisers" aria-labelledby="org-title">
+      <div class="wrap org-grid">
+        <div class="device-col">
+          <div class="device device-sm" aria-hidden="true">
+            <div class="app">
+              <div class="app-status"><span>9:41</span><span class="app-status-icons"><i></i><i></i><i></i></span></div>
+              <div class="app-bar">
+                <span class="app-round"><Icon name="back" size={18} /></span>
+                <span class="app-round"><Icon name="share" size={17} /></span>
+              </div>
+              <div class="app-scroll">
+                <p class="app-live"><span class="app-live-dot"></span>HAPPENING NOW</p>
+                <p class="app-title">Founders &amp; Funders KL</p>
+                <p class="app-place">Common Ground, Bukit Bintang <Icon name="north-east" size={13} /></p>
+              </div>
+              <div class="app-scrim"></div>
+              <div class="app-sheet room-sheet">
+                <span class="app-sheet-handle"></span>
+                <p class="room-title">Bring the room in</p>
+                <p class="room-text">Sidekick only works when people are checked in. Share the link or put the code on screen.</p>
+                <div class="room-qr"><Fragment set:html={roomQr} /></div>
+                <p class="room-link"><span>sidekick.artifisi.com/e/7Hq2xVb9</span><Icon name="copy" size={17} /></p>
+                <p class="room-share"><Icon name="share" size={17} />Share link</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="org-copy">
+          <h2 id="org-title" class="display" data-reveal>Running the event? <em>Bring the room in.</em></h2>
+          <p class="body">Sidekick works when people are checked in. Getting them there takes one link.</p>
+          <ol class="org-steps">
+            <li>
+              <span class="org-n">1</span>
+              <div>
+                <h3>Add your event</h3>
+                <p>Paste its Luma, Meetup or Eventbrite page and your sidekick fills in the name, place and time. Or type it in.</p>
+              </div>
+            </li>
+            <li>
+              <span class="org-n">2</span>
+              <div>
+                <h3>Put the code on screen</h3>
+                <p>Every event gets its own link and QR code. People scan it from their seats and check in, in the browser or the Android app.</p>
+              </div>
+            </li>
+            <li>
+              <span class="org-n">3</span>
+              <div>
+                <h3>Keep your audience</h3>
+                <p>Their sidekicks scout during the talk, so people can stay seated and meet at the break.</p>
+              </div>
+            </li>
+          </ol>
+          <div class="actions org-actions">
+            <a class="btn btn-signal" href={`${app}/new`}>Add your event <Arrow /></a>
+          </div>
+          <p class="fine">Running a coworking space instead? Members can check in to the place itself, with a fresh room each day.</p>
+        </div>
       </div>
     </section>
 

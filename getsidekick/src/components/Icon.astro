@@ -1,7 +1,7 @@
 ---
 // Small line icons, drawn on a 24px grid with one stroke weight.
 interface Props {
-  name: "x" | "check" | "eye-off" | "swap" | "user" | "block" | "chat" | "send" | "back" | "share" | "handshake" | "forum" | "north-east" | "undo";
+  name: "x" | "check" | "eye-off" | "swap" | "user" | "block" | "chat" | "send" | "back" | "share" | "handshake" | "forum" | "north-east" | "undo" | "copy";
   size?: number;
 }
 const { name, size = 20 } = Astro.props;
@@ -83,5 +83,13 @@ const { name, size = 20 } = Astro.props;
     )
   }
   {name === "north-east" && <path d="M7 17 17 7M9 7h8v8" />}
+  {
+    name === "copy" && (
+      <>
+        <rect x="8.5" y="8.5" width="11" height="11" rx="2.5" />
+        <path d="M15.5 8.5V6.5A2 2 0 0 0 13.5 4.5h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2" />
+      </>
+    )
+  }
   {name === "undo" && <path d="M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />}
 </svg>
