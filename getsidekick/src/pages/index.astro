@@ -1,0 +1,189 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Sidekick: stay in the talk and meet the right people"
+  description="Sidekick checks the room at an event and ranks who is worth meeting. You decide who to connect with, and nobody sees who you passed on."
+>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="/"><i aria-hidden="true"></i>Sidekick</a>
+      <nav aria-label="Main">
+        <a href="#how">How it works</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#questions">Questions</a>
+        <a class="btn btn-primary" href="https://sidekick.artifisi.com">Open the app</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow">For people who go to events to meet people</p>
+          <h1>Stay in the talk. Your sidekick works the room.</h1>
+          <p class="lead">
+            Check in to an event and Sidekick ranks the people there by what they are looking for and what they can offer.
+            You swipe to connect or pass. When you both connect, you get each other's contact details and an opener for the break.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://sidekick.artifisi.com">Open Sidekick</a>
+            <a class="btn btn-ghost" href="#how">See how it works</a>
+          </div>
+          <p class="status">Runs in the browser, no install needed. Still in pilot.</p>
+        </div>
+
+        <div class="phone" aria-hidden="true">
+          <div class="screen">
+            <div class="screen-head"><span>Your sidekick</span><b>Demo event</b></div>
+            <div class="deck-stack">
+              <article class="person back">
+                <div class="avatar">A</div>
+                <h3>Amir</h3>
+                <p class="role">Product lead, payments</p>
+                <p class="fit">Wants to hire a designer. Can share notes on running a pilot.</p>
+              </article>
+              <article class="person top">
+                <span class="stamp">CONNECT</span>
+                <div class="avatar">D</div>
+                <h3>Daniel</h3>
+                <p class="role">CTO, logistics startup</p>
+                <p class="fit">Can offer engineering help and mentorship. Looking for early customers.</p>
+                <div class="tags"><span>Engineering</span><span>Mentorship</span><span>Logistics</span></div>
+                <div class="swipe-row">
+                  <span>Pass</span>
+                  <span class="connect">Connect</span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="problem band-oat" aria-labelledby="problem-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">The problem</p>
+          <h2 id="problem-title">At an event you have to pick between the talk and the people you came to meet.</h2>
+        </div>
+        <ol class="reveal">
+          <li><span class="n">1</span><p>Leave the talk to find one person, and miss the rest of the session.</p></li>
+          <li><span class="n">2</span><p>Stay in the talk, and leave with no introductions.</p></li>
+          <li><span class="n">3</span><p>Work the room with no way to tell who fits what you need.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <div class="steps-head reveal">
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-title">Three steps, and the room does the searching.</h2>
+        </div>
+        <div class="steps">
+          <article class="step reveal">
+            <span class="num">1</span>
+            <h3>Check in</h3>
+            <p>Check in to the event, or to a place like a coworking space. Sidekick sends your sidekick to scout the room.</p>
+          </article>
+          <article class="step reveal">
+            <span class="num">2</span>
+            <h3>Swipe on the people</h3>
+            <p>Each card shows what someone is looking for and what they can offer. Read the sidekicks' conversation first, then connect or pass.</p>
+          </article>
+          <article class="step reveal">
+            <span class="num">3</span>
+            <h3>Match and talk</h3>
+            <p>When you both connect, you get each other's contact details and an opener for the break. Nobody sees a pass.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk band-pine" aria-labelledby="talk-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Before you swipe</p>
+          <h2 id="talk-title">Read what the two sidekicks would say to each other.</h2>
+          <p class="talk-note">
+            The conversation is built from the two profiles only. It says nothing about who has swiped on whom,
+            so it helps you decide without showing anyone's choices.
+          </p>
+        </div>
+        <div class="chat reveal" role="group" aria-label="Example conversation from the demo event">
+          <p class="chat-label">Example from the demo event</p>
+          <div class="turn mine"><small>Your sidekick</small>I'm with Raja, a builder. Looking for funding.</div>
+          <div class="turn"><small>Daniel's sidekick</small>I'm with Daniel, CTO at a logistics startup. Can offer engineering help and mentorship.</div>
+          <div class="turn mine"><small>Your sidekick</small>Raja would value the conversation.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" aria-labelledby="privacy-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Privacy</p>
+          <h2 id="privacy-title">Your choices stay with you.</h2>
+        </div>
+        <ul class="privacy-list reveal">
+          <li><span><strong>Passes are never shown.</strong> No one can see who you passed on, or who passed on them.</span></li>
+          <li><span><strong>Contact details come only after a match.</strong> A match needs both people to connect.</span></li>
+          <li><span><strong>Profiles are only shown to their owner.</strong> Other people see the card for the event, not your account.</span></li>
+          <li><span><strong>Blocks work both ways.</strong> Once you block someone, neither of you sees the other.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="questions" class="faq band-oat" aria-labelledby="faq-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Questions</p>
+          <h2 id="faq-title">What people ask first.</h2>
+        </div>
+        <div class="reveal">
+          <details open>
+            <summary>Do I need to sign in?</summary>
+            <p>No. You can fill in a profile, check in and see your sidekick's picks as a guest. To connect with people you sign in with Google, and your guest details move across to your account.</p>
+          </details>
+          <details>
+            <summary>Does it work on Android and on the web?</summary>
+            <p>Yes. The same app runs in the browser at sidekick.artifisi.com, and there is also an Android app that uses the same account.</p>
+          </details>
+          <details>
+            <summary>Can the other person see that I passed?</summary>
+            <p>No. A pass is private. Only a connection that both people make leads to a match.</p>
+          </details>
+          <details>
+            <summary>Who can see my photo?</summary>
+            <p>Photos are optional. They are checked to be a JPEG, PNG or WebP image of up to 2 MB. Other people in the same event see the photo on your card.</p>
+          </details>
+          <details>
+            <summary>Has it been used at a real event?</summary>
+            <p>Not yet. Sidekick is in pilot and has been tested on a demo event with sample people. Check-in does not verify where someone is yet, so anyone can check in from anywhere during the pilot.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final band-pine" aria-labelledby="final-title">
+      <div class="wrap">
+        <p class="eyebrow reveal">Try it at your next event</p>
+        <h2 id="final-title" class="reveal">Go to the talk. Let your sidekick find the people.</h2>
+        <div class="actions reveal">
+          <a class="btn btn-primary" href="https://sidekick.artifisi.com">Open Sidekick</a>
+          <a class="btn btn-ghost" href="#how">How it works</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Sidekick, made by Artifisi Sdn Bhd.</span>
+      <a href="https://sidekick.artifisi.com">sidekick.artifisi.com</a>
+    </div>
+  </footer>
+</Base>
