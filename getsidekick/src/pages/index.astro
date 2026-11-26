@@ -47,7 +47,7 @@ const chapters = [
   {
     n: "04",
     title: "Both connect. It's a match.",
-    body: "You swap contact details and get an opener for the break. Nobody ever sees a pass.",
+    body: "You swap contact details and get an opener for the break. Until you both connect, nothing is shared.",
   },
 ];
 
@@ -126,27 +126,27 @@ const deck = [
 const scenarios = [
   {
     id: "pass",
-    label: "You pass",
-    wire: "Nothing is sent",
-    you: "Daniel leaves your deck. Only you know.",
-    them: "Nothing changes. Daniel can’t tell you passed.",
-    note: "A pass is stored for you alone. Daniel’s screen doesn’t change, and nobody can ever look it up.",
+    label: "Hana passes",
+    wire: "Nothing shared",
+    you: "Daniel leaves Hana’s deck. The choice stays with her.",
+    them: "Nothing changes on Daniel’s side.",
+    note: "Hana’s choice stays on her phone. Daniel’s screen doesn’t change, and there’s nothing for anyone to look up later.",
   },
   {
     id: "connect",
-    label: "You connect",
-    wire: "Nothing is sent yet",
+    label: "Hana connects",
+    wire: "Nothing shared yet",
     you: "Saved. If Daniel connects too, it’s a match.",
-    them: "Still nothing. Daniel isn’t told you connected.",
-    note: "Your connect waits quietly. Daniel isn’t told, so a one-sided connect never becomes awkward.",
+    them: "Still nothing. Daniel isn’t told.",
+    note: "Hana’s interest waits on her side. Daniel only finds out if he connects too, so reaching out is never awkward.",
   },
   {
     id: "both",
-    label: "You both connect",
-    wire: "Contacts swapped",
-    you: "It’s a match. Daniel’s contact details are yours.",
+    label: "They both connect",
+    wire: "Contacts shared",
+    you: "It’s a match. Daniel’s contact details are hers.",
     them: "The same moment, on Daniel’s side.",
-    note: "Only now does anything cross over: your contact details, the same sidekick conversation, and an opener for the break.",
+    note: "Now it’s mutual, so both phones change at once: a match on each side, contact details swapped, and an opener for the break.",
   },
 ] as const;
 
@@ -164,10 +164,10 @@ const structured = {
 };
 
 const rules = [
-  { icon: "eye-off", title: "Passes stay private", body: "No one can see who you passed on, or who passed on them." },
-  { icon: "swap", title: "Contacts after a match", body: "Your contact details are shared only when both of you connect." },
-  { icon: "user", title: "Your profile is yours", body: "Other people see your card at that event, never your account." },
-  { icon: "block", title: "Blocks go both ways", body: "Block someone and neither of you sees the other again." },
+  { icon: "swap", title: "Mutual or nothing", body: "Contact details are shared only when you both connect." },
+  { icon: "eye-off", title: "Your choices stay with you", body: "Who you connect with or pass on is stored for you alone." },
+  { icon: "user", title: "Your profile stays yours", body: "People at the event see your card, never your account." },
+  { icon: "block", title: "Blocks work both ways", body: "Block someone and neither of you sees the other again." },
 ] as const;
 
 const faqs = [
@@ -176,7 +176,7 @@ const faqs = [
     "No. As a guest you can fill in a profile, check in and see who your sidekick picks. To connect with people you sign in with Google, and everything you did as a guest carries over.",
   ],
   ["Does it work on my phone?", "Yes. It runs in the browser on any phone or computer, and there is also an Android app that uses the same account."],
-  ["Can someone see that I passed?", "No. A pass is never shown to anyone. Only two connects make a match."],
+  ["Will people know if I’m not interested?", "No. Your choices stay on your phone. Only a connect from both sides makes a match."],
   [
     "How does it decide who to show me?",
     "It compares what you're looking for and can offer with everyone else checked in to the same event, and ranks people by how well you fit both ways.",
@@ -303,7 +303,7 @@ const faqs = [
           </p>
           <ul class="how">
             <li><span class="how-key"><Icon name="handshake" size={16} /></span><span><b>Connect</b> if you’d like to meet. It only becomes a match if they connect too.</span></li>
-            <li><span class="how-key"><Icon name="x" size={16} /></span><span><b>Pass</b> and they’ll never know.</span></li>
+            <li><span class="how-key"><Icon name="x" size={16} /></span><span><b>Pass</b> quietly. It stays on your phone.</span></li>
             <li><span class="how-key"><Icon name="forum" size={16} /></span><span><b>How would the sidekicks talk?</b> Hear it before you decide. It’s built from the two profiles only.</span></li>
           </ul>
           <p class="keys" aria-hidden="true"><kbd>←</kbd> Pass <kbd>→</kbd> Connect</p>
@@ -398,11 +398,14 @@ const faqs = [
     <section class="privacy dark" id="privacy" aria-labelledby="privacy-title">
       <div class="wrap">
         <div class="privacy-head">
-          <h2 id="privacy-title" class="display xl" data-reveal>A pass is <em>never</em> seen.</h2>
-          <p class="body">Here is exactly what each phone shows. Choose what Hana does with Daniel’s card.</p>
+          <h2 id="privacy-title" class="display xl" data-reveal>Nothing is shared until it’s <em>mutual.</em></h2>
+          <p class="body">
+            Your interest and your contact details stay on your side until you both connect, so reaching out costs you nothing.
+            Choose what Hana does with Daniel’s card and watch both phones.
+          </p>
         </div>
 
-        <div class="scenarios" role="tablist" aria-label="What Hana does">
+        <div class="scenarios" role="tablist" aria-label="What Hana does with Daniel’s card">
           {
             scenarios.map((sc, i) => (
               <button type="button" role="tab" id={`sc-${sc.id}`} aria-controls="views" aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-scenario={sc.id} data-note={sc.note}>

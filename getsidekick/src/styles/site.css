@@ -1517,12 +1517,15 @@ section.privacy {
 }
 .privacy-head {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 32px 64px;
-  align-items: end;
+  gap: 28px;
+}
+.privacy-head .display.xl {
+  font-size: clamp(52px, 8vw, 128px);
+  max-width: 13ch;
 }
 .privacy-head .body {
-  margin: 0 0 12px;
+  margin: 0;
+  max-width: 56ch;
   color: #c9d6cc;
 }
 .scenarios {
@@ -1561,7 +1564,7 @@ section.privacy {
   display: grid;
   grid-template-columns: minmax(0, 340px) 200px minmax(0, 340px);
   justify-content: start;
-  align-items: center;
+  align-items: start;
 }
 .view {
   margin: 0;
@@ -1687,6 +1690,7 @@ section.privacy {
   color: #c9d6cc;
 }
 .wire {
+  align-self: center;
   position: relative;
   display: flex;
   flex-direction: column;

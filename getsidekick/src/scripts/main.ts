@@ -358,7 +358,7 @@ if (stack) {
       },
     });
     status.innerHTML = !like
-      ? `Passed. <b>${name} will never know.</b>`
+      ? `Passed. <b>That stays on Hana’s phone.</b> ${name} isn’t told.`
       : match
         ? `In this demo ${name} connects too, so <b>it’s a match.</b>`
         : `Connected. It becomes a match only if ${name} connects too, and <b>${name} isn’t told unless she does.</b>`;
