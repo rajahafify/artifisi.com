@@ -1,0 +1,40 @@
+---
+// The match moment, as in match_moment.dart: the screen goes dark Pine with a glow of Signal,
+// the two faces come together, and there is one thing to do next.
+import Buddy from "./Buddy.astro";
+
+interface Props {
+  me: { initials: string; tone: string };
+  them: { initials: string; tone: string };
+  firstName: string;
+  /** Real buttons in the live demo; plain text in the static privacy picture. */
+  interactive?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+const { me, them, firstName, interactive = false, class: cls = "", ...rest } = Astro.props;
+---
+
+<div class:list={["moment", cls]} {...rest}>
+  <span class="moment-glow" aria-hidden="true"></span>
+  <div class="moment-faces" aria-hidden="true">
+    <span class:list={["moment-face", "moment-me", `tone-${me.tone}`]}><span>{me.initials}</span></span>
+    <span class:list={["moment-face", "moment-them", `tone-${them.tone}`]}><span>{them.initials}</span></span>
+  </div>
+  <p class="moment-kicker"><Buddy size={16} mood="happy" color="#FBF9F4" features="#0E2E21" cheeks="#FF5A36" />IT’S A MATCH</p>
+  <p class="moment-title">You and {firstName} both want to connect</p>
+  <p class="moment-sub">Your contacts are swapped, and your sidekick wrote an opener for the break.</p>
+  {
+    interactive ? (
+      <div class="moment-actions">
+        <button type="button" class="moment-go" data-moment-go>Say hi to {firstName}</button>
+        <button type="button" class="moment-later" data-moment-later>Keep scouting</button>
+      </div>
+    ) : (
+      <div class="moment-actions" aria-hidden="true">
+        <span class="moment-go">Say hi to {firstName}</span>
+        <span class="moment-later">Keep scouting</span>
+      </div>
+    )
+  }
+</div>

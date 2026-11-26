@@ -1,0 +1,18 @@
+---
+// The landing page's layout: the shell plus the script that runs the story and the demo.
+import Shell from "./Shell.astro";
+
+type Props = {
+  title: string;
+  description: string;
+  structured?: Record<string, unknown>;
+};
+const props = Astro.props;
+---
+
+<Shell {...props}>
+  <slot />
+</Shell>
+<script>
+  import "../scripts/main.ts";
+</script>

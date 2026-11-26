@@ -1,0 +1,41 @@
+---
+// Not found: the app's empty-state pattern (Buddy, a serif line, one way out).
+import Shell from "../layouts/Shell.astro";
+import Buddy from "../components/Buddy.astro";
+import Arrow from "../components/Arrow.astro";
+---
+
+<Shell title="Not found · Sidekick" description="This page isn't here." noindex>
+  <main class="lost">
+    <Buddy size={72} mood="normal" color="#12402E" features="#FBF9F4" cheeks="#FF5A36" />
+    <h1 class="display">This page wandered <em>off.</em></h1>
+    <p class="body">Even a good sidekick can’t find it. It may have moved, or the link has a typo.</p>
+    <div class="actions">
+      <a class="btn btn-signal" href="/">Back to Sidekick <Arrow /></a>
+      <a class="btn btn-line" href="https://sidekick.artifisi.com">Open the app</a>
+    </div>
+  </main>
+</Shell>
+
+<style>
+  .lost {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 48px var(--gutter);
+    text-align: center;
+  }
+  .lost .display {
+    margin-top: 8px;
+  }
+  .lost .body {
+    margin: 0;
+  }
+  .lost .actions {
+    justify-content: center;
+    margin-top: 8px;
+  }
+</style>

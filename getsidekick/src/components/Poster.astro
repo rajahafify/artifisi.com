@@ -1,0 +1,37 @@
+---
+// A person's poster card, as the app draws it with PortraitPoster + PosterArt (ui.dart, art.dart):
+// a deep lit gradient in the person's tone, their initials set large in the serif, a dark fade at
+// the bottom, then the fit chip, name, headline and the sidekick's reason over the top.
+import Buddy from "./Buddy.astro";
+
+interface Props {
+  name: string;
+  role: string;
+  reason: string;
+  fit: string; // "Strong fit" | "Good fit" | "Worth a hello"
+  tone: "pine" | "lagoon" | "moss" | "clay" | "plum";
+  light?: "left" | "right";
+  class?: string;
+  [key: string]: unknown;
+}
+const { name, role, reason, fit, tone, light = "left", class: cls = "", ...rest } = Astro.props;
+const words = name.trim().split(/\s+/);
+const initials = words.length > 1 ? words[0][0] + words[words.length - 1][0] : words[0][0];
+const strong = fit === "Strong fit";
+---
+
+<article class:list={["poster", `tone-${tone}`, `light-${light}`, cls]} {...rest}>
+  <span class="poster-mono" aria-hidden="true">{initials}</span>
+  <span class="poster-fade" aria-hidden="true"></span>
+  <span class:list={["poster-chip", strong && "is-strong"]}>{fit}</span>
+  <span class="poster-stamp poster-stamp-connect" aria-hidden="true">CONNECT</span>
+  <span class="poster-stamp poster-stamp-pass" aria-hidden="true">PASS</span>
+  <div class="poster-foot">
+    <h3 class="poster-name">{name}</h3>
+    <p class="poster-role">{role}</p>
+    <p class="poster-reason">
+      <Buddy size={13} mood="wink" color="#FBF9F4" features="#0E2E21" cheeks="#FF5A36" />
+      <span>{reason}</span>
+    </p>
+  </div>
+</article>

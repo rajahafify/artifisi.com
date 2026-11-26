@@ -1,0 +1,674 @@
+---
+import Base from "../layouts/Base.astro";
+import Arrow from "../components/Arrow.astro";
+import Icon from "../components/Icon.astro";
+import Buddy from "../components/Buddy.astro";
+import Poster from "../components/Poster.astro";
+import Match from "../components/Match.astro";
+
+import QRCode from "qrcode";
+
+const app = "https://sidekick.artifisi.com";
+
+// A QR code for desktop visitors, drawn at build time. High error correction leaves room for
+// Buddy in the middle.
+// The organiser section's phone shows the app's "Bring the room in" sheet, which draws its code
+// black on white (room_share.dart). It points at the app, since the event in the picture is a demo.
+const roomQr = await QRCode.toString(app, {
+  type: "svg",
+  errorCorrectionLevel: "M",
+  margin: 0,
+  color: { dark: "#000000ff", light: "#ffffffff" },
+});
+const qr = await QRCode.toString(app, {
+  type: "svg",
+  errorCorrectionLevel: "H",
+  margin: 0,
+  color: { dark: "#12402eff", light: "#00000000" },
+});
+
+// The story told by the room scene, one chapter per phase (see PHASES in room.ts).
+const chapters = [
+  {
+    n: "01",
+    title: "Check in from your seat.",
+    body: "Tap check in when you arrive. Your sidekick appears beside you, in green, and you stay in the talk.",
+  },
+  {
+    n: "02",
+    title: "Everyone else checks in too.",
+    body: "Each person who checks in brings a sidekick of their own. Theirs are grey; yours is the green one.",
+  },
+  {
+    n: "03",
+    title: "The sidekicks talk.",
+    body: "Yours talks to many of theirs at once, comparing what each person is looking for and can offer. Other pairs talk too.",
+  },
+  {
+    n: "04",
+    title: "You match, or you pass.",
+    body: "You decide who to meet. When you both connect, it’s a match and contacts swap. Nothing is shared until then.",
+  },
+];
+
+// Demo people from the Sidekick dev seed. The reasons follow the app's own wording.
+// The same three people, order, fit and reasons as the Try a card deck below, so the story and
+// the demo tell one story.
+const picks = [
+  { name: "Daniel Tan", role: "CTO, logistics startup", state: "match", outcome: "You both connected. It’s a match." },
+  { name: "Aisha Rahman", role: "Partner at a seed fund", state: "wait", outcome: "You connected. Waiting for Aisha." },
+  { name: "Mei Lin", role: "Product designer", state: "pass", outcome: "You passed. Mei isn’t told." },
+];
+
+// The demo deck, built the way the app builds it. Hana (the demo "you") is looking for funding,
+// engineering help, mentorship and product feedback, and offers design help and customers. Run
+// through the app's own ranking (templatePick in logic/sidekick.dart), that gives Daniel 90 (Strong
+// fit), Aisha 60 and Mei 40 (Good fit), with these reasons, in this order. The people come from the
+// app's demo seed. Conversations and openers are written from the two profiles, as examples.
+const deck = [
+  {
+    id: "daniel",
+    first: "Daniel",
+    name: "Daniel Tan",
+    role: "CTO, logistics startup",
+    fit: "Strong fit",
+    tone: "lagoon",
+    light: "right",
+    reason: "Two-way fit: Daniel offers engineering help and is looking for design help.",
+    match: true,
+    why: "Daniel can help Hana with engineering help, and Hana can help Daniel with design help.",
+    lines: [
+      ["mine", "I’m with Hana, a founder. She needs engineering help and a mentor for her first release."],
+      ["theirs", "I’m with Daniel, CTO at a logistics startup. He offers both, and he’s short on design help."],
+      ["mine", "Hana designs. That’s a fair trade for ten minutes at the break."],
+    ],
+    opener: "What would you check first before a first release?",
+  },
+  {
+    id: "aisha",
+    first: "Aisha",
+    name: "Aisha Rahman",
+    role: "Partner at a seed fund",
+    fit: "Good fit",
+    tone: "plum",
+    light: "left",
+    reason: "Two-way fit: Aisha offers funding and is looking for customers.",
+    match: false,
+    why: "Aisha can help Hana with funding, and Hana can help Aisha with customers.",
+    lines: [
+      ["mine", "I’m with Hana, a founder raising her first round."],
+      ["theirs", "I’m with Aisha, partner at a seed fund. She’s meeting founders who already have customers."],
+      ["mine", "Hana has two customers on a pilot. Worth a coffee."],
+    ],
+    opener: "Can I tell you about the two customers on our pilot?",
+  },
+  {
+    id: "mei",
+    first: "Mei",
+    name: "Mei Lin",
+    role: "Product designer",
+    fit: "Good fit",
+    tone: "clay",
+    light: "left",
+    reason: "Mei offers product feedback, which you’re looking for.",
+    match: false,
+    why: "Mei can help Hana with product feedback.",
+    lines: [
+      ["mine", "I’m with Hana. She wants product feedback before launch."],
+      ["theirs", "I’m with Mei, a product designer looking for collaborators."],
+      ["mine", "A short review now could become a project later."],
+    ],
+    opener: "Would you look at our onboarding for five minutes?",
+  },
+] as const;
+
+// What each side sees, for the privacy explainer. Facts from the backend's privacy rules.
+const scenarios = [
+  {
+    id: "pass",
+    label: "Hana passes",
+    wire: "Nothing shared",
+    you: "Daniel leaves Hana’s deck. The choice stays with her.",
+    them: "Nothing changes on Daniel’s side.",
+    note: "Hana’s choice stays on her phone. Daniel’s screen doesn’t change, and there’s nothing for anyone to look up later.",
+  },
+  {
+    id: "connect",
+    label: "Hana connects",
+    wire: "Nothing shared yet",
+    you: "Saved. If Daniel connects too, it’s a match.",
+    them: "Still nothing. Daniel isn’t told.",
+    note: "Hana’s interest waits on her side. Daniel only finds out if he connects too, so reaching out is never awkward.",
+  },
+  {
+    id: "both",
+    label: "They both connect",
+    wire: "Contacts shared",
+    you: "It’s a match. Daniel’s contact details are hers.",
+    them: "The same moment, on Daniel’s side.",
+    note: "Now it’s mutual, so both phones change at once: a match on each side, contact details swapped, and an opener for the break.",
+  },
+] as const;
+
+// What search engines read about the product. Only facts the page states elsewhere.
+const structured = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Sidekick",
+  url: "https://getsidekick.artifisi.com",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web, Android",
+  description:
+    "Check in to an event and your sidekick scouts the room, ranks who is worth meeting, and lines up the match. You stay in the talk.",
+  publisher: { "@type": "Organization", name: "Artifisi Sdn Bhd" },
+};
+
+const rules = [
+  { icon: "swap", title: "Mutual or nothing", body: "Contact details are shared only when you both connect." },
+  { icon: "eye-off", title: "Your choices stay with you", body: "Who you connect with or pass on is stored for you alone." },
+  { icon: "user", title: "Your profile stays yours", body: "People at the event see your card, never your account." },
+  { icon: "block", title: "Blocks work both ways", body: "Block someone and neither of you sees the other again." },
+] as const;
+
+const faqs = [
+  [
+    "Do I need an account?",
+    "No. As a guest you can fill in a profile, check in and see who your sidekick picks. To connect with people you sign in with Google, and everything you did as a guest carries over.",
+  ],
+  ["Does it work on my phone?", "Yes. It runs in the browser on any phone or computer, and there is also an Android app that uses the same account."],
+  ["Will people know if I’m not interested?", "No. Your choices stay on your phone. Only a connect from both sides makes a match."],
+  [
+    "How does it decide who to show me?",
+    "It compares what you're looking for and can offer with everyone else checked in to the same event, and ranks people by how well you fit both ways.",
+  ],
+  [
+    "Has it been used at a real event?",
+    "Not yet. Sidekick is in pilot and has been tested on a demo event. During the pilot, check-in doesn't confirm where you are.",
+  ],
+];
+---
+
+<Base
+  structured={structured}
+  title="Sidekick: stay in the talk, meet the right people"
+  description="Check in to an event and your sidekick scouts the room, ranks who is worth meeting, and lines up the match. You stay in the talk."
+>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav" data-nav>
+    <a class="brand" href="/" aria-label="Sidekick home">
+      <Buddy size={18} mood="wink" color="currentColor" features="var(--brand-features)" cheeks="#FF5A36" />Sidekick
+    </a>
+    <nav aria-label="Main">
+      <a href="#story-1">How it works</a>
+      <a href="#demo">Try a card</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#organisers">Organisers</a>
+      <a class="nav-cta" href={app}>Open the app <Arrow /></a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- The story: a pinned stage with the room scene. Without JavaScript it is a hero plus a list. -->
+    <section class="story" id="story" data-story aria-label="How Sidekick works">
+      <div class="stage" data-stage>
+        <canvas class="room" data-room aria-hidden="true"></canvas>
+        <div class="scrim" aria-hidden="true"></div>
+
+        <div class="tags" aria-hidden="true">
+          <span class="tag tag-you" data-label-you><i></i><span class="tag-before">You, in the talk</span><span class="tag-after">You, checked in</span></span>
+          <span class="tag tag-sk" data-label-sidekick><i></i>Your sidekick</span>
+          {
+            [
+              ["Daniel", "We need engineering help. You?", "Daniel can help with that!"],
+              ["Aisha", "We’re raising a first round.", "Aisha funds early teams."],
+              ["Mei", "Could we get product feedback?", "Mei loves giving feedback."],
+              ["Sofia", "Know anyone in go-to-market?", "Sofia makes intros!"],
+              ["Arjun", "We have a pilot running.", "Arjun wants partners like that."],
+              ["Their", "What are you after today?", "Mine’s hiring a designer."],
+            ].map(([who, mine, theirs]) => (
+              <>
+                <span class="bubble bubble-right bubble-mine" data-pair-mine>
+                  <span class="bubble-in">
+                    <small>Your sidekick</small>
+                    <span class="bubble-text">{mine}</span>
+                    <span class="bubble-dots"><b /><b /><b /></span>
+                  </span>
+                </span>
+                <span class="bubble bubble-left" data-pair-theirs>
+                  <span class="bubble-in">
+                    <small>{who === "Their" ? "Their sidekick" : `${who}’s sidekick`}</small>
+                    <span class="bubble-text">{theirs}</span>
+                    <span class="bubble-dots"><b /><b /><b /></span>
+                  </span>
+                </span>
+              </>
+            ))
+          }
+          {
+            ["Looking for a cofounder?", "We’re hiring this month."].map((text) => (
+              <span class="bubble bubble-other" data-bubble-other>
+                <span class="bubble-in">
+                  <span class="bubble-text">{text}</span>
+                  <span class="bubble-dots"><b /><b /><b /></span>
+                </span>
+              </span>
+            ))
+          }
+        </div>
+
+        <!-- Step 4: the app's swipe deck, played by the scroll. -->
+        <div class="swipe" aria-hidden="true" data-swipe>
+          <div class="swipe-cards">
+            <Poster name="Daniel Tan" role="CTO, logistics startup" reason="Two-way fit: Daniel offers engineering help and is looking for design help." fit="Strong fit" tone="lagoon" light="right" class="swipe-card" data-swipe-card="daniel" />
+            <Poster name="Aisha Rahman" role="Partner at a seed fund" reason="Two-way fit: Aisha offers funding and is looking for customers." fit="Good fit" tone="plum" class="swipe-card" data-swipe-card="aisha" />
+            <Poster name="Mei Lin" role="Product designer" reason="Mei offers product feedback, which you’re looking for." fit="Good fit" tone="clay" class="swipe-card" data-swipe-card="mei" />
+          </div>
+          <div class="swipe-actions">
+            <span class="app-circle" data-swipe-pass><Icon name="x" size={24} /></span>
+            <span class="app-signal" data-swipe-connect><Icon name="handshake" size={19} />Connect</span>
+          </div>
+          <p class="swipe-toast" data-swipe-toast>Connect sent. Waiting for Aisha.</p>
+          <p class="swipe-toast swipe-toast-pass" data-swipe-toast-pass>Passed. Mei isn’t told.</p>
+          <div class="swipe-match" data-swipe-match>
+            <span class="swipe-burst" data-swipe-burst></span>
+            <div class="swipe-faces">
+              <span class="sf sf-mine"><Buddy size={44} mood="wink" color="#1F7A52" features="#FBF9F4" cheeks="#FF5A36" /></span>
+              <span class="sf sf-theirs"><Buddy size={44} mood="happy" color="#B8BDB4" features="#3F4C45" cheeks="#E9A08C" /></span>
+            </div>
+            <p class="swipe-kicker">It’s a match</p>
+            <p class="swipe-title">You and Daniel both connected</p>
+            <p class="swipe-sub">Contacts swapped, with an opener for the break.</p>
+          </div>
+        </div>
+
+        <div class="hero" data-hero>
+          <h1>
+            <span class="line"><span>Stay in the <em>talk.</em></span></span>
+            <span class="line"><span>Your sidekick</span></span>
+            <span class="line"><span><em>works the room.</em></span></span>
+          </h1>
+          <div class="hero-foot">
+            <p class="hero-lead">
+              Check in, and Sidekick finds the people worth meeting while you listen. You decide who to connect with.
+            </p>
+            <div class="actions">
+              <a class="btn btn-signal" href={app}>Open Sidekick <Arrow /></a>
+              <a class="btn btn-line" href="#story-1">See how it works</a>
+            </div>
+          </div>
+          <p class="scroll-cue" aria-hidden="true"><span></span>Scroll to watch your sidekick work</p>
+        </div>
+
+        <ol class="chapters" data-chapters>
+          {
+            chapters.map((c, i) => (
+              <li class="chapter" id={`story-${i + 1}`} data-chapter>
+                <span class="chapter-n">
+                  {c.n}
+                  <span> / 04</span>
+                </span>
+                <h2>{c.title}</h2>
+                <p>{c.body}</p>
+                {i === chapters.length - 1 && (
+                  <a class="chapter-cta" href={app}>
+                    Try it at your next event <Arrow />
+                  </a>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="rail" data-rail aria-label="Story steps" role="group">
+          {
+            chapters.map((c, i) => (
+              <button type="button" data-step={i} aria-label={`Step ${c.n}: ${c.title}`}>
+                <span class="rail-bar"><span /></span>
+                <span class="rail-n">{c.n}</span>
+              </button>
+            ))
+          }
+        </div>
+
+        <p class="legend" aria-hidden="true">
+          <span><i class="lg-you"></i>You</span>
+          <span><i class="lg-sk"></i>Your sidekick</span>
+          <span><i class="lg-ppl"></i>Other people’s sidekicks</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Try a card: the app's event screen, working. -->
+    <section class="demo light" id="demo" aria-labelledby="demo-title">
+      <div class="wrap demo-grid">
+        <div class="demo-copy">
+          <h2 id="demo-title" class="display" data-reveal>This is the app. <em>Try it.</em></h2>
+          <p class="body">
+            Hana is at the talk. Her sidekick read the room and ranked three people for her. Swipe a card right to connect
+            or left to pass, the same way you would in the app.
+          </p>
+          <ul class="how">
+            <li><span class="how-key"><Icon name="handshake" size={16} /></span><span><b>Connect</b> if you’d like to meet. It only becomes a match if they connect too.</span></li>
+            <li><span class="how-key"><Icon name="x" size={16} /></span><span><b>Pass</b> quietly. It stays on your phone.</span></li>
+            <li><span class="how-key"><Icon name="forum" size={16} /></span><span><b>How would the sidekicks talk?</b> Hear it before you decide. It’s built from the two profiles only.</span></li>
+          </ul>
+          <p class="keys" aria-hidden="true"><kbd>←</kbd> Pass <kbd>→</kbd> Connect</p>
+          <p class="fine">A working copy of the app’s event screen, with the people from its demo event. Conversations are examples.</p>
+        </div>
+
+        <div class="device-col">
+          <div class="device" data-reveal>
+            <div class="app" data-app>
+              <div class="app-status" aria-hidden="true"><span>9:41</span><span class="app-status-icons"><i></i><i></i><i></i></span></div>
+              <div class="app-bar" aria-hidden="true">
+                <span class="app-round"><Icon name="back" size={18} /></span>
+                <span class="app-round"><Icon name="share" size={17} /></span>
+              </div>
+              <div class="app-scroll">
+                <p class="app-live"><span class="app-live-dot"></span>HAPPENING NOW</p>
+                <p class="app-title">Founders &amp; Funders KL</p>
+                <p class="app-place">Common Ground, Bukit Bintang <Icon name="north-east" size={13} /></p>
+                <div class="app-segments" aria-hidden="true">
+                  <span class="is-on" data-seg-you>For you · 3</span>
+                  <span data-seg-matches>Matches</span>
+                </div>
+                <p class="app-brief"><Buddy size={13} mood="wink" /><span data-brief>Read 3 people for you. 1 strong fit, shown first.</span></p>
+                <div class="app-stack" data-deck tabindex="0" role="group" aria-label="Demo deck. Left arrow passes, right arrow connects.">
+                  {
+                    deck.map((d) => (
+                      <Poster
+                        name={d.name}
+                        role={d.role}
+                        reason={d.reason}
+                        fit={d.fit}
+                        tone={d.tone}
+                        light={d.light}
+                        class="deck-card"
+                        data-pcard={d.id}
+                        data-first={d.first}
+                        data-match={String(d.match)}
+                        aria-label={`${d.name}. ${d.role}. ${d.reason}`}
+                      />
+                    ))
+                  }
+                  <div class="app-empty" data-empty hidden>
+                    <Buddy size={44} mood="wink" />
+                    <p class="app-empty-title">You’ve seen everyone</p>
+                    <p class="app-empty-text" data-empty-text>New people show up here as they check in.</p>
+                  </div>
+                </div>
+                <div class="app-actions">
+                  <button type="button" class="app-circle" data-act="pass" aria-label="Pass"><Icon name="x" size={24} /></button>
+                  <button type="button" class="app-signal" data-act="connect"><Icon name="handshake" size={19} />Connect</button>
+                </div>
+                <p class="app-note">Nobody sees a pass. Contacts swap only if you both connect.</p>
+                <button type="button" class="app-text-btn" data-talk-open><Icon name="forum" size={18} />How would the sidekicks talk?</button>
+              </div>
+
+              <div class="app-scrim" data-sheet-scrim hidden></div>
+              <div class="app-sheet" data-sheet role="dialog" aria-modal="true" aria-label="How your sidekicks would talk" hidden>
+                <span class="app-sheet-handle" aria-hidden="true"></span>
+                {
+                  deck.map((d) => (
+                    <div class="app-sheet-body" data-sheet-for={d.id} hidden>
+                      <p class="app-sheet-title">How your sidekicks would talk</p>
+                      <p class="app-sheet-sub">With {d.first}. Nobody sees if you connect or pass.</p>
+                      <p class="app-caps">Before you connect</p>
+                      <p class="app-sheet-why">{d.why}</p>
+                      {d.lines.map(([who, text]) => (
+                        <p class={`app-bubble ${who}`}>
+                          <small>{who === "mine" ? "Your sidekick" : `${d.first}’s sidekick`}</small>
+                          {text}
+                        </p>
+                      ))}
+                      <p class="app-caps app-caps-gap">If you connect, try</p>
+                      <p class="app-opener">“{d.opener}”</p>
+                    </div>
+                  ))
+                }
+                <button type="button" class="app-sheet-close" data-sheet-close>Done</button>
+              </div>
+
+              <Match interactive me={{ initials: "H", tone: "pine" }} them={{ initials: "DT", tone: "lagoon" }} firstName="Daniel" class="app-moment" data-moment hidden />
+            </div>
+          </div>
+          <div class="device-foot">
+            <p class="deck-status" data-deck-status role="status" aria-live="polite"></p>
+            <button type="button" class="demo-reset" data-reset><Icon name="undo" size={16} />Reset the demo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy: the same screens, on both phones. -->
+    <section class="privacy dark" id="privacy" aria-labelledby="privacy-title">
+      <div class="wrap">
+        <div class="privacy-head">
+          <h2 id="privacy-title" class="display xl" data-reveal>Nothing is shared until it’s <em>mutual.</em></h2>
+          <p class="body">
+            Your interest and your contact details stay on your side until you both connect, so reaching out costs you nothing.
+            Choose what Hana does with Daniel’s card and watch both phones.
+          </p>
+        </div>
+
+        <div class="privacy-stage">
+          <div class="scenario-panel">
+            <div class="scenarios" role="tablist" aria-label="What Hana does with Daniel’s card">
+              {
+                scenarios.map((sc, i) => (
+                  <button type="button" role="tab" id={`sc-${sc.id}`} aria-controls="views" aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-scenario={sc.id} data-note={sc.note}>
+                    {sc.label}
+                  </button>
+                ))
+              }
+            </div>
+
+            <p class="scenario-note" data-scenario-note aria-live="polite">{scenarios[0].note}</p>
+          </div>
+        <div class="views" id="views" role="tabpanel" aria-labelledby="sc-pass" data-views data-state="pass">
+          <figure class="view">
+            <figcaption>Hana’s phone</figcaption>
+            <div class="mini-frame" aria-hidden="true">
+              <div class="device">
+                <div class="app">
+                  <div class="app-status"><span>9:41</span><span class="app-status-icons"><i></i><i></i><i></i></span></div>
+                  <div class="app-bar">
+                    <span class="app-round"><Icon name="back" size={18} /></span>
+                    <span class="app-round"><Icon name="share" size={17} /></span>
+                  </div>
+                  <div class="app-scroll">
+                    <p class="app-live"><span class="app-live-dot"></span>HAPPENING NOW</p>
+                    <p class="app-title">Founders &amp; Funders KL</p>
+                    <p class="app-place">Common Ground, Bukit Bintang <Icon name="north-east" size={13} /></p>
+                    <div class="app-segments"><span class="is-on" data-mini-count>For you · 3</span><span data-mini-matches>Matches</span></div>
+                    <p class="app-brief"><Buddy size={13} mood="wink" /><span>Read 3 people for you. 1 strong fit, shown first.</span></p>
+                    <div class="app-stack">
+                      <Poster name="Aisha Rahman" role="Partner at a seed fund" reason="Two-way fit: Aisha offers funding and is looking for customers." fit="Good fit" tone="plum" class="deck-card mini-next" data-mini-next />
+                      <Poster name="Daniel Tan" role="CTO, logistics startup" reason="Two-way fit: Daniel offers engineering help and is looking for design help." fit="Strong fit" tone="lagoon" light="right" class="deck-card" data-mini-top />
+                    </div>
+                    <div class="app-actions">
+                      <span class="app-circle"><Icon name="x" size={24} /></span>
+                      <span class="app-circle" data-mini-undo hidden><Icon name="undo" size={22} /></span>
+                      <span class="app-signal"><Icon name="handshake" size={19} />Connect</span>
+                    </div>
+                    <p class="app-note">Nobody sees a pass. Contacts swap only if you both connect.</p>
+                  </div>
+                  <Match me={{ initials: "H", tone: "pine" }} them={{ initials: "DT", tone: "lagoon" }} firstName="Daniel" data-mini-moment hidden />
+                </div>
+              </div>
+            </div>
+            {scenarios.map((sc) => <p class="view-line" data-when={sc.id} hidden={sc.id !== "pass"}>{sc.you}</p>)}
+          </figure>
+
+          <div class="wire" aria-hidden="true">
+            <span class="wire-line"><span class="wire-dot"></span></span>
+            {scenarios.map((sc) => <span class="wire-label" data-when={sc.id} hidden={sc.id !== "pass"}>{sc.wire}</span>)}
+          </div>
+
+          <figure class="view">
+            <figcaption>Daniel’s phone</figcaption>
+            <div class="mini-frame" aria-hidden="true">
+              <div class="device">
+                <div class="app">
+                  <div class="app-status"><span>9:41</span><span class="app-status-icons"><i></i><i></i><i></i></span></div>
+                  <div class="app-bar">
+                    <span class="app-round"><Icon name="back" size={18} /></span>
+                    <span class="app-round"><Icon name="share" size={17} /></span>
+                  </div>
+                  <div class="app-scroll">
+                    <p class="app-live"><span class="app-live-dot"></span>HAPPENING NOW</p>
+                    <p class="app-title">Founders &amp; Funders KL</p>
+                    <p class="app-place">Common Ground, Bukit Bintang <Icon name="north-east" size={13} /></p>
+                    <div class="app-segments"><span class="is-on" data-mini-count-them>For you · 5</span><span data-mini-matches>Matches</span></div>
+                    <p class="app-brief"><Buddy size={13} mood="wink" /><span>Read 5 people for you. 1 strong fit, shown first.</span></p>
+                    <div class="app-stack">
+                      <Poster name="Mei Lin" role="Product designer" reason="Mei offers design help, which you’re looking for." fit="Good fit" tone="clay" class="deck-card mini-next" />
+                      <Poster name="Hana" role="Founder, first release next month" reason="Two-way fit: Hana offers design help and is looking for engineering help." fit="Strong fit" tone="pine" class="deck-card" />
+                    </div>
+                    <div class="app-actions">
+                      <span class="app-circle"><Icon name="x" size={24} /></span>
+                      
+                      <span class="app-signal"><Icon name="handshake" size={19} />Connect</span>
+                    </div>
+                    <p class="app-note">Nobody sees a pass. Contacts swap only if you both connect.</p>
+                  </div>
+                  <Match me={{ initials: "DT", tone: "lagoon" }} them={{ initials: "H", tone: "pine" }} firstName="Hana" data-mini-moment hidden />
+                </div>
+              </div>
+            </div>
+            {scenarios.map((sc) => <p class="view-line" data-when={sc.id} hidden={sc.id !== "pass"}>{sc.them}</p>)}
+          </figure>
+        </div>
+        </div>
+
+        <ul class="rules">
+          {
+            rules.map((r) => (
+              <li>
+                <span class="rule-icon"><Icon name={r.icon} size={22} /></span>
+                <h3>{r.title}</h3>
+                <p>{r.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- For organisers: how a room fills up, using the app's own sharing sheet. -->
+    <section class="org light" id="organisers" aria-labelledby="org-title">
+      <div class="wrap org-grid">
+        <div class="device-col">
+          <div class="device device-sm" aria-hidden="true">
+            <div class="app">
+              <div class="app-status"><span>9:41</span><span class="app-status-icons"><i></i><i></i><i></i></span></div>
+              <div class="app-bar">
+                <span class="app-round"><Icon name="back" size={18} /></span>
+                <span class="app-round"><Icon name="share" size={17} /></span>
+              </div>
+              <div class="app-scroll">
+                <p class="app-live"><span class="app-live-dot"></span>HAPPENING NOW</p>
+                <p class="app-title">Founders &amp; Funders KL</p>
+                <p class="app-place">Common Ground, Bukit Bintang <Icon name="north-east" size={13} /></p>
+              </div>
+              <div class="app-scrim"></div>
+              <div class="app-sheet room-sheet">
+                <span class="app-sheet-handle"></span>
+                <p class="room-title">Bring the room in</p>
+                <p class="room-text">Sidekick only works when people are checked in. Share the link or put the code on screen.</p>
+                <div class="room-qr"><Fragment set:html={roomQr} /></div>
+                <p class="room-link"><span>sidekick.artifisi.com/e/7Hq2xVb9</span><Icon name="copy" size={17} /></p>
+                <p class="room-share"><Icon name="share" size={17} />Share link</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="org-copy">
+          <h2 id="org-title" class="display" data-reveal>Running the event? <em>Bring the room in.</em></h2>
+          <p class="body">Sidekick works when people are checked in. Getting them there takes one link.</p>
+          <ol class="org-steps">
+            <li>
+              <span class="org-n">1</span>
+              <div>
+                <h3>Add your event</h3>
+                <p>Paste its Luma, Meetup or Eventbrite page and your sidekick fills in the name, place and time. Or type it in.</p>
+              </div>
+            </li>
+            <li>
+              <span class="org-n">2</span>
+              <div>
+                <h3>Put the code on screen</h3>
+                <p>Every event gets its own link and QR code. People scan it from their seats and check in, in the browser or the Android app.</p>
+              </div>
+            </li>
+            <li>
+              <span class="org-n">3</span>
+              <div>
+                <h3>Keep your audience</h3>
+                <p>Their sidekicks scout during the talk, so people can stay seated and meet at the break.</p>
+              </div>
+            </li>
+          </ol>
+          <div class="actions org-actions">
+            <a class="btn btn-signal" href={`${app}/new`}>Add your event <Arrow /></a>
+          </div>
+          <p class="fine">Running a coworking space instead? Members can check in to the place itself, with a fresh room each day.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Questions -->
+    <section class="faq light" id="questions" aria-labelledby="faq-title">
+      <div class="wrap faq-grid">
+        <div>
+          <h2 id="faq-title" class="display" data-reveal>Before you <em>check in.</em></h2>
+        </div>
+        <div class="faq-list">
+          {
+            faqs.map(([q, a], i) => (
+              <details open={i === 0}>
+                <summary>
+                  {q}
+                  <span class="plus" aria-hidden="true" />
+                </summary>
+                <p>{a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Final call -->
+    <section class="final light" aria-labelledby="final-title">
+      <div class="wrap">
+        <h2 id="final-title" class="display mega" data-reveal>
+          Go to the <em>talk.</em><br />We'll work the room.
+        </h2>
+        <div class="final-row">
+          <div class="final-foot">
+            <a class="btn btn-signal btn-lg" href={app}>Open Sidekick <Arrow /></a>
+            <p>Runs in your browser. Look around as a guest, and sign in only when you want to connect.</p>
+          </div>
+          <figure class="qr" aria-label="QR code for sidekick.artifisi.com">
+            <div class="qr-code">
+              <Fragment set:html={qr} />
+              <span class="qr-badge" aria-hidden="true"><Buddy size={22} mood="wink" color="#12402E" features="#FBF9F4" cheeks="#FF5A36" /></span>
+            </div>
+            <figcaption><b>On a laptop?</b> Scan to open Sidekick on your phone, where you'll use it at the event.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot light">
+    <div class="wrap">
+      <span class="brand"><Buddy size={18} mood="wink" color="currentColor" features="var(--brand-features)" cheeks="#FF5A36" />Sidekick</span>
+      <span>Made by Artifisi Sdn Bhd. In pilot.</span>
+      <a href={app}>sidekick.artifisi.com</a>
+    </div>
+  </footer>
+</Base>
