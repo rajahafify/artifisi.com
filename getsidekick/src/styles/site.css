@@ -620,7 +620,19 @@ html.motion .tags {
   background: var(--pine);
 }
 .tag-sk i {
-  background: var(--signal);
+  background: #1f7a52;
+}
+.tag-after {
+  display: none;
+}
+.tag.is-checked .tag-before {
+  display: none;
+}
+.tag.is-checked .tag-after {
+  display: inline;
+}
+.tag.is-checked i {
+  background: #1f7a52;
 }
 .pick-card {
   position: absolute;
@@ -656,26 +668,24 @@ html.motion .tags {
   font-size: 12px;
   color: var(--ink-2);
 }
-.pick-fit {
-  font-weight: 600;
-}
-.pick-fit.is-strong {
-  color: var(--signal-deep);
-}
-.pick-reason {
+.pick-outcome {
   margin-top: 6px;
   font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--ink);
+  line-height: 1.4;
+  font-weight: 500;
 }
-.pick-match {
-  display: none;
-  margin-top: 8px;
-  font-family: var(--text);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.pick.is-match .pick-outcome {
   color: var(--signal-deep);
+}
+.pick.is-wait .pick-outcome {
+  color: #1f7a52;
+}
+.pick.is-pass .pick-card {
+  background: #f1f0eb;
+  box-shadow: 0 10px 22px -14px rgba(18, 64, 46, 0.3);
+}
+.pick.is-pass .pick-outcome {
+  color: var(--ink-2);
 }
 .pick.is-match .pick-card {
   box-shadow: 0 0 0 2px var(--signal), 0 14px 30px -12px rgba(18, 64, 46, 0.38);
@@ -765,8 +775,11 @@ html.motion .legend.is-on {
   box-shadow: 0 0 0 3px rgba(18, 64, 46, 0.18);
 }
 .legend .lg-sk {
-  background: var(--signal);
-  box-shadow: 0 0 10px var(--signal);
+  background: #1f7a52;
+  box-shadow: 0 0 0 3px rgba(31, 122, 82, 0.2);
+}
+.legend .lg-ppl {
+  background: #c3c7bf;
 }
 
 /* ---------- Light and dark sections ---------- */
@@ -2159,7 +2172,11 @@ html.motion h2[data-reveal] > div {
   }
   /* On phones the copy sits over the lower half of the scene; give it a paper backing. */
   .scrim {
-    background: linear-gradient(0deg, rgba(245, 239, 227, 0.96) 0%, rgba(245, 239, 227, 0.88) 38%, rgba(245, 239, 227, 0) 62%);
+    background: linear-gradient(0deg, rgba(245, 239, 227, 0.96) 0%, rgba(245, 239, 227, 0.86) 26%, rgba(245, 239, 227, 0) 44%);
+  }
+  /* The hero copy is taller than a story step's; give it a deeper paper backing of its own. */
+  html.motion .hero::before {
+    background: linear-gradient(0deg, rgba(245, 239, 227, 0.95) 0%, rgba(245, 239, 227, 0.85) 45%, rgba(245, 239, 227, 0) 64%);
   }
   .hero-foot {
     flex-direction: column;
@@ -2280,13 +2297,45 @@ html.motion h2[data-reveal] > div {
   color: var(--ink-2);
 }
 .bubble-me .bubble-in {
-  max-width: 220px;
+  max-width: 230px;
   border-radius: 16px 16px 5px 16px;
-  background: var(--signal);
-  color: #1a0b05;
+  background: #1f7a52;
+  color: #fbf9f4;
 }
 .bubble-me small {
-  color: rgba(26, 11, 5, 0.72);
+  color: rgba(251, 249, 244, 0.78);
+}
+/* In a conversation pair, your bubble sits to the right of your Buddy and theirs to the left of
+   theirs, so the two never cover each other. */
+.bubble-right .bubble-in {
+  translate: -18px 0;
+  border-radius: 16px 16px 16px 5px;
+}
+.bubble-left .bubble-in {
+  bottom: calc(6px + var(--lift, 0px));
+  transition: bottom 300ms var(--ease);
+  translate: calc(-100% + 18px) 0;
+  border-radius: 16px 16px 5px 16px;
+  transform-origin: 100% 100%;
+}
+.bubble-mine .bubble-in {
+  max-width: 190px;
+  background: #1f7a52;
+  color: #fbf9f4;
+}
+.bubble-mine small {
+  color: rgba(251, 249, 244, 0.78);
+}
+.bubble-mine .bubble-dots b {
+  background: #fbf9f4;
+}
+/* Other pairs talking among themselves: smaller, grey, no name. */
+.bubble-other .bubble-in {
+  max-width: 160px;
+  padding: 6px 10px 7px;
+  background: #e6e8e2;
+  color: #4d5d54;
+  font-size: 11.5px;
 }
 .bubble-dots {
   display: none;
@@ -2344,6 +2393,176 @@ html.motion h2[data-reveal] > div {
 }
 .bubble-in {
   transform-origin: 0% 100%;
+}
+
+/* Step 4: the swipe deck, played by the scroll (main.ts). */
+.swipe {
+  display: none;
+}
+html.motion .swipe {
+  display: block;
+  position: absolute;
+  right: calc(var(--gutter) + 120px);
+  top: 50%;
+  width: 290px;
+  margin-top: -250px;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.swipe::before {
+  content: "";
+  position: absolute;
+  inset: -60px -70px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(245, 239, 227, 0.92), rgba(245, 239, 227, 0));
+}
+.swipe-cards {
+  position: relative;
+  height: 400px;
+}
+.swipe-card {
+  position: absolute;
+  inset: 0;
+  font-size: 14px;
+  box-shadow: 0 30px 60px -30px rgba(13, 47, 34, 0.55);
+  will-change: transform, opacity;
+}
+.swipe-card .poster-stamp {
+  top: 3em;
+  font-size: 1.5em;
+}
+.swipe-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+}
+.swipe-actions .app-circle,
+.swipe-actions .app-signal {
+  box-shadow: 0 12px 24px -14px rgba(13, 47, 34, 0.5);
+}
+.swipe-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 92px;
+  translate: -50% 0;
+  width: max-content;
+  padding: 10px 16px;
+  border-radius: 99px;
+  background: var(--pine);
+  color: var(--paper);
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  box-shadow: 0 14px 28px -14px rgba(13, 47, 34, 0.6);
+}
+.swipe-toast-pass {
+  background: #f1f0eb;
+  color: var(--pine);
+}
+.swipe-match {
+  position: absolute;
+  inset: -16px -22px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 24px;
+  border-radius: 34px;
+  text-align: center;
+  color: var(--poster-ink);
+  background:
+    radial-gradient(90% 60% at 50% 28%, rgba(255, 90, 54, 0.55), rgba(255, 90, 54, 0)),
+    var(--poster-bg);
+  box-shadow: 0 40px 80px -30px rgba(13, 47, 34, 0.7);
+  opacity: 0;
+}
+.swipe-burst {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+}
+.swipe-burst i {
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  margin: -7px 0 0 -4px;
+  border-radius: 2px;
+}
+.swipe-faces {
+  position: relative;
+  display: flex;
+}
+.sf {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border: 3px solid var(--poster-bg);
+}
+.sf-mine {
+  background: #e3f0e8;
+  box-shadow: 0 0 0 3px #1f7a52;
+  margin-right: -16px;
+  z-index: 1;
+}
+.sf-theirs {
+  background: #eef0ec;
+  box-shadow: 0 0 0 3px #b8bdb4;
+}
+.swipe-kicker {
+  position: relative;
+  margin-top: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+.swipe-title {
+  position: relative;
+  margin-top: 10px;
+  font-family: var(--display);
+  font-size: 34px;
+  line-height: 1.05;
+}
+.swipe-sub {
+  position: relative;
+  margin-top: 10px;
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--poster-muted);
+}
+@media (max-width: 720px) {
+  html.motion .swipe {
+    right: auto;
+    left: 50%;
+    top: 96px;
+    width: 230px;
+    margin: 0 0 0 -115px;
+  }
+  .swipe-cards {
+    height: 300px;
+  }
+  .swipe-card {
+    font-size: 11px;
+  }
+  .swipe-actions .app-circle,
+  .swipe-actions .app-signal {
+    height: 48px;
+  }
+  .swipe-actions .app-circle {
+    width: 48px;
+  }
+  .swipe-title {
+    font-size: 26px;
+  }
+  .sf {
+    width: 72px;
+    height: 72px;
+  }
 }
 
 /* Pick cards flip to stay on screen (set by room.ts). */

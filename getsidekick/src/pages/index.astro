@@ -32,22 +32,22 @@ const chapters = [
   {
     n: "01",
     title: "Check in from your seat.",
-    body: "Check in to the event, or to a place like a coworking space. You stay in the talk.",
+    body: "Tap check in when you arrive. Your sidekick appears beside you, in green, and you stay in the talk.",
   },
   {
     n: "02",
-    title: "Your sidekick scouts the floor.",
-    body: "It reads what each person checked in is looking for and what they can offer.",
+    title: "Everyone else checks in too.",
+    body: "Each person who checks in brings a sidekick of their own. Theirs are grey; yours is the green one.",
   },
   {
     n: "03",
-    title: "It ranks who is worth meeting.",
-    body: "You get a short list, each with a one-line reason. Read how the two sidekicks would talk, then connect or pass.",
+    title: "The sidekicks talk.",
+    body: "Yours talks to many of theirs at once, comparing what each person is looking for and can offer. Other pairs talk too.",
   },
   {
     n: "04",
-    title: "Both connect. It's a match.",
-    body: "You swap contact details and get an opener for the break. Until you both connect, nothing is shared.",
+    title: "You match, or you pass.",
+    body: "You decide who to meet. When you both connect, it’s a match and contacts swap. Nothing is shared until then.",
   },
 ];
 
@@ -55,9 +55,9 @@ const chapters = [
 // The same three people, order, fit and reasons as the Try a card deck below, so the story and
 // the demo tell one story.
 const picks = [
-  { name: "Daniel Tan", role: "CTO, logistics startup", fit: "Strong fit", reason: "Two-way fit: Daniel offers engineering help and is looking for design help." },
-  { name: "Aisha Rahman", role: "Partner at a seed fund", fit: "Good fit", reason: "Two-way fit: Aisha offers funding and is looking for customers." },
-  { name: "Mei Lin", role: "Product designer", fit: "Good fit", reason: "Mei offers product feedback, which you’re looking for." },
+  { name: "Daniel Tan", role: "CTO, logistics startup", state: "match", outcome: "You both connected. It’s a match." },
+  { name: "Aisha Rahman", role: "Partner at a seed fund", state: "wait", outcome: "You connected. Waiting for Aisha." },
+  { name: "Mei Lin", role: "Product designer", state: "pass", outcome: "You passed. Mei isn’t told." },
 ];
 
 // The demo deck, built the way the app builds it. Hana (the demo "you") is looking for funding,
@@ -216,42 +216,70 @@ const faqs = [
         <div class="scrim" aria-hidden="true"></div>
 
         <div class="tags" aria-hidden="true">
-          <span class="tag tag-you" data-label-you><i></i>You, in the talk</span>
+          <span class="tag tag-you" data-label-you><i></i><span class="tag-before">You, in the talk</span><span class="tag-after">You, checked in</span></span>
           <span class="tag tag-sk" data-label-sidekick><i></i>Your sidekick</span>
-          <span class="bubble bubble-me" data-bubble-me data-lines="Hi! Who here can help with funding or engineering?|What are you looking for today?|Anyone hiring a designer?">
-            <span class="bubble-in"><small>Your sidekick</small><span class="bubble-text">Hi! Who here can help with funding or engineering?</span></span>
-          </span>
           {
             [
-              ["Daniel", "Daniel offers engineering help."],
-              ["Mei", "Mei can give product feedback."],
-              ["Sofia", "Sofia can make go-to-market intros."],
-              ["Arjun", "Arjun is looking for partners."],
-            ].map(([who, text]) => (
-              <span class="bubble" data-bubble>
+              ["Daniel", "We need engineering help. You?", "Daniel can help with that!"],
+              ["Aisha", "We’re raising a first round.", "Aisha funds early teams."],
+              ["Mei", "Could we get product feedback?", "Mei loves giving feedback."],
+              ["Sofia", "Know anyone in go-to-market?", "Sofia makes intros!"],
+              ["Arjun", "We have a pilot running.", "Arjun wants partners like that."],
+              ["Their", "What are you after today?", "Mine’s hiring a designer."],
+            ].map(([who, mine, theirs]) => (
+              <>
+                <span class="bubble bubble-right bubble-mine" data-pair-mine>
+                  <span class="bubble-in">
+                    <small>Your sidekick</small>
+                    <span class="bubble-text">{mine}</span>
+                    <span class="bubble-dots"><b /><b /><b /></span>
+                  </span>
+                </span>
+                <span class="bubble bubble-left" data-pair-theirs>
+                  <span class="bubble-in">
+                    <small>{who === "Their" ? "Their sidekick" : `${who}’s sidekick`}</small>
+                    <span class="bubble-text">{theirs}</span>
+                    <span class="bubble-dots"><b /><b /><b /></span>
+                  </span>
+                </span>
+              </>
+            ))
+          }
+          {
+            ["Looking for a cofounder?", "We’re hiring this month."].map((text) => (
+              <span class="bubble bubble-other" data-bubble-other>
                 <span class="bubble-in">
-                  <small>{who}’s sidekick</small>
                   <span class="bubble-text">{text}</span>
                   <span class="bubble-dots"><b /><b /><b /></span>
                 </span>
               </span>
             ))
           }
-          {
-            picks.map((p, i) => (
-              <span class="pick" data-label-pick>
-                <span class="pick-card">
-                  <b>
-                    <em>{i + 1}</em>
-                    {p.name}
-                  </b>
-                  <small>{p.role} · <span class:list={["pick-fit", p.fit === "Strong fit" && "is-strong"]}>{p.fit}</span></small>
-                  <span class="pick-reason">{p.reason}</span>
-                  <span class="pick-match">Match. Contacts swapped.</span>
-                </span>
-              </span>
-            ))
-          }
+        </div>
+
+        <!-- Step 4: the app's swipe deck, played by the scroll. -->
+        <div class="swipe" aria-hidden="true" data-swipe>
+          <div class="swipe-cards">
+            <Poster name="Daniel Tan" role="CTO, logistics startup" reason="Two-way fit: Daniel offers engineering help and is looking for design help." fit="Strong fit" tone="lagoon" light="right" class="swipe-card" data-swipe-card="daniel" />
+            <Poster name="Aisha Rahman" role="Partner at a seed fund" reason="Two-way fit: Aisha offers funding and is looking for customers." fit="Good fit" tone="plum" class="swipe-card" data-swipe-card="aisha" />
+            <Poster name="Mei Lin" role="Product designer" reason="Mei offers product feedback, which you’re looking for." fit="Good fit" tone="clay" class="swipe-card" data-swipe-card="mei" />
+          </div>
+          <div class="swipe-actions">
+            <span class="app-circle" data-swipe-pass><Icon name="x" size={24} /></span>
+            <span class="app-signal" data-swipe-connect><Icon name="handshake" size={19} />Connect</span>
+          </div>
+          <p class="swipe-toast" data-swipe-toast>Connect sent. Waiting for Aisha.</p>
+          <p class="swipe-toast swipe-toast-pass" data-swipe-toast-pass>Passed. Mei isn’t told.</p>
+          <div class="swipe-match" data-swipe-match>
+            <span class="swipe-burst" data-swipe-burst></span>
+            <div class="swipe-faces">
+              <span class="sf sf-mine"><Buddy size={44} mood="wink" color="#1F7A52" features="#FBF9F4" cheeks="#FF5A36" /></span>
+              <span class="sf sf-theirs"><Buddy size={44} mood="happy" color="#B8BDB4" features="#3F4C45" cheeks="#E9A08C" /></span>
+            </div>
+            <p class="swipe-kicker">It’s a match</p>
+            <p class="swipe-title">You and Daniel both connected</p>
+            <p class="swipe-sub">Contacts swapped, with an opener for the break.</p>
+          </div>
         </div>
 
         <div class="hero" data-hero>
@@ -306,7 +334,7 @@ const faqs = [
         <p class="legend" aria-hidden="true">
           <span><i class="lg-you"></i>You</span>
           <span><i class="lg-sk"></i>Your sidekick</span>
-          <span><i class="lg-ppl"></i>People at the event</span>
+          <span><i class="lg-ppl"></i>Other people’s sidekicks</span>
         </p>
       </div>
     </section>

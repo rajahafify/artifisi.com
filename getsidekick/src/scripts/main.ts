@@ -37,10 +37,11 @@ async function loadRoom() {
     {
       you: q("[data-label-you]"),
       sidekick: q("[data-label-sidekick]"),
-      picks: qa("[data-label-pick]"),
-      bubbleMe: q("[data-bubble-me]"),
-      // Phones show three replies at a time, desktops four.
-      bubbles: qa("[data-bubble]").slice(0, small ? 3 : 4),
+      // One pair of bubbles per conversation; phones run three, desktops six plus two grey pairs.
+      pairs: qa("[data-pair-mine]")
+        .map((mine, k) => ({ mine, theirs: qa("[data-pair-theirs]")[k] }))
+        .slice(0, small ? 3 : 5),
+      others: small ? [] : qa("[data-bubble-other]"),
     },
     { small, tier },
   );
@@ -99,7 +100,7 @@ function scrollToY(y: number) {
 }
 
 // ---- The story ------------------------------------------------------------------------
-const steps = [PHASES.checkin, PHASES.scout, PHASES.rank, PHASES.match];
+const steps = [PHASES.checkin, PHASES.arrive, PHASES.talk, PHASES.outcome];
 const storyRange = () => story.offsetHeight - innerHeight;
 // Where to land for a step: a little past its start, so its copy is fully in.
 const stepY = (i: number) => story.offsetTop + storyRange() * (steps[i][0] + (steps[i][1] - steps[i][0]) * 0.45);
@@ -123,6 +124,71 @@ if (motion) {
     copy.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, a);
     if (i < chapters.length - 1) copy.to(el, { opacity: 0, y: -30, ease: "power2.in" }, b - 0.05);
   });
+  // Step 4, played by the scroll on the app's own swipe deck: Mei is passed, Aisha gets a connect
+  // that waits, and Daniel is a match. Scrolling back up plays it backwards.
+  const swipe = q("[data-swipe]");
+  if (swipe) {
+    const [oA] = PHASES.outcome;
+    const card = (id: string) => q(`[data-swipe-card="${id}"]`, swipe)!;
+    const mei = card("mei");
+    const aisha = card("aisha");
+    const daniel = card("daniel");
+    const stampOf = (c: HTMLElement, kind: string) => q(`.poster-stamp-${kind}`, c)!;
+    const passBtn = q("[data-swipe-pass]", swipe)!;
+    const connectBtn = q("[data-swipe-connect]", swipe)!;
+    gsap.set(aisha, { y: 14, scale: 0.95 });
+    gsap.set(daniel, { y: 28, scale: 0.9 });
+    gsap.set(qa(".poster-stamp", swipe), { scale: 0.6 });
+    const press = (btn: HTMLElement, at: number) =>
+      copy.to(btn, { scale: 0.86, duration: 0.006, ease: "power1.out" }, at).to(btn, { scale: 1, duration: 0.012, ease: "back.out(3)" }, at + 0.006);
+    const swipeOut = (c: HTMLElement, dir: number, at: number, rise: HTMLElement[]) => {
+      copy
+        .to(c, { x: dir * 34, rotation: dir * 6, duration: 0.012, ease: "power1.out" }, at)
+        .to(stampOf(c, dir > 0 ? "connect" : "pass"), { opacity: 1, scale: 1.08, duration: 0.01, ease: "back.out(3)" }, at + 0.004)
+        .to(c, { x: dir * 560, y: 60, rotation: dir * 26, opacity: 0, duration: 0.022, ease: "power2.in" }, at + 0.017);
+      rise.forEach((r, i) => copy.to(r, { y: i * 14, scale: 1 - i * 0.05, duration: 0.016, ease: "back.out(2)" }, at + 0.03));
+    };
+    copy.fromTo(swipe, { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.02, ease: "back.out(1.6)" }, oA);
+    press(passBtn, oA + 0.022);
+    swipeOut(mei, -1, oA + 0.022, [aisha, daniel]);
+    copy.fromTo("[data-swipe-toast-pass]", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.008 }, oA + 0.045).to("[data-swipe-toast-pass]", { opacity: 0, duration: 0.008 }, oA + 0.065);
+    press(connectBtn, oA + 0.07);
+    swipeOut(aisha, 1, oA + 0.07, [daniel]);
+    copy.fromTo("[data-swipe-toast]", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.008 }, oA + 0.093).to("[data-swipe-toast]", { opacity: 0, duration: 0.008 }, oA + 0.113);
+    press(connectBtn, oA + 0.118);
+    swipeOut(daniel, 1, oA + 0.118, []);
+    // The match: the panel pops, the two Buddies (green, yours; grey, Daniel's) come together,
+    // and confetti in the brand colours bursts out from between them.
+    const match = q("[data-swipe-match]", swipe)!;
+    copy.fromTo(match, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.024, ease: "back.out(1.8)" }, oA + 0.142);
+    copy.fromTo(q(".sf-mine", swipe), { x: -80, rotation: -20 }, { x: 0, rotation: 0, duration: 0.022, ease: "back.out(2.2)" }, oA + 0.148);
+    copy.fromTo(q(".sf-theirs", swipe), { x: 80, rotation: 20 }, { x: 0, rotation: 0, duration: 0.022, ease: "back.out(2.2)" }, oA + 0.148);
+    const burst = q("[data-swipe-burst]", swipe)!;
+    const colours = ["#ff5a36", "#1f7a52", "#ede4d3", "#ffb59f", "#b8bdb4"];
+    const bits = Array.from({ length: 26 }, (_, i) => {
+      const b = document.createElement("i");
+      b.style.background = colours[i % colours.length];
+      if (i % 3 === 0) b.style.borderRadius = "50%";
+      burst.append(b);
+      return b;
+    });
+    copy.fromTo(
+      bits,
+      { x: 0, y: 0, scale: 0, rotation: 0, opacity: 1 },
+      {
+        x: () => gsap.utils.random(-170, 170),
+        y: () => gsap.utils.random(-150, 90),
+        rotation: () => gsap.utils.random(-240, 240),
+        scale: () => gsap.utils.random(0.7, 1.3),
+        duration: 0.03,
+        ease: "power3.out",
+        stagger: { each: 0.0005, from: "random" },
+      },
+      oA + 0.152,
+    );
+    copy.fromTo(qa(".swipe-kicker, .swipe-title, .swipe-sub", swipe), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.014, stagger: 0.004 }, oA + 0.16);
+    copy.to(q(".swipe-actions", swipe), { opacity: 0, y: 10, duration: 0.012 }, oA + 0.145);
+  }
   copy.set({}, {}, 1); // pad to exactly one unit so progress maps onto PHASES
 
   const setUi = (p: number) => {

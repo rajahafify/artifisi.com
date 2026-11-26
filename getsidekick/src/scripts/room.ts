@@ -2,19 +2,21 @@
 //
 // Back half: the talk. A stage with a slide, a speaker, and rows of chairs. You sit in one.
 // Front half: the floor. People stand around cocktail tables, talking.
-// Your sidekick (the orange orb) leaves your seat, visits each group on the floor, ranks three
-// people, and when you both connect, a line joins your chair to theirs.
+//
+// The story is four actions, each happening in place while the camera holds still:
+//   1. You check in. A ripple spreads from your seat and your sidekick (green Buddy) appears.
+//   2. Everyone else checks in. A grey Buddy appears beside each of them.
+//   3. The sidekicks talk. Yours talks to many of theirs at once; other pairs talk too.
+//   4. Match or pass. Your conversations resolve: a match, a connect that waits, a pass.
+// Green is always yours; grey is everyone else's.
 //
 // Everything on screen is a function of one number, `progress` (0 to 1), plus a clock for idle
 // motion. Scrolling backwards plays the story backwards.
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import {
   BoxGeometry,
-  BufferAttribute,
-  BufferGeometry,
   CanvasTexture,
   CapsuleGeometry,
-  CatmullRomCurve3,
-  CircleGeometry,
   Color,
   ConeGeometry,
   CylinderGeometry,
@@ -22,8 +24,6 @@ import {
   Fog,
   HemisphereLight,
   InstancedMesh,
-  Line,
-  LineDashedMaterial,
   Matrix4,
   Mesh,
   MeshBasicMaterial,
@@ -32,13 +32,11 @@ import {
   PCFSoftShadowMap,
   PerspectiveCamera,
   PlaneGeometry,
-  PointLight,
-  QuadraticBezierCurve3,
+  Quaternion,
   RingGeometry,
   SRGBColorSpace,
   Scene,
   SphereGeometry,
-  TubeGeometry,
   Vector3,
   WebGLRenderer,
 } from "three";
@@ -56,10 +54,10 @@ export interface Room {
 export interface RoomLabels {
   you?: HTMLElement | null;
   sidekick?: HTMLElement | null;
-  picks: HTMLElement[];
-  /** The hero's speech bubbles: your sidekick's, then replies from other people's sidekicks. */
-  bubbleMe?: HTMLElement | null;
-  bubbles?: HTMLElement[];
+  /** Step 3: one pair of bubbles per conversation, your sidekick's and theirs. */
+  pairs?: { mine: HTMLElement; theirs: HTMLElement }[];
+  /** Step 3: grey pairs talking among themselves. */
+  others?: HTMLElement[];
 }
 
 // Story phases, in progress units. The page copy lines up with these.
@@ -72,6 +70,9 @@ const FLOOR = new Color("#efe7d7");
 const ZONE = new Color("#e6dcc8");
 const PINE = new Color("#12402e");
 const SIGNAL = new Color("#ff5a36");
+// Your sidekick is green; everyone else's is grey.
+const GREEN = new Color("#1f7a52");
+const GREY = new Color("#b8bdb4");
 const CHAIR = new Color("#d3c6ad");
 const TABLE = new Color("#fbf8f1");
 const CLOTHES = ["#8c9a90", "#6e7f75", "#b5a58a", "#9aa6a0", "#7f705f", "#a9b4ac", "#c2b39b", "#5f6f66"].map((c) => new Color(c));
@@ -102,7 +103,8 @@ type Person = {
   clothes: Color;
   skin: Color;
   phase: number;
-  scanAt: number; // scout progress when the sidekick reaches their group; 2 = never
+  /** When this person checks in, in progress units; 2 = they don't, so no sidekick. */
+  checkIn: number;
 };
 
 // Text drawn onto a flat plane, for the floor zone labels and the slide on stage.
@@ -270,14 +272,14 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
         clothes: CLOTHES[Math.floor(rand() * CLOTHES.length)],
         skin: SKIN[Math.floor(rand() * SKIN.length)],
         phase: rand() * 6.28,
-        scanAt: 2,
+        checkIn: 2,
       });
     }
   }
   const speakerIndex = people.length;
-  people.push({ x: 0.6, z: -7.4, face: 0, seated: false, clothes: new Color("#2b3a33"), skin: SKIN[1], phase: 0, scanAt: 2 });
+  people.push({ x: 0.6, z: -7.4, face: 0, seated: false, clothes: new Color("#2b3a33"), skin: SKIN[1], phase: 0, checkIn: 2 });
 
-  // Groups on the floor, each around a cocktail table, placed along the sidekick's route.
+  // Groups on the floor, each around a cocktail table.
   const groupSpots: [number, number, number][] = [
     [-6.4, 1.8, 4],
     [-2.9, 2.4, 3],
@@ -308,7 +310,7 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
         clothes: CLOTHES[Math.floor(rand() * CLOTHES.length)],
         skin: SKIN[Math.floor(rand() * SKIN.length)],
         phase: rand() * 6.28,
-        scanAt: 2,
+        checkIn: 2,
       });
     }
   });
@@ -319,37 +321,6 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
 
   const you = people[youIndex];
   you.clothes = PINE.clone();
-
-  // The sidekick's route: from your seat over to the floor, past every group.
-  const route = new CatmullRomCurve3(
-    [
-      [0, 0.6],
-      [-4.6, 0.9],
-      [-8.4, 3.6],
-      [-5.4, 8.2],
-      [-1.4, 6.0],
-      [1.8, 9.2],
-      [5.6, 8.6],
-      [8.8, 4.0],
-      [5.6, 0.6],
-      [2.2, 3.8],
-    ].map(([x, z]) => new Vector3(x, 1.7, z)),
-  );
-  const routeEnd = route.getPoint(1);
-  // When the sidekick first comes near each table, its whole group counts as scouted.
-  groupSpots.forEach(([gx, gz], g) => {
-    let at = 2;
-    for (let s = 0; s <= 300; s++) {
-      const p = route.getPoint(s / 300);
-      if (Math.hypot(p.x - gx, p.z - gz) < 2.0) {
-        at = s / 300;
-        break;
-      }
-    }
-    people.forEach((p, i) => {
-      if (groupOf[i] === g) p.scanAt = at;
-    });
-  });
 
   // ---- Meshes (instanced, so the whole crowd is a handful of draw calls) ---------------
   const n = people.length;
@@ -404,12 +375,6 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   blobs.visible = tier === "low";
   scene.add(blobs);
 
-  // "Seen" marks: a thin ring at the feet of everyone the sidekick has scouted.
-  const seenGeo = new RingGeometry(0.3, 0.36, 40);
-  seenGeo.rotateX(-Math.PI / 2);
-  const seen = new InstancedMesh(seenGeo, new MeshBasicMaterial({ color: PINE, transparent: true, opacity: 0.35, depthWrite: false }), n);
-  scene.add(seen);
-
   // Rings under you, the picks and the sidekick's scan.
   const flatRing = (inner: number, outer: number, color: Color, opacity = 0) => {
     const g = new RingGeometry(inner, outer, 64);
@@ -418,11 +383,8 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     scene.add(m);
     return m;
   };
-  const youRing = flatRing(0.42, 0.5, PINE, 0.9);
-  const youPulse = flatRing(0.95, 1.0, SIGNAL);
-  const scanRing = flatRing(0.97, 1.0, SIGNAL);
-  const scanDisc = new Mesh(new CircleGeometry(1, 48).rotateX(-Math.PI / 2), new MeshBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0, depthWrite: false }));
-  scene.add(scanDisc);
+  const youRing = flatRing(0.42, 0.5, GREEN, 0.9);
+  const youPulse = flatRing(0.95, 1.0, GREEN);
   const pickRings = picks.map(() => flatRing(0.42, 0.52, PINE));
 
   // A map pin over your head, so you can always find yourself.
@@ -435,118 +397,92 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   pin.castShadow = pinTip.castShadow = true;
   scene.add(pin);
 
-  // Your sidekick: Buddy, the logo, in 3D and in Signal orange, with a soft light of its own.
-  const buddy = makeBuddy({ body: SIGNAL, features: "#0e2e21", cheeks: "#ffd0c0", shadows: true, glow: 0.22 });
-  const orb = buddy.group;
-  buddy.setWink(true);
-  const orbLight = new PointLight(SIGNAL, 6, 4.5, 2);
-  scene.add(orb, orbLight);
-
-  // ---- The hero: your sidekick talking to everyone's sidekick at once --------------------
-  // While you sit in the talk, your Buddy floats above your seat with lines out to the small
-  // Buddies of people on the floor. Pulses run both ways and speech bubbles answer back.
-  // Just above and beside your seat, clear of the pin over your head.
-  const heroAt = new Vector3(you.x + 0.8, 2.75, you.z + 0.35);
-  // The first four answer in speech bubbles, so they're people on the right of the room, clear of
-  // the headline. The rest are reached at the same time, without a bubble.
-  const talkTargets = [
-    picks[0], // Daniel
-    picks[2], // Mei
-    firstOf(7),
-    firstOf(8) + 1,
-    firstOf(9) + 2,
-    picks[1], // Aisha
-    firstOf(5),
-    firstOf(3) + 1,
-    firstOf(1),
-    firstOf(2) + 3,
-  ].slice(0, opts.small ? 6 : 10);
-  const minis = talkTargets.map((idx, i) => {
-    const b = makeBuddy({ body: "#ede4d3", features: "#12402e", cheeks: SIGNAL, seed: i + 1 });
-    b.group.scale.setScalar(0.34);
-    b.group.position.set(people[idx].x, 1.92, people[idx].z);
-    scene.add(b.group);
-    return b;
+  // ---- Who checks in, and when ----------------------------------------------------------
+  // Everyone on the floor and most of the audience check in during step 2, in a scattered order.
+  // You check in during step 1. The speaker and a few seats never do, so not everyone has a sidekick.
+  const [arriveA, arriveB] = PHASES.arrive;
+  people.forEach((pp, i) => {
+    if (i === youIndex || i === speakerIndex) return;
+    if (pp.seated && rand() > 0.62) return;
+    pp.checkIn = lerp(arriveA + 0.015, arriveB - 0.05, rand());
   });
-  const links = talkTargets.map((idx) => {
-    const to = new Vector3(people[idx].x, 1.92, people[idx].z);
-    const mid = heroAt.clone().lerp(to, 0.5);
-    mid.y = Math.max(heroAt.y, to.y) + 1.4;
-    const curve = new QuadraticBezierCurve3(heroAt.clone(), mid, to);
-    const geo = new TubeGeometry(curve, 48, 0.014, 6, false);
-    const mesh = new Mesh(geo, new MeshBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0, depthWrite: false }));
-    geo.setDrawRange(0, 0);
-    scene.add(mesh);
-    const out = new Mesh(new SphereGeometry(0.05, 12, 10), new MeshBasicMaterial({ color: SIGNAL, transparent: true, depthWrite: false }));
-    const back = new Mesh(new SphereGeometry(0.045, 12, 10), new MeshBasicMaterial({ color: "#12402e", transparent: true, depthWrite: false }));
-    scene.add(out, back);
-    return { curve, geo, mesh, out, back, count: geo.index!.count };
-  });
-  const bubbleAt = (i: number) => minis[i]?.group.position;
-  let lastMe = -1;
-  const orbShadow = new Mesh(new CircleGeometry(0.34, 32).rotateX(-Math.PI / 2), new MeshBasicMaterial({ color: "#000", transparent: true, opacity: 0.08, depthWrite: false }));
-  scene.add(orbShadow);
-  // A dotted trail that shows where the sidekick has been.
-  const trailPts = route.getPoints(240).map((p) => new Vector3(p.x, 0.03, p.z));
-  const trail = new Line(new BufferGeometry().setFromPoints(trailPts), new LineDashedMaterial({ color: SIGNAL, dashSize: 0.18, gapSize: 0.16, transparent: true, opacity: 0.7 }));
-  trail.computeLineDistances();
-  trail.geometry.setDrawRange(0, 0);
-  scene.add(trail);
+  // The picks check in early, so their sidekicks are there to talk to.
+  picks.forEach((i) => (people[i].checkIn = lerp(arriveA + 0.02, arriveA + 0.08, rand())));
+  const checkInAt = PHASES.checkin[0] + (PHASES.checkin[1] - PHASES.checkin[0]) * 0.35;
 
-  // Lines from the sidekick to the three it ranked.
-  const pickLines = picks.map(() => {
-    const line = new Line(
-      new BufferGeometry().setFromPoints([new Vector3(), new Vector3()]),
-      new LineDashedMaterial({ color: PINE, dashSize: 0.14, gapSize: 0.1, transparent: true, opacity: 0 }),
-    );
-    scene.add(line);
-    return line;
-  });
+  // Where a person's sidekick floats: beside them, at shoulder height.
+  const sidekickAt = (i: number, out = new Vector3()) => {
+    const pp = people[i];
+    return out.set(pp.x + 0.42, pp.seated ? 1.3 : 1.62, pp.z + 0.12);
+  };
 
-  // The match: a line from your chair to theirs, drawn as a tube so it reads on a light floor.
-  const match = people[picks[0]];
-  const arcCurve = new QuadraticBezierCurve3(
-    new Vector3(you.x, 1.25, you.z),
-    new Vector3((you.x + match.x) / 2, 4.6, (you.z + match.z) / 2),
-    new Vector3(match.x, 1.6, match.z),
+  // ---- Grey sidekicks (everyone else's): instanced, so a whole room is three draw calls ------
+  const others = people.map((pp, i) => ({ i, pp })).filter(({ pp, i }) => pp.checkIn <= 1 && i !== youIndex);
+  const greyBody = new InstancedMesh(
+    new RoundedBoxGeometry(1.4, 1.2, 0.9, 6, 0.45),
+    new MeshStandardMaterial({ color: GREY, roughness: 0.45 }),
+    others.length,
   );
-  const ARC = 120;
-  const arcGeo = new TubeGeometry(arcCurve, ARC, 0.035, 8, false);
-  const arc = new Mesh(arcGeo, new MeshBasicMaterial({ color: SIGNAL }));
-  const arcIndexCount = arcGeo.index!.count;
-  arcGeo.setDrawRange(0, 0);
-  scene.add(arc);
-  const spark = new Mesh(new SphereGeometry(0.09, 16, 12), new MeshBasicMaterial({ color: SIGNAL }));
-  scene.add(spark);
+  const greyEyes = new InstancedMesh(new SphereGeometry(1, 14, 10), new MeshStandardMaterial({ color: "#3f4c45", roughness: 0.4 }), others.length * 2);
+  const greyCheeks = new InstancedMesh(new SphereGeometry(1, 12, 8), new MeshStandardMaterial({ color: "#e9a08c", roughness: 0.7 }), others.length * 2);
+  greyBody.castShadow = true;
+  scene.add(greyBody, greyEyes, greyCheeks);
+  const eyeLocal = [-0.22, 0.22].map((x) => new Matrix4().compose(new Vector3(x, 0.08, 0.42), new Quaternion(), new Vector3(0.11, 0.14, 0.06)));
+  const cheekLocal = [-0.38, 0.38].map((x) => new Matrix4().compose(new Vector3(x, -0.14, 0.39), new Quaternion(), new Vector3(0.1, 0.06, 0.035)));
+  const GREY_SIZE = 0.27;
 
-  // ---- Camera -------------------------------------------------------------------------
-  // [progress, camera position, look-at]
-  const shots: [number, Vector3, Vector3][] = [
-    [0.0, new Vector3(-13, 18, 28), new Vector3(-7.4, 0, 0.6)],
-    [0.2, new Vector3(-10, 11, 9.5), new Vector3(-4.2, 0.6, -3.2)],
-    [0.42, new Vector3(-2, 23, 18), new Vector3(-1.2, 0, 4.2)],
-    [0.66, new Vector3(-4, 13.5, 19), new Vector3(-0.4, 0.6, 4.8)],
-    [0.92, new Vector3(-9, 15, 19), new Vector3(-0.6, 0.6, 0.8)],
+  // ---- Your sidekick: the logo, in 3D, in green ------------------------------------------
+  const buddy = makeBuddy({ body: GREEN, features: "#fbf9f4", cheeks: SIGNAL, shadows: true, glow: 0.12 });
+  const mine = buddy.group;
+  buddy.setWink(true);
+  scene.add(mine);
+  const mineAt = sidekickAt(youIndex).add(new Vector3(0.18, 0.28, 0));
+  const MINE_SIZE = 0.44;
+
+  // ---- Step 3: conversations -----------------------------------------------------------
+  // Your sidekick doesn't travel: a green Buddy pops up beside each grey one it talks to, so it is
+  // in several conversations at once (the three picks first). A few grey pairs talk too.
+  const yourTalks = [picks[0], picks[1], picks[2], firstOf(7), firstOf(8) + 1].slice(0, opts.small ? 3 : 5);
+  const pairCandidates: [number, number][] = [
+    [firstOf(1), firstOf(9)],
+    [firstOf(2) + 1, firstOf(3)],
+    [firstOf(5) + 1, firstOf(4) + 1],
+    [firstOf(0), firstOf(1) + 1],
   ];
-  const wide = shots.map(([, a, l]) => [a.clone(), l.clone()] as [Vector3, Vector3]);
-  // Portrait screens: centre the room and frame the top pick.
-  const narrow: [Vector3, Vector3][] = [
-    [new Vector3(0, 30, 23), new Vector3(0, 0, 5.5)],
-    [new Vector3(-5, 8.5, 6), new Vector3(-2.6, 0.6, -3.6)],
-    [new Vector3(0, 24, 15), new Vector3(0, 0, 4.4)],
-    [new Vector3(3, 14, 16), new Vector3(2.6, 0.6, 5.6)],
-    [new Vector3(2, 24, 17), new Vector3(1, 0.6, 2.8)],
-  ];
+  const otherPairs = pairCandidates.filter(([a, b]) => people[a]?.checkIn <= 1 && people[b]?.checkIn <= 1 && !yourTalks.includes(a) && !yourTalks.includes(b));
+  const clones = yourTalks.map((i, k) => {
+    const b = makeBuddy({ body: GREEN, features: "#fbf9f4", cheeks: SIGNAL, glow: 0.12, seed: k + 3 });
+    b.group.visible = false;
+    scene.add(b.group);
+    // Just to the right of their grey Buddy, a touch higher, so the two read as a pair.
+    return { b, at: sidekickAt(i).add(new Vector3(0.5, 0.06, 0.05)) };
+  });
+  // A soft green ring on the floor where each one pops in.
+  const cloneRings = yourTalks.map(() => flatRing(0.3, 0.38, GREEN));
+
+  // ---- Camera ---------------------------------------------------------------------------
+  // Two framings only: the hero, then one view of the whole room for all four steps. The move
+  // between them happens once, as step 1 begins; after that the camera only drifts slightly in.
+  const shots = {
+    hero: [new Vector3(-13, 18, 28), new Vector3(-7.4, 0, 0.6)],
+    story: [new Vector3(-9.5, 14.5, 19.5), new Vector3(-0.2, 0.6, 1.0)],
+  };
+  const wide = { hero: shots.hero.map((v) => v.clone()), story: shots.story.map((v) => v.clone()) };
+  const narrow = {
+    hero: [new Vector3(0, 30, 23), new Vector3(0, 0, 5.5)],
+    // Looks a little further into the floor, so the room sits in the top part of the screen,
+    // above the step's copy.
+    story: [new Vector3(1.2, 27, 15.5), new Vector3(0.9, 0.6, 4.6)],
+  };
   const camPos = new Vector3();
   const camLook = new Vector3();
   function cameraAt(p: number) {
-    let i = 0;
-    while (i < shots.length - 2 && p > shots[i + 1][0]) i++;
-    const [p0, a0, l0] = shots[i];
-    const [p1, a1, l1] = shots[i + 1];
-    const t = smooth(p0, p1, p);
-    camPos.lerpVectors(a0, a1, t);
-    camLook.lerpVectors(l0, l1, t);
+    const t = smooth(PHASES.checkin[0] - 0.02, PHASES.checkin[0] + 0.08, p);
+    camPos.lerpVectors(shots.hero[0], shots.story[0], t);
+    camLook.lerpVectors(shots.hero[1], shots.story[1], t);
+    // A slow push in across the four steps, small enough to feel still.
+    const drift = smooth(PHASES.checkin[0], 1, p) * 0.06;
+    camPos.lerp(camLook, drift);
   }
 
   let width = 1;
@@ -560,10 +496,10 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     camera.fov = camera.aspect < 0.8 ? 38 : camera.aspect < 1.3 ? 32 : 28;
     camera.updateProjectionMatrix();
     const set = camera.aspect < 0.8 ? narrow : wide;
-    set.forEach(([a, l], k) => {
-      shots[k][1].copy(a);
-      shots[k][2].copy(l);
-    });
+    shots.hero[0].copy(set.hero[0]);
+    shots.hero[1].copy(set.hero[1]);
+    shots.story[0].copy(set.story[0]);
+    shots.story[1].copy(set.story[1]);
   }
   const ro = new ResizeObserver(resize);
   ro.observe(canvas);
@@ -573,10 +509,15 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   let target = 0;
   let current = 0;
   const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
-  const sk = new Vector3();
   const tmp = new Vector3();
+  const tmp2 = new Vector3();
+  const pos = new Vector3();
   const project = new Vector3();
   const col = new Color();
+  const m4 = new Matrix4();
+  const m5 = new Matrix4();
+  const quat = new Quaternion();
+  const scl = new Vector3();
   const hidden = new Matrix4().makeScale(0, 0, 0);
 
   function place(el: HTMLElement | null | undefined, at: Vector3, opacity: number) {
@@ -585,10 +526,16 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     let x = (project.x * 0.5 + 0.5) * width;
     const y = (-project.y * 0.5 + 0.5) * height;
     if (el.classList.contains("bubble")) {
-      // Keep bubbles inside the screen, and on phones out of the headline below the scene.
-      const half = ((el.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0) / 2;
-      x = clamp(x, half + 10, width - half - 10);
-      if (opts.small && y > height * 0.42) opacity = 0;
+      // Keep bubbles inside the screen and clear of the step rail on the right, and never over
+      // the step's copy at the bottom left (or, on phones, the bottom).
+      const w = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0;
+      // Where the bubble sits relative to its point: centred, or to one side of it.
+      const before = el.classList.contains("bubble-left") ? w - 18 : el.classList.contains("bubble-right") ? 18 : w / 2;
+      const right = opts.small ? 10 : 140;
+      x = clamp(x, before + 10, width - (w - before) - right);
+      const half = before;
+      const overCopy = opts.small ? y > height * 0.62 : x - half < width * 0.4 && y > height * 0.56;
+      if (overCopy) opacity = 0;
     }
     const onScreen = x > -10 && x < width + 10 && y > 60 && y < height + 10;
     const visible = opacity > 0.01 && project.z < 1 && onScreen;
@@ -597,9 +544,14 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     el.style.visibility = visible ? "visible" : "hidden";
     if (!visible || el.classList.contains("bubble")) return;
     const pick = el.classList.contains("pick");
+    if (pick && opts.small && y > height * 0.6) {
+      el.style.opacity = "0";
+      el.style.visibility = "hidden";
+      return;
+    }
     const box = pick ? (el.firstElementChild as HTMLElement) : el;
     const room = width < 720 ? 16 : 150; // keep clear of the step rail on the right
-    el.classList.toggle("flip", x + 18 + box.offsetWidth > width - room);
+    el.classList.toggle("flip", el.classList.contains("tag-you") || x + 18 + box.offsetWidth > width - room);
     if (pick) el.classList.toggle("below", y - 18 - box.offsetHeight < 90);
   }
 
@@ -611,6 +563,11 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     const t = clamp((intro - delay) / 0.42);
     return t <= 0 ? 0.0001 : backOut(t);
   }
+  // A pop for things that appear: 0 before `at`, a quick overshoot, then 1.
+  const pop = (at: number, p: number, span = 0.025) => {
+    const t = clamp((p - at) / span);
+    return t <= 0 ? 0 : t >= 1 ? 1 : backOut(t);
+  };
 
   function draw(p: number, time: number) {
     const intro = introOn ? clamp((time - 0.15) / 2.1) : 1;
@@ -641,33 +598,26 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
       tableTops.instanceMatrix.needsUpdate = tableLegs.instanceMatrix.needsUpdate = true;
       if (intro >= 1) introSettled = true;
     }
-    const checkin = smooth(PHASES.checkin[0], PHASES.checkin[1], p);
-    const scoutT = smooth(PHASES.scout[0], PHASES.scout[1] - 0.02, p);
-    const scouting = smooth(PHASES.scout[0] - 0.01, PHASES.scout[0] + 0.03, p) * (1 - smooth(PHASES.rank[0], PHASES.rank[0] + 0.05, p));
-    const rank = smooth(PHASES.rank[0], PHASES.rank[0] + 0.1, p);
-    const matched = smooth(PHASES.match[0], PHASES.match[0] + 0.12, p);
 
-    // Where the sidekick is: beside your head, then over to the floor, then along its route.
-    const bob = Math.sin(time * 2.4) * 0.08;
-    if (p < PHASES.scout[0]) {
-      const end = route.getPoint(0);
-      sk.lerpVectors(heroAt, end, checkin);
-      sk.y += Math.sin(checkin * Math.PI) * 1.2;
-    } else if (p < PHASES.rank[0]) {
-      route.getPoint(scoutT, sk);
-    } else {
-      sk.copy(routeEnd);
-    }
-    sk.y += bob;
+    const [talkA, talkB] = PHASES.talk;
+    const [outA] = PHASES.outcome;
+    const checkedIn = smooth(checkInAt - 0.01, checkInAt + 0.02, p);
+    const talking = smooth(talkA, talkA + 0.03, p);
+    const decided = smooth(outA, outA + 0.05, p);
+
+    // Camera first: the sidekicks and labels face it.
+    cameraAt(p);
+    pointer.sx += (pointer.x - pointer.sx) * 0.05;
+    pointer.sy += (pointer.y - pointer.sy) * 0.05;
+    camera.position.copy(camPos);
+    camera.position.x += pointer.sx * 0.6;
+    camera.position.y -= pointer.sy * 0.4;
+    camera.lookAt(camLook);
 
     // People.
-    const dim = rank * 0.7;
     for (let i = 0; i < n; i++) {
       const pp = people[i];
-      const pick = picks.indexOf(i);
-      const isYou = i === youIndex;
       let x = pp.x;
-      let z = pp.z;
       let face = pp.face;
       let y = 0;
       let scaleY = 1;
@@ -680,204 +630,172 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
         y = 0.45;
         face = Math.sin(time * 0.45 + 1.2) * 0.6;
       } else {
-        // Standing people shift their weight and turn a little as they talk.
         face += Math.sin(time * 0.7 + pp.phase) * 0.25;
         y = Math.max(0, Math.sin(time * 1.6 + pp.phase)) * 0.025;
       }
-      dummy.position.set(x, y, z);
-      dummy.rotation.set(0, face, 0);
       const g = grow(pp.x, pp.z, intro);
+      dummy.position.set(x, y, pp.z);
+      dummy.rotation.set(0, face, 0);
       dummy.scale.set(g, scaleY * g, g);
       dummy.updateMatrix();
       bodies.setMatrixAt(i, dummy.matrix);
-      const headY = y + (pp.seated ? 0.98 : 1.12);
-      dummy.position.set(x, lerp(0, headY, Math.min(1, g)), z);
+      dummy.position.set(x, lerp(0, y + (pp.seated ? 0.98 : 1.12), Math.min(1, g)), pp.z);
       dummy.scale.set(g, g, g);
       dummy.updateMatrix();
       heads.setMatrixAt(i, dummy.matrix);
-      dummy.position.set(x, 0.011, z);
+      dummy.position.set(x, 0.011, pp.z);
       dummy.rotation.set(0, 0, 0);
       dummy.scale.set(0.95 * g, 1, 0.95 * g);
       dummy.updateMatrix();
       blobs.setMatrixAt(i, dummy.matrix);
-
-      // Colour: fade everyone but you and the picks once the list is ready.
-      let fade = 0;
-      if (!isYou && pick < 0 && i !== speakerIndex) fade = dim;
-      if (pick > 0) fade = matched * 0.35;
-      col.copy(pp.clothes);
-      col.lerp(PAPER, fade);
-      bodies.setColorAt(i, col);
-      col.copy(pp.skin).lerp(PAPER, fade);
-      heads.setColorAt(i, col);
-
-      // Seen rings.
-      const s = pp.scanAt <= 1 ? smooth(pp.scanAt, pp.scanAt + 0.04, scoutT) * (1 - rank) : 0;
-      if (s > 0.01) {
-        dummy.position.set(x, 0.015, z);
-        dummy.rotation.set(0, 0, 0);
-        dummy.scale.setScalar(0.6 + s * 0.4);
-        dummy.updateMatrix();
-        seen.setMatrixAt(i, dummy.matrix);
-      } else seen.setMatrixAt(i, hidden);
+      // In the last step, people outside your three conversations step back a little.
+      const fade = i === youIndex || picks.includes(i) || i === speakerIndex ? 0 : decided * 0.45;
+      bodies.setColorAt(i, col.copy(pp.clothes).lerp(PAPER, fade));
+      heads.setColorAt(i, col.copy(pp.skin).lerp(PAPER, fade));
     }
-    bodies.instanceMatrix.needsUpdate = true;
-    heads.instanceMatrix.needsUpdate = true;
-    bodies.instanceColor!.needsUpdate = true;
-    heads.instanceColor!.needsUpdate = true;
-    seen.instanceMatrix.needsUpdate = true;
-    blobs.instanceMatrix.needsUpdate = true;
+    bodies.instanceMatrix.needsUpdate = heads.instanceMatrix.needsUpdate = blobs.instanceMatrix.needsUpdate = true;
+    bodies.instanceColor!.needsUpdate = heads.instanceColor!.needsUpdate = true;
 
-    // The sidekick, and the pin over you, arrive last.
-    const arrive = smooth(0.75, 1, intro);
-    // Bigger in the hero, where it's the star; its working size once it heads out.
-    orb.scale.setScalar(Math.max(0.0001, arrive * lerp(0.95, 0.52, checkin)));
-    orbShadow.visible = arrive > 0.5;
-    pin.scale.setScalar(Math.max(0.0001, arrive));
-    orb.position.copy(sk);
-    // Face the camera, even when it looks down from above, with a little tilt as it bobs.
-    orb.lookAt(camera.position);
-    orb.rotateZ(Math.sin(time * 1.7) * 0.06);
-    buddy.setWink(rank < 0.5 ? scouting < 0.5 : true);
-    buddy.tick(time);
-    orbLight.position.copy(sk);
-    orbShadow.position.set(sk.x, 0.012, sk.z);
-    const trailCount = p < PHASES.scout[0] ? 0 : Math.floor((p < PHASES.rank[0] ? scoutT : 1) * 241);
-    trail.geometry.setDrawRange(0, trailCount);
-    (trail.material as LineDashedMaterial).opacity = 0.75 * (1 - matched * 0.7);
-
-    // The hero network: lines reach out one after another, then stay while you're in the hero.
-    const talk = (1 - smooth(0.03, 0.11, p)) * arrive;
-    links.forEach((l, i) => {
-      const reach = introOn ? smooth(2.0 + i * 0.12, 2.6 + i * 0.12, time) : 1;
-      const on = talk * reach;
-      const visible = on > 0.01;
-      l.mesh.visible = l.out.visible = l.back.visible = minis[i].group.visible = visible;
-      if (!visible) return;
-      l.geo.setDrawRange(0, Math.floor((reach * l.count) / 6) * 6);
-      (l.mesh.material as MeshBasicMaterial).opacity = 0.5 * on;
-      // One pulse goes out from you, one comes back from them.
-      const a = (time * 0.42 + i * 0.137) % 1;
-      const b = (time * 0.42 + i * 0.137 + 0.5) % 1;
-      l.curve.getPoint(a, l.out.position);
-      l.curve.getPoint(1 - b, l.back.position);
-      (l.out.material as MeshBasicMaterial).opacity = on * Math.sin(a * Math.PI);
-      (l.back.material as MeshBasicMaterial).opacity = on * 0.8 * Math.sin(b * Math.PI);
-      const m = minis[i];
-      const pop = smooth(2.3 + i * 0.12, 2.75 + i * 0.12, introOn ? time : 9);
-      m.group.scale.setScalar(Math.max(0.0001, 0.34 * pop * talk));
-      m.group.position.y = 1.92 + Math.sin(time * 2 + i) * 0.04;
-      m.group.lookAt(camera.position);
-      m.tick(time);
+    // Grey sidekicks appear beside each person as they check in (step 2), and blink and bob.
+    others.forEach(({ i, pp }, k) => {
+      const s = pop(pp.checkIn, p) * GREY_SIZE;
+      if (s < 0.001) {
+        greyBody.setMatrixAt(k, hidden);
+        greyEyes.setMatrixAt(k * 2, hidden);
+        greyEyes.setMatrixAt(k * 2 + 1, hidden);
+        greyCheeks.setMatrixAt(k * 2, hidden);
+        greyCheeks.setMatrixAt(k * 2 + 1, hidden);
+        return;
+      }
+      sidekickAt(i, pos);
+      pos.y += Math.sin(time * 1.8 + pp.phase) * 0.03;
+      dummy.position.copy(pos);
+      dummy.lookAt(camera.position);
+      quat.copy(dummy.quaternion);
+      m4.compose(pos, quat, scl.setScalar(s));
+      greyBody.setMatrixAt(k, m4);
+      const blink = ((time + pp.phase) % 4.3) < 0.12 ? 0.1 : 1;
+      eyeLocal.forEach((e, j) => {
+        m5.copy(e);
+        m5.elements[5] *= blink;
+        greyEyes.setMatrixAt(k * 2 + j, tmpMat.multiplyMatrices(m4, m5));
+      });
+      cheekLocal.forEach((c, j) => greyCheeks.setMatrixAt(k * 2 + j, tmpMat.multiplyMatrices(m4, c)));
     });
+    greyBody.instanceMatrix.needsUpdate = greyEyes.instanceMatrix.needsUpdate = greyCheeks.instanceMatrix.needsUpdate = true;
 
+    // Check-in ripples: one under each person at the moment they check in, and yours in step 1.
+    others.forEach(({ pp }, k) => {
+      const t = (p - pp.checkIn) / 0.035;
+      if (t < 0 || t > 1) return ripples.setMatrixAt(k, hidden);
+      dummy.position.set(pp.x, 0.02, pp.z);
+      dummy.rotation.set(0, 0, 0);
+      dummy.scale.setScalar(0.5 + t * 1.6);
+      dummy.updateMatrix();
+      ripples.setMatrixAt(k, dummy.matrix);
+    });
+    ripples.instanceMatrix.needsUpdate = true;
+    (ripples.material as MeshBasicMaterial).opacity = 0.55;
+
+    // You: the ring under your seat and the pin above you, then the check-in pulse.
+    const arrive = smooth(0.75, 1, intro);
+    youRing.position.set(you.x, 0.02, you.z);
     pin.position.set(you.x, 1.85 + Math.sin(time * 2) * 0.06, you.z);
     pin.rotation.y = time * 0.8;
-    pinMat.color.copy(PINE).lerp(SIGNAL, matched);
-
-    // Rings.
-    youRing.position.set(you.x, 0.02, you.z);
+    pin.scale.setScalar(Math.max(0.0001, arrive));
+    pinMat.color.copy(PINE);
     const pulse = (time * 0.8) % 1;
     youPulse.position.set(you.x, 0.021, you.z);
-    youPulse.scale.setScalar(0.5 + pulse * 1.8);
-    (youPulse.material as MeshBasicMaterial).opacity = (1 - pulse) * 0.7 * (smooth(0.08, 0.16, p) * (1 - smooth(0.28, 0.34, p)) + matched);
-    (youRing.material as MeshBasicMaterial).color.copy(PINE).lerp(SIGNAL, matched);
-    const sweep = (time * 1.4) % 1;
-    scanRing.position.set(sk.x, 0.022, sk.z);
-    scanRing.scale.setScalar(0.3 + sweep * 2.2);
-    (scanRing.material as MeshBasicMaterial).opacity = scouting * (1 - sweep) * 0.9;
-    scanDisc.position.set(sk.x, 0.018, sk.z);
-    scanDisc.scale.setScalar(2.5);
-    (scanDisc.material as MeshBasicMaterial).opacity = scouting * 0.08;
+    youPulse.scale.setScalar(0.5 + pulse * 2.2);
+    const pulsing = smooth(PHASES.checkin[0] + 0.02, checkInAt, p) * (1 - smooth(PHASES.arrive[0] - 0.03, PHASES.arrive[0], p));
+    (youPulse.material as MeshBasicMaterial).opacity = (1 - pulse) * 0.8 * pulsing;
+
+    // Your green sidekick pops up beside you the moment you check in, and stays there.
+    const mineScale = pop(checkInAt, p, 0.03) * MINE_SIZE;
+    mine.visible = mineScale > 0.001;
+    mine.scale.setScalar(Math.max(0.0001, mineScale));
+    mine.position.copy(mineAt);
+    mine.position.y += Math.sin(time * 1.6) * 0.05;
+    mine.lookAt(camera.position);
+    buddy.setWink(talking < 0.5);
+    buddy.tick(time);
+
+    // Step 3: your green Buddy pops up beside each grey one it talks to, one after another.
+    // In step 4 only the three picks' conversations stay.
+    clones.forEach(({ b, at }, k) => {
+      const t0 = talkA + 0.008 + k * 0.012;
+      const s = pop(t0, p, 0.03) * (k > 2 ? 1 - decided : 1);
+      const size = s * GREY_SIZE * 1.08;
+      b.group.visible = size > 0.001;
+      const ring = cloneRings[k];
+      const tt = clamp((p - t0) / 0.03);
+      ring.position.set(at.x, 0.02, at.z);
+      ring.scale.setScalar(0.6 + tt * 1.4);
+      (ring.material as MeshBasicMaterial).opacity = tt > 0 && tt < 1 ? (1 - tt) * 0.8 : 0;
+      if (!b.group.visible) return;
+      b.group.scale.setScalar(size);
+      b.group.position.copy(at);
+      b.group.position.y += Math.sin(time * 1.8 + k) * 0.03;
+      b.group.lookAt(camera.position);
+      b.setWink((time + k) % 5 < 2.5);
+      b.tick(time);
+    });
+
+    // Rings under the three picks in step 4: the match in Signal, the others in their outcome.
     picks.forEach((idx, k) => {
       const ring = pickRings[k];
       ring.position.set(people[idx].x, 0.02, people[idx].z);
       const mat = ring.material as MeshBasicMaterial;
-      mat.color.copy(PINE);
-      if (k === 0) mat.color.lerp(SIGNAL, matched);
-      mat.opacity = rank * (k === 0 ? 1 : 0.8 * (1 - matched * 0.6));
+      mat.color.copy(k === 0 ? SIGNAL : k === 1 ? GREEN : GREY);
+      mat.opacity = decided * (k === 0 ? 1 : 0.7);
     });
-
-    picks.forEach((idx, k) => {
-      const line = pickLines[k];
-      const attr = line.geometry.attributes.position as BufferAttribute;
-      attr.setXYZ(0, sk.x, sk.y, sk.z);
-      attr.setXYZ(1, people[idx].x, 1.3, people[idx].z);
-      attr.needsUpdate = true;
-      line.computeLineDistances();
-      const appear = smooth(PHASES.rank[0] + k * 0.03, PHASES.rank[0] + 0.08 + k * 0.03, p);
-      (line.material as LineDashedMaterial).opacity = appear * 0.75 * (1 - matched);
-    });
-
-    // The match line, drawn from your chair to theirs, with a spark travelling along it.
-    const draw = smooth(PHASES.match[0], PHASES.match[0] + 0.14, p);
-    arcGeo.setDrawRange(0, Math.floor((draw * arcIndexCount) / 6) * 6);
-    const sparkT = (time * 0.4) % 1;
-    arcCurve.getPoint(sparkT, spark.position);
-    spark.visible = draw > 0.98;
-
-    // Camera, with a little drift toward the pointer.
-    cameraAt(p);
-    if (camera.aspect < 0.8) {
-      // Portrait screens can't see the whole floor, so follow the sidekick while it scouts.
-      const dx = (clamp(sk.x, -5, 5) * 0.8 - camLook.x) * scouting;
-      const dz = (sk.z + 2.5 - camLook.z) * scouting * 0.6;
-      camLook.x += dx;
-      camPos.x += dx;
-      camLook.z += dz;
-      camPos.z += dz;
-    }
-    pointer.sx += (pointer.x - pointer.sx) * 0.05;
-    pointer.sy += (pointer.y - pointer.sy) * 0.05;
-    camera.position.copy(camPos);
-    camera.position.x += pointer.sx * 0.8;
-    camera.position.y -= pointer.sy * 0.5;
-    camera.lookAt(camLook);
+    (youRing.material as MeshBasicMaterial).color.copy(GREEN).lerp(SIGNAL, decided);
 
     renderer.render(scene, camera);
 
-    // The hero's speech bubbles. Your sidekick asks; the others answer, several at once, each on
-    // its own loop: a moment of typing dots, the reply, then a pause.
-    const heroTalk = (1 - smooth(0.03, 0.1, p)) * smooth(2.2, 2.8, introOn ? time : 9);
-    if (labels.bubbleMe) {
-      const lines = (labels.bubbleMe.dataset.lines ?? "").split("|");
-      const which = Math.floor(time / 4.2) % Math.max(1, lines.length);
-      if (which !== lastMe && lines[which]) {
-        lastMe = which;
-        const text = labels.bubbleMe.querySelector<HTMLElement>(".bubble-text");
-        if (text) text.textContent = lines[which];
-        labels.bubbleMe.dataset.state = "";
-        void labels.bubbleMe.offsetWidth;
-        labels.bubbleMe.dataset.state = "text";
-      }
-      place(labels.bubbleMe, tmp.copy(sk).setY(sk.y + 0.85), heroTalk);
-    }
-    (labels.bubbles ?? []).forEach((el, i) => {
-      const at = bubbleAt(i);
-      if (!at) {
-        el.style.visibility = "hidden";
+    // ---- HTML over the scene ----
+    // Step 1: you, and your sidekick's name tag.
+    if (labels.you) labels.you.classList.toggle("is-checked", checkedIn > 0.5);
+    place(labels.you, tmp.set(you.x, 2.15, you.z), smooth(PHASES.checkin[0], PHASES.checkin[0] + 0.04, p) * (1 - talking));
+    place(labels.sidekick, tmp.copy(mineAt).setY(mineAt.y + 0.2), checkedIn * (1 - smooth(PHASES.arrive[0] + 0.04, PHASES.arrive[0] + 0.08, p)));
+
+    // Step 3: many conversations at once. In each, your sidekick types and asks, theirs types and
+    // answers, then a pause; the pairs run on staggered loops. Grey pairs chat among themselves.
+    const talkVis = talking * (1 - smooth(talkB - 0.02, talkB + 0.01, p));
+    const say = (el: HTMLElement, at: Vector3, t: number, from: number, to: number) => {
+      const state = t < from ? "off" : t < from + 0.8 ? "typing" : t < to ? "text" : "off";
+      if (el.dataset.state !== state) el.dataset.state = state;
+      place(el, at, state === "off" ? 0 : talkVis);
+    };
+    (labels.pairs ?? []).forEach(({ mine, theirs }, k) => {
+      if (k >= clones.length) {
+        mine.style.visibility = theirs.style.visibility = "hidden";
         return;
       }
-      const cycle = 6.6;
-      const t = (time - 2.6 - i * 0.7 + cycle * 4) % cycle;
-      const state = t < 0.9 ? "typing" : t < 4.8 ? "text" : "off";
-      if (el.dataset.state !== state) el.dataset.state = state;
-      place(el, tmp.copy(at).setY(at.y + 0.42), state === "off" ? 0 : heroTalk);
+      const t = (time - k * 1.15 + 7 * 8) % 7;
+      // Yours reads to the right of your Buddy; their answer reads to the left of theirs and is
+      // lifted by the height of yours while both show, so a pair's bubbles never cover each other.
+      say(mine, tmp.copy(clones[k].at).setY(clones[k].at.y + 0.3), t, 0, 4.4);
+      const lift = mine.dataset.state && mine.dataset.state !== "off" ? ((mine.firstElementChild as HTMLElement)?.offsetHeight ?? 0) + 8 : 0;
+      theirs.style.setProperty("--lift", `${lift}px`);
+      say(theirs, sidekickAt(yourTalks[k], tmp2).setY(tmp2.y + 0.3), t, 1.7, 6.1);
     });
-
-    // HTML labels.
-    place(labels.you, tmp.set(you.x, 2.1, you.z), smooth(0.07, 0.13, p) * (1 - scouting * 0.5));
-    place(labels.sidekick, sk, smooth(0.07, 0.13, p) * (1 - rank));
-    labels.picks.forEach((el, k) => {
-      const pp = people[picks[k]];
-      const show = smooth(PHASES.rank[0] + 0.04 + k * 0.03, PHASES.rank[0] + 0.1 + k * 0.03, p);
-      // At the match the other two cards step back entirely, rather than sitting half-faded
-      // at a contrast nobody can read.
-      const keep = k === 0 ? 1 : 1 - matched;
-      place(el, tmp.set(pp.x, 1.55, pp.z), show * keep);
-      el.classList.toggle("is-match", k === 0 && matched > 0.5);
+    (labels.others ?? []).forEach((el, k) => {
+      const pair = otherPairs[k];
+      if (!pair) return void (el.style.visibility = "hidden");
+      const t = (time - k * 1.6 - 0.6 + 6 * 8) % 6;
+      say(el, sidekickAt(pair[0], tmp).setY(tmp.y + 0.34), t, 0, 4);
     });
   }
+
+  const tmpMat = new Matrix4();
+  // Check-in ripples for everyone else (one ring each, instanced).
+  const ripples = new InstancedMesh(
+    new RingGeometry(0.42, 0.5, 40).rotateX(-Math.PI / 2),
+    new MeshBasicMaterial({ color: GREY.clone().multiplyScalar(0.75), transparent: true, opacity: 0.5, depthWrite: false }),
+    others.length,
+  );
+  scene.add(ripples);
 
   // ---- Quality ------------------------------------------------------------------------
   function setTier(next: Tier) {
