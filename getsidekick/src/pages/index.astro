@@ -405,28 +405,51 @@ const faqs = [
           </p>
         </div>
 
-        <div class="scenarios" role="tablist" aria-label="What Hana does with Daniel’s card">
-          {
-            scenarios.map((sc, i) => (
-              <button type="button" role="tab" id={`sc-${sc.id}`} aria-controls="views" aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-scenario={sc.id} data-note={sc.note}>
-                {sc.label}
-              </button>
-            ))
-          }
-        </div>
+        <div class="privacy-stage">
+          <div class="scenario-panel">
+            <div class="scenarios" role="tablist" aria-label="What Hana does with Daniel’s card">
+              {
+                scenarios.map((sc, i) => (
+                  <button type="button" role="tab" id={`sc-${sc.id}`} aria-controls="views" aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-scenario={sc.id} data-note={sc.note}>
+                    {sc.label}
+                  </button>
+                ))
+              }
+            </div>
 
+            <p class="scenario-note" data-scenario-note aria-live="polite">{scenarios[0].note}</p>
+          </div>
         <div class="views" id="views" role="tabpanel" aria-labelledby="sc-pass" data-views data-state="pass">
           <figure class="view">
             <figcaption>Hana’s phone</figcaption>
-            <div class="mini-app" aria-hidden="true">
-              <div class="mini-head">
-                <span class="mini-seg"><span class="is-on" data-mini-count>For you · 2</span><span>Matches</span></span>
+            <div class="mini-frame" aria-hidden="true">
+              <div class="device">
+                <div class="app">
+                  <div class="app-status"><span>9:41</span><span class="app-status-icons"><i></i><i></i><i></i></span></div>
+                  <div class="app-bar">
+                    <span class="app-round"><Icon name="back" size={18} /></span>
+                    <span class="app-round"><Icon name="share" size={17} /></span>
+                  </div>
+                  <div class="app-scroll">
+                    <p class="app-live"><span class="app-live-dot"></span>HAPPENING NOW</p>
+                    <p class="app-title">Founders &amp; Funders KL</p>
+                    <p class="app-place">Common Ground, Bukit Bintang <Icon name="north-east" size={13} /></p>
+                    <div class="app-segments"><span class="is-on" data-mini-count>For you · 3</span><span data-mini-matches>Matches</span></div>
+                    <p class="app-brief"><Buddy size={13} mood="wink" /><span>Read 3 people for you. 1 strong fit, shown first.</span></p>
+                    <div class="app-stack">
+                      <Poster name="Aisha Rahman" role="Partner at a seed fund" reason="Two-way fit: Aisha offers funding and is looking for customers." fit="Good fit" tone="plum" class="deck-card mini-next" data-mini-next />
+                      <Poster name="Daniel Tan" role="CTO, logistics startup" reason="Two-way fit: Daniel offers engineering help and is looking for design help." fit="Strong fit" tone="lagoon" light="right" class="deck-card" data-mini-top />
+                    </div>
+                    <div class="app-actions">
+                      <span class="app-circle"><Icon name="x" size={24} /></span>
+                      <span class="app-circle" data-mini-undo hidden><Icon name="undo" size={22} /></span>
+                      <span class="app-signal"><Icon name="handshake" size={19} />Connect</span>
+                    </div>
+                    <p class="app-note">Nobody sees a pass. Contacts swap only if you both connect.</p>
+                  </div>
+                  <Match me={{ initials: "H", tone: "pine" }} them={{ initials: "DT", tone: "lagoon" }} firstName="Daniel" data-mini-moment hidden />
+                </div>
               </div>
-              <div class="mini-stack" data-when="pass connect">
-                <Poster name="Aisha Rahman" role="Partner at a seed fund" reason="Two-way fit: Aisha offers funding and is looking for customers." fit="Good fit" tone="plum" class="mini-next" />
-                <Poster name="Daniel Tan" role="CTO, logistics startup" reason="Two-way fit: Daniel offers engineering help and is looking for design help." fit="Strong fit" tone="lagoon" light="right" class="mini-top" data-mini-daniel />
-              </div>
-              <Match me={{ initials: "H", tone: "pine" }} them={{ initials: "DT", tone: "lagoon" }} firstName="Daniel" class="mini-moment" data-when="both" hidden />
             </div>
             {scenarios.map((sc) => <p class="view-line" data-when={sc.id} hidden={sc.id !== "pass"}>{sc.you}</p>)}
           </figure>
@@ -438,20 +461,39 @@ const faqs = [
 
           <figure class="view">
             <figcaption>Daniel’s phone</figcaption>
-            <div class="mini-app" aria-hidden="true">
-              <div class="mini-head">
-                <span class="mini-seg"><span class="is-on">For you · 5</span><span>Matches</span></span>
+            <div class="mini-frame" aria-hidden="true">
+              <div class="device">
+                <div class="app">
+                  <div class="app-status"><span>9:41</span><span class="app-status-icons"><i></i><i></i><i></i></span></div>
+                  <div class="app-bar">
+                    <span class="app-round"><Icon name="back" size={18} /></span>
+                    <span class="app-round"><Icon name="share" size={17} /></span>
+                  </div>
+                  <div class="app-scroll">
+                    <p class="app-live"><span class="app-live-dot"></span>HAPPENING NOW</p>
+                    <p class="app-title">Founders &amp; Funders KL</p>
+                    <p class="app-place">Common Ground, Bukit Bintang <Icon name="north-east" size={13} /></p>
+                    <div class="app-segments"><span class="is-on" data-mini-count-them>For you · 5</span><span data-mini-matches>Matches</span></div>
+                    <p class="app-brief"><Buddy size={13} mood="wink" /><span>Read 5 people for you. 1 strong fit, shown first.</span></p>
+                    <div class="app-stack">
+                      <Poster name="Mei Lin" role="Product designer" reason="Mei offers design help, which you’re looking for." fit="Good fit" tone="clay" class="deck-card mini-next" />
+                      <Poster name="Hana" role="Founder, first release next month" reason="Two-way fit: Hana offers design help and is looking for engineering help." fit="Strong fit" tone="pine" class="deck-card" />
+                    </div>
+                    <div class="app-actions">
+                      <span class="app-circle"><Icon name="x" size={24} /></span>
+                      
+                      <span class="app-signal"><Icon name="handshake" size={19} />Connect</span>
+                    </div>
+                    <p class="app-note">Nobody sees a pass. Contacts swap only if you both connect.</p>
+                  </div>
+                  <Match me={{ initials: "DT", tone: "lagoon" }} them={{ initials: "H", tone: "pine" }} firstName="Hana" data-mini-moment hidden />
+                </div>
               </div>
-              <div class="mini-stack" data-when="pass connect">
-                <Poster name="Mei Lin" role="Product designer" reason="Mei offers design help, which you’re looking for." fit="Good fit" tone="clay" class="mini-next" />
-                <Poster name="Hana" role="Founder, first release next month" reason="Two-way fit: Hana offers design help and is looking for engineering help." fit="Strong fit" tone="pine" class="mini-top mini-still" />
-              </div>
-              <Match me={{ initials: "DT", tone: "lagoon" }} them={{ initials: "H", tone: "pine" }} firstName="Hana" class="mini-moment" data-when="both" hidden />
             </div>
             {scenarios.map((sc) => <p class="view-line" data-when={sc.id} hidden={sc.id !== "pass"}>{sc.them}</p>)}
           </figure>
         </div>
-        <p class="scenario-note" data-scenario-note aria-live="polite">{scenarios[0].note}</p>
+        </div>
 
         <ul class="rules">
           {

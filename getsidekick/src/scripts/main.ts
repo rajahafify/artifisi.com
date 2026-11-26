@@ -438,6 +438,15 @@ if (stack) {
   layout();
 }
 
+// On a short frame the demo screen scrolls; start it scrolled down so the buttons show.
+const demoScroll = q("[data-app] .app-scroll");
+if (demoScroll) {
+  const fit = () => (demoScroll.scrollTop = demoScroll.scrollHeight);
+  fit();
+  document.fonts?.ready.then(fit);
+  addEventListener("resize", fit, { passive: true });
+}
+
 // ---- Privacy: what each side sees ------------------------------------------------------
 const views = q("[data-views]");
 if (views) {
@@ -460,7 +469,59 @@ if (views) {
     const appearing = all.filter((el) => el.hidden && el.dataset.when!.split(" ").includes(id));
     all.forEach((el) => (el.hidden = !el.dataset.when!.split(" ").includes(id)));
     if (motion) gsap.fromTo(appearing, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.06, ease: "expo.out" });
+    play(id, motion);
   };
+
+  // Hana's phone acts out the choice: Daniel's card goes left (pass) or right (connect), the next
+  // card rises, and the screen settles where the app would leave it (Undo after a pass, two left).
+  // When both connect, both phones show the match moment. Daniel's phone never changes before then.
+  const top = q("[data-mini-top]", views)!;
+  const next = q("[data-mini-next]", views)!;
+  const undo = q("[data-mini-undo]", views)!;
+  const count = q("[data-mini-count]", views)!;
+  const matchTabs = qa("[data-mini-matches]", views);
+  const moments = qa("[data-mini-moment]", views);
+  let acting: gsap.core.Timeline | null = null;
+  const settle = (id: string) => {
+    const dir = id === "pass" ? -1 : 1;
+    gsap.set(top, { x: dir * 460, y: 30, rotation: dir * 7, opacity: 0 });
+    gsap.set(next, { y: 0, scale: 1, opacity: 1 });
+    count.textContent = "For you · 2";
+    undo.hidden = id !== "pass";
+    const both = id === "both";
+    matchTabs.forEach((m) => (m.textContent = both ? "Matches · 1" : "Matches"));
+    moments.forEach((m) => {
+      m.hidden = !both;
+      gsap.set(m, { opacity: 1 });
+    });
+  };
+  function play(id: string, animate: boolean) {
+    acting?.kill();
+    if (!animate) return settle(id);
+    // Start from the deck before the choice, then act it out.
+    const dir = id === "pass" ? -1 : 1;
+    const stamp = q(dir < 0 ? ".poster-stamp-pass" : ".poster-stamp-connect", top)!;
+    qa(".poster-stamp", top).forEach((el) => (el.style.opacity = "0"));
+    gsap.set(top, { x: 0, y: 0, rotation: 0, opacity: 1 });
+    gsap.set(next, { y: 12, scale: 0.94, opacity: 0.55 });
+    count.textContent = "For you · 3";
+    undo.hidden = true;
+    matchTabs.forEach((m) => (m.textContent = "Matches"));
+    moments.forEach((m) => (m.hidden = true));
+    acting = gsap
+      .timeline()
+      .to(top, { x: dir * 40, rotation: dir * 3, duration: 0.35, ease: "power1.out" }, 0.2)
+      .to(stamp, { opacity: 1, duration: 0.2 }, 0.3)
+      .to(top, { x: dir * 460, y: 30, rotation: dir * 7, duration: 0.45, ease: "power2.in" }, 0.6)
+      .to(next, { y: 0, scale: 1, opacity: 1, duration: 0.35, ease: "power2.out" }, 0.85)
+      .call(() => settle(id === "both" ? "connect" : id), [], 1.15);
+    if (id === "both") {
+      acting.call(() => settle("both"), [], 1.35).fromTo(moments, { opacity: 0 }, { opacity: 1, duration: 0.45 }, 1.35);
+    }
+  }
+  // Rest on the first choice; act it out once when the phones come into view.
+  settle("pass");
+  if (motion) ScrollTrigger.create({ trigger: views, start: "top 65%", once: true, onEnter: () => play(views.dataset.state!, true) });
   tabs.forEach((t, i) => {
     t.addEventListener("click", () => show(t.dataset.scenario!));
     t.addEventListener("keydown", (e) => {
