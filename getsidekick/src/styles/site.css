@@ -482,8 +482,9 @@ h1 em {
 }
 
 /* ---------- Story (pinned, scroll-driven) ---------- */
+/* Steps play on their own once reached, so the story needs less scroll than a scrub did. */
 html.motion .story {
-  height: 460vh;
+  height: 420vh;
 }
 html.motion .stage {
   position: sticky;

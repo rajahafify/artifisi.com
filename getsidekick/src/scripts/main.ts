@@ -50,7 +50,7 @@ async function loadRoom() {
     room.renderAt(0); // reduced motion: one still frame behind the hero
     return;
   }
-  room.setProgress(storyProgress);
+  room.setProgress(storyProgress, true);
   room.setActive(storyVisible);
   gsap.ticker.add((time) => room!.tick(time));
   gsap.fromTo(canvas, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.2, ease: "power2.out" });
@@ -122,7 +122,8 @@ if (motion) {
     const [a, b] = steps[i];
     copy.addLabel(`step${i + 1}`, a);
     copy.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, a);
-    if (i < chapters.length - 1) copy.to(el, { opacity: 0, y: -30, ease: "power2.in" }, b - 0.05);
+    // Each step's copy stays fully in until the very end of its range, where the step rests.
+    if (i < chapters.length - 1) copy.to(el, { opacity: 0, y: -30, ease: "power2.in", duration: 0.015 }, b - 0.015);
   });
   // Step 4, played by the scroll on the app's own swipe deck: Mei is passed, Aisha gets a connect
   // that waits, and Daniel is a match. Scrolling back up plays it backwards.
@@ -193,7 +194,7 @@ if (motion) {
 
   const setUi = (p: number) => {
     storyProgress = p;
-    room?.setProgress(p);
+    room?.setProgress(p, true);
     let current = -1;
     steps.forEach(([a, b], i) => {
       if (p >= a) current = i;
@@ -207,14 +208,45 @@ if (motion) {
     legend.classList.toggle("is-on", showUi && p < 0.97);
   };
 
+  // Steps, not a scrub. The scroll only decides which step you're on; crossing into a step
+  // plays it to the end on its own clock, whether or not the scroll keeps moving. Each step rests
+  // just before the end of its range, where everything in it has fully played. Scrolling back
+  // past a boundary plays back to the step before, a little faster.
+  const rest = [0, ...steps.map(([, b], i) => (i === steps.length - 1 ? 1 : b - 0.025))];
+  const stepFor = (p: number) => steps.reduce((s, [a], i) => (p >= a ? i + 1 : s), 0);
+  copy.pause();
+  const player = { p: 0 };
+  let currentStep = -1;
+  let playing: gsap.core.Tween | null = null;
+  const render = () => {
+    copy.progress(player.p);
+    setUi(player.p);
+  };
+  const goTo = (step: number, instant = false) => {
+    if (step === currentStep && !instant) return;
+    currentStep = step;
+    const to = rest[step];
+    playing?.kill();
+    const distance = Math.abs(to - player.p);
+    if (instant || distance < 0.001) {
+      player.p = to;
+      render();
+      return;
+    }
+    const forward = to > player.p;
+    playing = gsap.to(player, {
+      p: to,
+      duration: clamp(distance * (forward ? 11 : 5), 0.6, 3.2),
+      ease: forward ? "power1.inOut" : "power2.out",
+      onUpdate: render,
+    });
+  };
   ScrollTrigger.create({
     trigger: story,
     start: "top top",
     end: "bottom bottom",
-    animation: copy,
-    scrub: 0.6,
-    onUpdate: (self) => setUi(self.progress),
-    onRefresh: (self) => setUi(self.progress),
+    onUpdate: (self) => goTo(stepFor(self.progress)),
+    onRefresh: (self) => goTo(stepFor(self.progress), true),
   });
   // Only draw the scene while any of it is on screen.
   ScrollTrigger.create({
@@ -330,6 +362,11 @@ if (stack) {
   let matches = 0;
   let waiting = 0;
   let busy = false;
+  // True while the deck is playing itself (see "Swipes for you" below). It never moves focus.
+  let autoplaying = false;
+  const focusDeck = () => {
+    if (!autoplaying) stack.focus({ preventScroll: true });
+  };
 
   const width = () => stack.clientWidth || 340;
   const stampsAt = (card: HTMLElement, t: number) => {
@@ -392,12 +429,12 @@ if (stack) {
       gsap.fromTo(q(".moment-them", moment), { x: 55 }, { x: 0, duration: 0.66, delay: 0.11, ease: "back.out(1.7)" });
       gsap.fromTo(qa(".moment-kicker, .moment-title, .moment-sub, .moment-actions", moment), { opacity: 0 }, { opacity: 1, duration: 0.6, delay: 0.5 });
     }
-    q<HTMLButtonElement>("[data-moment-go]", moment)!.focus({ preventScroll: true });
+    if (!autoplaying) q<HTMLButtonElement>("[data-moment-go]", moment)!.focus({ preventScroll: true });
   };
   const hideMoment = (text?: string) => {
     moment.hidden = true;
     if (text) status.innerHTML = text;
-    stack.focus({ preventScroll: true });
+    focusDeck();
   };
   q("[data-moment-go]", moment)!.addEventListener("click", () =>
     hideMoment("In the app, <b>this opens your chat with Daniel</b>, with his contact details and the opener."),
@@ -427,7 +464,7 @@ if (stack) {
         if (top && !fast) gsap.from(top, { opacity: 0.6, duration: 0.26 });
         busy = false;
         if (match) showMoment();
-        else stack.focus({ preventScroll: true });
+        else focusDeck();
       },
     });
     status.innerHTML = !like
@@ -505,7 +542,65 @@ if (stack) {
     moment.hidden = scrim.hidden = sheet.hidden = true;
     status.textContent = "";
     layout();
-    stack.focus({ preventScroll: true });
+    focusDeck();
+  });
+
+  // Swipes for you. Reaching this section is a breakpoint: if you haven't touched the deck a
+  // couple of seconds later, it plays itself (a nudge as a hint, Daniel to a match, then Aisha
+  // passed and Mei connected). Touching the deck, a button or a key hands it straight back to
+  // you, for good; scrolling away pauses it. Off with reduced motion.
+  let handedOver = false;
+  let pending: gsap.core.Tween[] = [];
+  const stopAuto = () => {
+    pending.forEach((t) => t.kill());
+    pending = [];
+    autoplaying = false;
+  };
+  const takeOver = () => {
+    if (autoplaying && status.dataset.auto) status.textContent = "";
+    delete status.dataset.auto;
+    handedOver = true;
+    stopAuto();
+  };
+  const device = stack.closest(".device")!;
+  device.addEventListener("pointerdown", takeOver, { capture: true });
+  device.addEventListener("keydown", takeOver, { capture: true });
+  actions.forEach((b) => b.addEventListener("pointerdown", takeOver));
+  q("[data-reset]")!.addEventListener("pointerdown", takeOver);
+  const after = (seconds: number, fn: () => void) => pending.push(gsap.delayedCall(seconds, fn));
+  const nudge = (card: HTMLElement) => {
+    const t = gsap.timeline();
+    t.to(card, { x: 46, rotation: 4, duration: 0.35, ease: "power2.out", onUpdate: () => stampsAt(card, 0.4) })
+      .to(card, { x: 0, rotation: 0, duration: 0.5, ease: "back.out(2)", onComplete: () => stampsAt(card, 0) });
+  };
+  const autoPlay = () => {
+    if (handedOver || !motion || index >= cards.length || !sheet.hidden) return;
+    autoplaying = true;
+    status.dataset.auto = "1";
+    status.innerHTML = "Not swiping? <b>Here’s how it goes.</b> Swipe any time to take over.";
+    let at = 0;
+    const step = (gap: number, fn: () => void) => after((at += gap), () => autoplaying && fn());
+    if (cards[index]) step(0, () => nudge(cards[index]));
+    // Whatever is on top, play the rest of the deck: Daniel connects (a match), Aisha is
+    // passed, Mei gets a connect that waits.
+    const plan: Record<string, boolean> = { daniel: true, aisha: false, mei: true };
+    cards.slice(index).forEach((card) => {
+      step(1.3, () => decide(plan[card.dataset.pcard!] ?? true));
+      if (card.dataset.match === "true") step(3.4, () => hideMoment());
+    });
+    step(1.2, () => {
+      autoplaying = false;
+      delete status.dataset.auto;
+    });
+  };
+  ScrollTrigger.create({
+    trigger: device,
+    start: "top 55%",
+    end: "bottom 30%",
+    onEnter: () => after(2.2, autoPlay),
+    onEnterBack: () => after(2.2, autoPlay),
+    onLeave: stopAuto,
+    onLeaveBack: stopAuto,
   });
 
   layout();

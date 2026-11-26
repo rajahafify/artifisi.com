@@ -42,7 +42,8 @@ import {
 } from "three";
 
 export interface Room {
-  setProgress(p: number): void;
+  /** Where the story is, 0 to 1. With `snap` the scene jumps there instead of easing. */
+  setProgress(p: number, snap?: boolean): void;
   /** Draw one frame. Called from the page's shared animation loop (GSAP's ticker), in seconds. */
   tick(seconds: number): void;
   renderAt(p: number): void;
@@ -841,8 +842,9 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   }
 
   return {
-    setProgress(p) {
+    setProgress(p, snap = false) {
       target = clamp(p);
+      if (snap) current = target;
     },
     tick,
     renderAt(p) {
