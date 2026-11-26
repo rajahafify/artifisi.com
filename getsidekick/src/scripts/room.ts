@@ -478,9 +478,9 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   const wide = { hero: shots.hero.map((v) => v.clone()), story: shots.story.map((v) => v.clone()) };
   const narrow = {
     hero: [new Vector3(0, 30, 23), new Vector3(0, 0, 5.5)],
-    // Looks a little further into the floor, so the room sits in the top part of the screen,
-    // above the step's copy.
-    story: [new Vector3(1.2, 27, 15.5), new Vector3(0.9, 0.6, 4.6)],
+    // Looks a little into the floor, so the room sits above the step's copy, with the talk (and
+    // you in it) low enough to clear the header.
+    story: [new Vector3(-0.4, 27, 12.9), new Vector3(-0.7, 0.6, 2.0)],
   };
   const camPos = new Vector3();
   const camLook = new Vector3();
@@ -495,6 +495,7 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
 
   let width = 1;
   let height = 1;
+  let still = false; // a single frame (reduced motion): draw it again when its frame changes size
   function resize() {
     const rect = canvas.getBoundingClientRect();
     width = Math.max(1, rect.width);
@@ -508,6 +509,7 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     shots.hero[1].copy(set.hero[1]);
     shots.story[0].copy(set.story[0]);
     shots.story[1].copy(set.story[1]);
+    if (still) draw(current, 5.2);
   }
   const ro = new ResizeObserver(resize);
   ro.observe(canvas);
@@ -559,7 +561,11 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     }
     const box = pick ? (el.firstElementChild as HTMLElement) : el;
     const room = width < 720 ? 16 : 150; // keep clear of the step rail on the right
-    el.classList.toggle("flip", el.classList.contains("tag-you") || x + 18 + box.offsetWidth > width - room);
+    const flip = el.classList.contains("tag-you") || x + 18 + box.offsetWidth > width - room;
+    el.classList.toggle("flip", flip);
+    // A tag flipped to the left of its point stays on screen, even when the point is near the edge.
+    const minX = box.offsetWidth + 22;
+    if (flip && !pick && x < minX) el.style.transform = `translate3d(${minX.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
     if (pick) el.classList.toggle("below", y - 18 - box.offsetHeight < 90);
   }
 
@@ -871,6 +877,7 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     renderAt(p) {
       active = false;
       introOn = false;
+      still = true;
       target = current = clamp(p);
       draw(current, 5.2);
       // Fonts may arrive after the still frame; draw it again once they do.

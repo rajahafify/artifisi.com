@@ -38,7 +38,8 @@ The last pass ran axe-core (WCAG 2.2 AA plus best practices) at desktop, phone a
 
 ## Accessibility and fallbacks
 
-- With reduced motion, or without WebGL, the story is a normal hero plus a numbered list, with one still frame of the room. No pinning, no smooth scroll.
+- With reduced motion, the story is a normal hero, then one still frame of the room in a frame of its own (the sidekicks talking), then the steps as a list. The frame never sits behind text, and without WebGL it is left out. No pinning, no smooth scroll.
+- In the scroll story, each step's copy sits on a soft patch of paper, so the room never runs through the text.
 - Without JavaScript, the page is fully readable; only the demo buttons are hidden.
 - The scene pauses when off screen or when the tab is hidden, and caps pixel ratio (1.5 on phones).
 
@@ -61,3 +62,5 @@ npm run build      # static output in dist/
 ## Copy rules
 
 Claims on the page come from the Sidekick README and backend code. Sidekick is in pilot and has not run at a live event; the page says so. No prices, user counts or testimonials until they are real.
+
+The sidekick is described as what it is: an AI that ranks and writes from profiles. The section "What your sidekick does, and doesn't" lists its limits (it never messages anyone, swipes for you, shares contacts before a match, or reveals swipes) and notes that pilot models are free hosted ones that may keep what they're sent. Chat bubbles in the story speak about their person ("Mine needs engineering help."), never as them.

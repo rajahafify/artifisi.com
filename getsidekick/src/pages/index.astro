@@ -51,7 +51,7 @@ const chapters = [
     n: "03",
     kicker: "How Sidekick fixes it · 3 of 4",
     title: "The sidekicks find the fits.",
-    body: "Yours talks to many of theirs at once, matching what you need with what others offer. No small talk, no guessing.",
+    body: "Yours compares notes with all of theirs at once, from the profiles alone: what you need, what they offer. It never messages anyone, and it never decides for you.",
   },
   {
     n: "04",
@@ -180,6 +180,21 @@ const rules = [
   { icon: "block", title: "Blocks work both ways", body: "Block someone and neither of you sees the other again." },
 ] as const;
 
+// What the sidekick does and doesn't, in plain terms. Facts from the Sidekick README's privacy
+// rules and its sidekick notes (backend/src/sidekick.ts): it ranks and writes from profiles only.
+const does = [
+  ["Reads profiles", "Yours, and those of the people checked in to the same event: who you are, what you’re looking for, what you can offer."],
+  ["Ranks who fits", "Both ways: what they offer that you need, and what you offer that they need. The best fits come first."],
+  ["Writes how the two of you would get on", "As a short chat between the sidekicks, made from the two profiles, so you can read it before you decide."],
+  ["Hands you an opener", "Once you match, a first line for the break."],
+] as const;
+const doesnt = [
+  ["Message anyone", "No one hears from your sidekick. People at the event see your card in their deck, and that’s all until you match."],
+  ["Swipe for you", "Every connect and every pass is yours."],
+  ["Share your contact details", "They only go to people you matched with."],
+  ["Give away who swiped", "Its chats are made from profiles alone, so they can’t reveal who connected or passed."],
+] as const;
+
 const faqs = [
   [
     "Do I need an account?",
@@ -189,11 +204,11 @@ const faqs = [
   ["Will people know if I’m not interested?", "No. Your choices stay on your phone. Only a connect from both sides makes a match."],
   [
     "How does it decide who to show me?",
-    "It compares what you're looking for and can offer with everyone else checked in to the same event, and ranks people by how well you fit both ways.",
+    "An AI model compares what you’re looking for and can offer with everyone else checked in to the same event, and ranks people by how well you fit both ways. It reads profiles only.",
   ],
   [
     "Has it been used at a real event?",
-    "Not yet. Sidekick is in pilot and has been tested on a demo event. During the pilot, check-in doesn't confirm where you are.",
+    "Not yet. Sidekick is in pilot and has been tested on a demo event. During the pilot, check-in doesn’t confirm where you are.",
   ],
 ];
 ---
@@ -236,12 +251,12 @@ const faqs = [
           ))}
           {
             [
-              ["Daniel", "We need engineering help. You?", "Daniel can help with that!"],
-              ["Aisha", "We’re raising a first round.", "Aisha funds early teams."],
-              ["Mei", "Could we get product feedback?", "Mei loves giving feedback."],
-              ["Sofia", "Know anyone in go-to-market?", "Sofia makes intros!"],
-              ["Arjun", "We have a pilot running.", "Arjun wants partners like that."],
-              ["Their", "What are you after today?", "Mine’s hiring a designer."],
+              ["Daniel", "Mine needs engineering help.", "Daniel offers that."],
+              ["Aisha", "Mine is raising a first round.", "Aisha funds early teams."],
+              ["Mei", "Mine wants product feedback.", "Mei gives it."],
+              ["Sofia", "Mine needs go-to-market intros.", "Sofia makes those."],
+              ["Arjun", "Mine has a pilot running.", "Arjun wants partners like that."],
+              ["Their", "What is yours after today?", "Mine’s hiring a designer."],
             ].map(([who, mine, theirs]) => (
               <>
                 <span class="bubble bubble-right bubble-mine" data-pair-mine>
@@ -455,6 +470,40 @@ const faqs = [
       </div>
     </section>
 
+    <!-- What the sidekick does and doesn't: the trust question, answered plainly. -->
+    <section class="plain light" id="sidekick" aria-labelledby="plain-title">
+      <div class="wrap">
+        <div class="plain-head">
+          <h2 id="plain-title" class="display" data-reveal>What your sidekick does, and doesn’t.</h2>
+          <p class="body">
+            Your sidekick is an AI that works from profiles. It does the reading and the ranking; you do the deciding.
+          </p>
+        </div>
+        <div class="plain-grid">
+          <div class="plain-col">
+            <h3 class="plain-h"><span class="plain-mark is-yes"><Icon name="check" size={18} /></span>It does</h3>
+            <ul class="plain-list">
+              {does.map(([t, d]) => (
+                <li><b>{t}.</b> {d}</li>
+              ))}
+            </ul>
+          </div>
+          <div class="plain-col">
+            <h3 class="plain-h"><span class="plain-mark is-no"><Icon name="x" size={18} /></span>It never</h3>
+            <ul class="plain-list">
+              {doesnt.map(([t, d]) => (
+                <li><b>{t}.</b> {d}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <p class="fine plain-fine">
+          During the pilot it runs on free hosted AI models, which may keep what they’re sent. Write your profile the way
+          you would a name badge.
+        </p>
+      </div>
+    </section>
+
     <!-- Privacy: the same screens, on both phones. -->
     <section class="privacy dark" id="privacy" aria-labelledby="privacy-title">
       <div class="wrap">
@@ -659,7 +708,7 @@ const faqs = [
     <section class="final light" aria-labelledby="final-title">
       <div class="wrap">
         <h2 id="final-title" class="display mega" data-reveal>
-          Go to the <em>talk.</em><br />We'll work the room.
+          Go to the <em>talk.</em> <br />We’ll work the room.
         </h2>
         <div class="final-row">
           <div class="final-foot">
@@ -671,7 +720,7 @@ const faqs = [
               <Fragment set:html={qr} />
               <span class="qr-badge" aria-hidden="true"><Buddy size={22} mood="wink" color="#12402E" features="#FBF9F4" cheeks="#FF5A36" /></span>
             </div>
-            <figcaption><b>On a laptop?</b> Scan to open Sidekick on your phone, where you'll use it at the event.</figcaption>
+            <figcaption><b>On a laptop?</b> Scan to open Sidekick on your phone, where you’ll use it at the event.</figcaption>
           </figure>
         </div>
       </div>

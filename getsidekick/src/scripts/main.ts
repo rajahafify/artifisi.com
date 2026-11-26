@@ -32,6 +32,10 @@ let storyProgress = 0;
 let storyVisible = true;
 async function loadRoom() {
   const { createRoom } = await import("./room");
+  // Without motion the room is a still picture in its own frame under the hero: show the frame
+  // first so the renderer sizes to it, and take it away again if WebGL fails.
+  const stage = q("[data-stage]")!;
+  if (!motion) stage.classList.add("has-still");
   room = createRoom(
     canvas,
     {
@@ -47,9 +51,14 @@ async function loadRoom() {
     },
     { small, tier },
   );
-  if (!room) return; // WebGL failed after all: the story still reads, over the paper background
+  if (!room) {
+    // WebGL failed after all: the story still reads, over the paper background.
+    stage.classList.remove("has-still");
+    return;
+  }
   if (!motion) {
-    room.renderAt(0); // reduced motion: one still frame behind the hero
+    // One still frame of the busiest moment: your green sidekick beside the grey ones it talks to.
+    room.renderAt((PHASES.talk[0] + PHASES.talk[1]) / 2);
     return;
   }
   room.setProgress(storyProgress, true);

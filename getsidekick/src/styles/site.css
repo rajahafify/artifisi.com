@@ -483,6 +483,53 @@ h1 em {
 .legend {
   display: none;
 }
+/* Static (reduced motion, no WebGL, no JS): the room is one still picture in its own frame between
+   the hero and the steps, never behind text. It only shows once a frame has been drawn into it. */
+html:not(.motion) .stage {
+  display: flex;
+  flex-direction: column;
+}
+html:not(.motion) .hero {
+  order: 1;
+  width: 100%;
+  min-height: 0;
+  padding-bottom: 56px;
+}
+html:not(.motion) .room {
+  order: 2;
+  display: none;
+  position: relative;
+  inset: auto;
+  width: calc(100% - 2 * var(--gutter));
+  max-width: calc(var(--wrap) - 2 * var(--gutter));
+  height: auto;
+  aspect-ratio: 16 / 9;
+  margin: 0 auto 56px;
+  border-radius: 20px;
+  background: var(--oat);
+}
+html:not(.motion) .stage.has-still .room {
+  display: block;
+}
+html:not(.motion) .chapters {
+  order: 3;
+  width: 100%;
+}
+/* The problem gets its own row; the four fixes sit under it. */
+html:not(.motion) .chapter:first-child {
+  grid-column: 1 / -1;
+}
+html:not(.motion) .chapter:first-child p {
+  max-width: 60ch;
+}
+html:not(.motion) .scrim {
+  display: none;
+}
+@media (max-width: 720px) {
+  html:not(.motion) .room {
+    aspect-ratio: 3 / 4;
+  }
+}
 
 /* ---------- Story (pinned, scroll-driven) ---------- */
 /* Steps play on their own once reached, so the story needs less scroll than a scrub did. */
@@ -567,6 +614,19 @@ html.motion .chapter {
   width: 100%;
   opacity: 0;
   will-change: opacity, transform;
+  isolation: isolate;
+}
+/* A soft patch of paper behind each step's copy, so the room never runs through the text. It
+   fades in and out with its step. */
+html.motion .chapter::before {
+  content: "";
+  position: absolute;
+  inset: -28px -40px -24px -40px;
+  z-index: -1;
+  border-radius: 48px;
+  background: rgba(245, 239, 227, 0.9);
+  filter: blur(28px);
+  pointer-events: none;
 }
 .chapter-cta {
   display: inline-flex;
@@ -707,6 +767,9 @@ html.motion .rail {
   gap: 6px;
   opacity: 0;
   transition: opacity 500ms var(--ease);
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(245, 239, 227, 0.86);
 }
 html.motion .rail.is-on {
   opacity: 1;
@@ -759,6 +822,9 @@ html.motion .legend {
   color: var(--ink-2);
   opacity: 0;
   transition: opacity 500ms var(--ease);
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(245, 239, 227, 0.86);
 }
 html.motion .legend.is-on {
   opacity: 1;
@@ -1763,6 +1829,81 @@ section.privacy {
   max-width: 30ch;
 }
 
+/* ---------- What your sidekick does, and doesn't ---------- */
+section.plain {
+  padding: 0 0 clamp(96px, 13vw, 180px);
+}
+.plain .wrap {
+  padding-top: clamp(64px, 8vw, 112px);
+  border-top: 1px solid var(--line-light);
+}
+.plain-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 24px clamp(40px, 7vw, 120px);
+  align-items: end;
+}
+.plain-head .body {
+  margin-top: 0;
+}
+.plain-grid {
+  margin-top: clamp(48px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px clamp(40px, 7vw, 120px);
+}
+.plain-h {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(28px, 2.6vw, 38px);
+  line-height: 1;
+}
+.plain-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.plain-mark.is-yes {
+  background: var(--pine);
+  color: var(--paper);
+}
+.plain-mark.is-no {
+  border: 1px solid var(--line-light);
+  color: var(--pine);
+}
+.plain-list {
+  margin-top: 24px;
+  border-top: 1px solid var(--line-light);
+}
+.plain-list li {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line-light);
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 52ch;
+}
+.plain-list b {
+  color: var(--pine);
+  font-weight: 600;
+}
+.plain-fine {
+  margin-top: 32px;
+  max-width: 70ch;
+}
+@media (max-width: 900px) {
+  .plain-head,
+  .plain-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* ---------- For organisers ---------- */
 section.org {
   padding: clamp(96px, 13vw, 180px) 0;
@@ -2198,6 +2339,8 @@ html.motion h2[data-reveal] > div {
     transform: none;
     flex-direction: row;
     gap: 6px;
+    padding: 0;
+    background: none;
   }
   /* The bars are thin, but each button keeps a 24px-tall tap area. */
   .rail button {
