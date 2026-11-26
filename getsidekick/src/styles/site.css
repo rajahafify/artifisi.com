@@ -2243,6 +2243,109 @@ html.motion h2[data-reveal] > div {
 }
 
 
+/* Speech bubbles over the hero room, in the app's chat style. room.ts places them and sets
+   data-state: typing (dots), text, or off. */
+.bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transition: opacity 250ms var(--ease);
+}
+.bubble-in {
+  position: absolute;
+  left: 0;
+  bottom: 6px;
+  translate: -50% 0;
+  width: max-content;
+  max-width: 200px;
+  padding: 8px 12px 9px;
+  border-radius: 16px 16px 16px 5px;
+  background: #fffdf8;
+  color: var(--pine);
+  font-size: 12.5px;
+  line-height: 1.35;
+  box-shadow: 0 12px 26px -14px rgba(13, 47, 34, 0.5);
+}
+.bubble small {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.bubble-me .bubble-in {
+  max-width: 220px;
+  border-radius: 16px 16px 5px 16px;
+  background: var(--signal);
+  color: #1a0b05;
+}
+.bubble-me small {
+  color: rgba(26, 11, 5, 0.72);
+}
+.bubble-dots {
+  display: none;
+  gap: 4px;
+  padding: 4px 2px 2px;
+}
+.bubble-dots b {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-2);
+  animation: dot 1s ease-in-out infinite;
+}
+.bubble-dots b:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.bubble-dots b:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes dot {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+.bubble[data-state="typing"] .bubble-text {
+  display: none;
+}
+.bubble[data-state="typing"] .bubble-dots {
+  display: inline-flex;
+}
+/* A small pop each time a bubble starts typing or its reply lands. */
+.bubble[data-state="typing"] .bubble-in {
+  animation: pop-a 320ms var(--ease);
+}
+.bubble[data-state="text"] .bubble-in {
+  animation: pop-b 320ms var(--ease);
+}
+@keyframes pop-a {
+  from {
+    scale: 0.7;
+    opacity: 0;
+  }
+}
+@keyframes pop-b {
+  from {
+    scale: 0.92;
+  }
+}
+.bubble-in {
+  transform-origin: 0% 100%;
+}
+
 /* Pick cards flip to stay on screen (set by room.ts). */
 .pick.flip .pick-card {
   left: auto;

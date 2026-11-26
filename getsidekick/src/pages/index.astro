@@ -218,6 +218,25 @@ const faqs = [
         <div class="tags" aria-hidden="true">
           <span class="tag tag-you" data-label-you><i></i>You, in the talk</span>
           <span class="tag tag-sk" data-label-sidekick><i></i>Your sidekick</span>
+          <span class="bubble bubble-me" data-bubble-me data-lines="Hi! Who here can help with funding or engineering?|What are you looking for today?|Anyone hiring a designer?">
+            <span class="bubble-in"><small>Your sidekick</small><span class="bubble-text">Hi! Who here can help with funding or engineering?</span></span>
+          </span>
+          {
+            [
+              ["Daniel", "Daniel offers engineering help."],
+              ["Mei", "Mei can give product feedback."],
+              ["Sofia", "Sofia can make go-to-market intros."],
+              ["Arjun", "Arjun is looking for partners."],
+            ].map(([who, text]) => (
+              <span class="bubble" data-bubble>
+                <span class="bubble-in">
+                  <small>{who}’s sidekick</small>
+                  <span class="bubble-text">{text}</span>
+                  <span class="bubble-dots"><b /><b /><b /></span>
+                </span>
+              </span>
+            ))
+          }
           {
             picks.map((p, i) => (
               <span class="pick" data-label-pick>

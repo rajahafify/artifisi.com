@@ -34,7 +34,14 @@ async function loadRoom() {
   const { createRoom } = await import("./room");
   room = createRoom(
     canvas,
-    { you: q("[data-label-you]"), sidekick: q("[data-label-sidekick]"), picks: qa("[data-label-pick]") },
+    {
+      you: q("[data-label-you]"),
+      sidekick: q("[data-label-sidekick]"),
+      picks: qa("[data-label-pick]"),
+      bubbleMe: q("[data-bubble-me]"),
+      // Phones show three replies at a time, desktops four.
+      bubbles: qa("[data-bubble]").slice(0, small ? 3 : 4),
+    },
     { small, tier },
   );
   if (!room) return; // WebGL failed after all: the story still reads, over the paper background

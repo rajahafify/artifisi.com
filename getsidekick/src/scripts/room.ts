@@ -57,10 +57,14 @@ export interface RoomLabels {
   you?: HTMLElement | null;
   sidekick?: HTMLElement | null;
   picks: HTMLElement[];
+  /** The hero's speech bubbles: your sidekick's, then replies from other people's sidekicks. */
+  bubbleMe?: HTMLElement | null;
+  bubbles?: HTMLElement[];
 }
 
 // Story phases, in progress units. The page copy lines up with these.
 import { PHASES } from "./phases";
+import { makeBuddy } from "./buddy3d";
 export { PHASES };
 
 const PAPER = new Color("#f5efe3");
@@ -431,13 +435,56 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   pin.castShadow = pinTip.castShadow = true;
   scene.add(pin);
 
-  // The sidekick: a small glowing orb with a soft light of its own.
-  const orb = new Mesh(new SphereGeometry(0.2, 32, 20), new MeshStandardMaterial({ color: SIGNAL, emissive: SIGNAL, emissiveIntensity: 0.9, roughness: 0.3 }));
-  orb.castShadow = true;
-  const orbHalo = new Mesh(new SphereGeometry(0.36, 24, 16), new MeshBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0.18, depthWrite: false }));
+  // Your sidekick: Buddy, the logo, in 3D and in Signal orange, with a soft light of its own.
+  const buddy = makeBuddy({ body: SIGNAL, features: "#0e2e21", cheeks: "#ffd0c0", shadows: true, glow: 0.22 });
+  const orb = buddy.group;
+  buddy.setWink(true);
   const orbLight = new PointLight(SIGNAL, 6, 4.5, 2);
-  scene.add(orb, orbHalo, orbLight);
-  const orbShadow = new Mesh(new CircleGeometry(0.3, 32).rotateX(-Math.PI / 2), new MeshBasicMaterial({ color: "#000", transparent: true, opacity: 0.08, depthWrite: false }));
+  scene.add(orb, orbLight);
+
+  // ---- The hero: your sidekick talking to everyone's sidekick at once --------------------
+  // While you sit in the talk, your Buddy floats above your seat with lines out to the small
+  // Buddies of people on the floor. Pulses run both ways and speech bubbles answer back.
+  // Just above and beside your seat, clear of the pin over your head.
+  const heroAt = new Vector3(you.x + 0.8, 2.75, you.z + 0.35);
+  // The first four answer in speech bubbles, so they're people on the right of the room, clear of
+  // the headline. The rest are reached at the same time, without a bubble.
+  const talkTargets = [
+    picks[0], // Daniel
+    picks[2], // Mei
+    firstOf(7),
+    firstOf(8) + 1,
+    firstOf(9) + 2,
+    picks[1], // Aisha
+    firstOf(5),
+    firstOf(3) + 1,
+    firstOf(1),
+    firstOf(2) + 3,
+  ].slice(0, opts.small ? 6 : 10);
+  const minis = talkTargets.map((idx, i) => {
+    const b = makeBuddy({ body: "#ede4d3", features: "#12402e", cheeks: SIGNAL, seed: i + 1 });
+    b.group.scale.setScalar(0.34);
+    b.group.position.set(people[idx].x, 1.92, people[idx].z);
+    scene.add(b.group);
+    return b;
+  });
+  const links = talkTargets.map((idx) => {
+    const to = new Vector3(people[idx].x, 1.92, people[idx].z);
+    const mid = heroAt.clone().lerp(to, 0.5);
+    mid.y = Math.max(heroAt.y, to.y) + 1.4;
+    const curve = new QuadraticBezierCurve3(heroAt.clone(), mid, to);
+    const geo = new TubeGeometry(curve, 48, 0.014, 6, false);
+    const mesh = new Mesh(geo, new MeshBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0, depthWrite: false }));
+    geo.setDrawRange(0, 0);
+    scene.add(mesh);
+    const out = new Mesh(new SphereGeometry(0.05, 12, 10), new MeshBasicMaterial({ color: SIGNAL, transparent: true, depthWrite: false }));
+    const back = new Mesh(new SphereGeometry(0.045, 12, 10), new MeshBasicMaterial({ color: "#12402e", transparent: true, depthWrite: false }));
+    scene.add(out, back);
+    return { curve, geo, mesh, out, back, count: geo.index!.count };
+  });
+  const bubbleAt = (i: number) => minis[i]?.group.position;
+  let lastMe = -1;
+  const orbShadow = new Mesh(new CircleGeometry(0.34, 32).rotateX(-Math.PI / 2), new MeshBasicMaterial({ color: "#000", transparent: true, opacity: 0.08, depthWrite: false }));
   scene.add(orbShadow);
   // A dotted trail that shows where the sidekick has been.
   const trailPts = route.getPoints(240).map((p) => new Vector3(p.x, 0.03, p.z));
@@ -535,14 +582,20 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   function place(el: HTMLElement | null | undefined, at: Vector3, opacity: number) {
     if (!el) return;
     project.copy(at).project(camera);
-    const x = (project.x * 0.5 + 0.5) * width;
+    let x = (project.x * 0.5 + 0.5) * width;
     const y = (-project.y * 0.5 + 0.5) * height;
+    if (el.classList.contains("bubble")) {
+      // Keep bubbles inside the screen, and on phones out of the headline below the scene.
+      const half = ((el.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0) / 2;
+      x = clamp(x, half + 10, width - half - 10);
+      if (opts.small && y > height * 0.42) opacity = 0;
+    }
     const onScreen = x > -10 && x < width + 10 && y > 60 && y < height + 10;
     const visible = opacity > 0.01 && project.z < 1 && onScreen;
     el.style.opacity = visible ? opacity.toFixed(3) : "0";
     el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
     el.style.visibility = visible ? "visible" : "hidden";
-    if (!visible) return;
+    if (!visible || el.classList.contains("bubble")) return;
     const pick = el.classList.contains("pick");
     const box = pick ? (el.firstElementChild as HTMLElement) : el;
     const room = width < 720 ? 16 : 150; // keep clear of the step rail on the right
@@ -597,12 +650,9 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     // Where the sidekick is: beside your head, then over to the floor, then along its route.
     const bob = Math.sin(time * 2.4) * 0.08;
     if (p < PHASES.scout[0]) {
-      const orbit = tmp.set(Math.cos(time * 1.3) * 0.55, 0, Math.sin(time * 1.3) * 0.55).multiplyScalar(1 - checkin);
-      const start = tmp.clone().add(new Vector3(you.x, 1.55, you.z));
       const end = route.getPoint(0);
-      sk.lerpVectors(start, end, checkin);
-      sk.y += Math.sin(checkin * Math.PI) * 1.8;
-      void orbit;
+      sk.lerpVectors(heroAt, end, checkin);
+      sk.y += Math.sin(checkin * Math.PI) * 1.2;
     } else if (p < PHASES.rank[0]) {
       route.getPoint(scoutT, sk);
     } else {
@@ -680,17 +730,46 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
 
     // The sidekick, and the pin over you, arrive last.
     const arrive = smooth(0.75, 1, intro);
-    orb.scale.setScalar(Math.max(0.0001, arrive));
-    orbHalo.visible = orbShadow.visible = arrive > 0.5;
+    // Bigger in the hero, where it's the star; its working size once it heads out.
+    orb.scale.setScalar(Math.max(0.0001, arrive * lerp(0.95, 0.52, checkin)));
+    orbShadow.visible = arrive > 0.5;
     pin.scale.setScalar(Math.max(0.0001, arrive));
     orb.position.copy(sk);
-    orbHalo.position.copy(sk);
-    orbHalo.scale.setScalar(1 + Math.sin(time * 3) * 0.12);
+    // Face the camera, even when it looks down from above, with a little tilt as it bobs.
+    orb.lookAt(camera.position);
+    orb.rotateZ(Math.sin(time * 1.7) * 0.06);
+    buddy.setWink(rank < 0.5 ? scouting < 0.5 : true);
+    buddy.tick(time);
     orbLight.position.copy(sk);
     orbShadow.position.set(sk.x, 0.012, sk.z);
     const trailCount = p < PHASES.scout[0] ? 0 : Math.floor((p < PHASES.rank[0] ? scoutT : 1) * 241);
     trail.geometry.setDrawRange(0, trailCount);
     (trail.material as LineDashedMaterial).opacity = 0.75 * (1 - matched * 0.7);
+
+    // The hero network: lines reach out one after another, then stay while you're in the hero.
+    const talk = (1 - smooth(0.03, 0.11, p)) * arrive;
+    links.forEach((l, i) => {
+      const reach = introOn ? smooth(2.0 + i * 0.12, 2.6 + i * 0.12, time) : 1;
+      const on = talk * reach;
+      const visible = on > 0.01;
+      l.mesh.visible = l.out.visible = l.back.visible = minis[i].group.visible = visible;
+      if (!visible) return;
+      l.geo.setDrawRange(0, Math.floor((reach * l.count) / 6) * 6);
+      (l.mesh.material as MeshBasicMaterial).opacity = 0.5 * on;
+      // One pulse goes out from you, one comes back from them.
+      const a = (time * 0.42 + i * 0.137) % 1;
+      const b = (time * 0.42 + i * 0.137 + 0.5) % 1;
+      l.curve.getPoint(a, l.out.position);
+      l.curve.getPoint(1 - b, l.back.position);
+      (l.out.material as MeshBasicMaterial).opacity = on * Math.sin(a * Math.PI);
+      (l.back.material as MeshBasicMaterial).opacity = on * 0.8 * Math.sin(b * Math.PI);
+      const m = minis[i];
+      const pop = smooth(2.3 + i * 0.12, 2.75 + i * 0.12, introOn ? time : 9);
+      m.group.scale.setScalar(Math.max(0.0001, 0.34 * pop * talk));
+      m.group.position.y = 1.92 + Math.sin(time * 2 + i) * 0.04;
+      m.group.lookAt(camera.position);
+      m.tick(time);
+    });
 
     pin.position.set(you.x, 1.85 + Math.sin(time * 2) * 0.06, you.z);
     pin.rotation.y = time * 0.8;
@@ -756,6 +835,35 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     camera.lookAt(camLook);
 
     renderer.render(scene, camera);
+
+    // The hero's speech bubbles. Your sidekick asks; the others answer, several at once, each on
+    // its own loop: a moment of typing dots, the reply, then a pause.
+    const heroTalk = (1 - smooth(0.03, 0.1, p)) * smooth(2.2, 2.8, introOn ? time : 9);
+    if (labels.bubbleMe) {
+      const lines = (labels.bubbleMe.dataset.lines ?? "").split("|");
+      const which = Math.floor(time / 4.2) % Math.max(1, lines.length);
+      if (which !== lastMe && lines[which]) {
+        lastMe = which;
+        const text = labels.bubbleMe.querySelector<HTMLElement>(".bubble-text");
+        if (text) text.textContent = lines[which];
+        labels.bubbleMe.dataset.state = "";
+        void labels.bubbleMe.offsetWidth;
+        labels.bubbleMe.dataset.state = "text";
+      }
+      place(labels.bubbleMe, tmp.copy(sk).setY(sk.y + 0.85), heroTalk);
+    }
+    (labels.bubbles ?? []).forEach((el, i) => {
+      const at = bubbleAt(i);
+      if (!at) {
+        el.style.visibility = "hidden";
+        return;
+      }
+      const cycle = 6.6;
+      const t = (time - 2.6 - i * 0.7 + cycle * 4) % cycle;
+      const state = t < 0.9 ? "typing" : t < 4.8 ? "text" : "off";
+      if (el.dataset.state !== state) el.dataset.state = state;
+      place(el, tmp.copy(at).setY(at.y + 0.42), state === "off" ? 0 : heroTalk);
+    });
 
     // HTML labels.
     place(labels.you, tmp.set(you.x, 2.1, you.z), smooth(0.07, 0.13, p) * (1 - scouting * 0.5));
@@ -823,9 +931,9 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
       active = false;
       introOn = false;
       target = current = clamp(p);
-      draw(current, 1.2);
+      draw(current, 5.2);
       // Fonts may arrive after the still frame; draw it again once they do.
-      document.fonts?.ready.then(() => draw(current, 1.2));
+      document.fonts?.ready.then(() => draw(current, 5.2));
     },
     setPointer(x, y) {
       pointer.x = x;
