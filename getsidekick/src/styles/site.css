@@ -462,6 +462,9 @@ h1 em {
 .chapter-n span {
   color: var(--ink-2);
 }
+.chapter-n.is-problem {
+  color: var(--ink-2);
+}
 .chapter h2 {
   margin-top: 14px;
   font-family: var(--display);
@@ -2329,6 +2332,28 @@ html.motion h2[data-reveal] > div {
 }
 .bubble-mine .bubble-dots b {
   background: #fbf9f4;
+}
+/* The problem step: your thought, and a question mark over people on the floor. */
+.bubble-think .bubble-in {
+  max-width: 230px;
+  border-radius: 16px 16px 16px 5px;
+}
+.bubble-below .bubble-in {
+  bottom: auto;
+  top: 10px;
+  border-radius: 5px 16px 16px 16px;
+}
+.bubble-q .bubble-in {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 20px;
+  line-height: 1;
+  color: var(--signal-deep);
 }
 /* Other pairs talking among themselves: smaller, grey, no name. */
 .bubble-other .bubble-in {

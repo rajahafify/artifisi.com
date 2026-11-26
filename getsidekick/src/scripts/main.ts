@@ -42,6 +42,8 @@ async function loadRoom() {
         .map((mine, k) => ({ mine, theirs: qa("[data-pair-theirs]")[k] }))
         .slice(0, small ? 3 : 5),
       others: small ? [] : qa("[data-bubble-other]"),
+      thought: q("[data-thought]"),
+      questions: qa("[data-question]").slice(0, small ? 5 : 8),
     },
     { small, tier },
   );
@@ -100,7 +102,7 @@ let jumpToStep: (step: number) => void = () => {};
 
 
 // ---- The story ------------------------------------------------------------------------
-const steps = [PHASES.checkin, PHASES.arrive, PHASES.talk, PHASES.outcome];
+const steps = [PHASES.problem, PHASES.checkin, PHASES.arrive, PHASES.talk, PHASES.outcome];
 const storyRange = () => story.offsetHeight - innerHeight;
 // Where to land for a step: a little past its start, so its copy is fully in.
 const stepY = (i: number) => story.offsetTop + storyRange() * (steps[i][0] + (steps[i][1] - steps[i][0]) * 0.45);

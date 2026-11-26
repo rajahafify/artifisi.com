@@ -3,7 +3,9 @@
 // Back half: the talk. A stage with a slide, a speaker, and rows of chairs. You sit in one.
 // Front half: the floor. People stand around cocktail tables, talking.
 //
-// The story is four actions, each happening in place while the camera holds still:
+// First the problem: you're stuck in the talk, the floor is full, and you can't tell who's worth
+// meeting (a question mark over people out there). Then four actions fix it, each in place while
+// the camera holds still:
 //   1. You check in. A ripple spreads from your seat and your sidekick (green Buddy) appears.
 //   2. Everyone else checks in. A grey Buddy appears beside each of them.
 //   3. The sidekicks talk. Yours talks to many of theirs at once; other pairs talk too.
@@ -59,6 +61,9 @@ export interface RoomLabels {
   pairs?: { mine: HTMLElement; theirs: HTMLElement }[];
   /** Step 3: grey pairs talking among themselves. */
   others?: HTMLElement[];
+  /** The problem: your thought, and a question mark over people on the floor. */
+  thought?: HTMLElement | null;
+  questions?: HTMLElement[];
 }
 
 // Story phases, in progress units. The page copy lines up with these.
@@ -443,6 +448,8 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   // ---- Step 3: conversations -----------------------------------------------------------
   // Your sidekick doesn't travel: a green Buddy pops up beside each grey one it talks to, so it is
   // in several conversations at once (the three picks first). A few grey pairs talk too.
+  // Floor people who get a question mark in the problem step, spread over the room.
+  const questionAt = [firstOf(4) + 1, firstOf(6) + 2, firstOf(7) + 1, firstOf(9) + 1, firstOf(8), firstOf(5), firstOf(3) + 2, firstOf(1)];
   const yourTalks = [picks[0], picks[1], picks[2], firstOf(7), firstOf(8) + 1].slice(0, opts.small ? 3 : 5);
   const pairCandidates: [number, number][] = [
     [firstOf(1), firstOf(9)],
@@ -478,11 +485,11 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
   const camPos = new Vector3();
   const camLook = new Vector3();
   function cameraAt(p: number) {
-    const t = smooth(PHASES.checkin[0] - 0.02, PHASES.checkin[0] + 0.08, p);
+    const t = smooth(PHASES.problem[0] - 0.02, PHASES.problem[0] + 0.08, p);
     camPos.lerpVectors(shots.hero[0], shots.story[0], t);
     camLook.lerpVectors(shots.hero[1], shots.story[1], t);
     // A slow push in across the four steps, small enough to feel still.
-    const drift = smooth(PHASES.checkin[0], 1, p) * 0.06;
+    const drift = smooth(PHASES.problem[0], 1, p) * 0.06;
     camPos.lerp(camLook, drift);
   }
 
@@ -757,6 +764,20 @@ export function createRoom(canvas: HTMLCanvasElement, labels: RoomLabels, opts: 
     // ---- HTML over the scene ----
     // Step 1: you, and your sidekick's name tag.
     if (labels.you) labels.you.classList.toggle("is-checked", checkedIn > 0.5);
+    // The problem: your thought over your seat, and question marks popping up over people on the
+    // floor. They clear as you check in.
+    const [probA] = PHASES.problem;
+    const problem = smooth(probA, probA + 0.03, p) * (1 - smooth(PHASES.checkin[0], PHASES.checkin[0] + 0.03, p));
+    // On phones your seat is near the top of the screen, so the thought hangs below you instead.
+    labels.thought?.classList.toggle("bubble-below", opts.small);
+    place(labels.thought, tmp.set(you.x, opts.small ? 0.9 : 2.55, you.z), problem);
+    (labels.questions ?? []).forEach((el, k) => {
+      const idx = questionAt[k];
+      if (idx === undefined) return void (el.style.visibility = "hidden");
+      const shown = pop(probA + 0.02 + k * 0.012, p, 0.025) * problem;
+      const bob = Math.sin(time * 2 + k) * 0.05;
+      place(el, tmp.set(people[idx].x, 1.75 + bob, people[idx].z), Math.min(1, shown));
+    });
     place(labels.you, tmp.set(you.x, 2.15, you.z), smooth(PHASES.checkin[0], PHASES.checkin[0] + 0.04, p) * (1 - talking));
     place(labels.sidekick, tmp.copy(mineAt).setY(mineAt.y + 0.2), checkedIn * (1 - smooth(PHASES.arrive[0] + 0.04, PHASES.arrive[0] + 0.08, p)));
 
