@@ -57,7 +57,8 @@ async function loadRoom() {
 }
 const idle = (fn: () => void) =>
   "requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 600 }) : setTimeout(fn, 200);
-requestAnimationFrame(() => idle(() => void loadRoom()));
+// If the 3D chunk fails to load (offline, a flaky network), the story still works without it.
+requestAnimationFrame(() => idle(() => void loadRoom().catch(() => {})));
 
 // ---- Header ---------------------------------------------------------------------------
 const nav = q("[data-nav]")!;
@@ -94,10 +95,9 @@ if (motion) {
 }
 onScroll(scrollY);
 
-function scrollToY(y: number) {
-  if (lenis) lenis.scrollTo(y, { duration: 1.6 });
-  else scrollTo({ top: y, behavior: "auto" });
-}
+// Set by the story once it's built: jump to a step (0 is the hero) and play it.
+let jumpToStep: (step: number) => void = () => {};
+
 
 // ---- The story ------------------------------------------------------------------------
 const steps = [PHASES.checkin, PHASES.arrive, PHASES.talk, PHASES.outcome];
@@ -222,8 +222,9 @@ if (motion) {
     copy.progress(player.p);
     setUi(player.p);
   };
-  const goTo = (step: number, instant = false) => {
-    if (step === currentStep && !instant) return;
+  /** Play to a step; returns how long that takes, in seconds. */
+  const goTo = (step: number, instant = false): number => {
+    if (step === currentStep && !instant) return playing?.isActive() ? playing.duration() - playing.time() : 0;
     currentStep = step;
     const to = rest[step];
     playing?.kill();
@@ -231,22 +232,76 @@ if (motion) {
     if (instant || distance < 0.001) {
       player.p = to;
       render();
-      return;
+      return 0;
     }
     const forward = to > player.p;
-    playing = gsap.to(player, {
-      p: to,
-      duration: clamp(distance * (forward ? 11 : 5), 0.6, 3.2),
-      ease: forward ? "power1.inOut" : "power2.out",
-      onUpdate: render,
-    });
+    const duration = clamp(distance * (forward ? 11 : 5), 0.6, 3.2);
+    playing = gsap.to(player, { p: to, duration, ease: forward ? "power1.inOut" : "power2.out", onUpdate: render });
+    return duration;
   };
+  // The hybrid: one scroll gesture moves one step, and the page holds still while that step plays.
+  // A small nudge (a few pixels of scroll) past the step you're resting on starts the next one at
+  // once; the page settles on that step's place and ignores the wheel, touch and keys until the
+  // step has finished. Up works the same way. After the last step, scrolling is normal again.
+  const NUDGE = 24;
+  const anchorY = (i: number) => (i === 0 ? story.offsetTop : stepY(i - 1));
+  let resting = 0;
+  let held = false;
+  let release: gsap.core.Tween | null = null;
+  // A trackpad flick keeps sending wheel events for a second or so. Let go only once input has
+  // been quiet for a moment, so one gesture never runs through several steps.
+  let lastInput = 0;
+  const noteInput = () => (lastInput = performance.now());
+  for (const type of ["wheel", "touchmove"]) addEventListener(type, noteInput, { passive: true, capture: true });
+  // Lenis already blocks wheel and touch while a step holds the page; scroll keys need blocking
+  // here (outside text fields), so the keyboard can't slip past a step either.
+  const scrollKeys = new Set(["ArrowDown", "ArrowUp", "PageDown", "PageUp", " ", "Home", "End"]);
+  addEventListener(
+    "keydown",
+    (e) => {
+      noteInput();
+      const typing = (e.target as HTMLElement)?.closest?.("input, textarea, [contenteditable]");
+      if (held && scrollKeys.has(e.key) && !typing) e.preventDefault();
+    },
+    { capture: true },
+  );
+  const letGo = () => {
+    if (performance.now() - lastInput < 220) {
+      release = gsap.delayedCall(0.1, letGo);
+      return;
+    }
+    held = false;
+    lenis?.start();
+  };
+  const moveTo = (i: number) => {
+    resting = clamp(i, 0, steps.length);
+    const plays = goTo(resting);
+    release?.kill();
+    held = true;
+    lenis?.stop();
+    lenis?.scrollTo(anchorY(resting), { force: true, duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 3) });
+    release = gsap.delayedCall(Math.max(plays, 0.8) + 0.05, letGo);
+  };
+  lenis?.on("scroll", (e: Lenis) => {
+    if (held) return;
+    const y = e.scroll;
+    const top = story.offsetTop;
+    if (y < top - 1 || y > top + storyRange() + 1) return; // outside the story: plain scrolling
+    if (e.direction > 0 && resting < steps.length && y > anchorY(resting) + NUDGE) moveTo(resting + 1);
+    else if (e.direction < 0 && resting > 0 && y < anchorY(resting) - NUDGE) moveTo(resting - 1);
+  });
   ScrollTrigger.create({
     trigger: story,
     start: "top top",
     end: "bottom bottom",
-    onUpdate: (self) => goTo(stepFor(self.progress)),
-    onRefresh: (self) => goTo(stepFor(self.progress), true),
+    // Coming back up from the page below lands on the last step.
+    onEnterBack: () => {
+      if (!held) moveTo(steps.length);
+    },
+    onRefresh: (self) => {
+      resting = stepFor(self.progress);
+      goTo(resting, true);
+    },
   });
   // Only draw the scene while any of it is on screen.
   ScrollTrigger.create({
@@ -262,18 +317,19 @@ if (motion) {
   // One loop for the whole page: Lenis, ScrollTrigger and (once loaded) the room all run on
   // GSAP's ticker.
 
-  railButtons.forEach((b, i) => b.addEventListener("click", () => scrollToY(stepY(i))));
+  railButtons.forEach((b, i) => b.addEventListener("click", () => moveTo(i + 1)));
 
   // Keyboard users can reach the hero links and the last step's link while they're faded out;
   // bring the right part of the story back into view when they do.
   hero.addEventListener("focusin", () => {
-    if (scrollY > story.offsetTop + 40) scrollToY(story.offsetTop);
+    if (resting !== 0) moveTo(0);
   });
   chapters.forEach((el, i) =>
     el.addEventListener("focusin", () => {
-      if (Math.abs(scrollY - stepY(i)) > innerHeight * 0.2) scrollToY(stepY(i));
+      if (resting !== i + 1) moveTo(i + 1);
     }),
   );
+  jumpToStep = moveTo;
 
   addEventListener(
     "pointermove",
@@ -330,7 +386,7 @@ for (const a of qa<HTMLAnchorElement>('a[href^="#"]')) {
     if (!target) return;
     if (step && motion) {
       e.preventDefault();
-      scrollToY(stepY(Number(step[1]) - 1));
+      jumpToStep(Number(step[1]));
     } else if (lenis) {
       e.preventDefault();
       lenis.scrollTo(target, { offset: 0, duration: 1.4 });
@@ -595,10 +651,10 @@ if (stack) {
   };
   ScrollTrigger.create({
     trigger: device,
-    start: "top 55%",
+    start: "top 85%",
     end: "bottom 30%",
-    onEnter: () => after(2.2, autoPlay),
-    onEnterBack: () => after(2.2, autoPlay),
+    onEnter: () => after(1.2, autoPlay),
+    onEnterBack: () => after(1.2, autoPlay),
     onLeave: stopAuto,
     onLeaveBack: stopAuto,
   });
